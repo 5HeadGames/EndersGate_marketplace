@@ -4,7 +4,6 @@ import {config as dotenvConfig} from "dotenv";
 import {resolve} from "path";
 dotenvConfig({path: resolve(__dirname, "./.env")});
 
-import {HardhatUserConfig} from "hardhat/types";
 import {NetworkUserConfig} from "hardhat/types";
 
 import "@typechain/hardhat";
@@ -67,11 +66,6 @@ const config: any = {
       accounts: {
         mnemonic: MNEMONIC,
       },
-      forking: {
-        url: 'https://speedy-nodes-nyc.moralis.io/bdd2a4b14a469f0e3a230d4d/avalanche/mainnet',
-        blockNumber: 8501674
-      },
-      chainId: chainIds.hardhat,
     },
     mainnet: createTestnetConfig("mainnet"),
     goerli: createTestnetConfig("goerli"),
@@ -85,10 +79,7 @@ const config: any = {
   solidity: {
     compilers: [
       {
-        version: "0.8.9",
-      },
-      {
-        version: "0.6.12",
+        version: "0.8.11",
       },
     ],
   },
