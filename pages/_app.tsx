@@ -23,16 +23,14 @@ const MyApp = ({Component, pageProps}: AppProps) => {
     );
 
     return (
-        <MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>
-            <MoralisDappProvider>
-                <Head>
-                    <title>Ender's Game</title>
-                </Head>
-                <Layout>
-                    {content}
-                </Layout>
-            </MoralisDappProvider>
-        </MoralisProvider>
+      <MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>
+        <MoralisDappProvider>
+          <Head>
+            <title>Ender's Game</title>
+          </Head>
+          <Layout>{content}</Layout>
+        </MoralisDappProvider>
+      </MoralisProvider>
     );
 };
 
