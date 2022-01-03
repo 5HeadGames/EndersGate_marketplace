@@ -1,15 +1,9 @@
 import {Select} from 'antd';
-import {useMoralisDapp} from "@shared/providers/MoralisDappProvider/MoralisDappProvider";
 import {getCollectionsByChain} from "@shared/helpers/collections";
 
 
 function SearchCollections({setInputValue}) {
     const {Option} = Select;
-    const {chainId} = useMoralisDapp();
-    const NFTCollections = getCollectionsByChain(chainId);
-
-
-
     function onChange(value) {
         setInputValue(value);
     }
@@ -26,11 +20,6 @@ function SearchCollections({setInputValue}) {
                 optionFilterProp="children"
                 onChange={onChange}
             >
-                {NFTCollections &&
-                    NFTCollections.map((collection, i) =>
-                        <Option value={collection.addrs} key={i}>{collection.name}</Option>
-                    )
-                }
             </Select>
 
         </>

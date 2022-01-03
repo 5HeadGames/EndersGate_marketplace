@@ -1,8 +1,6 @@
-import Transfer from "./components/Transfer";
-import NativeBalance from "../NativeBalance";
 import Address from "../Address/Address";
 import Blockie from "../Blockie";
-import { Card } from "antd";
+import {Card} from "antd";
 
 const styles = {
   title: {
@@ -13,7 +11,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  },
+  } as any,
   card: {
     boxShadow: "0 0.5rem 1.2rem rgb(189 197 209 / 20%)",
     border: "1px solid #e7eaf3",
@@ -32,11 +30,9 @@ function Wallet() {
         <div style={styles.header}>
           <Blockie scale={5} avatar currentWallet />
           <Address size="6" copyable />
-          <NativeBalance />
         </div>
       }
     >
-      <Transfer />
     </Card>
   );
 }

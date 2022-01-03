@@ -1,6 +1,5 @@
 import React from "react";
 import Text from "antd/lib/typography/Text";
-import NativeBalance from "shared/components/NativeBalance";
 import Account from "shared/components/Account";
 import Chains from "shared/components/Chains";
 import SearchCollections from "shared/components/SearchCollections";
@@ -71,7 +70,6 @@ export default function AppLayout({children}) {
                 </Menu>
                 <div style={styles.headerRight}>
                     <Chains />
-                    <NativeBalance />
                     <Account />
                 </div>
             </Header>
