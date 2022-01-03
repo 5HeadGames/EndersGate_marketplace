@@ -2,11 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 :root {
-	--color-primary: #14bf98;
-	--color-primary-disabled: #bfede3;
-	--color-primary-opacity: #517cac;
-	--color-secondary: #1d91b3;
-	--color-overlay: rgba(0, 0, 0, 0.5);
+	--color-primary: #c646f3;
+	--color-primary-disabled: #392443;
+	--color-primary-opacity: #713784;
+	--color-secondary: #17161e;
+	--color-overlay: #1e1d25;
+	--color-overlay-border: #2c2b30;
 	--color-white: white;
 	--color-alert-success: #37a211;
 	--color-alert-error: #b52423;

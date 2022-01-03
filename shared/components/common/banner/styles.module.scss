@@ -1,0 +1,221 @@
+@import "/styles/utilities.scss";
+@import "/styles/variables.scss";
+
+$medida: 1920;
+
+.bannerSection {
+	width: 100%;
+	margin: unset;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: column;
+}
+
+.containerInfo {
+	width: 100%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	background-image: url("/img/home/ownership/bg-1920.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+	padding-top: calculate-vw(93, $medida);
+	padding-bottom: calculate-vw(41, $medida);
+}
+
+.title {
+	font-family: "OldStandardTT-Bold";
+	font-weight: 700;
+	letter-spacing: 0px;
+	text-align: center;
+	color: white;
+
+	margin: unset;
+
+	width: calculate-vw(570, $medida);
+
+	$f-48: (1920px: 48px,
+			1441px: 30px,
+			1440px: 32px,
+			1025px: 20px,
+			1024px: 32px,
+			769px: 20px,
+			768px: 32px,
+			501px: 32px,
+			500px: 32px,
+			391px: 15px,
+			390px: 32px,
+			100px: 0px,
+		);
+
+	@include poly-fluid-sizing("font-size", $f-48);
+
+	$lh-56: (1920px: 56px,
+			1441px: 40px,
+			1440px: 35px,
+			1025px: 25px,
+			1024px: 32px,
+			769px: 20px,
+			768px: 32px,
+			501px: 32px,
+			500px: 32px,
+			391px: 20px,
+			390px: 32px,
+			100px: 0px,
+		);
+	@include poly-fluid-sizing("line-height", $lh-56);
+}
+
+.ownerBtn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border: 1px solid white;
+	width: fit-content;
+
+	border-radius: 8px;
+
+	font-family: "CoreSansC-Bold";
+	font-weight: 600;
+	letter-spacing: 0px;
+	text-align: right;
+	color: white;
+
+	margin: unset;
+
+	margin-top: calculate-vw(30, $medida);
+	padding: 16px 40px;
+
+	$f-14: (1920px: 14px,
+			1441px: 10px,
+			1440px: 14px,
+			1024px: 10px,
+			769px: 12px,
+			768px: 14px,
+			500px: 14px,
+			391px: 12px,
+			390px: 14px,
+			100px: 0px,
+		);
+
+	@include poly-fluid-sizing("font-size", $f-14);
+
+	$lh-13: (1920px: 13px,
+			1441px: 10px,
+			1440px: 13px,
+			1024px: 10px,
+			769px: 5px,
+			768px: 13px,
+			500px: 13px,
+			391px: 5px,
+			390px: 13px,
+			100px: 0px,
+		);
+
+	@include poly-fluid-sizing("line-height", $lh-13);
+}
+
+.ownerBtn:hover {
+	font-weight: bold;
+	text-decoration: none;
+}
+
+@media all and (max-width: 1024px) {
+	$medida: 1024;
+
+	.bannerSection {
+		width: 100%;
+	}
+
+	.containerInfo {
+		padding-top: calculate-vw(93, $medida);
+		padding-bottom: calculate-vw(41, $medida);
+	}
+
+	.title {
+		width: calculate-vw(570, $medida);
+	}
+
+	.ownerBtn {
+		margin-top: calculate-vw(30, $medida);
+	}
+}
+
+@media all and (max-width: 768px) {
+	$medida: 768;
+
+	.bannerSection {
+		width: 100%;
+	}
+
+	.containerInfo {
+		background-image: url("/img/home/ownership/bg-768.jpg");
+
+		padding-top: calculate-vw(88, $medida);
+		padding-bottom: calculate-vw(51, $medida);
+	}
+
+	.title {
+		width: calculate-vw(380, $medida);
+	}
+
+	.ownerBtn {
+		margin-top: calculate-vw(30, $medida);
+	}
+}
+
+@media all and (max-width: 500px) {
+	$medida: 500;
+
+	.bannerSection {
+		width: 100%;
+	}
+
+	.containerInfo {
+		background-image: url("/img/home/ownership/bg-390.jpg");
+
+		padding-top: calculate-vw(77, $medida);
+		padding-bottom: calculate-vw(77, $medida);
+	}
+
+	.title {
+		width: calculate-vw(285, $medida);
+	}
+
+	.ownerBtn {
+		margin-top: calculate-vw(30, $medida);
+	}
+}
+
+@media all and (max-width: 390px) {
+	$medida: 390;
+
+	.bannerSection {
+		width: 100%;
+	}
+
+	.containerInfo {
+		background-image: url("/img/home/ownership/bg-390.jpg");
+
+		padding-top: calculate-vw(77, $medida);
+		padding-bottom: calculate-vw(77, $medida);
+	}
+
+	.title {
+		width: calculate-vw(285, $medida);
+	}
+
+	.ownerBtn {
+		width: calculate-vw(154, $medida);
+		height: calculate-vw(46, $medida);
+
+		margin-top: calculate-vw(30, $medida);
+		padding: calculate-vw(16, $medida) 0px;
+	}
+}

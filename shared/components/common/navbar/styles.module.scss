@@ -1,0 +1,131 @@
+@import "/styles/utilities.scss";
+@import "/styles/variables.scss";
+
+$medida: 1920;
+
+.navbarContainer {
+	padding-left: calculate-vw(248, $medida);
+	padding-right: calculate-vw(229, $medida);
+}
+
+.logoPadding {
+	margin-right: calculate-vw(339, $medida);
+}
+
+.gapItems {
+	gap: calculate-vw(40, $medida);
+}
+
+.mobileMenu {
+	height: calc(100vh - 80px);
+}
+
+.logoLogged,
+.logo {
+	max-width: 86px;
+}
+
+@media (max-width:1700px) {
+	$medida: 1700;
+
+	.logoPadding {
+		margin-right: calculate-vw(80, $medida);
+	}
+
+	.navbarContainer {
+		padding-left: calculate-vw(100, $medida);
+		padding-right: calculate-vw(100, $medida);
+	}
+}
+
+
+
+@media (max-width:1279px) {
+	.logo {
+		max-width: 72px;
+	}
+
+	.navbarContainerOpen {
+		padding-top: 20px;
+		margin-bottom: 48px;
+	}
+
+	.mobileMenu {
+		height: calc(100vh - 170px);
+	}
+
+	.openLogo {
+		max-width: unset;
+		width: 143px;
+		padding: 0;
+	}
+}
+
+
+@media (max-width:768px) {
+
+
+	.navbarContainerOpen {
+		padding-top: 20px;
+		margin-bottom: 48px;
+	}
+
+	.mobileMenuLogged {
+		height: calc(100vh - 158px);
+	}
+
+}
+
+@media (max-width:650px) {
+	.navbarContainerOpenLogged {
+		padding-top: 20px;
+		margin-bottom: 58px;
+	}
+
+
+}
+
+@media (max-width:640px) {
+	.openLogoLogged {
+		max-width: unset;
+		width: 143px;
+		padding: 0;
+	}
+}
+
+
+@media (max-width:500px) {
+
+	.openLogo,
+	.openLogoLogged {
+		width: 113px;
+		padding: 0;
+	}
+
+	.logoContainerOpen {
+		justify-content: center;
+	}
+
+	.logoPadding {
+		margin: 0;
+	}
+
+	.XOpen {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		height: 100%;
+	}
+
+	.mobileMenu,
+	.mobileMenuLogged {
+		height: calc(100vh - 150px);
+	}
+
+	.navbarContainerOpen,
+	.navbarContainerOpenLogged {
+		padding-top: 40px;
+		margin-bottom: 28px;
+	}
+}

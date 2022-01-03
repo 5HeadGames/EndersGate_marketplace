@@ -1,0 +1,254 @@
+@import "/styles/utilities.scss";
+@import "/styles/variables.scss";
+
+$medida: 1920;
+
+.footer {
+	width: 100%;
+	margin: unset;
+	padding: unset;
+	background: #171C1B;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding-top: calculate-vw(35, $medida);
+	padding-bottom: calculate-vw(60, $medida);
+}
+
+.containerLogo {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	margin-bottom: calculate-vw(48, $medida);
+}
+
+.logo {
+	width: calculate-vw(108, $medida);
+	height: calculate-vw(78, $medida);
+}
+
+.containerFooter {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+	position: relative;
+	padding: 0px 10px;
+}
+
+.navFooter {
+	// width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+}
+
+.footerLink {
+	font-family: "CoreSansC-Light";
+	font-weight: 300;
+	letter-spacing: 0px;
+	text-align: center;
+	color: #FFFFFF;
+	opacity: 0.5;
+	margin: unset;
+	margin-right: calculate-vw(80, $medida);
+
+
+	$f-14: (1920px: 14px,
+			1441px: 10px,
+			1440px: 14px,
+			1024px: 10px,
+			769px: 12px,
+			768px: 14px,
+			414px: 14px,
+			390px: 14px,
+			100px: 0px,
+		);
+
+	@include poly-fluid-sizing("font-size", $f-14);
+
+
+	$lh-24: (1920px: 24px,
+			1441px: 15px,
+			1440px: 24px,
+			1024px: 15px,
+			769px: 10px,
+			768px: 14px,
+			414px: 14px,
+			390px: 24px,
+			100px: 0px,
+		);
+	@include poly-fluid-sizing("line-height", $lh-24);
+
+	&:last-child {
+		margin: unset;
+	}
+}
+
+.rights {
+	position: absolute;
+
+	font-family: "CoreSansC-Light";
+	font-weight: 300;
+	letter-spacing: 0px;
+	text-align: center;
+	color: #FFFFFF;
+	opacity: 0.2;
+
+	margin: unset;
+	right: calculate-vw(32, $medida);
+	;
+
+	$f-14: (1920px: 14px,
+			1441px: 10px,
+			1440px: 14px,
+			1024px: 10px,
+			769px: 5px,
+			768px: 12px,
+			636px: 10px,
+			500px: 12px,
+			415px: 10px,
+			414px: 12px,
+			390px: 12px,
+			0px: 0px,
+		);
+
+	@include poly-fluid-sizing("font-size", $f-14);
+
+
+	$lh-24: (1920px: 24px,
+			1441px: 15px,
+			1440px: 24px,
+			1024px: 15px,
+			769px: 10px,
+			768px: 16px,
+			414px: 10px,
+			390px: 24px,
+			0px: 0px,
+		);
+	@include poly-fluid-sizing("line-height", $lh-24);
+
+}
+
+@media only screen and (max-width: 1440px) {
+	$medida: 1440;
+
+	.footer {
+		padding-top: calculate-vw(35, $medida);
+		padding-bottom: calculate-vw(60, $medida);
+	}
+
+	.containerLogo {
+		margin-bottom: calculate-vw(48, $medida);
+	}
+
+	.logo {
+		width: calculate-vw(108, $medida);
+		height: calculate-vw(78, $medida);
+
+	}
+
+	.footerLink {
+		margin-right: calculate-vw(80, $medida);
+
+	}
+
+	.rights {
+		right: calculate-vw(32, $medida);
+	}
+
+}
+
+@media only screen and (max-width: 768px) {
+	$medida: 768;
+
+	.footer {
+		padding-top: calculate-vw(32, $medida);
+		padding-bottom: calculate-vw(16, $medida);
+	}
+
+	.containerLogo {
+		margin-bottom: calculate-vw(48, $medida);
+	}
+
+	.logo {
+		width: calculate-vw(108, $medida);
+		height: calculate-vw(78, $medida);
+	}
+
+	.containerFooter {
+		flex-direction: column;
+	}
+
+	.footerLink {
+		margin-right: calculate-vw(30, $medida);
+
+	}
+
+	.rights {
+		position: initial;
+		margin-top: calculate-vw(24, $medida);
+		right: calculate-vw(32, $medida);
+	}
+
+}
+
+
+@media only screen and (max-width: 550px) {
+	$medida: 390;
+
+
+	.footer {
+		padding-top: calculate-vw(32, $medida);
+		padding-bottom: calculate-vw(16, $medida);
+	}
+
+	.containerLogo {
+		margin-bottom: calculate-vw(48, $medida);
+	}
+
+	.logo {
+		width: calculate-vw(108, $medida);
+		height: calculate-vw(78, $medida);
+
+	}
+
+	.containerFooter {
+		flex-direction: column;
+	}
+
+	.navFooter {
+		display: grid;
+		grid-template-columns: auto auto;
+		justify-content: start;
+
+		padding-left: calculate-vw(24, $medida);
+		// padding-right:calculate-vw(113, $medida);
+		margin-bottom: calculate-vw(13, $medida);
+
+
+	}
+
+	.footerLink {
+		text-align: left;
+		margin-right: calculate-vw(35, $medida);
+		margin-bottom: calculate-vw(32, $medida);
+
+		&:last-child {
+			margin-right: calculate-vw(35, $medida);
+			margin-bottom: calculate-vw(32, $medida);
+		}
+	}
+
+	.rights {
+		position: initial;
+		margin-top: calculate-vw(24, $medida);
+		right: calculate-vw(32, $medida);
+	}
+
+}
