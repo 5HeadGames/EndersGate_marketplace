@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "hardhat/console.sol";
 
-import "./interfaces/IERC721Base.sol";
+import "./interfaces/IERC1155Custom.sol";
 
 /// @title Clock auction for non-fungible tokens.
 contract ClockAuction is Ownable, Pausable {
@@ -197,8 +197,8 @@ contract ClockAuction is Ownable, Pausable {
 
   /// @dev Gets the NFT object from an address, validating that implementsERC721 is true.
   /// @param _nftAddress - Address of the NFT.
-  function _getNftContract(address _nftAddress) internal pure returns (IERC721Base) {
-    IERC721Base candidateContract = IERC721Base(_nftAddress);
+  function _getNftContract(address _nftAddress) internal pure returns (IERC1155Custom) {
+    IERC1155Custom candidateContract = IERC1155Custom(_nftAddress);
     // require(candidateContract.implementsERC721());
     return candidateContract;
   }
@@ -264,7 +264,7 @@ contract ClockAuction is Ownable, Pausable {
     address _claimant,
     uint256 _tokenId
   ) internal view returns (bool) {
-    IERC721Base _nftContract = _getNftContract(_nftAddress);
+    IERC1155Custom _nftContract = _getNftContract(_nftAddress);
     return (_nftContract.ownerOf(_tokenId) == _claimant);
   }
 
@@ -321,7 +321,7 @@ contract ClockAuction is Ownable, Pausable {
     address _owner,
     uint256 _tokenId
   ) internal {
-    IERC721Base _nftContract = _getNftContract(_nftAddress);
+    IERC1155Custom _nftContract = _getNftContract(_nftAddress);
 
     // It will throw if transfer fails
     _nftContract.transferFrom(_owner, address(this), _tokenId);
@@ -337,7 +337,7 @@ contract ClockAuction is Ownable, Pausable {
     address _receiver,
     uint256 _tokenId
   ) internal {
-    IERC721Base _nftContract = _getNftContract(_nftAddress);
+    IERC1155Custom _nftContract = _getNftContract(_nftAddress);
 
     // It will throw if transfer fails
     _nftContract.transferFrom(address(this), _receiver, _tokenId);
