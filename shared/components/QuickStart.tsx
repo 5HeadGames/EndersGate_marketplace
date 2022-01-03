@@ -1,8 +1,7 @@
-import { Card, Timeline, Typography } from "antd";
-import React, { useMemo } from "react";
-import { useMoralis } from "react-moralis";
+import {Card, Timeline, Typography} from "antd";
+import React, {useMemo} from "react";
 
-const { Text } = Typography;
+const {Text} = Typography;
 
 const styles = {
   title: {
@@ -22,16 +21,10 @@ const styles = {
   },
 };
 
-export default function QuickStart({ isServerInfo }) {
-  const { Moralis } = useMoralis();
-
-  const isInchDex = useMemo(
-    () => (Moralis.Plugins?.oneInch ? true : false),
-    [Moralis.Plugins?.oneInch]
-  );
+export default function QuickStart({isServerInfo}) {
 
   return (
-    <div style={{ display: "flex", gap: "10px" }}>
+    <div style={{display: "flex", gap: "10px"}}>
       <Card style={styles.card} title={<h1 style={styles.title}>📝 To-Do List</h1>}>
         <Timeline mode="left" style={styles.timeline}>
           <Timeline.Item dot="📄">
@@ -93,10 +86,10 @@ export default function QuickStart({ isServerInfo }) {
               </a>
               :
             </Text>
-            <Text code delete={isServerInfo} style={{ display: "block" }}>
+            <Text code delete={isServerInfo} style={{display: "block"}}>
               REACT_APP_MORALIS_APPLICATION_ID = xxxxxxxxxxxx
             </Text>
-            <Text code delete={isServerInfo} style={{ display: "block" }}>
+            <Text code delete={isServerInfo} style={{display: "block"}}>
               REACT_APP_MORALIS_SERVER_URL = https://xxxxxx.grandmoralis.com:2053/server
             </Text>
           </Timeline.Item>
@@ -108,7 +101,7 @@ export default function QuickStart({ isServerInfo }) {
           </Timeline.Item>
 
           <Timeline.Item dot="💿">
-            <Text delete={isInchDex} style={styles.text}>
+            <Text style={styles.text}>
               Install{" "}
               <a
                 href="https://moralis.io/plugins/1inch/?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplate"
@@ -171,7 +164,7 @@ export default function QuickStart({ isServerInfo }) {
           </Timeline>
         </Card>
         <Card
-          style={{ marginTop: "10px", ...styles.card }}
+          style={{marginTop: "10px", ...styles.card}}
           title={<h1 style={styles.title}>📡 Connecting your Local Chain to the Moralis DB</h1>}
         >
           <Timeline mode="left" style={styles.timeline}>
