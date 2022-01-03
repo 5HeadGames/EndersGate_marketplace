@@ -55,7 +55,7 @@ function AddressInput(props) {
       onChange={(e) => {
         updateAddress(e.target.value);
       }}
-      disabled={validatedAddress}
+      disabled={Boolean(validatedAddress)}
       style={
         validatedAddress
           ? { ...props?.style, border: "1px solid rgb(33, 191, 150)" }

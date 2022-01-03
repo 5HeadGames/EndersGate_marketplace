@@ -25,7 +25,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     return (
         <>
             <Head>
-                <title>Ender's Game</title>
+                <title>Ender's Gate</title>
             </Head>
             <Layout>
                 <Provider store={store}>{content}</Provider>

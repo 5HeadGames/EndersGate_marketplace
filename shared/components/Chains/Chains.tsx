@@ -80,7 +80,7 @@ const menuItems = [
 
 function Chains() {
   const { switchNetwork } = useChain();
-  const [selected, setSelected] = useState({});
+  const [selected, setSelected] = useState<any>({});
 
   const handleMenuClick = (e) => {
     console.log("switch to: ", e.key);
@@ -101,7 +101,6 @@ function Chains() {
     <div>
       <Dropdown overlay={menu} trigger={["click"]}>
         <Button
-          key={selected?.key}
           icon={selected?.icon}
           style={{ ...styles.button, ...styles.item }}
         >

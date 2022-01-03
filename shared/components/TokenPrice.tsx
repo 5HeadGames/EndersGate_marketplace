@@ -1,5 +1,4 @@
 import {useState} from "react";
-import useTokenPrice from "@shared/hooks/useTokenPrice";
 
 const styles = {
   token: {
@@ -10,11 +9,10 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    whiteSpace: "nowrap",
   },
 };
 function TokenPrice(props) {
-  const {tokenPrice} = useTokenPrice(props);
+  const {tokenPrice} = {tokenPrice: {usdPrice: 100, nativePrice: 1}}
   const [isUSDMode, setIsUSDMode] = useState(true);
 
   const toggleDisplayStyle = () => setIsUSDMode(!isUSDMode);
