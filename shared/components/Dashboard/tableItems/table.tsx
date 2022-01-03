@@ -69,18 +69,15 @@ const Table = ({ title }) => {
           {navItems.map((item, index) => {
             return (
               <div
-                className="border-r-2 border-overlay-border cursor-pointer"
+                className={clsx(
+                  {
+                    "bg-primary-disabled": columnSelected === item.value,
+                  },
+                  "border-r-2 border-overlay-border cursor-pointer px-4 py-2 "
+                )}
                 onClick={() => setColumnSelected(item.value)}
               >
-                <Typography
-                  type="subTitle"
-                  className={clsx(
-                    {
-                      "bg-primary-disabled": columnSelected === item.value,
-                    },
-                    "px-4 py-2 text-primary"
-                  )}
-                >
+                <Typography type="subTitle" className={clsx("text-primary")}>
                   {item.title}
                 </Typography>
               </div>
@@ -88,8 +85,8 @@ const Table = ({ title }) => {
           })}
         </div>
         {title === "Recently Sold" && (
-          <div className="flex flex-col border-2 border-overlay-border border-t-0 w-full">
-            <div className="w-full pl-4">
+          <div className="flex flex-col border-2 border-overlay-border border-t-0 border-b-0 w-full">
+            <div className="w-full">
               <table className="w-full">
                 <tbody>
                   {itemsSold.map((item, index) => {
@@ -103,8 +100,8 @@ const Table = ({ title }) => {
           </div>
         )}
         {title === "Recently Listed" && (
-          <div className="flex flex-col border-2 border-overlay-border border-t-0 w-full">
-            <div className="w-full pl-4">
+          <div className="flex flex-col border-2 border-overlay-border border-t-0 border-b-0 w-full">
+            <div className="w-full">
               <table className="w-full">
                 <tbody>
                   {itemsSold.map((item, index) => {

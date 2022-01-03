@@ -1,15 +1,13 @@
 import { Typography } from "@shared/components/common/typography";
 import React from "react";
-import clsx from "clsx";
 import { Icons } from "@shared/const/Icons";
-import Address from "@shared/components/Address/Address";
 import AddressText from "@shared/components/common/specialFields/SpecialFields";
 
 const ItemSold = ({ transaction }) => {
   const { icon, id, bread_count, buyer, seller, price, timeAgo } = transaction;
   return (
-    <tr>
-      <td className="py-4">
+    <tr className="border-b-2 border-overlay-border">
+      <td className="py-4 pl-4">
         <div className="flex gap-x-2">
           <img src={icon} className="h-10 w-10" alt="" />
           <div className="flex flex-col items-center gap-4">
