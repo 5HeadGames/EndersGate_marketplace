@@ -52,7 +52,7 @@ export const DropdownMenu: React.FC<
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="w-max grid md:grid-cols-3 grid-cols-1 gap-4 p-6 origin-top-left absolute left-0 mt-2  rounded-md shadow-button bg-primary-disabled  focus:outline-none">
+            <Menu.Items className="w-max grid xl:grid-cols-3 md:grid-cols-2  gap-4 p-6 origin-top-left absolute left-0 mt-2  rounded-md shadow-button bg-primary-disabled  focus:outline-none">
               {navElementsLinks.map((item, index) => {
                 return (
                   <Menu.Item key={index}>
@@ -68,7 +68,7 @@ export const DropdownMenu: React.FC<
                           <img
                             src={item.icon}
                             alt=""
-                            className="p-2 bg-primary rounded-md"
+                            className="p-2 bg-primary rounded-md md:flex hidden"
                           />
                           <div className="flex flex-col ">
                             <Typography
@@ -77,7 +77,7 @@ export const DropdownMenu: React.FC<
                             >
                               {item.title}
                             </Typography>
-                            <p className="font-bold text-sm text-white w-64">
+                            <p className="font-bold text-sm text-white w-64 md:flex hidden">
                               {item.description}
                             </p>
                           </div>
