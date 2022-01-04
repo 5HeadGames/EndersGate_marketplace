@@ -1,0 +1,155 @@
+@import '/styles/utilities.scss';
+@import '/styles/variables.scss';
+
+$medida: 1920;
+
+
+.phase {
+	position: relative;
+
+	width: calculate-vw(422, $medida);
+	height: calculate-vw(698, $medida);
+}
+
+.phaseBg {
+	width: 100%;
+	z-index: 0;
+}
+
+.containerInfo {
+	z-index: 1;
+	position: absolute;
+
+	background-color: white;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	// right: 0px;
+	bottom: calculate-vw(123, $medida);
+
+	width: calculate-vw(288, $medida);
+	height: calculate-vw(80, $medida);
+
+	padding-top: calculate-vw(28, $medida);
+	padding-right: calculate-vw(0, $medida);
+	padding-bottom: calculate-vw(20, $medida);
+	padding-left: calculate-vw(0, $medida);
+
+	transition: width 1s;
+
+
+}
+
+.right {
+	right: 0;
+}
+
+
+.title {
+	width: 100%;
+	font-family: 'CoreSansC-Light';
+	font-weight: 300;
+	letter-spacing: 0px;
+
+	line-height: 0px;
+
+	text-align: center;
+	color: #171c1b;
+
+	margin: unset;
+
+	$f-36: (1920px: 36px,
+			1441px: 25px,
+			1440px: 36px,
+			1024px: 25px,
+			769px: 15px,
+			768px: 22px,
+			391px: 15px,
+			390px: 22px,
+			100px: 0px,
+		);
+
+	@include poly-fluid-sizing('font-size', $f-36);
+
+	$lh-36: (1920px: 36px,
+			1441px: 25px,
+			1440px: 36px,
+			1024px: 25px,
+			769px: 15px,
+			768px: 22px,
+			391px: 15px,
+			390px: 22px,
+			100px: 0px,
+		);
+
+	@include poly-fluid-sizing('line-height', $lh-36);
+}
+
+
+.containerInfo:hover {
+	width: 80%;
+}
+
+.phase:nth-child(odd) {
+	margin-top: calculate-vw(140, $medida);
+
+	.container-info {
+		right: unset;
+		left: 0px;
+	}
+}
+
+@media screen and(max-width:768px) {
+	$medida: 768;
+
+
+	.phase {
+		position: relative;
+
+		width: calculate-vw(224, $medida);
+		height: calculate-vw(384, $medida);
+	}
+
+	.containerInfo {
+		right: 0px;
+		bottom: calculate-vw(75, $medida);
+
+		width: calculate-vw(152, $medida);
+		height: calculate-vw(40, $medida);
+
+		padding-top: calculate-vw(8, $medida);
+		padding-bottom: calculate-vw(8, $medida);
+	}
+}
+
+@media screen and(max-width:390px) {
+	$medida: 390;
+
+
+	.phase {
+		align-self: flex-end;
+
+		width: calculate-vw(253, $medida);
+		height: calculate-vw(416, $medida);
+
+		margin-top: calculate-vw(24, $medida);
+	}
+
+	.containerInfo {
+		right: 0px;
+		bottom: calculate-vw(96, $medida);
+
+		width: calculate-vw(152, $medida);
+		height: calculate-vw(40, $medida);
+
+		padding-top: calculate-vw(8, $medida);
+		padding-bottom: calculate-vw(8, $medida);
+	}
+
+	.phase:nth-child(odd) {
+		margin-top: calculate-vw(24, $medida);
+		align-self: flex-start;
+	}
+}

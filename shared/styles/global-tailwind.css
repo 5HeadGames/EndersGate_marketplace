@@ -1,0 +1,79 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700;900&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+	--color-primary: #c646f3;
+	--color-primary-disabled: #392443;
+	--color-primary-opacity: #713784;
+	--color-secondary: #17161e;
+	--color-overlay: #1e1d25;
+	--color-overlay-border: #2c2b30;
+	--color-white: white;
+	--color-alert-success: #37a211;
+	--color-alert-error: #b52423;
+	--color-gray-0: #ffffff;
+	--color-gray-200: #dddddd;
+	--color-gray-500: #707070;
+	--color-gray-500-opacity-10: #f7f8f7;
+	--color-gray-800: #444444;
+	--color-gray-900: #000000;
+	--color-dark: #171c1b;
+	--color-facebook: #4267b2;
+	--transparent-gray-200: rgb(221, 221, 221, 0.5);
+	--transparent-gray-800: rgb(68, 68, 68, 0.5);
+}
+
+.light {
+	--color-primary: #14bf98;
+	--color-primary-disabled: #bfede3;
+	--color-primary-opacity: #517cac;
+	--color-secondary: #1d91b3;
+	--color-overlay: rgba(0, 0, 0, 0.5);
+	--color-white: white;
+	--color-dark: #171c1b;
+
+	--color-alert-success: #37a211;
+	--color-alert-error: #b52423;
+	--color-gray-0: #ffffff;
+	--color-gray-200: #dddddd;
+	--color-gray-500: #707070;
+	--color-gray-500-opacity-10: #f7f8f7;
+	--color-gray-800: #444444;
+	--color-gray-900: #000000;
+	--color-facebook: #4267b2;
+	--transparent-gray-200: rgb(221, 221, 221, 0.5);
+	--transparent-gray-800: rgb(68, 68, 68, 0.5);
+}
+
+.dark {
+	--color-primary: #f40000;
+	--color-secondary: #006ecd;
+	--color-alert-success: #37a211;
+	--color-alert-error: #f40000;
+	--color-gray-0: #ffffff;
+	--color-dark: #171c1b;
+
+	--color-gray-200: #dddddd;
+	--color-gray-500: #707070;
+	--color-gray-800: #444444;
+	--color-gray-900: #000000;
+	--color-facebook: #4267b2;
+	--transparent-gray-200: rgb(68, 68, 68, 0.5);
+	--transparent-gray-800: rgb(68, 68, 68, 0.5);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+	.hide-scroll-bar::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.hide-scroll-bar {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+}

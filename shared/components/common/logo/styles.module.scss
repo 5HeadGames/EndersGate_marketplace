@@ -1,0 +1,55 @@
+@import "/styles/utilities.scss";
+@import "/styles/variables.scss";
+
+$medida: 1920;
+
+
+// .reference {
+//     margin-right: calculate-vw(96, $medida);
+
+// }
+.logo {
+	width: 100%;
+	max-width: 165px;
+}
+
+
+@media screen and(max-width:768px) {
+	$medida: 768;
+
+	// .reference {
+	//     margin-right: calculate-vw(96, $medida);
+
+	// }
+	.logo {
+		width: 100%;
+		max-width: calculate-vw(165, $medida);
+	}
+}
+
+@media screen and(max-width:500px) {
+	$medida: 500;
+	// .reference {
+	//     margin-right: unset;
+	//     margin-bottom: calculate-vw(30, $medida);
+
+	// }
+	.logo {
+		width: 100%;
+		max-width: calculate-vw(120, $medida);
+	}
+}
+
+@media screen and(max-width:390px) {
+	$medida: 390;
+
+	// .reference {
+	//     margin-right: unset;
+	//     margin-bottom: calculate-vw(30, $medida);
+
+	// }
+	.logo {
+		width: 100%;
+		max-width: calculate-vw(120, $medida);
+	}
+}
