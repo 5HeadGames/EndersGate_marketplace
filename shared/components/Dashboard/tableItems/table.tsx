@@ -7,14 +7,14 @@ import TransactionsBoard from "../TransactionsBoard/TransactionsBoard";
 
 const navItems = [
   { title: "Trading Cards", value: "trading_cards" },
-  { title: "Forks", value: "forks" },
+  { title: "Packs", value: "packs" },
   { title: "Comics", value: "comics" },
 ];
 
 const itemsSold = [
   {
     icon: Icons.logo,
-    bread_count: 4,
+    breed_count: 4,
     id: 15456468,
     buyer: {
       nickname: "CarlTroubleMaker",
@@ -29,7 +29,7 @@ const itemsSold = [
   },
   {
     icon: Icons.logo,
-    bread_count: 4,
+    breed_count: 4,
     id: 15456468,
     buyer: {
       nickname: "CarlTroubleMaker3",
@@ -44,7 +44,7 @@ const itemsSold = [
   },
   {
     icon: Icons.logo,
-    bread_count: 4,
+    breed_count: 4,
     id: 15456468,
     buyer: {
       nickname: "CarlTroubleMaker345",
@@ -115,6 +115,10 @@ const Table = ({ title }) => {
           </div>
         )}
       </div>
+
+      {title === "Recently Sold" && (
+        <div className="text-white w-full flex justify-end px-8 mt-4">A</div>
+      )}
     </div>
   );
 };

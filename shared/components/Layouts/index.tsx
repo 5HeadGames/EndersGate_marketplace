@@ -9,6 +9,7 @@ import { Icons } from "@shared/const/Icons";
 import { useRouter } from "next/dist/client/router";
 import clsx from "clsx";
 import { Button } from "../common/button/button";
+import { DropdownMenu } from "../common/dropdownMenu/dropdownMenu";
 
 const { Header, Footer } = Layout;
 
@@ -29,9 +30,58 @@ const styles = {
 };
 
 const navItems = [
-  { name: "Menu", link: "/menu" },
-  { name: "Dashboard", link: "/dashboard" },
-  { name: "Marketplace", link: "/marketplace" },
+  {
+    name: "Menu",
+    link: "/menu",
+    menu: true,
+    icon: Icons.menu,
+    items: [
+      {
+        title: "Marketplace",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
+        href: "/marketplace",
+        icon: Icons.marketplaceWhite,
+      },
+      {
+        title: "Marketplace",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
+        href: "/marketplace",
+        icon: Icons.marketplaceWhite,
+      },
+      {
+        title: "Marketplace",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
+        href: "/marketplace",
+        icon: Icons.marketplaceWhite,
+      },
+      {
+        title: "Marketplace",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
+        href: "/marketplace",
+        icon: Icons.marketplaceWhite,
+      },
+      {
+        title: "Marketplace",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
+        href: "/marketplace",
+        icon: Icons.marketplaceWhite,
+      },
+      {
+        title: "Marketplace",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
+        href: "/marketplace",
+        icon: Icons.marketplaceWhite,
+      },
+    ],
+  },
+  { name: "Dashboard", link: "/dashboard", icon: Icons.dashboard },
+  { name: "Marketplace", link: "/marketplace", icon: Icons.marketplace },
 ];
 
 export default function AppLayout({ children }) {
@@ -50,10 +100,17 @@ export default function AppLayout({ children }) {
         <div className="flex items-center">
           <Logo />
           {navItems.map((item, index) => {
-            return (
+            return item.menu ? (
+              <DropdownMenu
+                icon={item.icon}
+                title={item.name}
+                navElementsLinks={item.items}
+              />
+            ) : (
               <NavbarItem
                 key={index}
                 name={item.name}
+                icon={item.icon}
                 link={item.link}
                 route={router.asPath}
               />
@@ -77,19 +134,24 @@ export const Logo = () => (
   <img className="h-12 w-12" src={Icons.logo} alt="logo" />
 );
 
-export const NavbarItem = ({ name, link, route }) => {
+export const NavbarItem = ({ name, link, route, icon }) => {
   return (
     <Link href={link}>
       <a className={clsx("md:ml-12 ml-8 py-8 relative")} href={link}>
-        <h3
-          className={clsx(
-            { "text-primary": link === route },
-            { "text-primary-opacity": link !== route },
-            "f-16"
-          )}
-        >
-          {name}
-        </h3>
+        <div className="flex items-center">
+          <img
+            src={icon}
+            className={clsx({ "opacity-50": link !== route }, "h-4 w-4 mr-2")}
+          />
+          <h3
+            className={clsx(
+              { "opacity-50": link !== route },
+              "text-base text-primary"
+            )}
+          >
+            {name}
+          </h3>
+        </div>
         <div
           className={clsx({
             "absolute bottom-0 w-full bg-primary h-1.5 rounded-t-md":

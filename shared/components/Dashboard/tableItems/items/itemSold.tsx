@@ -4,18 +4,18 @@ import { Icons } from "@shared/const/Icons";
 import AddressText from "@shared/components/common/specialFields/SpecialFields";
 
 const ItemSold = ({ transaction }) => {
-  const { icon, id, bread_count, buyer, seller, price, timeAgo } = transaction;
+  const { icon, id, breed_count, buyer, seller, price, timeAgo } = transaction;
   return (
     <tr className="border-b-2 border-overlay-border">
       <td className="py-4 pl-4">
         <div className="flex gap-x-2">
           <img src={icon} className="h-10 w-10" alt="" />
           <div className="flex flex-col items-center gap-4">
-            <Typography type="span" className="bg-white text-dark">
+            <Typography type="span" className="bg-white text-dark px-4 py-1">
               #{id}
             </Typography>
             <Typography type="caption" className="text-gray-200">
-              Bread Count: {bread_count}
+              Breed Count: {breed_count}
             </Typography>
           </div>
         </div>
