@@ -118,8 +118,8 @@ export default function AppLayout({ children }) {
           })}
         </div>
         <div>
-          <Button decoration="fill" size="small">
-            Logout
+          <Button decoration="fill" size="small" onClick={()=>router.push('/login')}>
+            Log In
           </Button>
         </div>
       </nav>
