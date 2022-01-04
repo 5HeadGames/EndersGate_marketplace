@@ -2,6 +2,7 @@ import {Typography} from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
 import {Icons} from "@shared/const/Icons";
+import { TransactionText } from "@shared/components/common/specialFields/SpecialFields";
 
 interface Props {
   id: string;
@@ -10,12 +11,13 @@ interface Props {
   value: number;
   value2: number;
   breed_count: number;
-  price: {eth: number, dollars: number};
-  timeAgo: string
+  price: { eth: number; dollars: number };
+  timeAgo: string;
 }
 
 const ItemListed: React.FunctionComponent<Props> = (props) => {
-  const {icon, label, value, value2, id, breed_count, price, timeAgo} = props
+  const { icon, label, value, value2, id, breed_count, price, timeAgo } = props;
+  console.log(props);
 
   return (
     <tr className="border-b-2 border-overlay-border">
@@ -24,7 +26,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
           <img src={icon} className="h-10 w-10" alt="" />
           <div className="flex flex-col items-center gap-4">
             <Typography type="span" className="bg-white text-dark px-4 py-1">
-              #{id}
+              #<TransactionText text={id} />
             </Typography>
             <Typography type="caption" className="text-gray-200">
               Breed Count: {breed_count}
@@ -32,11 +34,38 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
           </div>
         </div>
       </td>
+
       <td className="py-4">
-        feature
+        <div className="flex flex-col items-center">
+          <img src={Icons.earth} className="h-6 w-6" alt="" />
+          <Typography type="caption" className="text-white font-bold mt-1">
+            EARTH
+          </Typography>
+        </div>
       </td>
       <td className="py-4">
-        feature
+        <div className="flex flex-col items-center">
+          <img src={Icons.heart} className="h-6 w-6" alt="" />
+          <Typography type="caption" className="text-white font-bold mt-1">
+            200
+          </Typography>
+        </div>
+      </td>
+      <td className="py-4">
+        <div className="flex flex-col items-center">
+          <img src={Icons.dagger} className="h-6 w-6" alt="" />
+          <Typography type="caption" className="text-white font-bold mt-1">
+            500
+          </Typography>
+        </div>
+      </td>
+      <td className="py-4">
+        <div className="flex flex-col items-center">
+          <img src={Icons.logo} className="h-6 w-6" alt="" />
+          <Typography type="caption" className="text-white font-bold mt-1">
+            600
+          </Typography>
+        </div>
       </td>
       <td className="py-4">
         <div className="flex flex-col items-end pr-2">

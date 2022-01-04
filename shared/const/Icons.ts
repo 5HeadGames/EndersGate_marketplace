@@ -8,4 +8,7 @@ export enum Icons {
   dashboard = "/icons/dashboard.png",
   marketplace = "/icons/marketplace.png",
   marketplaceWhite = "/icons/marketplace-white.png",
+  heart = "/icons/hearts.png",
+  dagger = "/icons/plain-dagger.png",
+  earth = "/icons/earth.png",
 }
