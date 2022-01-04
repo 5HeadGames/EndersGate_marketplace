@@ -38,20 +38,6 @@ task("accounts", "Prints the list of accounts", async (args, hre) => {
   }
 });
 
-function createTestnetConfig(network: keyof typeof chainIds): NetworkUserConfig {
-  const url: string = "https://" + network + ".infura.io/v3/" + INFURA_API_KEY;
-  return {
-    accounts: {
-      count: 10,
-      initialIndex: 0,
-      mnemonic: MNEMONIC,
-      path: "m/44'/60'/0'/0",
-    },
-    chainId: chainIds[network],
-    url,
-  };
-}
-
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
@@ -59,22 +45,22 @@ const config: any = {
   defaultNetwork: "hardhat",
   networks: {
     ganache: {
-      url: 'https://localhost:8545',
-      fork: 'https://speedy-nodes-nyc.moralis.io/bdd2a4b14a469f0e3a230d4d/avalanche/mainnet@8501674'
+      url: "https://localhost:8545",
+      fork: "https://speedy-nodes-nyc.moralis.io/bdd2a4b14a469f0e3a230d4d/avalanche/mainnet@8501674",
     } as any,
     hardhat: {
       accounts: {
         mnemonic: MNEMONIC,
       },
     },
-    mainnet: createTestnetConfig("mainnet"),
-    goerli: createTestnetConfig("goerli"),
-    kovan: createTestnetConfig("kovan"),
-    rinkeby: createTestnetConfig("rinkeby"),
-    ropsten: createTestnetConfig("ropsten"),
-    avax: {
-      url: 'https://speedy-nodes-nyc.moralis.io/bdd2a4b14a469f0e3a230d4d/avalanche/mainnet',
-    }
+    harmony: {
+      url: `https://api.harmony.one`,
+      accounts: [process.env.PRIVATE_KEY]
+    },
+    harmony_test: {
+      url: `https://api.s0.b.hmny.io`,
+      accounts: [process.env.PRIVATE_KEY]
+    },
   },
   solidity: {
     compilers: [
@@ -98,4 +84,3 @@ const config: any = {
 };
 
 export default config;
-
