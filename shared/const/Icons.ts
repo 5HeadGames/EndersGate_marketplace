@@ -1,8 +1,8 @@
 export enum Icons {
   logo = "/icons/logo.png",
-  eth = "/icons/eth.png",
+  harmony = "/icons/harmony.png",
   axieSold = "/icons/axie-sold.png",
-  totalSale = "/icons/total.png",
+  totalSale = "/icons/totalSale.png",
   arrowLeft = "/icons/arrowLeft.png",
   menu = "/icons/menu.png",
   dashboard = "/icons/dashboard.png",

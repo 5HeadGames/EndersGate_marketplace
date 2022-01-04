@@ -10,9 +10,20 @@ const navItems = [
 ];
 
 const platformItems = [
-  { title: "TOTAL SALE", value: "48,580", icon: Icons.totalSale },
-  { title: "TOTAL VOLUME", value: "1,541", value2: "$1,57M", icon: Icons.eth },
-  { title: "AXIE SOLD", value: "1,200", icon: Icons.axieSold },
+  {
+    title: "TOTAL SALE",
+    value: "48,580",
+    icon: Icons.totalSale,
+    color: "#2ABAA7",
+  },
+  {
+    title: "TOTAL VOLUME",
+    value: "1,541",
+    value2: "$1,57M",
+    icon: Icons.harmony,
+    color: "#4D70E7",
+  },
+  { title: "AXIE SOLD", value: "1,200", icon: Icons.logo, color: "#7335D5" },
 ];
 
 const TransactionsBoard = () => {
@@ -48,6 +59,7 @@ const TransactionsBoard = () => {
             return (
               <PlatformMovements
                 icon={item.icon}
+                color={item.color}
                 label={item.title}
                 value={item.value}
                 value2={item.value2 || ""}
@@ -61,10 +73,15 @@ const TransactionsBoard = () => {
   );
 };
 
-export const PlatformMovements = ({ icon, label, value, value2 }) => {
+export const PlatformMovements = ({ icon, color, label, value, value2 }) => {
   return (
     <div className="flex items-center">
-      <img src={icon} className="h-16 w-16" alt="" />
+      <div
+        className="flex items-center justify-center p-4 rounded-full"
+        style={{ backgroundColor: color }}
+      >
+        <img src={icon} className="h-8 w-8" alt="" />
+      </div>
       <div className="pl-4">
         <Typography className="text-primary" type="label">
           {label}
