@@ -328,7 +328,7 @@ contract ClockAuction is Ownable, Pausable {
   }
 
   /// @dev Transfers an NFT owned by this contract to another address.
-  /// Returns true if the transfer succeeds.
+  // Returns true if the transfer succeeds.
   /// @param _nftAddress - The address of the NFT.
   /// @param _receiver - Address to transfer NFT to.
   /// @param _tokenId - ID of token to transfer.
