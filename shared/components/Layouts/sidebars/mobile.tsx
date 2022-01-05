@@ -92,7 +92,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
         <Dialog
           as="div"
           static
-          className="fixed inset-0 flex z-40 md:hidden bg-overlay"
+          className="fixed h-screen top-0 flex z-40 md:hidden bg-overlay"
           open={sidebarOpen}
           onClose={setSidebarOpen}
           initialFocus={initialFocus}
@@ -106,7 +106,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-600 bg-opacity-75" />
+            <Dialog.Overlay className="fixed inset-0 z-0 blur-xl bg-transparent-color-gray-200" />
           </Transition.Child>
           <Transition.Child
             as={Fragment}
@@ -117,7 +117,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
             leaveFrom="translate-x-0"
             leaveTo="-translate-x-full"
           >
-            <div className="bg-overlay relative flex-1 flex flex-col max-w-xs w-full">
+            <div className="bg-overlay relative flex-1 flex flex-col max-w-xs w-full w-64">
               <Transition.Child
                 as={Fragment}
                 enter="ease-in-out duration-300"
@@ -186,6 +186,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                               src={item.icon}
                               className="mr-4 flex-shrink-0 h-6 w-6 text-white"
                               aria-hidden="true"
+                              alt=""
                             />
                             {item.name}
                           </p>
@@ -197,6 +198,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                             }
                             className="mr-4 flex-shrink-0 h-6 w-6 text-white"
                             aria-hidden="true"
+                            alt=""
                           />
                         </div>
                         <div className={clsx({ ["hidden"]: !collapse[index] })}>
@@ -218,6 +220,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                                     src={subItem.icon}
                                     className="mr-4 flex-shrink-0 h-6 w-6 text-white"
                                     aria-hidden="true"
+                                    alt=""
                                   />
                                   {subItem.title}
                                 </a>
@@ -267,9 +270,6 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
               </div>
             </div>
           </Transition.Child>
-          <div className="flex-shrink-0 w-14" aria-hidden="true">
-            {/* Force sidebar to shrink to fit close icon */}
-          </div>
         </Dialog>
       </Transition.Root>
     </>
