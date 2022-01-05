@@ -41,17 +41,17 @@ const Table:React.FunctionComponent<Props> = ({ title ,data}) => {
             );
           })}
         </div>
-          <div className="flex flex-col border-2 border-overlay-border border-t-0 border-b-0 w-full">
-            <div className="w-full">
-              <table className="w-full">
-                <tbody>
-                  {data.map((item, index) => 
-                  <item.render {...item}/>
-                  )}
-                </tbody>
-              </table>
-            </div>
+        <div className="flex flex-col border-2 border-overlay-border border-t-0 border-b-0 w-full mb-20">
+          <div className="w-full overflow-x-scroll">
+            <table className="w-full min-w-max ">
+              <tbody>
+                {data.map((item, index) => (
+                  <item.render {...item} />
+                ))}
+              </tbody>
+            </table>
           </div>
+        </div>
       </div>
     </div>
   );

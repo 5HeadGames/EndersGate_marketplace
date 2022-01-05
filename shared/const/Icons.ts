@@ -11,4 +11,6 @@ export enum Icons {
   heart = "/icons/hearts.png",
   dagger = "/icons/plain-dagger.png",
   earth = "/icons/earth.png",
+  chevronRight = "/icons/chevronRight.svg",
+  chevronDown = "/icons/chevronDown.svg",
 }

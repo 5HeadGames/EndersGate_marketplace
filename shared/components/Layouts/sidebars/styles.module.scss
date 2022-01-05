@@ -1,0 +1,13 @@
+@import '/styles/utilities.scss';
+@import '/styles/variables.scss';
+$medida: 1920;
+
+.sideBarDesktop {
+	width: calculate-vw(400, $medida);
+}
+
+@media (max-width: 1400px) {
+	.sideBarDesktop {
+		width: 300px;
+	}
+}

@@ -54,7 +54,7 @@ const TransactionsBoard = () => {
             );
           })}
         </div>
-        <div className="flex flex-row py-10 px-8 gap-x-16">
+        <div className="flex flex-row py-10 px-8 gap-x-16 md:justify-start justify-center">
           {platformItems.map((item, index) => {
             return (
               <PlatformMovements
@@ -75,18 +75,18 @@ const TransactionsBoard = () => {
 
 export const PlatformMovements = ({ icon, color, label, value, value2 }) => {
   return (
-    <div className="flex items-center">
+    <div className="flex md:flex-row flex-col items-center">
       <div
-        className="flex items-center justify-center p-4 rounded-full"
+        className="flex items-center justify-center p-4 rounded-full h-max w-max"
         style={{ backgroundColor: color }}
       >
         <img src={icon} className="h-8 w-8" alt="" />
       </div>
-      <div className="pl-4">
-        <Typography className="text-primary" type="label">
+      <div className="md:pl-4 md:block flex flex-col items-center md:mt-0 mt-4">
+        <Typography className="text-primary text-center" type="label">
           {label}
         </Typography>
-        <Typography type="subTitle" className="text-white">
+        <Typography type="subTitle" className="text-white text-center">
           {value} {value2}
         </Typography>
       </div>
