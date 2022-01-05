@@ -8,10 +8,12 @@ import {Menu, Layout} from "antd";
 import {Icons} from "@shared/const/Icons";
 import {useRouter} from "next/dist/client/router";
 import clsx from "clsx";
-import {Button} from "../common/button/button";
-import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
+import { Button } from "../common/button/button";
+import { DropdownMenu } from "../common/dropdownMenu/dropdownMenu";
+import { MenuIcon } from "@heroicons/react/outline";
+import { SidebarMobile } from "./sidebars/mobile";
 
-const {Header, Footer} = Layout;
+const { Header, Footer } = Layout;
 
 const styles = {
   content: {
@@ -80,49 +82,75 @@ const navItems = [
       },
     ],
   },
-  {name: "Dashboard", link: "/dashboard", icon: Icons.dashboard},
-  {name: "Marketplace", link: "/marketplace", icon: Icons.marketplace},
+  { name: "Dashboard", link: "/dashboard", icon: Icons.dashboard },
+  { name: "Marketplace", link: "/marketplace", icon: Icons.marketplace },
 ];
 
-export default function AppLayout({children}) {
+export default function AppLayout({ children }) {
   const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const refSidebarMobile = React.useRef(null);
   //   const [inputValue, setInputValue] = React.useState("explore");
   return (
-    <Layout style={{height: "100vh", overflow: "auto"}}>
+    <Layout style={{ height: "100vh", overflow: "auto" }}>
       <nav
         className={clsx(
           "fixed top-0 z-10",
           "bg-overlay",
           "w-screen md:px-16 px-8 flex flex-row items-center justify-between shadow-md",
+          "rounded-b-xl",
+          "border-2 border-overlay-border"
         )}
       >
         <div className="flex items-center">
           <Logo />
-          {navItems.map((item, index) => {
-            return item.menu ? (
-              <DropdownMenu
-                icon={item.icon}
-                title={item.name}
-                navElementsLinks={item.items}
-              />
-            ) : (
-              <NavbarItem
-                key={index}
-                name={item.name}
-                icon={item.icon}
-                link={item.link}
-                route={router.asPath}
-              />
-            );
-          })}
+          <div className="md:flex hidden items-center">
+            {navItems.map((item, index) => {
+              return item.menu ? (
+                <DropdownMenu
+                  icon={item.icon}
+                  title={item.name}
+                  navElementsLinks={item.items}
+                />
+              ) : (
+                <NavbarItem
+                  key={index}
+                  name={item.name}
+                  icon={item.icon}
+                  link={item.link}
+                  route={router.asPath}
+                />
+              );
+            })}
+          </div>
         </div>
         <div>
-          <Button decoration="fill" size="small" onClick={() => router.push('/login')}>
+          <Button
+            decoration="fill"
+            size="small"
+            onClick={() => router.push("/login")}
+          >
             Log In
           </Button>
         </div>
+        <div
+          className="md:hidden flex"
+          onClick={() => {
+            setSidebarOpen(true);
+          }}
+        >
+          <MenuIcon
+            className="h-6 w-6 text-primary cursor-pointer"
+            aria-hidden="true"
+          />
+        </div>
       </nav>
-      <div className="bg-overlay px-10 " style={styles.content}>
+      <SidebarMobile
+        initialFocus={refSidebarMobile}
+        setSidebarOpen={setSidebarOpen}
+        sidebarOpen={sidebarOpen}
+      />
+      <div className="bg-overlay px-10 pt-32" style={styles.content}>
         {children}
       </div>
     </Layout>
@@ -130,7 +158,9 @@ export default function AppLayout({children}) {
 }
 
 export const Logo = () => (
-  <img className="h-12 w-12" src={Icons.logo} alt="logo" />
+  <div className="py-4">
+    <img className="h-12 w-12 " src={Icons.logo} alt="logo" />
+  </div>
 );
 
 export const NavbarItem = ({name, link, route, icon}) => {
