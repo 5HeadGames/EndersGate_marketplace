@@ -1,7 +1,7 @@
 import React from "react";
-import {useAuthState, useSignInWithEmailAndPassword} from "react-firebase-hooks/auth";
-import {getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth";
-import {getDatabase, ref, set} from "firebase/database";
+import {/*useAuthState,*/ useSignInWithEmailAndPassword} from "react-firebase-hooks/auth";
+import {getAuth/*, signInWithEmailAndPassword, signOut*/} from "firebase/auth";
+import {getDatabase/*, ref, set*/} from "firebase/database";
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
 
@@ -12,7 +12,7 @@ import {Button} from "shared/components/common/button";
 import firebase from "shared/firebase";
 
 const auth = getAuth(firebase);
-const db = getDatabase();
+// const db = getDatabase();
 const connector = new WalletConnect({
   bridge: "https://bridge.walletconnect.org", // Required
   qrcodeModal: QRCodeModal,

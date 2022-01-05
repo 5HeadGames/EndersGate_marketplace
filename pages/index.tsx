@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import NFTTokenIds from "../shared/components/NFTTokenIds";
 import "antd/dist/antd.css";
 import * as React from "react";

@@ -15,13 +15,13 @@ const mockNftID = [
 const NFTSaddress = "0x0d5ea610c7c7ab1b2e5f8a8ae3f1a43384bf8026";
 
 export const getNftsMetadata = async () => {
-   //await (window.ethereum as any).request({method: "eth_requestAccounts"});
-   const web3 = new Web3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER_MAINNET);
-   //address from a test contract on harmony one
-   const contract = new web3.eth.Contract(
-      ERC1155data.abi as any,
-      "0x3e8e62520db86bcdc3beda30fd6362f95f3662ef"
-   );
+  //await (window.ethereum as any).request({method: "eth_requestAccounts"});
+  const web3 = new Web3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER_MAINNET);
+  //address from a test contract on harmony one
+  const contract = new web3.eth.Contract(
+    ERC1155data.abi as any,
+    "0x3e8e62520db86bcdc3beda30fd6362f95f3662ef"
+  );
 
    const ipfsUrl = await Promise.all(mockNftID.map((id) => contract.methods.uri(id).call()));
    const nftsData = (await Promise.all(ipfsUrl.map((url) => axios(url)))).map(

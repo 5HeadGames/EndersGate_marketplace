@@ -124,7 +124,7 @@ export default function AppLayout({children}) {
             })}
           </div>
         </div>
-        <div>
+        <div className="md:flex hidden">
           <Button
             decoration="fill"
             size="small"

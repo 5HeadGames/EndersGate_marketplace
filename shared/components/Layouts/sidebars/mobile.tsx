@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Icons } from "@shared/const/Icons";
 import { Typography } from "@shared/components/common/typography";
+import { Button } from "@shared/components/common/button/button";
 
 interface LayoutDashboardProps {
   title?: string;
@@ -250,6 +251,18 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                       </Fragment>
                     );
                   })}
+                  <div>
+                    <Button
+                      decoration="fill"
+                      size="small"
+                      onClick={() => {
+                        setSidebarOpen(false);
+                        router.push("/login");
+                      }}
+                    >
+                      Log In
+                    </Button>
+                  </div>
                 </nav>
               </div>
             </div>
