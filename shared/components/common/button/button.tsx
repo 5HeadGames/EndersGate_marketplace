@@ -13,7 +13,7 @@ export interface ButtonProps {
   fill?: boolean;
   labelProps?: string;
   href?: string;
-  decoration?: "fill" | "line-white" | "line-primary";
+  decoration?: "fill" | "line-white" | "line-primary" | "fillPrimary";
   social?: "facebook" | "google";
   icon?: any;
   className?: string;
@@ -63,6 +63,14 @@ export const Button: React.FC<
               decoration === "fill" && !social && !tag,
           },
           {
+            "bg-primary border-primary shadow-md text-white":
+              decoration === "fillPrimary" && !social && !tag,
+          },
+          {
+            "hover:text-primary hover:border-primary hover:bg-transparent":
+              decoration === "fillPrimary" && !social && !disabled,
+          },
+          {
             "hover:text-primary hover:border-primary hover:bg-transparent":
               decoration === "fill" && !social && !disabled,
           },
@@ -80,7 +88,7 @@ export const Button: React.FC<
               decoration === "line-primary" && !social,
           },
           {
-            "hover:bg-primary hover:text-gray-0 hover:border-primary":
+            "hover:bg-primary hover:text-white hover:border-primary":
               decoration === "line-primary" && !social && !disabled,
           },
           //disabled

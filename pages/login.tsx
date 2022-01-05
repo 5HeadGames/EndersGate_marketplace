@@ -58,8 +58,13 @@ const Login = () => {
 
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center">
-      <div>
-        <Button decoration="fill" size="medium" className="w-full mb-2" onClick={handleModalConnect}>
+      <div className="flex flex-col gap-4">
+        <Button
+          decoration="fillPrimary"
+          size="medium"
+          className="w-full mb-2 bg-primary text-white"
+          onClick={handleModalConnect}
+        >
           Login with Ronin Wallet
         </Button>
         <Button
