@@ -8,12 +8,12 @@ import {Menu, Layout} from "antd";
 import {Icons} from "@shared/const/Icons";
 import {useRouter} from "next/dist/client/router";
 import clsx from "clsx";
-import { Button } from "../common/button/button";
-import { DropdownMenu } from "../common/dropdownMenu/dropdownMenu";
-import { MenuIcon } from "@heroicons/react/outline";
-import { SidebarMobile } from "./sidebars/mobile";
+import {Button} from "../common/button/button";
+import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
+import {MenuIcon} from "@heroicons/react/outline";
+import {SidebarMobile} from "./sidebars/mobile";
 
-const { Header, Footer } = Layout;
+const {Header, Footer} = Layout;
 
 const styles = {
   content: {
@@ -82,23 +82,22 @@ const navItems = [
       },
     ],
   },
-  { name: "Dashboard", link: "/dashboard", icon: Icons.dashboard },
-  { name: "Marketplace", link: "/marketplace", icon: Icons.marketplace },
+  {name: "Dashboard", link: "/dashboard", icon: Icons.dashboard},
+  {name: "Marketplace", link: "/marketplace", icon: Icons.marketplace},
 ];
 
-export default function AppLayout({ children }) {
+export default function AppLayout({children}) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
   //   const [inputValue, setInputValue] = React.useState("explore");
   return (
-    <Layout style={{ height: "100vh", overflow: "auto" }}>
+    <Layout style={{height: "100vh", overflow: "auto"}}>
       <nav
         className={clsx(
           "fixed top-0 z-10",
           "bg-overlay",
           "w-screen md:px-16 px-8 flex flex-row items-center justify-between shadow-md",
-          "rounded-b-xl",
           "border-2 border-overlay-border"
         )}
       >
@@ -111,6 +110,7 @@ export default function AppLayout({ children }) {
                   icon={item.icon}
                   title={item.name}
                   navElementsLinks={item.items}
+                  key={index}
                 />
               ) : (
                 <NavbarItem
@@ -150,7 +150,7 @@ export default function AppLayout({ children }) {
         setSidebarOpen={setSidebarOpen}
         sidebarOpen={sidebarOpen}
       />
-      <div className="bg-overlay px-10 pt-32" style={styles.content}>
+      <div className="bg-overlay px-10 " style={styles.content}>
         {children}
       </div>
     </Layout>
