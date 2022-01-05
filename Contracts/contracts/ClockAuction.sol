@@ -265,7 +265,7 @@ contract ClockAuction is Ownable, Pausable {
     uint256 _tokenId
   ) internal view returns (bool) {
     IERC1155Custom _nftContract = _getNftContract(_nftAddress);
-    return (_nftContract.ownerOf(_tokenId) == _claimant);
+    return (_nftContract.balanceOf(_claimant, _tokenId) > 0);
   }
 
   /// @dev Adds an auction to the list of open auctions. Also fires the
@@ -324,11 +324,11 @@ contract ClockAuction is Ownable, Pausable {
     IERC1155Custom _nftContract = _getNftContract(_nftAddress);
 
     // It will throw if transfer fails
-    _nftContract.transferFrom(_owner, address(this), _tokenId);
+    _nftContract.safeTransferFrom(_owner, address(this), _tokenId, 1, "");
   }
 
   /// @dev Transfers an NFT owned by this contract to another address.
-  /// Returns true if the transfer succeeds.
+  // Returns true if the transfer succeeds.
   /// @param _nftAddress - The address of the NFT.
   /// @param _receiver - Address to transfer NFT to.
   /// @param _tokenId - ID of token to transfer.
@@ -340,7 +340,7 @@ contract ClockAuction is Ownable, Pausable {
     IERC1155Custom _nftContract = _getNftContract(_nftAddress);
 
     // It will throw if transfer fails
-    _nftContract.transferFrom(address(this), _receiver, _tokenId);
+    _nftContract.safeTransferFrom(address(this), _receiver, _tokenId, 1, "");
   }
 
   /// @dev Computes owner's cut of a sale.
