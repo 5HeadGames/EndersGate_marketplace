@@ -4,9 +4,8 @@ import {getAuth/*, signInWithEmailAndPassword, signOut*/} from "firebase/auth";
 import {getDatabase/*, ref, set*/} from "firebase/database";
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
-// import Web3 from "web3";
-// import Web3Modal from "web3modal";
 
+import {getWeb3ModalProvider} from "@shared/web3";
 import {Button} from "shared/components/common/button";
 //import {InputEmail} from "shared/components/common/form/input-email";
 //import {InputPassword} from "shared/components/common/form/input-password";
@@ -19,6 +18,7 @@ const connector = new WalletConnect({
   qrcodeModal: QRCodeModal,
 });
 
+
 type Values = {email?: string; password?: string; address: string};
 
 const Login = () => {
@@ -27,9 +27,12 @@ const Login = () => {
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
 
+  const handleModalConnect = async () => {
+    const web3 = await getWeb3ModalProvider()
+  };
+
   const handleSubmit = async (user: Values) => {
-    if (user.email && user.password)
-      signInWithEmailAndPassword(user.email, user.password);
+    if (user.email && user.password) signInWithEmailAndPassword(user.email, user.password);
   };
 
   const handleQRCode = () => {
@@ -37,7 +40,7 @@ const Login = () => {
       // create new session
       connector.createSession();
     }
-  }
+  };
 
   React.useEffect(() => {
     connector.on("connect", (error, payload) => {
@@ -47,19 +50,24 @@ const Login = () => {
 
       // Get provided accounts and chainId
       const {accounts, chainId} = payload.params[0];
-      console.log({accounts, chainId})
+      console.log({accounts, chainId});
     });
-  }, [])
+  }, []);
 
   console.log({user, loading, error});
 
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center">
       <div>
-        <Button decoration="fill" size="medium" className="w-full mb-2">
+        <Button decoration="fill" size="medium" className="w-full mb-2" onClick={handleModalConnect}>
           Login with Ronin Wallet
         </Button>
-        <Button decoration="line-primary" size="medium" className="w-full mb-2" onClick={handleQRCode}>
+        <Button
+          decoration="line-primary"
+          size="medium"
+          className="w-full mb-2"
+          onClick={handleQRCode}
+        >
           Login By QR Code
         </Button>
         {openForm ? (
