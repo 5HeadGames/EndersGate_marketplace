@@ -14,8 +14,8 @@ const mockNftID= [
 const NFTSaddress = '0x0d5ea610c7c7ab1b2e5f8a8ae3f1a43384bf8026'
 
 export const getNftsMetadata = async () => {
-   await (window.ethereum as any).request({method: "eth_requestAccounts"});
-   const web3 = new Web3(window.ethereum);
+   await(window as any).request({ method: "eth_requestAccounts" });
+   const web3 = new Web3((window as any).ethereum);
    //address from a test contract on harmony one
    const contract = new web3.eth.Contract(
       ERC1155data.abi as any,
