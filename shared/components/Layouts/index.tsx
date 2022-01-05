@@ -5,15 +5,20 @@ import Chains from "shared/components/Chains";
 import SearchCollections from "shared/components/SearchCollections";
 import Link from "next/link";
 import {Menu, Layout} from "antd";
-import { Icons } from "@shared/const/Icons";
-import { useRouter } from "next/dist/client/router";
+import {Icons} from "@shared/const/Icons";
+import {useRouter} from "next/dist/client/router";
 import clsx from "clsx";
+<<<<<<< HEAD
 import { Button } from "../common/button/button";
 import { DropdownMenu } from "../common/dropdownMenu/dropdownMenu";
 import { MenuIcon } from "@heroicons/react/outline";
 import { SidebarMobile } from "./sidebars/mobile";
+=======
+import {Button} from "../common/button/button";
+import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
+>>>>>>> 05eddaea629640b1a5f6e8ead19efd7456d33dec
 
-const { Header, Footer } = Layout;
+const {Header, Footer} = Layout;
 
 const styles = {
   content: {
@@ -82,24 +87,27 @@ const navItems = [
       },
     ],
   },
-  { name: "Dashboard", link: "/dashboard", icon: Icons.dashboard },
-  { name: "Marketplace", link: "/marketplace", icon: Icons.marketplace },
+  {name: "Dashboard", link: "/dashboard", icon: Icons.dashboard},
+  {name: "Marketplace", link: "/marketplace", icon: Icons.marketplace},
 ];
 
-export default function AppLayout({ children }) {
+export default function AppLayout({children}) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
   //   const [inputValue, setInputValue] = React.useState("explore");
   return (
-    <Layout style={{ height: "100vh", overflow: "auto" }}>
+    <Layout style={{height: "100vh", overflow: "auto"}}>
       <nav
         className={clsx(
           "fixed top-0 z-10",
           "bg-overlay",
           "w-screen md:px-16 px-8 flex flex-row items-center justify-between shadow-md",
+<<<<<<< HEAD
           "rounded-b-xl",
           "border-2 border-overlay-border"
+=======
+>>>>>>> 05eddaea629640b1a5f6e8ead19efd7456d33dec
         )}
       >
         <div className="flex items-center">
@@ -124,9 +132,15 @@ export default function AppLayout({ children }) {
             })}
           </div>
         </div>
+<<<<<<< HEAD
         <div className="md:flex hidden">
           <Button decoration="fill" size="small">
             Logout
+=======
+        <div>
+          <Button decoration="fill" size="small" onClick={() => router.push('/login')}>
+            Log In
+>>>>>>> 05eddaea629640b1a5f6e8ead19efd7456d33dec
           </Button>
         </div>
         <div
@@ -141,12 +155,16 @@ export default function AppLayout({ children }) {
           />
         </div>
       </nav>
+<<<<<<< HEAD
       <SidebarMobile
         initialFocus={refSidebarMobile}
         setSidebarOpen={setSidebarOpen}
         sidebarOpen={sidebarOpen}
       />
       <div className="bg-overlay px-10 pt-32" style={styles.content}>
+=======
+      <div className="bg-overlay px-10 " style={styles.content}>
+>>>>>>> 05eddaea629640b1a5f6e8ead19efd7456d33dec
         {children}
       </div>
     </Layout>
@@ -159,18 +177,18 @@ export const Logo = () => (
   </div>
 );
 
-export const NavbarItem = ({ name, link, route, icon }) => {
+export const NavbarItem = ({name, link, route, icon}) => {
   return (
     <Link href={link}>
       <a className={clsx("md:ml-12 ml-8 py-8 relative")} href={link}>
         <div className="flex items-center">
           <img
             src={icon}
-            className={clsx({ "opacity-50": link !== route }, "h-4 w-4 mr-2")}
+            className={clsx({"opacity-50": link !== route}, "h-4 w-4 mr-2")}
           />
           <h3
             className={clsx(
-              { "opacity-50": link !== route },
+              {"opacity-50": link !== route},
               "text-base text-primary"
             )}
           >

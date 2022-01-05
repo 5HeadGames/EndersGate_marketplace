@@ -1,23 +1,24 @@
 import React from "react";
 import Head from "next/head";
-import type { AppProps } from "next/app";
+import type {AppProps} from "next/app";
 import "shared/styles/global-tailwind.css";
 import "shared/styles/index.css";
 import "shared/styles/style.css";
 import QuickStart from "shared/components/QuickStart";
 import Layout from "shared/components/Layouts";
-import { store } from "redux/store";
-import { Provider } from "react-redux";
+import {store} from "redux/store";
+import {Provider} from "react-redux";
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
-  const content = <Component {...pageProps} />;
+const MyApp = ({Component, pageProps}: AppProps) => {
   return (
     <>
       <Head>
         <title>Ender's Gate</title>
       </Head>
       <Layout>
-        <Provider store={store}>{content}</Provider>
+        <Provider store={store}>
+          <Component {...pageProps} />
+        </Provider>
       </Layout>
     </>
   );
