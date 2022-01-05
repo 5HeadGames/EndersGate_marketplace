@@ -35,10 +35,11 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "cd Contracts && npm run build && cd .. && next build",
     "start": "next start",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "install_all": "cd Contracts && npm install && cd .. && npm install"
   },
   "eslintConfig": {
     "extends": [
