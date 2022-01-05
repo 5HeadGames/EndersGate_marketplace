@@ -42,7 +42,7 @@ const Table:React.FunctionComponent<Props> = ({ title ,data}) => {
           })}
         </div>
         <div className="flex flex-col border-2 border-overlay-border border-t-0 border-b-0 w-full mb-20">
-          <div className="w-full overflow-x-scroll">
+          <div className="w-full overflow-x-auto">
             <table className="w-full min-w-max ">
               <tbody>
                 {data.map((item, index) => (
