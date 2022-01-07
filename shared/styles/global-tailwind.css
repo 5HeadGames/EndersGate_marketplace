@@ -21,6 +21,7 @@
 	--color-facebook: #4267b2;
 	--transparent-gray-200: rgb(221, 221, 221, 0.5);
 	--transparent-gray-800: rgb(68, 68, 68, 0.5);
+	--transparent-dark-100: rgb(0, 0, 0, 0.1);
 }
 
 .light {

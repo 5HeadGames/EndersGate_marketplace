@@ -42,6 +42,9 @@ module.exports = {
           200: "var(--transparent-gray-200)",
           800: "var(--transparent-gray-800)",
         },
+        dark: {
+          100: "var(--transparent-dark-100)",
+        },
       },
       inherit: colors.inherit,
       current: colors.current,

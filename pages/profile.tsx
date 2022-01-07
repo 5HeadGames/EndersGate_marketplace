@@ -3,8 +3,18 @@ import ProfileLayoutComponent from "@shared/components/Profile/profile";
 import { Icons } from "@shared/const/Icons";
 import React from "react";
 import "shared/firebase";
+import { useAppSelector } from "redux/store";
+import { useRouter } from "next/router";
 
 const Profile = () => {
+  const user = useAppSelector((state) => state.user);
+  const router = useRouter();
+  React.useEffect(() => {
+    if (user && !user.address) {
+      router.push("/login");
+    }
+    console.log(user);
+  }, [user]);
   return (
     <ProfileLayoutComponent>
       <div className="flex flex-col border border-overlay-border p-4 items-center">
