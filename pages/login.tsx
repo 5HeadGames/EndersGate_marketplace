@@ -24,12 +24,8 @@ const Login = () => {
     dispatch(onLoginUser({ address: accounts[0] }));
   };
 
-  // const handleSubmit = async (user: Values) => {
-  //   dispatch(onLoginUser({...user}));
-  // };
-
-  const handleSubmit = () => {
-    console.log("a");
+  const handleSubmit = async (user: Values) => {
+    dispatch(onLoginUser({ ...user }));
   };
 
   const handleQRCode = () => {
