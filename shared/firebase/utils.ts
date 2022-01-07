@@ -1,5 +1,5 @@
 import {getDatabase, ref, set, child, get} from "firebase/database";
-import firebase from "shared/firebase";
+import {getStorage, ref as getStorageRef, getDownloadURL, uploadBytesResumable} from 'firebase/storage'
 
 export const readUser = async (userId: string) => {
   const dbRef = ref(getDatabase());
@@ -23,24 +23,25 @@ export const writeUser = async (userPath: string, newData: Partial<User>) => {
 export const uploadFile = ({
   path,
   file,
+  metadata,
   onLoad,
   onError,
   onSuccess,
 }: {
   path: string;
   file: Blob;
-  onLoad: (snapshot: unknown) => void;
-  onError: (snapshot: unknown) => void;
-  onSuccess: (snapshot: unknown) => void;
+  metadata?: Record<string, unknown>;
+  onLoad?: (snapshot: unknown) => void;
+  onError?: (snapshot: unknown) => void;
+  onSuccess?: () => void;
 }) => {
-  const storageRef = firebase.storage().ref();
-  storageRef.child(path);
-  const uploadTask = storageRef.put(file);
+  const storageRef = getStorageRef(getStorage(), path);
+  const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
   uploadTask.on('state_changed', onLoad, onError, onSuccess);
 };
 
 export const getFileUrl = async ({path}: {path: string}) => {
-  const storageRef = firebase.storage().ref();
-  return await storageRef.child(path).getDownloadURL();
+  const storageRef = getStorageRef(getStorage(), path);
+  return await getDownloadURL(storageRef);
 }
