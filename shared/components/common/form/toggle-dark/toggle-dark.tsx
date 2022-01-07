@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { InputProps } from 'interfaces/common';
+import { InputProps } from 'shared/interfaces/common';
 import styles from './toggle-dark.module.scss';
 
 export interface ToggleDarkProps {
