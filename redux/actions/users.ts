@@ -16,6 +16,8 @@ const auth = getAuth();
 export const onLoginUser = createAsyncThunk(
   actionTypes.LOGIN_USER,
   async function prepare(userData: {address: string} | {email: string; password: string}) {
+    console.log(userData)
+    return;
     if ((userData as any).address) {
       const user = await readUser(`users/${(userData as any).address}`);
       const placeholderData = {

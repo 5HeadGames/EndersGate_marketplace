@@ -40,8 +40,8 @@ const Dialog: React.FunctionComponent<Props> = (props) => {
   return (
     <>
       <div
-        className="bg-secondary text-white border-primary border border-2 p-5 absolute"
-        style={{top: "50%", left: "50%", transform: "translate(-50%,-50%)"}}
+        className="bg-secondary text-white border-primary border border-2 p-5 absolute rounded-md"
+        style={{top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 200}}
         onClick={(e) => e.stopPropagation()}
       >
         {children}
