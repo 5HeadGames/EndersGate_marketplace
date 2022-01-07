@@ -77,7 +77,7 @@ const navItems = [
 
 export default function AppLayout({children}) {
   const router = useRouter();
-  const {blur} = useAppSelector((state) => state.layout);
+  const {blur, message, address} = useAppSelector((state) => ({...state.layout, ...state.user}));
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
   //   const [inputValue, setInputValue] = React.useState("explore");
@@ -126,8 +126,8 @@ export default function AppLayout({children}) {
           </div>
         </div>
         <div className="md:flex hidden">
-          <Button decoration="fill" size="small" onClick={() => router.push("/login")}>
-            Log In
+          <Button decoration="fill" size="small" onClick={() => router.push(address ? '/profile' : "/login")}>
+            {address ? 'Profile' : 'Log In'}
           </Button>
         </div>
         <div
@@ -146,10 +146,29 @@ export default function AppLayout({children}) {
       />
       <div className="bg-overlay px-10 " style={styles.content}>
         {children}
+        <Message content={message} open={Boolean(message)} />
       </div>
     </Layout>
   );
 }
+
+export const Message: React.FunctionComponent<{content: string; open: boolean}> = (
+  props
+) => {
+  const {content, open} = props;
+
+  return (
+    <div
+      className={clsx(
+        `absolute bottom-3.5 left-3.5 bg-purple-300 px-10 py-4 rounded-md`,
+        "ease-out duration-300",
+        open ? "scale-100" : "scale-0"
+      )}
+    >
+      {content}
+    </div>
+  );
+};
 
 export const Logo = () => (
   <div className="py-4">

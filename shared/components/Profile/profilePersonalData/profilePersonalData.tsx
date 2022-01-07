@@ -28,7 +28,7 @@ const ProfileDataAndActions = ({ name, photo, email }) => {
         <Typography type="title" className="text-primary">
           {name}
         </Typography>
-        <Typography type="span" className="text-white">
+        <Typography type="span" className="text-white md:text-xs text-caption">
           {email}
         </Typography>
       </div>

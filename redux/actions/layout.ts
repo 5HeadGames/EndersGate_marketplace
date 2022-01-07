@@ -7,3 +7,10 @@ export const onBlurLayout = createAction(actionTypes.BLUR_LAYOUT, function prepa
     payload: shouldBLur
   };
 });
+
+export const onMessage = createAction(actionTypes.MESSAGE_LAYOUT, function prepare(message: string) {
+
+  return {
+    payload: message
+  };
+});

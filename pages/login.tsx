@@ -1,8 +1,9 @@
 import React from "react";
 import {useForm} from "react-hook-form";
+import {useRouter} from 'next/router'
 
-import {useAppDispatch} from "redux/store";
-import {onLoginUser} from "redux/actions";
+import {useAppDispatch, useAppSelector} from "redux/store";
+import {onLoginUser, onMessage} from "redux/actions";
 import {getMetamaskProvider, getWalletConnect} from "@shared/web3";
 import {Button} from "shared/components/common/button";
 import Dialog from "shared/components/common/dialog";
@@ -13,19 +14,31 @@ import {InputEmail} from "shared/components/common/form/input-email";
 type Values = {email?: string; password?: string; address: string};
 
 const Login = () => {
-  //const [user, loading, error] = useAuthState(auth);
   const [openForm, setOpenForm] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const {address} = useAppSelector(state => state.user);
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const connector = getWalletConnect();
 
   const handleMetamaskConnect = async () => {
+    setLoading(true);
     const web3 = await getMetamaskProvider();
     const accounts = await web3.eth.getAccounts();
-    dispatch(onLoginUser({ address: accounts[0] }));
+    await dispatch(onLoginUser({address: accounts[0]}));
+    setLoading(false);
+    dispatch(onMessage("Login successful!"));
+    setTimeout(dispatch, 2000, onMessage(""));
   };
 
   const handleSubmit = async (user: Values) => {
-    dispatch(onLoginUser({ ...user }));
+    setLoading(true);
+    const web3 = await getMetamaskProvider();
+    const accounts = await web3.eth.getAccounts();
+    dispatch(onLoginUser({...user, address: accounts[0]}));
+    setLoading(false);
+    dispatch(onMessage("Login successful!"));
+    setTimeout(dispatch, 2000, onMessage(""));
   };
 
   const handleQRCode = () => {
@@ -41,40 +54,48 @@ const Login = () => {
         throw error;
       }
 
-      const { accounts, chainId } = payload.params[0];
-      dispatch(onLoginUser({ address: accounts[0] }));
+      const {accounts, chainId} = payload.params[0];
+      dispatch(onLoginUser({address: accounts[0]}));
     });
   }, []);
+
+  React.useEffect(() => {
+    if (address)
+      router.push('/dashboard')
+  }, [address])
 
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center">
       <div className="flex flex-col gap-4">
         <Button
+          disabled={loading}
           decoration="fillPrimary"
           size="medium"
           className="w-full mb-2 bg-primary text-white"
           onClick={handleMetamaskConnect}
         >
-          Login with Metamask
+          {loading ? '...' : 'Login with Metamask'}
         </Button>
         <Button
+          disabled={loading}
           decoration="line-primary"
           size="medium"
           className="w-full mb-2"
           onClick={handleQRCode}
         >
-          Login By QR Code
+          {loading ? '...' : 'Login By QR Code'}
         </Button>
         {openForm ? (
-          <EmailPasswordForm onSubmit={handleSubmit} />
+          <EmailPasswordForm onSubmit={handleSubmit} loading={loading} />
         ) : (
           <Button
+            disabled={loading}
             decoration="line-primary"
             size="medium"
             className="w-full mb-2"
             onClick={() => setOpenForm(true)}
           >
-            Login with email & password
+            {loading ? '...' : 'Login with email & password'}
           </Button>
         )}
       </div>
@@ -84,18 +105,17 @@ const Login = () => {
 
 interface EmailPasswordFormProps {
   onSubmit: (args: Values) => void;
+  loading: boolean;
 }
 
-const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
-  props
-) => {
-  const { onSubmit } = props;
+const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (props) => {
+  const {onSubmit, loading} = props;
   const [openRegistration, setOpenRegistration] = React.useState(false);
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: {errors},
   } = useForm();
 
   React.useEffect(() => {
@@ -122,31 +142,19 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
               name="password"
             />
           </div>
-          <Button
-            decoration="fill"
-            size="small"
-            type="submit"
-            className="w-full mb-2"
-          >
-            Sign in
+          <Button decoration="fill" size="small" type="submit" className="w-full mb-2" disabled={loading}>
+            {loading ? '...' : 'Sign in'}
           </Button>
           <span className="text-primary text-xs">
             You dont have an account?{" "}
-            <a
-              className="text-white"
-              href="#"
-              onClick={() => setOpenRegistration(true)}
-            >
+            <a className="text-white" href="#" onClick={() => setOpenRegistration(true)}>
               {" "}
               Register!{" "}
             </a>
           </span>
         </div>
       </form>
-      <Dialog
-        open={openRegistration}
-        onClose={() => setOpenRegistration(false)}
-      >
+      <Dialog open={openRegistration} onClose={() => setOpenRegistration(false)}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography type="title" className="text-center text-primary">
             {" "}
@@ -169,13 +177,8 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
                 error={errors.password}
               />
             </div>
-            <Button
-              decoration="fill"
-              size="small"
-              type="submit"
-              className="w-full mb-2"
-            >
-              Register
+            <Button decoration="fill" size="small" type="submit" className="w-full mb-2" disabled={loading}>
+              {loading ? '...' : 'Register'}
             </Button>
           </div>
         </form>

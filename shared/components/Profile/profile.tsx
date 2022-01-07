@@ -42,7 +42,7 @@ const ProfileLayoutComponent = ({ children }) => {
 
   return (
     <div className="flex w-full ">
-      <aside className="flex flex-col pt-32 pr-8 h-screen w-72 border-r border-overlay-border">
+      <aside className="md:flex hidden flex-col pt-32 pr-8 h-screen w-72 border-r border-overlay-border">
         <ProfileDataAndActions
           name="AN-Drew207"
           email="andrescontrerasoviedo740@gmail.com"

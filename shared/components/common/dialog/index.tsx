@@ -6,7 +6,7 @@ const styles = {
   back: {
     position: "absolute" as any,
     backgroundColor: "black",
-    opacity: "0.3",
+    opacity: "0.5",
     top: 0,
     left: 0,
     zIndex: 100,

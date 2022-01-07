@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { Icons } from "@shared/const/Icons";
 import { Typography } from "@shared/components/common/typography";
 import { Button } from "@shared/components/common/button/button";
+import ProfileDataAndActions from "@shared/components/Profile/profilePersonalData/profilePersonalData";
 
 interface LayoutDashboardProps {
   title?: string;
@@ -254,7 +255,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                       </Fragment>
                     );
                   })}
-                  <div>
+                  <div className="mb-4">
                     <Button
                       decoration="fill"
                       size="small"
@@ -266,6 +267,11 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                       Log In
                     </Button>
                   </div>
+                  <ProfileDataAndActions
+                    name={"AN-Drew207"}
+                    email="andrescontrerasoviedo740@gmail.com"
+                    photo=""
+                  />
                 </nav>
               </div>
             </div>
