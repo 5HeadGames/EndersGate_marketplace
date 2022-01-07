@@ -1,10 +1,6 @@
 import React from "react";
-import Text from "antd/lib/typography/Text";
-import Account from "shared/components/Account";
-import Chains from "shared/components/Chains";
-import SearchCollections from "shared/components/SearchCollections";
 import Link from "next/link";
-import {Menu, Layout} from "antd";
+import {Layout} from "antd";
 import {Icons} from "@shared/const/Icons";
 import {useRouter} from "next/dist/client/router";
 import clsx from "clsx";
@@ -12,8 +8,7 @@ import {Button} from "../common/button/button";
 import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
 import {MenuIcon} from "@heroicons/react/outline";
 import {SidebarMobile} from "./sidebars/mobile";
-
-const {Header, Footer} = Layout;
+import {useAppSelector} from "redux/store";
 
 const styles = {
   content: {
@@ -40,43 +35,37 @@ const navItems = [
     items: [
       {
         title: "Marketplace",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: Icons.marketplaceWhite,
       },
       {
         title: "Marketplace",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: Icons.marketplaceWhite,
       },
       {
         title: "Marketplace",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: Icons.marketplaceWhite,
       },
       {
         title: "Marketplace",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: Icons.marketplaceWhite,
       },
       {
         title: "Marketplace",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: Icons.marketplaceWhite,
       },
       {
         title: "Marketplace",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: Icons.marketplaceWhite,
       },
@@ -88,11 +77,23 @@ const navItems = [
 
 export default function AppLayout({children}) {
   const router = useRouter();
+  const {blur, message, address} = useAppSelector((state) => ({...state.layout, ...state.user}));
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
   //   const [inputValue, setInputValue] = React.useState("explore");
   return (
-    <Layout style={{height: "100vh", overflow: "auto"}}>
+    <Layout
+      style={{
+        height: "100vh",
+        overflow: "auto",
+        ...(blur
+          ? {
+            filter: "blur(8px)",
+            "-webkit-filter": "blur(8px)",
+          }
+          : {}),
+      }}
+    >
       <nav
         className={clsx(
           "fixed top-0 z-10",
@@ -125,12 +126,8 @@ export default function AppLayout({children}) {
           </div>
         </div>
         <div className="md:flex hidden">
-          <Button
-            decoration="fill"
-            size="small"
-            onClick={() => router.push("/login")}
-          >
-            Log In
+          <Button decoration="fill" size="small" onClick={() => router.push(address ? '/profile' : "/login")}>
+            {address ? 'Profile' : 'Log In'}
           </Button>
         </div>
         <div
@@ -139,10 +136,7 @@ export default function AppLayout({children}) {
             setSidebarOpen(true);
           }}
         >
-          <MenuIcon
-            className="h-6 w-6 text-primary cursor-pointer"
-            aria-hidden="true"
-          />
+          <MenuIcon className="h-6 w-6 text-primary cursor-pointer" aria-hidden="true" />
         </div>
       </nav>
       <SidebarMobile
@@ -152,10 +146,29 @@ export default function AppLayout({children}) {
       />
       <div className="bg-overlay px-10 " style={styles.content}>
         {children}
+        <Message content={message} open={Boolean(message)} />
       </div>
     </Layout>
   );
 }
+
+export const Message: React.FunctionComponent<{content: string; open: boolean}> = (
+  props
+) => {
+  const {content, open} = props;
+
+  return (
+    <div
+      className={clsx(
+        `absolute bottom-3.5 left-3.5 bg-purple-300 px-10 py-4 rounded-md`,
+        "ease-out duration-300",
+        open ? "scale-100" : "scale-0"
+      )}
+    >
+      {content}
+    </div>
+  );
+};
 
 export const Logo = () => (
   <div className="py-4">
@@ -168,23 +181,14 @@ export const NavbarItem = ({name, link, route, icon}) => {
     <Link href={link}>
       <a className={clsx("md:ml-12 ml-8 py-8 relative")} href={link}>
         <div className="flex items-center">
-          <img
-            src={icon}
-            className={clsx({"opacity-50": link !== route}, "h-4 w-4 mr-2")}
-          />
-          <h3
-            className={clsx(
-              {"opacity-50": link !== route},
-              "text-base text-primary"
-            )}
-          >
+          <img src={icon} className={clsx({"opacity-50": link !== route}, "h-4 w-4 mr-2")} />
+          <h3 className={clsx({"opacity-50": link !== route}, "text-base text-primary")}>
             {name}
           </h3>
         </div>
         <div
           className={clsx({
-            "absolute bottom-0 w-full bg-primary h-1.5 rounded-t-md":
-              link === route,
+            "absolute bottom-0 w-full bg-primary h-1.5 rounded-t-md": link === route,
           })}
         ></div>
       </a>

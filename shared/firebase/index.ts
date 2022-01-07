@@ -1,6 +1,7 @@
 import * as firebase from "firebase/app";
-import "firebase/auth";
 import "firebase/firestore";
+import "firebase/auth";
+import "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -11,8 +12,8 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
 };
-console.log(firebaseConfig);
 
 const app = firebase.initializeApp(firebaseConfig);
 
 export default app;
+export * from './utils'
