@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {Input} from 'shared/components/common/form/input';
+import { Input } from "../input";
 
-import {Icons} from 'consts/icons';
-import {InputProps} from 'interfaces/common';
+import { Icons } from "@shared/const/Icons";
+import { InputProps } from "@shared/interfaces/common"; 
 // import { Icon } from 'components/icon';
 
 export const InputPassword: React.FC<

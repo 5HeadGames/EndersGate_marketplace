@@ -17,7 +17,10 @@ export const Typography: React.FC<TypographyProps> = ({
 }) => {
   if (type === "title")
     return (
-      <h1 className={clsx(className)} onClick={() => onClick && onClick()}>
+      <h1
+        className={clsx(className, "text-xl")}
+        onClick={() => onClick && onClick()}
+      >
         {children || text}
       </h1>
     );

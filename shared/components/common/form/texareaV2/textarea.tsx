@@ -5,7 +5,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import styles from './textarea.module.scss';
 import { Typography } from '../../typography';
-import { InputProps } from 'interfaces/common';
+import { InputProps } from "@shared/interfaces/common"; 
 import { ETIME } from 'constants';
 
 export const Textarea: React.FC<
