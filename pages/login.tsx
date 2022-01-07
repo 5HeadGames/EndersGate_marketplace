@@ -98,29 +98,15 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
 
   return (
     <>
-      <form >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-4 flex flex-col bg-secondary rounded-md">
           <div className="mb-4 w-full">
-            <InputEmail
-              register={register}
-              placeholder="email"
-              name="email"
-            />
+            <InputEmail register={register} placeholder="email" name="email" />
           </div>
           <div className="mb-4">
-            <InputPassword
-              register={register}
-              placeholder=" password"
-              name="password"
-            />
+            <InputPassword register={register} placeholder=" password" name="password" />
           </div>
-          <Button
-            decoration="fill"
-            size="small"
-            type='submit'
-            className="w-full mb-2"
-            onClick={handleSubmit(onSubmit)}
-          >
+          <Button decoration="fill" size="small" type="submit" className="w-full mb-2">
             Sign in
           </Button>
           <span className="text-primary text-xs">
@@ -133,30 +119,19 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
         </div>
       </form>
       <Dialog open={openRegistration} onClose={() => setOpenRegistration(false)}>
-        <form>
-          <Typography type='title' className='text-center text-primary'> Register </Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Typography type="title" className="text-center text-primary">
+            {" "}
+            Register{" "}
+          </Typography>
           <div className="p-4 flex flex-col bg-secondary rounded-md">
             <div className="mb-4 w-full">
-              <InputEmail
-                register={register}
-                placeholder="email"
-                name="email"
-              />
+              <InputEmail register={register} placeholder="email" name="email" />
             </div>
             <div className="mb-4">
-              <InputPassword
-                register={register}
-                placeholder=" password"
-                name="password"
-              />
+              <InputPassword register={register} placeholder=" password" name="password" />
             </div>
-            <Button
-              decoration="fill"
-              size="small"
-              type='submit'
-              className="w-full mb-2"
-              onClick={handleSubmit(onSubmit)}
-            >
+            <Button decoration="fill" size="small" type="submit" className="w-full mb-2">
               Register
             </Button>
           </div>
