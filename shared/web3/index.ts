@@ -1,6 +1,14 @@
 import Web3 from "web3";
 import axios from "axios";
 import Web3Modal from "web3modal";
+import WalletConnect from "@walletconnect/client";
+import QRCodeModal from "@walletconnect/qrcode-modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+//import Fortmatic from "fortmatic";
+//import Torus from "@toruslabs/torus-embed";
+//import Authereum from "authereum";
+//import { Bitski } from "bitski";
+
 import ERC1155data from "../../Contracts/artifacts/contracts/MockNFT.sol/GameItems.json";
 
 const mockNftID = [
@@ -35,15 +43,21 @@ export const getNftsMetadata = async () => {
    }));
 };
 
-export const getWeb3ModalProvider = async () => {
-   const providerOptions = {
-      /* See Provider Options Section */
-   };
+export const getMetamaskProvider = async () => {
    const web3modal = new Web3Modal({
       network: "mainnet", // optional
       cacheProvider: true, // optional
-      providerOptions, // required
+      providerOptions:{}, // required
    });
    const provider = await web3modal.connect();
    return new Web3(provider);
 };
+
+const connector = new WalletConnect({
+  bridge: "https://bridge.walletconnect.org", // Required
+  qrcodeModal: QRCodeModal,
+});
+
+export const getWalletConnect = ()=>{
+   return connector
+}

@@ -1,38 +1,26 @@
 import React from "react";
-import {/*useAuthState,*/ useSignInWithEmailAndPassword} from "react-firebase-hooks/auth";
-import {getAuth/*, signInWithEmailAndPassword, signOut*/} from "firebase/auth";
-import {getDatabase/*, ref, set*/} from "firebase/database";
-import WalletConnect from "@walletconnect/client";
-import QRCodeModal from "@walletconnect/qrcode-modal";
 
-import {getWeb3ModalProvider} from "@shared/web3";
+import {useAppDispatch} from "redux/store";
+import {onLoginUser} from "redux/actions";
+import {getMetamaskProvider, getWalletConnect} from "@shared/web3";
 import {Button} from "shared/components/common/button";
-//import {InputEmail} from "shared/components/common/form/input-email";
-//import {InputPassword} from "shared/components/common/form/input-password";
-import firebase from "shared/firebase";
-
-const auth = getAuth(firebase);
-// const db = getDatabase();
-const connector = new WalletConnect({
-  bridge: "https://bridge.walletconnect.org", // Required
-  qrcodeModal: QRCodeModal,
-});
-
 
 type Values = {email?: string; password?: string; address: string};
 
 const Login = () => {
   //const [user, loading, error] = useAuthState(auth);
   const [openForm, setOpenForm] = React.useState(false);
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
+  const dispatch = useAppDispatch();
+  const connector = getWalletConnect();
 
-  const handleModalConnect = async () => {
-    const web3 = await getWeb3ModalProvider()
+  const handleMetamaskConnect = async () => {
+    const web3 = await getMetamaskProvider();
+    const accounts = await web3.eth.getAccounts();
+    dispatch(onLoginUser({address: accounts[0]}));
   };
 
   const handleSubmit = async (user: Values) => {
-    if (user.email && user.password) signInWithEmailAndPassword(user.email, user.password);
+    dispatch(onLoginUser({...user}))
   };
 
   const handleQRCode = () => {
@@ -48,13 +36,10 @@ const Login = () => {
         throw error;
       }
 
-      // Get provided accounts and chainId
       const {accounts, chainId} = payload.params[0];
-      console.log({accounts, chainId});
+      dispatch(onLoginUser({address: accounts[0]}));
     });
   }, []);
-
-  console.log({user, loading, error});
 
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center">
@@ -63,9 +48,9 @@ const Login = () => {
           decoration="fillPrimary"
           size="medium"
           className="w-full mb-2 bg-primary text-white"
-          onClick={handleModalConnect}
+          onClick={handleMetamaskConnect}
         >
-          Login with Ronin Wallet
+          Login with Metamask
         </Button>
         <Button
           decoration="line-primary"

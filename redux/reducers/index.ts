@@ -3,15 +3,21 @@ import * as actions from '../actions'
 
 const INITIAL_STATE = {
     user: {
+        address: '',
+        email: '',
+        id: '',
         nfts: []
     }
 };
 
-const userReducer = createReducer(INITIAL_STATE, (builder) => {
+const mainReducer = createReducer(INITIAL_STATE, (builder) => {
     builder
-        .addCase(actions.getNFTS, (state: typeof INITIAL_STATE, action) => {
+        .addCase(actions.onGetNfts, (state: typeof INITIAL_STATE, action) => {
             state.user.nfts = action.payload as NFT[]
+        })
+        .addCase(actions.onLoginUser.fulfilled, (state: typeof INITIAL_STATE, action) => {
+            state.user = {...state.user, ...action.payload}
         })
 })
 
-export default userReducer;
+export default mainReducer;
