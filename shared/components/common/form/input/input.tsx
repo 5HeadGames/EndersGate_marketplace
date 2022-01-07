@@ -108,7 +108,7 @@ export const Input: React.FC<
               },
               "disabled:placeholder-gray-200 disabled:cursor-not-allowed disabled:text-gray-500",
               {
-                "focus:outline-none focus:bg-gray-opacity-10 focus:ring-offset-transparent focus:ring-opacity-0 focus:border-gray-opacity-10 focus:ring-transparent":
+                "focus:outline-none focus:bg-gray-opacity-10 focus:ring-offset-transparent focus:ring-opacity-0 focus:border-none focus:ring-transparent":
                   !error,
               }
             )}
@@ -138,15 +138,15 @@ export const Input: React.FC<
           {rightImg && (
             <div
               onClick={rightClick}
-              className="absolute right-4 top-1/3 w-5 h-5"
+              className="absolute right-2 top-1/3 w-5 h-4"
             >
               <Icon src={rightImg} className="cursor-pointer" />
             </div>
           )}
         </div>
         {error && error.message && (
-          <span className="flex items-center mt-3 text-alert-error font-montserrat">
-            <div className="mr-1 w-4 h-3">
+          <span className="flex items-center mt-3 text-alert-error font-montserrat h-max">
+            <div className="mr-1 w-4 h-4">
               <Icon src={Icons.exclamation} className="text-alert-error" />
             </div>
             <Typography type="caption" className="f-12">

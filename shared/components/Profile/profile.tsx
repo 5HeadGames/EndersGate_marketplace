@@ -1,7 +1,7 @@
 import React from "react";
 import "shared/firebase";
 import { uploadFile, getFileUrl } from "shared/firebase/utils";
-import ProfileData from "./profilePersonalData/profilePersonalData";
+import ProfileDataAndActions from "./profilePersonalData/profilePersonalData";
 
 const ProfileComponent = () => {
   const [testUrl, setTestUrl] = React.useState("");
@@ -43,7 +43,7 @@ const ProfileComponent = () => {
   return (
     <div className="flex w-full ">
       <aside className="flex flex-col pt-32 pr-8 h-screen w-72 border-r border-overlay-border">
-        <ProfileData
+        <ProfileDataAndActions
           name="AN-Drew207"
           email="andrescontrerasoviedo740@gmail.com"
           photo=""

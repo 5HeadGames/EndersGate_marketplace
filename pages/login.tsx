@@ -21,11 +21,15 @@ const Login = () => {
   const handleMetamaskConnect = async () => {
     const web3 = await getMetamaskProvider();
     const accounts = await web3.eth.getAccounts();
-    dispatch(onLoginUser({address: accounts[0]}));
+    dispatch(onLoginUser({ address: accounts[0] }));
   };
 
-  const handleSubmit = async (user: Values) => {
-    dispatch(onLoginUser({...user}));
+  // const handleSubmit = async (user: Values) => {
+  //   dispatch(onLoginUser({...user}));
+  // };
+
+  const handleSubmit = () => {
+    console.log("a");
   };
 
   const handleQRCode = () => {
@@ -41,8 +45,8 @@ const Login = () => {
         throw error;
       }
 
-      const {accounts, chainId} = payload.params[0];
-      dispatch(onLoginUser({address: accounts[0]}));
+      const { accounts, chainId } = payload.params[0];
+      dispatch(onLoginUser({ address: accounts[0] }));
     });
   }, []);
 
@@ -86,39 +90,67 @@ interface EmailPasswordFormProps {
   onSubmit: (args: Values) => void;
 }
 
-const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (props) => {
-  const {onSubmit} = props;
+const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
+  props
+) => {
+  const { onSubmit } = props;
   const [openRegistration, setOpenRegistration] = React.useState(false);
   const {
     register,
     handleSubmit,
     watch,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
+
+  React.useEffect(() => {
+    console.log(errors);
+  }, [errors]);
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-4 flex flex-col bg-secondary rounded-md">
           <div className="mb-4 w-full">
-            <InputEmail register={register} placeholder="email" name="email" />
+            <InputEmail
+              register={register}
+              placeholder="email"
+              name="email"
+              error={errors.email}
+            />
           </div>
           <div className="mb-4">
-            <InputPassword register={register} placeholder=" password" name="password" />
+            <InputPassword
+              register={register}
+              placeholder=" password"
+              error={errors.password}
+              name="password"
+            />
           </div>
-          <Button decoration="fill" size="small" type="submit" className="w-full mb-2">
+          <Button
+            decoration="fill"
+            size="small"
+            type="submit"
+            className="w-full mb-2"
+          >
             Sign in
           </Button>
           <span className="text-primary text-xs">
             You dont have an account?{" "}
-            <a className="text-white" href="#" onClick={() => setOpenRegistration(true)}>
+            <a
+              className="text-white"
+              href="#"
+              onClick={() => setOpenRegistration(true)}
+            >
               {" "}
               Register!{" "}
             </a>
           </span>
         </div>
       </form>
-      <Dialog open={openRegistration} onClose={() => setOpenRegistration(false)}>
+      <Dialog
+        open={openRegistration}
+        onClose={() => setOpenRegistration(false)}
+      >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography type="title" className="text-center text-primary">
             {" "}
@@ -126,12 +158,27 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
           </Typography>
           <div className="p-4 flex flex-col bg-secondary rounded-md">
             <div className="mb-4 w-full">
-              <InputEmail register={register} placeholder="email" name="email" />
+              <InputEmail
+                register={register}
+                placeholder="email"
+                name="email"
+                error={errors.email}
+              />
             </div>
             <div className="mb-4">
-              <InputPassword register={register} placeholder=" password" name="password" />
+              <InputPassword
+                register={register}
+                placeholder=" password"
+                name="password"
+                error={errors.password}
+              />
             </div>
-            <Button decoration="fill" size="small" type="submit" className="w-full mb-2">
+            <Button
+              decoration="fill"
+              size="small"
+              type="submit"
+              className="w-full mb-2"
+            >
               Register
             </Button>
           </div>
