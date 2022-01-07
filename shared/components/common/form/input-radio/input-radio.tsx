@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import styles from './input-radio.module.scss';
 import { Typography } from '../../typography';
-import { InputProps } from 'interfaces/common';
+import { InputProps } from "@shared/interfaces/common";
 
 export const InputRadio: React.FC<
 	InputProps & React.InputHTMLAttributes<HTMLInputElement>

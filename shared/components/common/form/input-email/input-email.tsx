@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Input } from 'components/common/form/input';
-import { InputProps } from 'interfaces/common';
+import { Input } from "../input";
+import { InputProps } from "@shared/interfaces/common"; 
 
 export const InputEmail: React.FC<
 	InputProps & React.InputHTMLAttributes<HTMLInputElement>

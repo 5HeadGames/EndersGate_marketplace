@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Input } from 'components/common/form/input';
-import { InputProps } from 'interfaces/common';
-import { InputList } from '../input-list';
-import { OptionType } from 'interfaces';
+import { InputProps } from "@shared/interfaces/common";
+import { InputList } from "../input-list";
+import { OptionType } from "@shared/interfaces";
+import { Input } from "../input/input";
 
 export interface InputListProps {
 	options: OptionType[];
