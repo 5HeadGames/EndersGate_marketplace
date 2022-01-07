@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Input } from 'components/common/form/input';
+import {Input} from 'shared/components/common/form/input';
 
-import { Icons } from 'consts/icons';
-import { InputProps } from 'interfaces/common';
+import {Icons} from 'consts/icons';
+import {InputProps} from 'interfaces/common';
 // import { Icon } from 'components/icon';
 
 export const InputPassword: React.FC<
 	InputProps &
-		React.InputHTMLAttributes<HTMLInputElement> & {
-			validate?: boolean;
-		}
-> = ({ rules, validate = true, ...props }) => {
+	React.InputHTMLAttributes<HTMLInputElement> & {
+		validate?: boolean;
+	}
+> = ({rules, validate = true, ...props}) => {
 	const [isVisible, setIsVisible] = React.useState(false);
 
 	const handleClick = () => {

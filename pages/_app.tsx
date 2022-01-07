@@ -14,11 +14,11 @@ const MyApp = ({Component, pageProps}: AppProps) => {
       <Head>
         <title>Ender's Gate</title>
       </Head>
-      <Layout>
-        <Provider store={store}>
+      <Provider store={store}>
+        <Layout>
           <Component {...pageProps} />
-        </Provider>
-      </Layout>
+        </Layout>
+      </Provider>
     </>
   );
 };

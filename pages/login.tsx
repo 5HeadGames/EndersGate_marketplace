@@ -4,12 +4,16 @@ import {useAppDispatch} from "redux/store";
 import {onLoginUser} from "redux/actions";
 import {getMetamaskProvider, getWalletConnect} from "@shared/web3";
 import {Button} from "shared/components/common/button";
+import Dialog from "shared/components/common/dialog";
+//import {InputPassword} from "shared/components/common/form/input-password";
+//import {InputEmail} from "shared/components/common/form/input-email";
 
 type Values = {email?: string; password?: string; address: string};
 
 const Login = () => {
   //const [user, loading, error] = useAuthState(auth);
   const [openForm, setOpenForm] = React.useState(false);
+  const [openRegistration, setOpenRegistration] = React.useState(false);
   const dispatch = useAppDispatch();
   const connector = getWalletConnect();
 
@@ -20,7 +24,7 @@ const Login = () => {
   };
 
   const handleSubmit = async (user: Values) => {
-    dispatch(onLoginUser({...user}))
+    dispatch(onLoginUser({...user}));
   };
 
   const handleQRCode = () => {
@@ -72,6 +76,9 @@ const Login = () => {
             Login with email & password
           </Button>
         )}
+        <Dialog open={openRegistration} onClose={() => setOpenRegistration(false)}>
+          some dummy text
+        </Dialog>
       </div>
     </div>
   );
@@ -96,7 +103,11 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
   return (
     <div className="p-20 flex flex-col">
       <div className="mb-4 w-full">
-        <input value={formValues.email} onChange={setField("email")} placeholder="email" />
+        <input
+          value={formValues.email}
+          onChange={setField("email")}
+          placeholder="email"
+        />
       </div>
       <div className="mb-4">
         <input
