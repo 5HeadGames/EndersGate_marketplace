@@ -3,7 +3,7 @@ import "shared/firebase";
 import { uploadFile, getFileUrl } from "shared/firebase/utils";
 import ProfileDataAndActions from "./profilePersonalData/profilePersonalData";
 
-const ProfileComponent = () => {
+const ProfileLayoutComponent = ({ children }) => {
   const [testUrl, setTestUrl] = React.useState("");
   const inputFile = React.useRef(null);
 
@@ -49,8 +49,9 @@ const ProfileComponent = () => {
           photo=""
         />
       </aside>
+      <div className="w-full pt-32 px-4">{children}</div>
     </div>
   );
 };
 
-export default ProfileComponent;
+export default ProfileLayoutComponent;

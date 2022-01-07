@@ -1,4 +1,4 @@
-import { Button } from "@shared/components/common/button/button";
+import { Button } from "@shared/components/common/button";
 import { Typography } from "@shared/components/common/typography";
 import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
@@ -6,9 +6,9 @@ import React from "react";
 import "shared/firebase";
 
 const links = [
-  { href: "/profile", title: "Account" },
-  { href: "#", title: "Inventory" },
-  { href: "#", title: "Account Settings" },
+  { href: "/profile", title: "Account", icon: Icons.id },
+  { href: "#", title: "Inventory", icon: Icons.inventory },
+  { href: "#", title: "Account Settings", icon: Icons.settings },
 ];
 
 const ProfileDataAndActions = ({ name, photo, email }) => {
@@ -39,10 +39,10 @@ const ProfileDataAndActions = ({ name, photo, email }) => {
               decoration="fill"
               key={"profile-option-" + index}
               href={link.href}
-              className="py-3 flex justify-start items-start"
-            >
-              {link.title}
-            </Button>
+              className="p-3 flex justify-start items-start w-full"
+              label={link.title}
+              icon={link.icon}
+            />
           );
         })}
       </div>

@@ -134,10 +134,13 @@ export const Button: React.FC<
         {label ? (
           <Typography
             type="label"
-            className={clsx(labelProps, "w-full text-center cursor-pointer")}
+            className={clsx(
+              labelProps,
+              "w-full text-left cursor-pointer flex items-center"
+            )}
           >
             {icon && (
-              <div className="mr-4 w-4 h-4">
+              <div className="mr-2 w-4 h-4 flex shrink-0 items-center">
                 <img
                   alt="icon"
                   src={icon}

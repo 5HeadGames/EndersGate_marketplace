@@ -16,4 +16,7 @@ export enum Icons {
   exclamation = "/icons/exclamation.svg",
   eyeShow = "/icons/Eye-show.svg",
   eyeHide = "/icons/Eye-hide.svg",
+  id = "/icons/id.png",
+  settings = "/icons/settings.png",
+  inventory = "/icons/inventory.png",
 }
