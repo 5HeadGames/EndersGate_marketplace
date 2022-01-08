@@ -49,7 +49,7 @@ const ProfileLayoutComponent = ({ children }) => {
           photo=""
         />
       </aside>
-      <div className="w-full pt-32 px-4 h-screen">{children}</div>
+      <div className="w-full pt-32 md:px-4 min-h-screen">{children}</div>
     </div>
   );
 };

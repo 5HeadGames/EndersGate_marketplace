@@ -44,7 +44,10 @@ export const Typography: React.FC<TypographyProps> = ({
     );
   if (type === "label")
     return (
-      <label className={clsx(className)} onClick={() => onClick && onClick()}>
+      <label
+        className={clsx(className, "font-montserrat")}
+        onClick={() => onClick && onClick()}
+      >
         {children || text}
       </label>
     );

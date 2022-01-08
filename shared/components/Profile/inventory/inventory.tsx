@@ -12,19 +12,11 @@ import { Input } from "@shared/components/common/form/input";
 
 const links = [
   { href: "/profile", title: "Account", icon: Icons.id },
-  {
-    href: "/profile/inventory",
-    title: "Inventory",
-    icon: Icons.inventory,
-  },
-  {
-    href: "/profile/accountSettings",
-    title: "Account Settings",
-    icon: Icons.settings,
-  },
+  { href: "#", title: "Inventory", icon: Icons.inventory },
+  { href: "#", title: "Account Settings", icon: Icons.settings },
 ];
 
-const ProfileDataAndActions = ({ name, photo, email }) => {
+const Inventory = ({ name, photo, email }) => {
   const { Modal, isShow, show, hide } = useModal();
   const {
     register,
@@ -129,4 +121,4 @@ const ProfileDataAndActions = ({ name, photo, email }) => {
   );
 };
 
-export default ProfileDataAndActions;
+export default Inventory;

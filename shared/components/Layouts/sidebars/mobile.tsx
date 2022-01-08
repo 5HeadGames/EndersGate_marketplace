@@ -9,6 +9,7 @@ import { Icons } from "@shared/const/Icons";
 import { Typography } from "@shared/components/common/typography";
 import { Button } from "@shared/components/common/button/button";
 import ProfileDataAndActions from "@shared/components/Profile/profilePersonalData/profilePersonalData";
+import { useAppSelector } from "redux/store";
 
 interface LayoutDashboardProps {
   title?: string;
@@ -81,6 +82,8 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
     { name: "Dashboard", link: "/dashboard", icon: Icons.dashboard },
     { name: "Marketplace", link: "/marketplace", icon: Icons.marketplace },
   ];
+
+  const { address } = useAppSelector((state) => state.user);
 
   const [collapse, setCollapse] = React.useState(
     new Array(navItems.length).fill(false)
@@ -255,23 +258,26 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                       </Fragment>
                     );
                   })}
-                  <div className="mb-4">
-                    <Button
-                      decoration="fill"
-                      size="small"
-                      onClick={() => {
-                        setSidebarOpen(false);
-                        router.push("/login");
-                      }}
-                    >
-                      Log In
-                    </Button>
-                  </div>
-                  <ProfileDataAndActions
-                    name={"AN-Drew207"}
-                    email="andrescontrerasoviedo740@gmail.com"
-                    photo=""
-                  />
+                  {address !== "" ? (
+                    <ProfileDataAndActions
+                      name={"AN-Drew207"}
+                      email="andrescontrerasoviedo740@gmail.com"
+                      photo=""
+                    />
+                  ) : (
+                    <div className="mb-4">
+                      <Button
+                        decoration="fill"
+                        size="small"
+                        onClick={() => {
+                          setSidebarOpen(false);
+                          router.push("/login");
+                        }}
+                      >
+                        Log In
+                      </Button>
+                    </div>
+                  )}
                 </nav>
               </div>
             </div>

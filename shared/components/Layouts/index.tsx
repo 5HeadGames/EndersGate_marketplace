@@ -88,9 +88,9 @@ export default function AppLayout({children}) {
         overflow: "auto",
         ...(blur
           ? {
-            filter: "blur(8px)",
-            "-webkit-filter": "blur(8px)",
-          }
+              filter: "blur(8px)",
+              "-webkit-filter": "blur(8px)",
+            }
           : {}),
       }}
     >
@@ -126,8 +126,12 @@ export default function AppLayout({children}) {
           </div>
         </div>
         <div className="md:flex hidden">
-          <Button decoration="fill" size="small" onClick={() => router.push(address ? '/profile' : "/login")}>
-            {address ? 'Profile' : 'Log In'}
+          <Button
+            decoration="fill"
+            size="small"
+            onClick={() => router.push(address ? "/profile" : "/login")}
+          >
+            {address ? "Profile" : "Log In"}
           </Button>
         </div>
         <div
@@ -136,7 +140,10 @@ export default function AppLayout({children}) {
             setSidebarOpen(true);
           }}
         >
-          <MenuIcon className="h-6 w-6 text-primary cursor-pointer" aria-hidden="true" />
+          <MenuIcon
+            className="h-6 w-6 text-primary cursor-pointer"
+            aria-hidden="true"
+          />
         </div>
       </nav>
       <SidebarMobile
@@ -144,7 +151,7 @@ export default function AppLayout({children}) {
         setSidebarOpen={setSidebarOpen}
         sidebarOpen={sidebarOpen}
       />
-      <div className="bg-overlay px-10 " style={styles.content}>
+      <div className="bg-overlay md:px-10 px-6" style={styles.content}>
         {children}
         <Message content={message} open={Boolean(message)} />
       </div>

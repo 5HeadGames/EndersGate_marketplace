@@ -44,8 +44,7 @@ export const Input: React.FC<
                   { "text-alert-error": error || verifyValue === false },
                   { "text-primary": isFill },
                   { "text-primary": primary && !error },
-                  "font-medium mb-2 block f-14 text-dark",
-                  styles.fontCore
+                  "mb-2 block f-14 text-primary"
                 )}
               >
                 {(showLabel || labelVisible) && title}
@@ -93,7 +92,7 @@ export const Input: React.FC<
               { "pl-21 md:pl-36 pr-4": InputSelect },
               { "pl-14 pr-4": leftImg },
               { "pr-8 pl-4": rightImg },
-              { "bg-transparent border-primary": isFill },
+              { "border text-primary border-primary": isFill },
               { "bg-transparent border-primary": primary && !error },
 
               //Styles normal input
@@ -102,7 +101,7 @@ export const Input: React.FC<
                   !isFill && !error,
               },
               !!isFill && styles.inputDateWithValue,
-              "placeholder-gray-500 py-2 w-full text-gray-500 font-montserrat border rounded-lg",
+              "placeholder-gray-500 py-2 w-full text-dark font-montserrat border rounded-lg",
               {
                 "border-gray-500": !error && !isFill,
               },
@@ -130,7 +129,7 @@ export const Input: React.FC<
           {leftImg && (
             <div
               onClick={leftClick}
-              className="absolute left-7 top-1/3 w-5 h-5"
+              className="absolute left-7 top-1/4 w-5 h-5"
             >
               <Icon src={leftImg} className="text-gray-500 cursor-pointer" />
             </div>
@@ -138,7 +137,7 @@ export const Input: React.FC<
           {rightImg && (
             <div
               onClick={rightClick}
-              className="absolute right-2 top-1/3 w-5 h-4"
+              className="absolute right-2 top-1/4 w-5 h-4"
             >
               <Icon src={rightImg} className="cursor-pointer" />
             </div>
