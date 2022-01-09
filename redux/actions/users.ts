@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
+import {update} from "firebase/database";
 import {readUser, writeUser} from "shared/firebase";
 import * as actionTypes from "../constants";
 
@@ -44,22 +45,30 @@ export const onLoginUser = createAsyncThunk(
         );
         const user = await readUser(`users/${userData.address}`);
         writeUser(
-          (userData as any).address,
+          `users/${(userData as any).address}`,
           {email: userData.email},
         );
-        writeUser(
-          userAuth.uid,
-          {email: userData.email}
-        );
+        //writeUser(
+        //`users/${userAuth.uid}`,
+        //{email: userData.email}
+        //);
 
         return user || placeholderData;
       }
     } else {
       const user = await readUser(`users/${(userData as any).address}`);
+      console.log('On login', {user, add: userData.address})
       if (!user) {
-        writeUser((userData as any).address, placeholderData);
+        writeUser(`users/${(userData as any).address}`, placeholderData);
       }
       return user || placeholderData;
     }
+  }
+);
+
+export const onUpdateUser = createAction(
+  actionTypes.UPDATE_USER,
+  function prepare(updateData: Partial<User>) {
+    return {payload: updateData}
   }
 );

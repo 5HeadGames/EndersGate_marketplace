@@ -3,7 +3,7 @@ import axios from "axios";
 import Web3Modal from "web3modal";
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
-import WalletConnectProvider from "@walletconnect/web3-provider";
+import {Harmony} from '@harmony-js/core'
 //import Fortmatic from "fortmatic";
 //import Torus from "@toruslabs/torus-embed";
 //import Authereum from "authereum";
@@ -23,13 +23,13 @@ const mockNftID = [
 const NFTSaddress = "0x0d5ea610c7c7ab1b2e5f8a8ae3f1a43384bf8026";
 
 export const getNftsMetadata = async () => {
-  //await (window.ethereum as any).request({method: "eth_requestAccounts"});
-  const web3 = new Web3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER_MAINNET);
-  //address from a test contract on harmony one
-  const contract = new web3.eth.Contract(
-    ERC1155data.abi as any,
-    "0x3e8e62520db86bcdc3beda30fd6362f95f3662ef"
-  );
+   //await (window.ethereum as any).request({method: "eth_requestAccounts"});
+   const web3 = new Web3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER_MAINNET);
+   //address from a test contract on harmony one
+   const contract = new web3.eth.Contract(
+      ERC1155data.abi as any,
+      "0x3e8e62520db86bcdc3beda30fd6362f95f3662ef"
+   );
 
    const ipfsUrl = await Promise.all(mockNftID.map((id) => contract.methods.uri(id).call()));
    const nftsData = (await Promise.all(ipfsUrl.map((url) => axios(url)))).map(
@@ -43,21 +43,18 @@ export const getNftsMetadata = async () => {
    }));
 };
 
-export const getMetamaskProvider = async () => {
-   const web3modal = new Web3Modal({
-      network: "mainnet", // optional
-      cacheProvider: true, // optional
-      providerOptions:{}, // required
-   });
-   const provider = await web3modal.connect();
-   return new Web3(provider);
+export const loginHarmonyWallet = async () => {
+   const account = await (window as any)?.onewallet.getAccount()
+   if (!account)
+      return false
+   return account
 };
 
-const connector = new WalletConnect({
-  bridge: "https://bridge.walletconnect.org", // Required
-  qrcodeModal: QRCodeModal,
-});
 
-export const getWalletConnect = ()=>{
-   return connector
+
+export const getWalletConnect = () => {
+   return new WalletConnect({
+      bridge: "https://bridge.walletconnect.org", // Required
+      qrcodeModal: QRCodeModal,
+   });
 }

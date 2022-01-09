@@ -1,10 +1,10 @@
-import { Typography } from "@shared/components/common/typography";
+import {Typography} from "@shared/components/common/typography";
 import ProfileLayoutComponent from "@shared/components/Profile/profile";
-import { Icons } from "@shared/const/Icons";
+import {Icons} from "@shared/const/Icons";
 import React from "react";
-import "shared/firebase";
-import { useAppSelector } from "redux/store";
-import { useRouter } from "next/router";
+import Table from "shared/components/Dashboard/tableItems/table";
+import {useAppSelector} from "redux/store";
+import {useRouter} from "next/router";
 
 const Profile = () => {
   const user = useAppSelector((state) => state.user);
@@ -21,7 +21,7 @@ const Profile = () => {
         <img src={Icons.harmony} className="w-16" alt="" />
         <div className="flex flex-row items-center">
           <div className="flex flex-col">
-            <h1 className="text-white text-center" style={{ fontSize: "32px" }}>
+            <h1 className="text-white text-center" style={{fontSize: "32px"}}>
               0 ONE
             </h1>
             <Typography type="title" className="text-primary text-center">
@@ -30,6 +30,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <Table title="" data={[]} />
     </ProfileLayoutComponent>
   );
 };

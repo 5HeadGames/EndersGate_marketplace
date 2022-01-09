@@ -1,10 +1,10 @@
 import {getDatabase, ref, set, child, get} from "firebase/database";
 import {getStorage, ref as getStorageRef, getDownloadURL, uploadBytesResumable} from 'firebase/storage'
 
-export const readUser = async (userId: string) => {
+export const readUser = async (userPath: string) => {
   const dbRef = ref(getDatabase());
   try {
-    const snapshot = await get(child(dbRef, `users/${userId}`));
+    const snapshot = await get(child(dbRef, userPath));
     if (snapshot.exists()) return snapshot.val();
   } catch (err) {
     console.log({err});
@@ -14,7 +14,9 @@ export const readUser = async (userId: string) => {
 
 export const writeUser = async (userPath: string, newData: Partial<User>) => {
   const db = getDatabase();
-  set(ref(db, "users/" + userPath), {
+  const user = await readUser(userPath)
+  set(ref(db, userPath), {
+    ...user,
     ...newData,
   });
   return false;

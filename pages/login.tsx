@@ -4,7 +4,7 @@ import {useRouter} from 'next/router'
 
 import {useAppDispatch, useAppSelector} from "redux/store";
 import {onLoginUser, onMessage} from "redux/actions";
-import {getMetamaskProvider, getWalletConnect} from "@shared/web3";
+import {loginHarmonyWallet, getWalletConnect} from "@shared/web3";
 import {Button} from "shared/components/common/button";
 import Dialog from "shared/components/common/dialog";
 import {Typography} from "shared/components/common/typography";
@@ -17,15 +17,14 @@ const Login = () => {
   const [openForm, setOpenForm] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const {address} = useAppSelector(state => state.user);
+  const [connector, setConnector] = React.useState(getWalletConnect())
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const connector = getWalletConnect();
 
-  const handleMetamaskConnect = async () => {
+  const handleHarmonyConnect = async () => {
     setLoading(true);
-    const web3 = await getMetamaskProvider();
-    const accounts = await web3.eth.getAccounts();
-    await dispatch(onLoginUser({address: accounts[0]}));
+    const account = await loginHarmonyWallet();
+    await dispatch(onLoginUser({address: account.address}));
     setLoading(false);
     dispatch(onMessage("Login successful!"));
     setTimeout(dispatch, 2000, onMessage(""));
@@ -33,15 +32,15 @@ const Login = () => {
 
   const handleSubmit = async (user: Values) => {
     setLoading(true);
-    const web3 = await getMetamaskProvider();
-    const accounts = await web3.eth.getAccounts();
-    dispatch(onLoginUser({...user, address: accounts[0]}));
+    const account = await loginHarmonyWallet();
+    dispatch(onLoginUser({...user, address: account.address}));
     setLoading(false);
     dispatch(onMessage("Login successful!"));
     setTimeout(dispatch, 2000, onMessage(""));
   };
 
   const handleQRCode = () => {
+    console.log(connector)
     if (!connector.connected) {
       // create new session
       connector.createSession();
@@ -55,7 +54,10 @@ const Login = () => {
       }
 
       const {accounts, chainId} = payload.params[0];
+      console.log(accounts)
       dispatch(onLoginUser({address: accounts[0]}));
+      dispatch(onMessage("Login successful!"));
+      setTimeout(dispatch, 2000, onMessage(""));
     });
   }, []);
 
@@ -72,9 +74,9 @@ const Login = () => {
           decoration="fillPrimary"
           size="medium"
           className="w-full mb-2 bg-primary text-white"
-          onClick={handleMetamaskConnect}
+          onClick={handleHarmonyConnect}
         >
-          {loading ? '...' : 'Login with Metamask'}
+          {loading ? '...' : 'Login with Harmony Wallet'}
         </Button>
         <Button
           disabled={loading}

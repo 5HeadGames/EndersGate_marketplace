@@ -17,11 +17,13 @@ export const userReducer = createReducer(INITIAL_STATE, (builder) => {
             state.nfts = action.payload as NFT[];
         })
         .addCase(actions.onLoginUser.fulfilled, (state: typeof INITIAL_STATE, action) => {
-            state.address = action.payload.address;
-            state.email = action.payload.email;
-            state.name = action.payload.name;
-            state.profile_picture = action.payload.profile_picture;
-            state.userStatus = action.payload.userStatus;
-            state.id = action.payload.id;
+            Object.entries(action.payload).forEach(section => {
+                state[section[0]] = section[1]
+            })
+        })
+        .addCase(actions.onUpdateUser, (state: typeof INITIAL_STATE, action) => {
+            Object.entries(action.payload).forEach(section => {
+                state[section[0]] = section[1]
+            })
         });
 });
