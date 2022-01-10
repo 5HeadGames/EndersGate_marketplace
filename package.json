@@ -40,7 +40,8 @@
     "build": "next build",
     "start": "next start",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "install_all": "cd Contracts && npm install && cd .. && npm install"
   },
   "eslintConfig": {
     "extends": [

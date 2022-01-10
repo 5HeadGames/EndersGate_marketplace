@@ -1,15 +1,10 @@
 import Web3 from "web3";
 import axios from "axios";
 import Web3Modal from "web3modal";
+import ERC1155data from "shared/contracts/GameItems.json";
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
 import {Harmony} from '@harmony-js/core'
-//import Fortmatic from "fortmatic";
-//import Torus from "@toruslabs/torus-embed";
-//import Authereum from "authereum";
-//import { Bitski } from "bitski";
-
-import ERC1155data from "../../Contracts/artifacts/contracts/MockNFT.sol/GameItems.json";
 
 const mockNftID = [
    "1035205086292954408150852752291366796139603653328",
