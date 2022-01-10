@@ -11,33 +11,7 @@ const navItems = [
   { title: "30 days", value: "last_30d" },
 ];
 
-const FiltersBoard = () => {
-  const [filter, setFilter] = React.useState({
-    avatar: false,
-    champions: false,
-    action_cards: false,
-    reaction_cards: false,
-    tanks: false,
-    damage: false,
-    mages: false,
-    healers: false,
-    void: false,
-    fire: false,
-    water: false,
-    mystic: false,
-    earth: false,
-    venom: false,
-    wood: false,
-    stone: false,
-    iron: false,
-    epic: false,
-    legendary: false,
-    limited_edition: false,
-    attack: false,
-    damage_stats: false,
-    mages_stats: false,
-  });
-
+const FiltersBoard = ({ filter, setFilter }) => {
   const handleChange = (title) => {
     setFilter((prev) => {
       return { ...prev, [`${title}`]: !prev[`${title}`] };
@@ -221,8 +195,8 @@ const FiltersBoard = () => {
   }, [filter]);
 
   return (
-    <div className="xl:w-1/3 w-full flex flex-col">
-      <div className="flex flex-col rounded-md bg-primary-disabled p-6">
+    <div className="xl:w-1/4 w-full flex flex-col">
+      <div className="flex flex-col rounded-md bg-primary-disabled p-6 pb-16">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
             <Typography className="text-white font-bold" type="subTitle">
@@ -240,7 +214,7 @@ const FiltersBoard = () => {
         <div className="flex flex-col gap-4">
           {filterItems.map(
             ({ title, subItems, slideButton, value, onClick }, index) => (
-              <CollapseMenu title={title}>
+              <CollapseMenu key={"filter-" + index} title={title}>
                 <div className="flex flex-wrap gap-2 bg-primary-disabled">
                   {slideButton ? (
                     <SlideButton value={filter[value]} onClick={onClick} />
