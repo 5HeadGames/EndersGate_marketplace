@@ -1,8 +1,8 @@
-import Empty from "@shared/components/Empty/empty";
+import MarketplaceComponent from "@shared/components/Marketplace/marketplace";
 import React from "react";
 
 const Marketplace = () => {
-  return <Empty />;
+  return <MarketplaceComponent />;
 };
 
 export default Marketplace;

@@ -13,6 +13,7 @@ export enum Icons {
   earth = "/icons/earth.png",
   chevronRight = "/icons/chevronRight.svg",
   chevronDown = "/icons/chevronDown.svg",
+  upArrow = "/icons/upArrow.png",
   exclamation = "/icons/exclamation.svg",
   eyeShow = "/icons/Eye-show.svg",
   eyeHide = "/icons/Eye-hide.svg",

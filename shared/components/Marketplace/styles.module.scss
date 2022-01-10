@@ -1,0 +1,4 @@
+
+.gridContainer{
+	grid-template-columns: repeat(4,(320/1920)*100vw);
+}
