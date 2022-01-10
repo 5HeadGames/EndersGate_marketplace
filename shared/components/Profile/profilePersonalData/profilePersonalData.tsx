@@ -4,6 +4,7 @@ import {Icons} from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
 import "shared/firebase";
+import {CheckCircleOutlined} from '@ant-design/icons'
 import {useAppSelector} from "redux/store";
 import {useModal} from "@shared/hooks/modal";
 import {XIcon} from "@heroicons/react/solid";
@@ -20,7 +21,7 @@ const links = [
   {
     href: "/profile/activity",
     title: "Activity",
-    icon: Icons.settings,
+    icon: <CheckCircleOutlined />,
   },
   {
     href: "/profile/accountSettings",

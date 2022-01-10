@@ -1,10 +1,8 @@
 import {Button} from "@shared/components/common/button";
 import {Typography} from "@shared/components/common/typography";
 import {Icons} from "@shared/const/Icons";
-import {useAuthState} from "react-firebase-hooks/auth";
 import clsx from "clsx";
 import React from "react";
-import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import "shared/firebase";
 import {useAppSelector, useAppDispatch} from "redux/store";
 import {useForm} from "react-hook-form";
@@ -12,9 +10,7 @@ import {Input} from "@shared/components/common/form/input";
 import {InputEmail} from "@shared/components/common/form/input-email";
 import {InputPassword} from "@shared/components/common/form/input-password";
 import {writeUser, uploadFile, getFileUrl} from "@shared/firebase";
-import {onUpdateUser, onMessage, onLoginUser} from "@redux/actions";
-
-const auth = getAuth();
+import {onUpdateUser, onMessage, onLoginUser, onUpdateUserCredentials} from "@redux/actions";
 
 const AccountSettingsComponent = () => {
   const {
@@ -25,13 +21,10 @@ const AccountSettingsComponent = () => {
   } = useForm();
   const [image, setImage] = React.useState("");
   const [loadingForm, setLoading] = React.useState(false);
-  const [authUser, loading, error] = useAuthState(auth);
   const [openEmailPassword, setOpenEmailPassword] = React.useState(false);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const userPath = `users/${user.address}`;
-
-  console.log({authUser});
 
   const onLoadingImageSubmit = (load: unknown) => {
     console.log({load});
@@ -66,12 +59,31 @@ const AccountSettingsComponent = () => {
     writeUser(userPath, {[field]: e.target.value as string});
   };
 
-  const onSubmit = async ({email, password}: {email: string; password: string}) => {
+  const onSubmit = async ({
+    oldEmail,
+    newEmail,
+    oldPassword,
+    newPassword,
+  }: {
+    oldEmail: string;
+    newEmail: string;
+    oldPassword: string;
+    newPassword: string;
+  }) => {
     setLoading(true);
-    if (!authUser) onLoginUser({email, password, address: user.address})
-    else {
-      const credential = await signInWithEmailAndPassword(auth, email, password)
-      credential.user.updateEmail('newyou@domain.com')
+    try {
+      if (!user.email)
+        await dispatch(
+          onLoginUser({email: newEmail, password: newPassword, address: user.address})
+        );
+      else
+        await dispatch(
+          onUpdateUserCredentials({oldEmail, oldPassword, newEmail, newPassword, userPath})
+        );
+    } catch (err) {
+      console.log({err});
+      setLoading(false);
+      return;
     }
     setLoading(false);
     dispatch(onMessage("Changes submitted!"));
@@ -146,22 +158,48 @@ const AccountSettingsComponent = () => {
         <div
           className={clsx("w-full flex flex-col items-center", !openEmailPassword && "hidden")}
         >
+          {user.email && (
+            <>
+              <InputEmail
+                register={register}
+                error={errors.oldEmail}
+                isFill={!!watch("oldEmail")}
+                name="oldEmail"
+                title="Old email"
+                labelVisible
+                className="text-primary mt-2"
+                defaultValue={user.email}
+              />
+              <InputPassword
+                register={register}
+                error={errors.oldPassword}
+                isFill={!!watch("oldPassword")}
+                name="oldPassword"
+                title="Old password"
+                labelVisible
+                className="text-primary mt-2"
+              />
+              <div
+                className="w-full bg-primary mt-5 mb-2 rounded"
+                style={{height: "1px"}}
+              ></div>
+            </>
+          )}
           <InputEmail
             register={register}
-            error={errors.email}
-            isFill={!!watch("email")}
-            name="email"
-            title="Email"
+            error={errors.newEmail}
+            isFill={!!watch("newEmail")}
+            name="newEmail"
+            title={user.email ? "New email" : "Email"}
             labelVisible
             className="text-primary mt-2"
-            defaultValue={user.email}
           />
           <InputPassword
             register={register}
-            error={errors.password}
-            isFill={!!watch("password")}
-            name="password"
-            title="Password"
+            error={errors.newPassword}
+            isFill={!!watch("newPassword")}
+            name="newPassword"
+            title={user.email ? "New password" : "Password"}
             labelVisible
             className="text-primary mt-2"
           />

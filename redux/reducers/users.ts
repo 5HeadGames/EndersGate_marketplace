@@ -25,5 +25,8 @@ export const userReducer = createReducer(INITIAL_STATE, (builder) => {
             Object.entries(action.payload).forEach(section => {
                 state[section[0]] = section[1]
             })
+        })
+        .addCase(actions.onUpdateUserCredentials.fulfilled, (state: typeof INITIAL_STATE, action) => {
+            state.email = action.payload.email
         });
 });

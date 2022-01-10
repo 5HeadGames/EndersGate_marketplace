@@ -3,6 +3,8 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updateEmail,
+  updatePassword,
 } from "firebase/auth";
 import {update} from "firebase/database";
 import {readUser, writeUser} from "shared/firebase";
@@ -21,6 +23,7 @@ const auth = getAuth();
 export const onLoginUser = createAsyncThunk(
   actionTypes.LOGIN_USER,
   async function prepare(userData: {email?: string; password?: string; address: string}) {
+    console.log(userData);
     const placeholderData = {
       email: "",
       name: "",
@@ -35,19 +38,17 @@ export const onLoginUser = createAsyncThunk(
           (userData as any).email,
           (userData as any).password
         );
-        const user = await readUser(`users/${userAuth.uid}`);
-        return user;
+        const user = await readUser(`users/${userData.address}`);
+        return user || placeholderData;
       } catch (err) {
+        console.log({err})
         const {user: userAuth} = await createUserWithEmailAndPassword(
           auth,
           userData.email,
           userData.password
         );
+        await writeUser(`users/${(userData as any).address}`, {email: userData.email});
         const user = await readUser(`users/${userData.address}`);
-        writeUser(
-          `users/${(userData as any).address}`,
-          {email: userData.email},
-        );
         //writeUser(
         //`users/${userAuth.uid}`,
         //{email: userData.email}
@@ -57,18 +58,42 @@ export const onLoginUser = createAsyncThunk(
       }
     } else {
       const user = await readUser(`users/${(userData as any).address}`);
-      console.log('On login', {user, add: userData.address})
       if (!user) {
-        writeUser(`users/${(userData as any).address}`, placeholderData);
+        await writeUser(`users/${(userData as any).address}`, placeholderData);
       }
-      return user || placeholderData;
+      const newUser = await readUser(`users/${(userData as any).address}`);
+      return newUser || placeholderData;
     }
+  }
+);
+
+export const onUpdateUserCredentials = createAsyncThunk(
+  actionTypes.UPDATE_USER_CREDENTIALS,
+  async function prepare({
+    newEmail,
+    oldEmail,
+    newPassword,
+    oldPassword,
+    userPath,
+  }: {
+    newEmail: string;
+    oldEmail: string;
+    newPassword: string;
+    oldPassword: string;
+    userPath: string;
+  }) {
+    const currentAuth = getAuth();
+    const credential = await signInWithEmailAndPassword(currentAuth, oldEmail, oldPassword);
+    await updateEmail(credential.user, newEmail);
+    await updatePassword(credential.user, newPassword);
+    await writeUser(userPath, {email: newEmail});
+    return {email: newEmail};
   }
 );
 
 export const onUpdateUser = createAction(
   actionTypes.UPDATE_USER,
   function prepare(updateData: Partial<User>) {
-    return {payload: updateData}
+    return {payload: updateData};
   }
 );
