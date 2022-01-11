@@ -5,6 +5,7 @@ import {CollapseMenu} from "@shared/components/common/collapseMenu/collapseMenu"
 import {Icons} from "@shared/const/Icons";
 import {getNftsMetadata} from "shared/web3";
 import ItemDashboard from "./item/item";
+import NftCard from 'shared/components/Marketplace/itemCard'
 import FiltersBoard from "./filters/filters";
 import Styles from "./styles.module.scss";
 import clsx from "clsx";
@@ -73,6 +74,13 @@ const MarketplaceComponent = () => {
                 </div>
               </div>
             </div>
+          </div>
+          <div className='flex flex-wrap'>
+            {
+              new Array(10).fill(0).map(()=>(
+                <NftCard classes={{root:'m-4'}}/>
+              ))
+            }
           </div>
         </div>
       </div>
