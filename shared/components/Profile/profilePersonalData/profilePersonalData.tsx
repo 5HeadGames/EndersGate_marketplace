@@ -4,41 +4,67 @@ import {Icons} from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
 import "shared/firebase";
-import {CheckCircleOutlined} from '@ant-design/icons'
-import {useAppSelector} from "redux/store";
+import {CheckCircleOutlined, LogoutOutlined} from "@ant-design/icons";
+import {useAppSelector, useAppDispatch} from "redux/store";
+import {onLogout, onMessage} from "redux/actions";
 import {useModal} from "@shared/hooks/modal";
-import {XIcon} from "@heroicons/react/solid";
 import {useForm} from "react-hook-form";
 import {Input} from "@shared/components/common/form/input";
 
-const links = [
-  {href: "/profile", title: "Account", icon: Icons.id},
-  {
-    href: "/profile/inventory",
-    title: "Inventory",
-    icon: Icons.inventory,
-  },
-  {
-    href: "/profile/activity",
-    title: "Activity",
-    icon: <CheckCircleOutlined />,
-  },
-  {
-    href: "/profile/accountSettings",
-    title: "Account Settings",
-    icon: Icons.settings,
-  },
-];
+type ButtonsTypes = {logout: boolean};
 
 const ProfileDataAndActions = ({name, photo, email}) => {
+  const [disabled, setDisabled] = React.useState<ButtonsTypes>({logout: false});
   const {Modal, isShow, show, hide} = useModal();
   const {
     register,
     handleSubmit,
     formState: {errors},
   } = useForm();
-
   const user = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+
+  const disableButton = (option: ButtonsTypes) => {
+    setDisabled((prev) => ({...prev, ...option}));
+  };
+
+  const handleSignOut = async () => {
+    console.log('handleSignOut')
+    disableButton({logout: true});
+    const isLoggedOut = await dispatch(onLogout(user));
+    disableButton({logout: false});
+    if (isLoggedOut) {
+      dispatch(onMessage("Logged out successfully!"));
+      setTimeout(dispatch, 2000, onMessage(""));
+    }
+  };
+
+  const links = [
+    {href: "/profile", label: "Account", icon: Icons.id},
+    {
+      href: "/profile/inventory",
+      label: "Inventory",
+      icon: Icons.inventory,
+    },
+    {
+      href: "/profile/activity",
+      label: "Activity",
+      icon: <CheckCircleOutlined />,
+    },
+    {
+      href: "/profile/accountSettings",
+      label: "Account Settings",
+      icon: Icons.settings,
+    },
+    {
+      label: "Logout",
+      decoration: "line-primary",
+      onClick: handleSignOut,
+      icon: <LogoutOutlined />,
+      disabled: disabled.logout,
+    },
+  ];
+
   return (
     <div className="flex flex-col w-full">
       <Modal isShow={isShow}>
@@ -104,12 +130,10 @@ const ProfileDataAndActions = ({name, photo, email}) => {
         {links.map((link, index) => {
           return (
             <Button
-              decoration="fill"
+              {...link}
+              decoration={link.decoration || ("fill" as any)}
               key={"profile-option-" + index}
-              href={link.href}
               className="p-3 flex justify-start items-start w-full"
-              label={link.title}
-              icon={link.icon}
             />
           );
         })}

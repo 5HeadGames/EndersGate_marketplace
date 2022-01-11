@@ -2,7 +2,7 @@ import {Typography} from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
 import {Icons} from "@shared/const/Icons";
-import { TransactionText } from "@shared/components/common/specialFields/SpecialFields";
+import {TransactionText} from "@shared/components/common/specialFields/SpecialFields";
 
 interface Props {
   id: string;
@@ -11,13 +11,12 @@ interface Props {
   value: number;
   value2: number;
   breed_count: number;
-  price: { eth: number; dollars: number };
+  price: {eth: number; dollars: number};
   timeAgo: string;
 }
 
 const ItemListed: React.FunctionComponent<Props> = (props) => {
-  const { icon, label, value, value2, id, breed_count, price, timeAgo } = props;
-  console.log(props);
+  const {icon, label, value, value2, id, breed_count, price, timeAgo} = props;
 
   return (
     <tr className="border-b-2 border-overlay-border">
