@@ -67,11 +67,11 @@ const ProfileIndexPage = () => {
         </div>
       </div>
       <div className="flex flex-col w-full mt-10">
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between w-full items-center">
           <Typography type="title" className="text-white">
             Activities
           </Typography>
-          <Typography type="span" className="text-primary">
+          <Typography type="span" className="text-primary cursor-pointer">
             View More
           </Typography>
         </div>
