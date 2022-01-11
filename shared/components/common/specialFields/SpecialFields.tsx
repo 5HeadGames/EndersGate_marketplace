@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Icons } from "@shared/const/Icons";
 
 export const AddressText = ({ text }) => {
-  return <>{"(" + text.substring(0, 4) + "..." + text.substring(20) + ")"}</>;
+  return <>{"(" + text.substring(0, 5) + "..." + text.substring(36) + ")"}</>;
 };
 
 export const TransactionText = ({ text }) => {

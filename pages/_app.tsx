@@ -7,17 +7,20 @@ import "shared/styles/style.css";
 import Layout from "shared/components/Layouts";
 import {store} from "redux/store";
 import {Provider} from "react-redux";
+import { ToastProvider } from "react-toast-notifications";
 
-const MyApp = ({Component, pageProps}: AppProps) => {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
         <title>Ender's Gate</title>
       </Head>
       <Provider store={store}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <ToastProvider autoDismiss placement="bottom-center">
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ToastProvider>
       </Provider>
     </>
   );
