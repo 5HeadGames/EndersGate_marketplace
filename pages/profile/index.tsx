@@ -12,9 +12,9 @@ const Profile = () => {
   const user = useAppSelector((state) => state.user);
   const router = useRouter();
   React.useEffect(() => {
-    // if (user && !user.address) {
-    //   router.push("/login");
-    // }
+    if (user && !user.address) {
+      router.push("/login");
+    }
     console.log(user);
   }, [user]);
   return (
