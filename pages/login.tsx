@@ -1,7 +1,8 @@
 import React from "react";
 import {useForm} from "react-hook-form";
-import {useRouter} from 'next/router'
+import {useRouter} from "next/router";
 
+import {useModal} from "@shared/hooks/modal";
 import {useAppDispatch, useAppSelector} from "redux/store";
 import {onLoginUser, onMessage} from "redux/actions";
 import {loginHarmonyWallet, getWalletConnect} from "@shared/web3";
@@ -16,14 +17,16 @@ type Values = {email?: string; password?: string; address: string};
 const Login = () => {
   const [openForm, setOpenForm] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const {address} = useAppSelector(state => state.user);
-  const [connector, setConnector] = React.useState(getWalletConnect())
+  const {Modal, isShow, show, hide} = useModal();
+  const {address} = useAppSelector((state) => state.user);
+  const [connector, setConnector] = React.useState(getWalletConnect());
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const handleHarmonyConnect = async () => {
-    setLoading(true);
     const account = await loginHarmonyWallet();
+    if (!account) return show();
+    setLoading(true);
     await dispatch(onLoginUser({address: account.address}));
     setLoading(false);
     dispatch(onMessage("Login successful!"));
@@ -40,7 +43,7 @@ const Login = () => {
   };
 
   const handleQRCode = () => {
-    console.log(connector)
+    console.log(connector);
     if (!connector.connected) {
       // create new session
       connector.createSession();
@@ -54,7 +57,7 @@ const Login = () => {
       }
 
       const {accounts, chainId} = payload.params[0];
-      console.log(accounts)
+      console.log(accounts);
       dispatch(onLoginUser({address: accounts[0]}));
       dispatch(onMessage("Login successful!"));
       setTimeout(dispatch, 2000, onMessage(""));
@@ -62,9 +65,8 @@ const Login = () => {
   }, []);
 
   React.useEffect(() => {
-    if (address)
-      router.push('/dashboard')
-  }, [address])
+    if (address) router.push("/dashboard");
+  }, [address]);
 
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center">
@@ -76,7 +78,7 @@ const Login = () => {
           className="w-full mb-2 bg-primary text-white"
           onClick={handleHarmonyConnect}
         >
-          {loading ? '...' : 'Login with Harmony Wallet'}
+          {loading ? "..." : "Login with Harmony Wallet"}
         </Button>
         <Button
           disabled={loading}
@@ -85,7 +87,7 @@ const Login = () => {
           className="w-full mb-2"
           onClick={handleQRCode}
         >
-          {loading ? '...' : 'Login By QR Code'}
+          {loading ? "..." : "Login By QR Code"}
         </Button>
         {openForm ? (
           <EmailPasswordForm onSubmit={handleSubmit} loading={loading} />
@@ -97,10 +99,28 @@ const Login = () => {
             className="w-full mb-2"
             onClick={() => setOpenForm(true)}
           >
-            {loading ? '...' : 'Login with email & password'}
+            {loading ? "..." : "Login with email & password"}
           </Button>
         )}
       </div>
+      <Modal isShow={isShow}>
+        <div className="flex flex-col items-center p-6">
+          <Typography type="title" className="text-purple-400/75">
+            Install Harmony Wallet
+          </Typography>
+          <p className="text-purple-200/75">
+            You must install{" "}
+            <a
+              href="https://chrome.google.com/webstore/detail/harmony-chrome-extension/fnnegphlobjdpkhecapkijjdkgcjhkib"
+              className="text-primary"
+              target="_blank"
+            >
+              harmony one
+            </a>{" "}
+            official wallet to connect through this method
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 };
@@ -144,8 +164,14 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
               name="password"
             />
           </div>
-          <Button decoration="fill" size="small" type="submit" className="w-full mb-2" disabled={loading}>
-            {loading ? '...' : 'Sign in'}
+          <Button
+            decoration="fill"
+            size="small"
+            type="submit"
+            className="w-full mb-2"
+            disabled={loading}
+          >
+            {loading ? "..." : "Sign in"}
           </Button>
           <span className="text-primary text-xs">
             You dont have an account?{" "}
@@ -179,8 +205,14 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
                 error={errors.password}
               />
             </div>
-            <Button decoration="fill" size="small" type="submit" className="w-full mb-2" disabled={loading}>
-              {loading ? '...' : 'Register'}
+            <Button
+              decoration="fill"
+              size="small"
+              type="submit"
+              className="w-full mb-2"
+              disabled={loading}
+            >
+              {loading ? "..." : "Register"}
             </Button>
           </div>
         </form>

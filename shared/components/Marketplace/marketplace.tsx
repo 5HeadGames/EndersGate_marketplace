@@ -1,35 +1,23 @@
 import React from "react";
-import { Icons } from "@shared/const/Icons";
-import { getNftsMetadata } from "shared/web3";
+import {AppstoreOutlined, UnorderedListOutlined} from "@ant-design/icons";
+
+import {CollapseMenu} from "@shared/components/common/collapseMenu/collapseMenu";
+import {Icons} from "@shared/const/Icons";
+import {getNftsMetadata} from "shared/web3";
 import ItemDashboard from "./item/item";
 import FiltersBoard from "./filters/filters";
 import Styles from "./styles.module.scss";
 import clsx from "clsx";
 
 const MarketplaceComponent = () => {
-  // const [{ recentlyListed, recentlySold }, setTableItems] = React.useState({
-  //   recentlyListed: [],
-  //   recentlySold: [],
-  // });
+  const [currentOrder, setCurrentOrder] = React.useState("lowest_price");
 
-  // const getListedAndSold = async () => {
-  //   const nftsMock = await getNftsMetadata();
-  //   setTableItems({
-  //     recentlyListed: nftsMock.map((nft) => ({
-  //       ...nft,
-  //       icon: nft.image,
-  //       breed_count: 1,
-  //       price: { eth: "1", dollars: "4000" },
-  //       timeAgo: "a minute ago",
-  //       render: ItemDashboard,
-  //     })),
-  //     recentlySold: [],
-  //   });
-  // };
-
-  // React.useEffect(() => {
-  //   getListedAndSold();
-  // }, []);
+  const orderMapper = {
+    lowest_price: 'Lowest Price',
+    highest_price: 'Highest Price',
+    recently_listed: 'Recently Listed',
+    older_listed: 'Older Listed',
+  }
 
   const [filter, setFilter] = React.useState({
     avatar: false,
@@ -60,10 +48,33 @@ const MarketplaceComponent = () => {
   return (
     <div className="w-full flex xl:flex-row flex-col md:px-8 px-4 min-h-screen pt-36 pb-10">
       <FiltersBoard filter={filter} setFilter={setFilter} />
-      <div className="w-full flex flex-col">
-        <div
-          className={clsx(Styles.gridContainer, "grid  xl:gap-8 mt-6")}
-        ></div>
+      <div className="w-2/3 flex flex-col">
+        <div className={"grid ml-4 xl:gap-8 h-20"}>
+          <div className="w-full flex justify-between">
+            <h3 className="text-2xl text-primary">619,801 Axies</h3>
+            <div className="flex">
+              <CollapseMenu title={orderMapper[currentOrder]} classes={{container: 'border border-primary border-2 p-2 rounded-md', root: 'mr-4'}}>
+                <div className="bg-secondary flex flex-col justify-center items-center z-100 cursor-pointer">
+                  {["lowest_price", "highest_price", "recently_listed", "older_listed"].map(
+                    (title) => (
+                      <div className='p-2 text-primary hover:bg-primary hover:text-secondary w-full text-center' onClick={() => setCurrentOrder(title)}>
+                        {orderMapper[title]}
+                      </div>
+                    )
+                  )}
+                </div>
+              </CollapseMenu>
+              <div className=" border-2 border rounded-md border-primary flex justify-center items-center text-primary h-10">
+                <div className="flex flex-1 justify-center items-center text-primary h-10 border-r-2 border-primary p-2 cursor-pointer hover:bg-primary hover:text-secondary">
+                  <AppstoreOutlined />
+                </div>
+                <div className="flex flex-1 justify-center items-center text-primary h-10 p-2 cursor-pointer hover:bg-primary hover:text-secondary">
+                  <UnorderedListOutlined />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

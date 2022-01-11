@@ -1,13 +1,20 @@
 import * as React from "react";
 import clsx from "clsx";
-import { Typography } from "../typography";
-import { Icons } from "@shared/const/Icons";
+import {Typography} from "../typography";
+import {Icons} from "@shared/const/Icons";
 
-export const CollapseMenu: React.FC<any> = ({ children, title }) => {
-  const [open, setOpen] = React.useState(false);
+interface Props {
+  title: string;
+  defaultOpen?: boolean;
+  classes?: Partial<Record<'root' | 'container', string>>;
+}
+
+export const CollapseMenu: React.FunctionComponent<Props> = ({children, title, defaultOpen, classes}) => {
+  const [open, setOpen] = React.useState(defaultOpen || false);
+
   return (
-    <div className="text-right">
-      <div className="relative inline-block text-left w-full">
+    <div className={clsx("text-right", classes?.root)}>
+      <div className={clsx("relative inline-block text-left w-full", classes?.container)}>
         <div className="w-full">
           <div className="inline-flex w-full text-sm font-medium bg-transparent focus:outline-none">
             <div
@@ -16,7 +23,7 @@ export const CollapseMenu: React.FC<any> = ({ children, title }) => {
             >
               <img
                 src={Icons.upArrow}
-                style={{ transform: `rotate(${open ? "180deg" : "0"})` }}
+                style={{transform: `rotate(${open ? "180deg" : "0"})`}}
               />
               <Typography className="text-primary ml-2" type="subTitle">
                 {title}
@@ -26,7 +33,7 @@ export const CollapseMenu: React.FC<any> = ({ children, title }) => {
         </div>
         <div
           className={clsx(
-            { ["hidden"]: !open },
+            {["hidden"]: !open},
             "flex top-0 right-0 origin-top-right mt-2 bg-white divide-y rounded-b-10 focus:outline-none"
           )}
         >

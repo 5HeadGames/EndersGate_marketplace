@@ -1,22 +1,20 @@
-import { Typography } from "@shared/components/common/typography";
+import {Typography} from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
-import { Icons } from "@shared/const/Icons";
-import TransactionsBoard from "../TransactionsBoard/TransactionsBoard";
 
 const navItems = [
-  { title: "Trading Cards", value: "trading_cards" },
-  { title: "Packs", value: "packs" },
-  { title: "Comics", value: "comics" },
+  {title: "Trading Cards", value: "trading_cards"},
+  {title: "Packs", value: "packs"},
+  {title: "Comics", value: "comics"},
 ];
 
 
-interface Props{
-  title:string;
-  data:(Record<string,string> & {render:React.FunctionComponent<any>})[];
+interface Props {
+  title: string;
+  data: (Record<string, string> & {render: React.FunctionComponent<any>})[];
 }
 
-const Table:React.FunctionComponent<Props> = ({ title ,data}) => {
+const Table: React.FunctionComponent<Props> = ({title, data}) => {
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
   return (
     <div className="w-full flex flex-col">
