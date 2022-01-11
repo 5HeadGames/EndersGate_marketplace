@@ -47,12 +47,12 @@ const MarketplaceComponent = () => {
   });
 
   return (
-    <div className="w-full flex xl:flex-row flex-col md:px-8 px-4 min-h-screen pt-36 pb-10">
+    <div className="w-full flex xl:flex-row flex-col md:px-8 px-4 pt-36 pb-10">
       <FiltersBoard filter={filter} setFilter={setFilter} />
-      <div className="w-2/3 flex flex-col">
-        <div className={"grid ml-4 xl:gap-8 h-20"}>
-          <div className="w-full flex justify-between">
-            <h3 className="text-2xl text-primary">619,801 Axies</h3>
+      <div className="xl:w-2/3 xl:mt-0 mt-6 flex flex-col">
+        <div >
+          <div className="w-full flex justify-between sm:flex-row flex-col">
+            <h3 className="text-2xl text-primary ml-4">619,801 Axies</h3>
             <div className="flex">
               <CollapseMenu title={orderMapper[currentOrder]} classes={{container: 'border border-primary border-2 p-2 rounded-md', root: 'mr-4'}}>
                 <div className="bg-secondary flex flex-col justify-center items-center z-100 cursor-pointer">
@@ -75,10 +75,10 @@ const MarketplaceComponent = () => {
               </div>
             </div>
           </div>
-          <div className='flex flex-wrap'>
+          <div className='flex flex-wrap w-full justify-center items-center'>
             {
-              new Array(10).fill(0).map(()=>(
-                <NftCard classes={{root:'m-4'}}/>
+              new Array(6).fill(0).map(() => (
+                <NftCard classes={{root: 'm-4'}} />
               ))
             }
           </div>

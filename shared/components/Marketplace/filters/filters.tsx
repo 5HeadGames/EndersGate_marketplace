@@ -192,7 +192,7 @@ const FiltersBoard = ({filter, setFilter}) => {
   }, [filter]);
 
   return (
-    <div className="md:w-1/3 w-full flex flex-col">
+    <div className="xl:w-1/3 w-full flex flex-col">
       <div className="flex rounded-t-md border-2 border-overlay-border mb-4 sm:flex-row flex-col">
         {["trading_cards", "packs", "comics"].map((nftType) => (
           <div

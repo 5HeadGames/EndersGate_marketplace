@@ -1,17 +1,20 @@
 import React from "react";
-import clsx from 'clsx'
-import {Icons} from "@shared/const/Icons";
+import clsx from "clsx";
+import { Icons } from "@shared/const/Icons";
 
 interface Props {
-  classes?:Partial<Record<'root',string>>;
+  classes?: Partial<Record<"root", string>>;
 }
 
 const NFTCard: React.FunctionComponent<Props> = (props) => {
-  const {classes} = props
+  const { classes } = props;
   return (
-    <div className={clsx("bg-purple-900/25 rounded-xl p-4 flex flex-col text-white",classes?.root)}>
-      <div className="w-full flex flex-col">
-        <div className="bg-primary p-2 rounded-md">
+    <div
+      className={clsx("rounded-xl p-4 flex flex-col text-white w-56", classes?.root)}
+      style={{ backgroundColor: "rgba(42,1,56,0.1)" }}
+    >
+      <div className="w-full flex flex-col text-xs mb-4">
+        <div className="bg-primary p-2 rounded-md w-2/3">
           <span>#234243982743</span>
         </div>
         <div>
@@ -21,13 +24,13 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
           <span>Breed count:4</span>
         </div>
       </div>
-      <div className='w-full h-30'>
-        <img src={Icons.logo} className='w-24 h-24'/>
-    </div>
-        <div className='flex flex-col'>
-          <span>0.0017</span>
-          <span>$253.77</span>
-        </div>
+      <div className="w-full h-30 flex justify-center my-4">
+        <img src={Icons.logo} className="w-24 h-24" />
+      </div>
+      <div className="flex flex-col text-sm text-center">
+        <span>0.0017</span>
+        <span>$253.77</span>
+      </div>
     </div>
   );
 };
