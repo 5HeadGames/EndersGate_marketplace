@@ -7,6 +7,7 @@ import { Icons } from "@shared/const/Icons";
 import { CopyOutlined, SelectOutlined } from "@ant-design/icons";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
 import { useToasts } from "react-toast-notifications";
+import Styles from "./styles.module.scss";
 
 const ProfileIndexPage = () => {
   const user = useAppSelector((state) => state.user);
@@ -76,6 +77,21 @@ const ProfileIndexPage = () => {
           </Typography>
         </div>
         <hr className="w-full mt-4" />
+        <div
+          className={clsx(
+            Styles.gray,
+            "h-72 w-full ",
+            "flex flex-col justify-center items-center gap-6"
+          )}
+        >
+          <img src={Icons.logo} className="h-40 w-40" alt="" />
+          <Typography
+            type="subTitle"
+            className={clsx(Styles.title, "text-primary")}
+          >
+            You don't have any activity yet
+          </Typography>
+        </div>
       </div>
     </>
   );

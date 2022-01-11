@@ -54,18 +54,30 @@ const MarketplaceComponent = () => {
           <div className="w-full flex justify-between">
             <h3 className="text-2xl text-primary">619,801 Axies</h3>
             <div className="flex">
-              <CollapseMenu title={orderMapper[currentOrder]} classes={{container: 'border border-primary border-2 p-2 rounded-md', root: 'mr-4'}}>
+              <CollapseMenu
+                title={orderMapper[currentOrder]}
+                classes={{
+                  container: "border border-primary border-2 p-2 rounded-md",
+                  root: "mr-4",
+                }}
+              >
                 <div className="bg-secondary flex flex-col justify-center items-center z-100 cursor-pointer">
-                  {["lowest_price", "highest_price", "recently_listed", "older_listed"].map(
-                    (title) => (
-                      <div className='p-2 text-primary hover:bg-primary hover:text-secondary w-full text-center' onClick={() => setCurrentOrder(title)}>
-                        {orderMapper[title]}
-                      </div>
-                    )
-                  )}
+                  {[
+                    "lowest_price",
+                    "highest_price",
+                    "recently_listed",
+                    "older_listed",
+                  ].map((title) => (
+                    <div
+                      className="p-2 text-primary hover:bg-primary hover:text-secondary w-full text-center"
+                      onClick={() => setCurrentOrder(title)}
+                    >
+                      {orderMapper[title]}
+                    </div>
+                  ))}
                 </div>
               </CollapseMenu>
-              <div className=" border-2 border rounded-md border-primary flex justify-center items-center text-primary h-10">
+              <div className=" border-2 border rounded-md overflow-hidden border-primary flex justify-center items-center text-primary h-10">
                 <div className="flex flex-1 justify-center items-center text-primary h-10 border-r-2 border-primary p-2 cursor-pointer hover:bg-primary hover:text-secondary">
                   <AppstoreOutlined />
                 </div>
@@ -75,12 +87,10 @@ const MarketplaceComponent = () => {
               </div>
             </div>
           </div>
-          <div className='flex flex-wrap'>
-            {
-              new Array(10).fill(0).map(()=>(
-                <NftCard classes={{root:'m-4'}}/>
-              ))
-            }
+          <div className="flex flex-wrap">
+            {new Array(10).fill(0).map(() => (
+              <NftCard classes={{ root: "m-4" }} />
+            ))}
           </div>
         </div>
       </div>
