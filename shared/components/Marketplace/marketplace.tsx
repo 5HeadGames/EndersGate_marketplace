@@ -1,19 +1,14 @@
 import React from "react";
 import {AppstoreOutlined, UnorderedListOutlined} from "@ant-design/icons";
+import {useRouter} from 'next/router'
 
-import {CollapseMenu} from "@shared/components/common/collapseMenu/collapseMenu";
-import {Icons} from "@shared/const/Icons";
-import {getNftsMetadata} from "shared/web3";
-import ItemDashboard from "./item/item";
 import NftCard from 'shared/components/Marketplace/itemCard'
 import FiltersBoard from "./filters/filters";
-import Styles from "./styles.module.scss";
-import clsx from "clsx";
-import { DropdownMenu } from "../common/dropdownMenu";
-import { DropdownActions } from "../common/dropdownActions/dropdownActions";
+import {DropdownActions} from "../common/dropdownActions/dropdownActions";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("lowest_price");
+  const router = useRouter()
 
   const orderMapper = {
     lowest_price: "Lowest Price",
@@ -89,8 +84,8 @@ const MarketplaceComponent = () => {
             </div>
           </div>
           <div className="flex flex-wrap w-full justify-center items-center">
-            {new Array(6).fill(0).map(() => (
-              <NftCard classes={{ root: "m-4" }} />
+            {new Array(6).fill(0).map((a, id) => (
+              <NftCard classes={{root: "m-4 cursor-pointer"}} onClick={() => router.push(`collectable/${id}`)} />
             ))}
           </div>
         </div>

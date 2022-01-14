@@ -1,17 +1,19 @@
 import React from "react";
 import clsx from "clsx";
-import { Icons } from "@shared/const/Icons";
+import {Icons} from "@shared/const/Icons";
 
-interface Props {
+interface Props extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   classes?: Partial<Record<"root", string>>;
 }
 
 const NFTCard: React.FunctionComponent<Props> = (props) => {
-  const { classes } = props;
+  const {classes, ...rest} = props;
+
   return (
     <div
       className={clsx("rounded-xl p-4 flex flex-col text-white w-56", classes?.root)}
-      style={{ backgroundColor: "rgba(42,1,56,0.1)" }}
+      style={{backgroundColor: "rgba(42,1,56,0.1)"}}
+      {...rest}
     >
       <div className="w-full flex flex-col text-xs mb-4">
         <div className="bg-primary p-2 rounded-md w-2/3">
