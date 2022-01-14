@@ -5,7 +5,7 @@ import {useRouter} from "next/router";
 import {useModal} from "@shared/hooks/modal";
 import {useAppDispatch, useAppSelector} from "redux/store";
 import {onLoginUser, onMessage} from "redux/actions";
-import {loginHarmonyWallet, getWalletConnect} from "@shared/web3";
+import {loginHarmonyWallet, loginMetamaskWallet, getWalletConnect} from "@shared/web3";
 import {Button} from "shared/components/common/button";
 import Dialog from "shared/components/common/dialog";
 import {Typography} from "shared/components/common/typography";
@@ -22,6 +22,16 @@ const Login = () => {
   const [connector, setConnector] = React.useState(getWalletConnect());
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const handleMetamaskConnect = async () => {
+    const web3 = await loginMetamaskWallet();
+    if (!web3) return show();
+    setLoading(true);
+    await dispatch(onLoginUser({address: (await web3.eth.getAccounts())[0]}));
+    setLoading(false);
+    dispatch(onMessage("Login successful!"));
+    setTimeout(dispatch, 2000, onMessage(""));
+  };
 
   const handleHarmonyConnect = async () => {
     const account = await loginHarmonyWallet();
@@ -79,6 +89,15 @@ const Login = () => {
           onClick={handleHarmonyConnect}
         >
           {loading ? "..." : "Login with Harmony Wallet"}
+        </Button>
+        <Button
+          disabled={loading}
+          decoration="fillPrimary"
+          size="medium"
+          className="w-full mb-2 bg-primary text-white"
+          onClick={handleMetamaskConnect}
+        >
+          {loading ? "..." : "Login with Metamask Wallet"}
         </Button>
         <Button
           disabled={loading}
