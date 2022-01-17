@@ -49,6 +49,7 @@ export const loginMetamaskWallet = async () => {
    const provider = await (window as any).ethereum
    if (!provider)
       return false
+   await (window.ethereum as any).request({method: "eth_requestAccounts"});
    return new Web3(provider)
 };
 
@@ -58,3 +59,4 @@ export const getWalletConnect = () => {
       qrcodeModal: QRCodeModal,
    });
 }
+

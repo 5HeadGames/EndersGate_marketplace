@@ -1,19 +1,19 @@
-import { useCallback, useState, Fragment, useRef } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
+import {useCallback, useState, Fragment, useRef} from "react";
+import {Dialog, Transition} from "@headlessui/react";
+import {XIcon} from "@heroicons/react/outline";
 
 export const useModal = () => {
-  const [isShow, setIsShow] = useState(false);
+  const [isShow, setIsShow] = useState<string | boolean>(false);
   const cancelButtonRef = useRef<HTMLDivElement>(null);
   const hide = () => {
     setIsShow(false);
   };
 
-  const show = () => {
-    setIsShow(true);
+  const show = (state?: string) => {
+    setIsShow(state || true);
   };
 
-  const Modal = useCallback(({ children, isShow, withoutX }) => {
+  const Modal = useCallback(({children, isShow, withoutX}) => {
     return (
       <Transition.Root show={isShow} as={Fragment}>
         <Dialog
@@ -80,5 +80,5 @@ export const useModal = () => {
     );
   }, []);
 
-  return { Modal, hide, isShow, show };
+  return {Modal, hide, isShow, show};
 };

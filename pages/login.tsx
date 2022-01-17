@@ -25,7 +25,7 @@ const Login = () => {
 
   const handleMetamaskConnect = async () => {
     const web3 = await loginMetamaskWallet();
-    if (!web3) return show();
+    if (!web3) return show("metamask");
     setLoading(true);
     await dispatch(onLoginUser({address: (await web3.eth.getAccounts())[0]}));
     setLoading(false);
@@ -35,7 +35,7 @@ const Login = () => {
 
   const handleHarmonyConnect = async () => {
     const account = await loginHarmonyWallet();
-    if (!account) return show();
+    if (!account) return show("harmony");
     setLoading(true);
     await dispatch(onLoginUser({address: account.address}));
     setLoading(false);
@@ -122,19 +122,23 @@ const Login = () => {
           </Button>
         )}
       </div>
-      <Modal isShow={isShow}>
+      <Modal isShow={Boolean(isShow)}>
         <div className="flex flex-col items-center p-6">
           <Typography type="title" className="text-purple-400/75">
-            Install Harmony Wallet
+            {`Install ${isShow === "metamask" ? "Metamask" : "Harmony"} Wallet`}
           </Typography>
           <p className="text-purple-200/75">
             You must install{" "}
             <a
-              href="https://chrome.google.com/webstore/detail/harmony-chrome-extension/fnnegphlobjdpkhecapkijjdkgcjhkib"
+              href={
+                isShow === "metamask"
+                  ? "https://metamask.io/"
+                  : "https://chrome.google.com/webstore/detail/harmony-chrome-extension/fnnegphlobjdpkhecapkijjdkgcjhkib"
+              }
               className="text-primary"
               target="_blank"
             >
-              harmony one
+              {isShow === "metamask" ? "metamask" : "harmony one"}
             </a>{" "}
             official wallet to connect through this method
           </p>
