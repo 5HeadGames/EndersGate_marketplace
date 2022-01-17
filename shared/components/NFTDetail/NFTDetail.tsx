@@ -53,7 +53,7 @@ const NFTDetailComponent = () => {
             </Typography>
           </div>
           <Button decoration="fillPrimary" size="small">
-            <img src={Icons.harmony} className="h-6 w-5 mr-2" alt="" /> Buy now
+            <img src={Icons.harmony} className="h-6 w-6" alt="" /> Buy now
           </Button>
         </div>
       </div>
