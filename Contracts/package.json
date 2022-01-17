@@ -8,6 +8,8 @@
   },
   "scripts": {
     "test": "npx hardhat test",
+    "console_test": "npx hardhat console --network harmony_test",
+    "console": "npx hardhat console --network harmony",
     "build": "npx hardhat compile"
   },
   "keywords": [],

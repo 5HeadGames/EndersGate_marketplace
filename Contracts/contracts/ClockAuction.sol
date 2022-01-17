@@ -4,12 +4,13 @@ pragma solidity ^0.8.11;
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "hardhat/console.sol";
 
 import "./interfaces/IERC1155Custom.sol";
 
 /// @title Clock auction for non-fungible tokens.
-contract ClockAuction is Ownable, Pausable {
+contract ClockAuction is Ownable, Pausable, ERC1155Holder {
   using Address for address payable;
 
   // Represents an auction on an NFT
@@ -33,6 +34,8 @@ contract ClockAuction is Ownable, Pausable {
 
   // Map from token ID to their corresponding auction.
   mapping(address => mapping(uint256 => Auction)) public auctions;
+  // Nfts allowed in marketplace
+  mapping(address => bool) private _nftsAllowed;
 
   event AuctionCreated(
     address indexed _nftAddress,
@@ -137,8 +140,9 @@ contract ClockAuction is Ownable, Pausable {
     canBeStoredWith128Bits(_endingPrice)
     canBeStoredWith64Bits(_duration)
   {
+    require(_nftsAllowed[_nftAddress], "Nft not allowed");
     address _seller = _msgSender();
-    require(_owns(_nftAddress, _seller, _tokenId));
+    require(_owns(_nftAddress, _seller, _tokenId), "User doesn't owns nft");
     _escrow(_nftAddress, _seller, _tokenId);
     Auction memory _auction = Auction(
       _seller,
@@ -157,6 +161,7 @@ contract ClockAuction is Ownable, Pausable {
   /// @param _tokenId - ID of token to bid on.
   function bid(address _nftAddress, uint256 _tokenId) external payable whenNotPaused {
     // _bid will throw if the bid or funds transfer fails
+    require(_nftsAllowed[_nftAddress], "Nft not allowed");
     _bid(_nftAddress, _tokenId, msg.value);
     _transfer(_nftAddress, msg.sender, _tokenId);
   }
@@ -187,6 +192,10 @@ contract ClockAuction is Ownable, Pausable {
     Auction storage _auction = auctions[_nftAddress][_tokenId];
     require(_isOnAuction(_auction));
     _cancelAuction(_nftAddress, _tokenId, _auction.seller);
+  }
+
+  function setNftAllowed(address nftAddress, bool isAllowed) external onlyOwner {
+    _nftsAllowed[nftAddress] = isAllowed;
   }
 
   /// @dev Returns true if the NFT is on auction.

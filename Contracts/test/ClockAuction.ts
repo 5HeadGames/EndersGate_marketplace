@@ -2,25 +2,25 @@ import {expect} from "chai";
 import {ethers} from "hardhat";
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import {ClockAuction} from "../typechain/ClockAuction";
-import {MockNFT} from "../typechain/MockNFT";
+import {ERC1155card} from "../typechain/ERC1155card";
 
 describe("[ClockAuction]", function () {
-  let accounts: SignerWithAddress[], marketplace: ClockAuction, nft: MockNFT;
+  let accounts: SignerWithAddress[], marketplace: ClockAuction, nft: ERC1155card;
 
   const OWNER_CUT = "400";
 
   before(async () => {
     const [AuctionFactory, NftFactory, _accounts] = await Promise.all([
       ethers.getContractFactory("ClockAuction"),
-      ethers.getContractFactory("MockNFT"),
+      ethers.getContractFactory("ERC1155card"),
       ethers.getSigners(),
     ]);
     accounts = _accounts;
 
-    [marketplace, nft] = await Promise.all([
+    [marketplace, nft] = (await Promise.all([
       AuctionFactory.deploy(OWNER_CUT),
-      NftFactory.deploy(),
-    ]);
+      NftFactory.deploy("Darius"),
+    ])) as [ClockAuction, ERC1155card];
   });
 
   it("should initialize owner share properly", async () => {
@@ -38,8 +38,25 @@ describe("[ClockAuction]", function () {
     ).to.be.revertedWith("");
   });
 
+  it("should only allow nfts approved by owner", async () => {
+    await expect(
+      marketplace.createAuction(
+        nft.address,
+        1,
+        ethers.utils.parseEther("1"),
+        ethers.utils.parseEther("1"),
+        3600
+      )
+    ).to.be.revertedWith("");
+    await expect(
+      marketplace.bid(nft.address, 1, {value: ethers.utils.parseEther("1.5")})
+    ).to.be.revertedWith("");
+    await marketplace.setNftAllowed(nft.address, true);
+  });
+
   it("should create an auction properly", async () => {
-    await nft.approve(marketplace.address, 1);
+    await nft.mint(accounts[0].address, 1, 1);
+    await nft.setApprovalForAll(marketplace.address, true);
     await marketplace.createAuction(
       nft.address,
       1,
@@ -55,23 +72,21 @@ describe("[ClockAuction]", function () {
   });
 
   it("should bid for an auction", async () => {
-    //const oldOwnerBalance = await ethers.provider.getBalance(accounts[0].address);
-    //const newOwnerBalance = await ethers.provider.getBalance(accounts[1].address);
-
+    const oldOwnerBalance = await ethers.provider.getBalance(accounts[0].address);
+    const newOwnerBalance = await ethers.provider.getBalance(accounts[1].address);
     await marketplace
       .connect(accounts[1])
       .bid(nft.address, 1, {value: ethers.utils.parseEther("1.5")});
-
-    const newOwner = await nft.ownerOf(1);
+    const nftBalance = await nft.balanceOf(accounts[1].address, 1);
     //const oldOwnerBalance2 = await ethers.provider.getBalance(accounts[0].address);
     //const newOwnerBalance2 = await ethers.provider.getBalance(accounts[1].address);
-
     await expect(marketplace.getAuction(nft.address, 1)).to.be.revertedWith('');
-    expect(newOwner).to.equal(accounts[1].address);
+    expect(Number(nftBalance.toString())).to.be.greaterThanOrEqual(1);
   });
 
-  it('should cancel auction', async () => {
-    await nft.approve(marketplace.address, 2);
+  it("should cancel auction", async () => {
+    await nft.mint(accounts[0].address, 2, 1);
+    await nft.setApprovalForAll(marketplace.address, true);
     await marketplace.createAuction(
       nft.address,
       2,
@@ -81,6 +96,6 @@ describe("[ClockAuction]", function () {
     );
     await marketplace.cancelAuction(nft.address, 2);
     await expect(marketplace.getAuction(nft.address, 2)).to.be.revertedWith('');
-    expect(await nft.ownerOf(2)).to.equal(accounts[0].address);
-  })
+    expect(await nft.balanceOf(accounts[0].address, 2)).to.equal(1);
+  });
 });
