@@ -3,6 +3,7 @@ import React from "react";
 import clsx from "clsx";
 import {Icons} from "@shared/const/Icons";
 import { TransactionText } from "@shared/components/common/specialFields/SpecialFields";
+import Link from "next/link";
 
 interface Props {
   id: string;
@@ -81,9 +82,11 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
         </div>
       </td>
       <td className="bg-primary-disabled cursor-pointer py-4 text-center w-8">
-        <div className="flex justify-center shrink-0">
-          <img src={Icons.arrowLeft} className="w-5" alt="" />
-        </div>
+        <Link href="/NFTDetail">
+          <a href="/NFTDetail" className="flex justify-center shrink-0">
+            <img src={Icons.arrowLeft} className="w-5" alt="" />
+          </a>
+        </Link>
       </td>
     </tr>
   );
