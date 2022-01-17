@@ -1,7 +1,7 @@
-import {Typography} from "@shared/components/common/typography";
+import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
-import {Icons} from "@shared/const/Icons";
+import { Icons } from "@shared/const/Icons";
 import { TransactionText } from "@shared/components/common/specialFields/SpecialFields";
 import Link from "next/link";
 
@@ -18,7 +18,6 @@ interface Props {
 
 const ItemListed: React.FunctionComponent<Props> = (props) => {
   const { icon, label, value, value2, id, breed_count, price, timeAgo } = props;
-  console.log(props);
 
   return (
     <tr className="border-b-2 border-overlay-border">

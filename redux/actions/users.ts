@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   updateEmail,
   updatePassword,
+  signOut,
 } from "firebase/auth";
 import {update} from "firebase/database";
 import {readUser, writeUser} from "shared/firebase";
@@ -41,7 +42,7 @@ export const onLoginUser = createAsyncThunk(
         const user = await readUser(`users/${userData.address}`);
         return user || placeholderData;
       } catch (err) {
-        console.log({err})
+        console.log({err});
         const {user: userAuth} = await createUserWithEmailAndPassword(
           auth,
           userData.email,
@@ -95,5 +96,20 @@ export const onUpdateUser = createAction(
   actionTypes.UPDATE_USER,
   function prepare(updateData: Partial<User>) {
     return {payload: updateData};
+  }
+);
+
+export const onLogout = createAsyncThunk(
+  actionTypes.LOGOUT,
+  async function prepare(user: User) {
+    const auth = getAuth();
+    try {
+      if (user.email) await signOut(auth);
+      else return true;
+    } catch (err) {
+      console.log({err});
+      return false;
+    }
+    return true;
   }
 );

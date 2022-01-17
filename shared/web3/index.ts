@@ -45,7 +45,12 @@ export const loginHarmonyWallet = async () => {
    return account
 };
 
-
+export const loginMetamaskWallet = async () => {
+   const provider = await (window as any).ethereum
+   if (!provider)
+      return false
+   return new Web3(provider)
+};
 
 export const getWalletConnect = () => {
    return new WalletConnect({

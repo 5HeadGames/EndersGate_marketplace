@@ -31,6 +31,7 @@ const Table: React.FunctionComponent<Props> = ({title, data}) => {
                   "border-r-2 border-overlay-border cursor-pointer px-4 py-2 "
                 )}
                 onClick={() => setColumnSelected(item.value)}
+                key={index}
               >
                 <Typography type="subTitle" className={clsx("text-primary")}>
                   {item.title}
@@ -44,7 +45,7 @@ const Table: React.FunctionComponent<Props> = ({title, data}) => {
             <table className="w-full min-w-max ">
               <tbody>
                 {data.map((item, index) => (
-                  <item.render {...item} />
+                  <item.render key={index} {...item} />
                 ))}
               </tbody>
             </table>
