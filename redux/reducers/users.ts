@@ -2,13 +2,14 @@ import {createReducer} from "@reduxjs/toolkit";
 import * as actions from "../actions";
 
 const INITIAL_STATE = {
-    address: "",
-    email: "",
-    name: "",
-    profile_picture: "",
-    userStatus: "",
-    id: "",
-    nfts: [],
+  address: "",
+  email: "",
+  name: "",
+  profile_picture: "",
+  userStatus: "",
+  walletType: "",
+  id: "",
+  nfts: [],
 };
 
 export const userReducer = createReducer(INITIAL_STATE, (builder) => {

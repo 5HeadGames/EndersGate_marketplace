@@ -23,18 +23,23 @@ const auth = getAuth();
 
 export const onLoginUser = createAsyncThunk(
   actionTypes.LOGIN_USER,
-  async function prepare(userData: {email?: string; password?: string; address: string}) {
+  async function prepare(userData: {
+    email?: string;
+    password?: string;
+    address: string;
+  }) {
     console.log(userData);
     const placeholderData = {
       email: "",
       name: "",
       profile_picture: "",
       userStatus: "",
+      walletType: "",
       address: (userData as any).address,
     };
     if (userData.email) {
       try {
-        const {user: userAuth} = await signInWithEmailAndPassword(
+        const { user: userAuth } = await signInWithEmailAndPassword(
           auth,
           (userData as any).email,
           (userData as any).password
@@ -42,13 +47,15 @@ export const onLoginUser = createAsyncThunk(
         const user = await readUser(`users/${userData.address}`);
         return user || placeholderData;
       } catch (err) {
-        console.log({err});
-        const {user: userAuth} = await createUserWithEmailAndPassword(
+        console.log({ err });
+        const { user: userAuth } = await createUserWithEmailAndPassword(
           auth,
           userData.email,
           userData.password
         );
-        await writeUser(`users/${(userData as any).address}`, {email: userData.email});
+        await writeUser(`users/${(userData as any).address}`, {
+          email: userData.email,
+        });
         const user = await readUser(`users/${userData.address}`);
         //writeUser(
         //`users/${userAuth.uid}`,
@@ -84,18 +91,22 @@ export const onUpdateUserCredentials = createAsyncThunk(
     userPath: string;
   }) {
     const currentAuth = getAuth();
-    const credential = await signInWithEmailAndPassword(currentAuth, oldEmail, oldPassword);
+    const credential = await signInWithEmailAndPassword(
+      currentAuth,
+      oldEmail,
+      oldPassword
+    );
     await updateEmail(credential.user, newEmail);
     await updatePassword(credential.user, newPassword);
-    await writeUser(userPath, {email: newEmail});
-    return {email: newEmail};
+    await writeUser(userPath, { email: newEmail });
+    return { email: newEmail };
   }
 );
 
 export const onUpdateUser = createAction(
   actionTypes.UPDATE_USER,
   function prepare(updateData: Partial<User>) {
-    return {payload: updateData};
+    return { payload: updateData };
   }
 );
 
@@ -107,9 +118,19 @@ export const onLogout = createAsyncThunk(
       if (user.email) await signOut(auth);
       else return true;
     } catch (err) {
-      console.log({err});
+      console.log({ err });
       return false;
     }
     return true;
   }
+);
+
+export const onBuyNFT = createAsyncThunk(
+  actionTypes.BUY_NFT,
+  async function prepare(tx: { walletType: string; transaction: any }) {}
+);
+
+export const onSellNFT = createAsyncThunk(
+  actionTypes.SELL_NFT,
+  async function prepare(tx: { walletType: string; transaction: any }) {}
 );

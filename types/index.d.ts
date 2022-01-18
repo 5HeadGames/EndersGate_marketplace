@@ -9,4 +9,5 @@ interface User {
   name: string;
   profile_picture: string;
   userStatus: string;
+  walletType?: string;
 }

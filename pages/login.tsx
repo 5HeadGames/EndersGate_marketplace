@@ -4,21 +4,30 @@ import {useRouter} from "next/router";
 
 import {useModal} from "@shared/hooks/modal";
 import {useAppDispatch, useAppSelector} from "redux/store";
-import {onLoginUser, onMessage} from "redux/actions";
-import {loginHarmonyWallet, loginMetamaskWallet, getWalletConnect} from "@shared/web3";
-import {Button} from "shared/components/common/button";
+import { onLoginUser, onMessage, onUpdateUser } from "redux/actions";
+import {
+  loginHarmonyWallet,
+  loginMetamaskWallet,
+  getWalletConnect,
+} from "@shared/web3";
+import { Button } from "shared/components/common/button";
 import Dialog from "shared/components/common/dialog";
-import {Typography} from "shared/components/common/typography";
-import {InputPassword} from "shared/components/common/form/input-password";
-import {InputEmail} from "shared/components/common/form/input-email";
+import { Typography } from "shared/components/common/typography";
+import { InputPassword } from "shared/components/common/form/input-password";
+import { InputEmail } from "shared/components/common/form/input-email";
 
-type Values = {email?: string; password?: string; address: string};
+type Values = {
+  email?: string;
+  password?: string;
+  address: string;
+  walletType: "metamask" | "harmony" | "wallet_connect";
+};
 
 const Login = () => {
   const [openForm, setOpenForm] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const {Modal, isShow, show, hide} = useModal();
-  const {address} = useAppSelector((state) => state.user);
+  const { Modal, isShow, show, hide } = useModal();
+  const { address } = useAppSelector((state) => state.user);
   const [connector, setConnector] = React.useState(getWalletConnect());
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -27,8 +36,18 @@ const Login = () => {
     const web3 = await loginMetamaskWallet();
     if (!web3) return show("metamask");
     setLoading(true);
-    await dispatch(onLoginUser({address: (await web3.eth.getAccounts())[0]}));
+    await dispatch(
+      onLoginUser({
+        address: (await web3.eth.getAccounts())[0],
+      })
+    );
     setLoading(false);
+    await dispatch(
+      onUpdateUser({
+        address: (await web3.eth.getAccounts())[0],
+        walletType: "metamask",
+      })
+    );
     dispatch(onMessage("Login successful!"));
     setTimeout(dispatch, 2000, onMessage(""));
   };
@@ -37,8 +56,14 @@ const Login = () => {
     const account = await loginHarmonyWallet();
     if (!account) return show("harmony");
     setLoading(true);
-    await dispatch(onLoginUser({address: account.address}));
+    await dispatch(onLoginUser({ address: account.address }));
     setLoading(false);
+    await dispatch(
+      onUpdateUser({
+        address: account.address,
+        walletType: "harmony",
+      })
+    );
     dispatch(onMessage("Login successful!"));
     setTimeout(dispatch, 2000, onMessage(""));
   };
@@ -46,8 +71,15 @@ const Login = () => {
   const handleSubmit = async (user: Values) => {
     setLoading(true);
     const account = await loginHarmonyWallet();
-    dispatch(onLoginUser({...user, address: account.address}));
+    dispatch(onLoginUser({ ...user, address: account.address }));
     setLoading(false);
+    await dispatch(
+      onUpdateUser({
+        ...user,
+        address: account.address,
+        walletType: "harmony",
+      })
+    );
     dispatch(onMessage("Login successful!"));
     setTimeout(dispatch, 2000, onMessage(""));
   };
@@ -66,9 +98,9 @@ const Login = () => {
         throw error;
       }
 
-      const {accounts, chainId} = payload.params[0];
+      const { accounts, chainId } = payload.params[0];
       console.log(accounts);
-      dispatch(onLoginUser({address: accounts[0]}));
+      dispatch(onLoginUser({ address: accounts[0] }));
       dispatch(onMessage("Login successful!"));
       setTimeout(dispatch, 2000, onMessage(""));
     });
