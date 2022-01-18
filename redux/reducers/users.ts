@@ -34,5 +34,11 @@ export const userReducer = createReducer(INITIAL_STATE, (builder) => {
             Object.entries(INITIAL_STATE).forEach(section => {
                 state[section[0]] = section[1]
             })
+        })
+        .addCase(actions.onBuyNFT.fulfilled, (state: typeof INITIAL_STATE, action) => {
+
+        })
+        .addCase(actions.onSellNFT.fulfilled, (state: typeof INITIAL_STATE, action) => {
+
         });
 });
