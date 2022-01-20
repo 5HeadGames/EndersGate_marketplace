@@ -193,14 +193,15 @@ const FiltersBoard = ({filter, setFilter}) => {
 
   return (
     <div className="xl:w-1/3 w-full flex flex-col">
-      <div className="flex rounded-t-md border-2 border-overlay-border mb-4 sm:flex-row flex-col">
-        {["trading_cards", "packs", "comics"].map((nftType) => (
+      <div className="flex rounded-md border-2 border-primary mb-4 sm:flex-row flex-col">
+        {["trading_cards", "packs", "comics"].map((nftType, index) => (
           <div
             className={clsx(
               {
-                "bg-primary-disabled": filter[nftType],
+                "bg-primary": filter[nftType],
               },
-              "border-r-2 border-overlay-border cursor-pointer px-0 py-2 flex-1"
+              "cursor-pointer px-0 py-2 flex-1",
+              index !== 2 && "border-r-2 border-primary"
             )}
             onClick={() =>
               setFilter((prev) => ({
@@ -212,17 +213,28 @@ const FiltersBoard = ({filter, setFilter}) => {
               }))
             }
           >
-            <Typography type="subTitle" className={clsx("text-primary text-center")}>
+            <Typography
+              type="subTitle"
+              className={clsx(
+                "text-center",
+                {
+                  "text-white": filter[nftType],
+                },
+                {
+                  "text-primary": !filter[nftType],
+                }
+              )}
+            >
               {nftType === "trading_cards"
                 ? "Trading cards"
                 : nftType === "packs"
-                  ? "Packs"
-                  : "Comics"}
+                ? "Packs"
+                : "Comics"}
             </Typography>
           </div>
         ))}
       </div>
-      <div className="flex flex-col rounded-md bg-primary-disabled p-6 pb-16">
+      <div className="flex flex-col rounded-md bg-secondary p-6 pb-16">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
             <Typography className="text-white font-bold" type="subTitle">
@@ -236,34 +248,36 @@ const FiltersBoard = ({filter, setFilter}) => {
               Reset
             </Typography>
           </div>
-          <HeartOutlined className='text-primary cursor-pointer' />
+          <HeartOutlined className="text-primary cursor-pointer" />
         </div>
         <div className="flex flex-col gap-4 xl:w-80">
-          {filterItems.map(({title, subItems, slideButton, value, onClick}, index) => (
-            <CollapseMenu key={"filter-" + index} title={title} defaultOpen>
-              <div className="flex flex-wrap gap-2 bg-primary-disabled">
-                {slideButton ? (
-                  <SlideButton value={filter[value]} onClick={onClick} />
-                ) : (
-                  subItems.map((subItem, indexItem) => {
-                    return (
-                      <div
-                        onClick={subItem.onClick}
-                        className={clsx(
-                          "flex items-center justify-center px-4 py-2 bg-overlay cursor-pointer",
-                          "rounded-md",
-                          "text-white",
-                          {"bg-primary": filter[`${subItem.value}`]}
-                        )}
-                      >
-                        {subItem.title}
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </CollapseMenu>
-          ))}
+          {filterItems.map(
+            ({ title, subItems, slideButton, value, onClick }, index) => (
+              <CollapseMenu key={"filter-" + index} title={title} defaultOpen>
+                <div className="flex flex-wrap gap-2 bg-secondary">
+                  {slideButton ? (
+                    <SlideButton value={filter[value]} onClick={onClick} />
+                  ) : (
+                    subItems.map((subItem, indexItem) => {
+                      return (
+                        <div
+                          onClick={subItem.onClick}
+                          className={clsx(
+                            "flex items-center justify-center px-4 py-2 bg-overlay  cursor-pointer",
+                            "rounded-md",
+                            "text-white",
+                            { "bg-primary": filter[`${subItem.value}`] }
+                          )}
+                        >
+                          {subItem.title}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </CollapseMenu>
+            )
+          )}
         </div>
       </div>
     </div>

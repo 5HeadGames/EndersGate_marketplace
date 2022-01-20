@@ -2,7 +2,7 @@ import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
 import { Icons } from "@shared/const/Icons";
-
+import { PieChartFilled } from "@ant-design/icons";
 const navItems = [
   { title: "Last 24h", value: "last_24h" },
   { title: "7 days", value: "last_7d" },
@@ -13,17 +13,34 @@ const platformItems = [
   {
     title: "TOTAL SALE",
     value: "48,580",
-    icon: Icons.totalSale,
-    color: "#2ABAA7",
+    iconHtml: <PieChartFilled />,
+    css: {
+      /* Chrome 10-25, Safari 5.1-6 */
+      background:
+        "linear-gradient(to right, #00bf8f, #004515)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
+    },
   },
   {
     title: "TOTAL VOLUME",
     value: "1,541",
     value2: "$1,57M",
     icon: Icons.harmony,
-    color: "#4D70E7",
+    css: {
+      /* Chrome 10-25, Safari 5.1-6 */
+      background:
+        "linear-gradient(to right, #2c3e50, #3498db)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
+    },
   },
-  { title: "AXIE SOLD", value: "1,200", icon: Icons.logo, color: "#7335D5" },
+  {
+    title: "AXIE SOLD",
+    value: "1,200",
+    icon: Icons.logo,
+    css: {
+      /* Chrome 10-25, Safari 5.1-6 */
+      background:
+        "linear-gradient(to right, #6441a5, #2b1045)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
+    },
+  },
 ];
 
 const TransactionsBoard = () => {
@@ -43,9 +60,13 @@ const TransactionsBoard = () => {
                   type="subTitle"
                   className={clsx(
                     {
-                      "bg-primary-disabled": columnSelected === item.value,
+                      "bg-primary-disabled text-white":
+                        columnSelected === item.value,
                     },
-                    "px-6 py-4 text-primary"
+                    {
+                      "text-primary": columnSelected !== item.value,
+                    },
+                    "px-6 py-4"
                   )}
                 >
                   {item.title}
@@ -58,8 +79,9 @@ const TransactionsBoard = () => {
           {platformItems.map((item, index) => {
             return (
               <PlatformMovements
-                icon={item.icon}
-                color={item.color}
+                icon={item?.icon}
+                iconHtml={item.iconHtml}
+                css={item.css}
                 label={item.title}
                 value={item.value}
                 value2={item.value2 || ""}
@@ -73,14 +95,22 @@ const TransactionsBoard = () => {
   );
 };
 
-export const PlatformMovements = ({ icon, color, label, value, value2 }) => {
+export const PlatformMovements = ({
+  icon,
+  css,
+  label,
+  value,
+  value2,
+  iconHtml,
+}) => {
   return (
     <div className="flex xl:flex-row flex-col items-center">
       <div
-        className="flex items-center justify-center p-4 rounded-full h-max w-max"
-        style={{ backgroundColor: color }}
+        className="flex items-center justify-center p-4 rounded-full h-max w-max text-3xl text-white"
+        style={css}
       >
-        <img src={icon} className="h-8 w-8" alt="" />
+        {iconHtml && iconHtml}
+        {icon && <img src={icon} className="h-8 w-8" alt="" />}
       </div>
       <div className="xl:pl-4 xl:block flex flex-col items-center xl:mt-0 mt-4">
         <Typography className="text-primary text-center" type="label">

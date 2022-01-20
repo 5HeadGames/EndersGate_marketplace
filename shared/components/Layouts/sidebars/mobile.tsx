@@ -10,6 +10,13 @@ import { Typography } from "@shared/components/common/typography";
 import { Button } from "@shared/components/common/button/button";
 import ProfileDataAndActions from "@shared/components/Profile/profilePersonalData/profilePersonalData";
 import { useAppSelector } from "redux/store";
+import {
+  AppstoreFilled,
+  AreaChartOutlined,
+  DownOutlined,
+  RightOutlined,
+  ShopOutlined,
+} from "@ant-design/icons";
 
 interface LayoutDashboardProps {
   title?: string;
@@ -33,54 +40,54 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
       name: "Menu",
       link: "/menu",
       menu: true,
-      icon: Icons.menu,
+      icon: <AppstoreFilled />,
       items: [
         {
           title: "Marketplace",
           description:
             "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
-          icon: Icons.marketplace,
+          icon: <ShopOutlined />,
         },
         {
           title: "Marketplace",
           description:
             "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
-          icon: Icons.marketplace,
+          icon: <ShopOutlined />,
         },
         {
           title: "Marketplace",
           description:
             "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
-          icon: Icons.marketplace,
+          icon: <ShopOutlined />,
         },
         {
           title: "Marketplace",
           description:
             "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
-          icon: Icons.marketplace,
+          icon: <ShopOutlined />,
         },
         {
           title: "Marketplace",
           description:
             "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
-          icon: Icons.marketplace,
+          icon: <ShopOutlined />,
         },
         {
           title: "Marketplace",
           description:
             "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
-          icon: Icons.marketplace,
+          icon: <ShopOutlined />,
         },
       ],
     },
-    { name: "Dashboard", link: "/dashboard", icon: Icons.dashboard },
-    { name: "Marketplace", link: "/marketplace", icon: Icons.marketplace },
+    { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
+    { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
   ];
 
   const { address } = useAppSelector((state) => state.user);
@@ -165,6 +172,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                             {
                               "opacity-50": item.link !== router.asPath,
                             },
+
                             "flex justify-between items-center"
                           )}
                           onClick={() =>
@@ -186,24 +194,19 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                               "group flex items-center px-3 py-4 hover:opacity-90 text-base rounded-md  relative text-primary"
                             )}
                           >
-                            <img
-                              src={item.icon}
-                              className="mr-4 flex-shrink-0 h-6 w-6 text-white"
-                              aria-hidden="true"
-                              alt=""
-                            />
+                            <div className="mr-4 flex-shrink-0 flex items-start text-primary text-xl">
+                              {item.icon}
+                            </div>
                             {item.name}
                           </p>
-                          <img
-                            src={
-                              !collapse[index]
-                                ? Icons.chevronRight
-                                : Icons.chevronDown
-                            }
-                            className="mr-4 flex-shrink-0 h-6 w-6 text-white"
-                            aria-hidden="true"
-                            alt=""
-                          />
+
+                          <div className="flex-shrink-0 text-primary flex items-center text-xl">
+                            {!collapse[index] ? (
+                              <RightOutlined />
+                            ) : (
+                              <DownOutlined />
+                            )}
+                          </div>
                         </div>
                         <div className={clsx({ ["hidden"]: !collapse[index] })}>
                           {item?.items?.map((subItem) => {
@@ -211,7 +214,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                               <Link key={subItem.title} href={subItem.href}>
                                 <a
                                   className={clsx(
-                                    "flex items-center px-3 py-4  text-base rounded-md  relative text-primary",
+                                    "flex items-center px-3 py-4  text-base my-1 relative text-primary",
                                     {
                                       "opacity-50":
                                         subItem.href !== router.asPath,
@@ -220,12 +223,10 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                                   href="#"
                                   onClick={() => setSidebarOpen(false)}
                                 >
-                                  <img
-                                    src={subItem.icon}
-                                    className="mr-4 flex-shrink-0 h-6 w-6 text-white"
-                                    aria-hidden="true"
-                                    alt=""
-                                  />
+                                  <div className="mr-4 flex-shrink-0 flex items-start text-primary text-2xl">
+                                    {subItem.icon}
+                                  </div>
+
                                   {subItem.title}
                                 </a>
                               </Link>
@@ -246,11 +247,9 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                             )}
                             onClick={() => setSidebarOpen(false)}
                           >
-                            <img
-                              src={item.icon}
-                              className="mr-4 flex-shrink-0 h-6 w-6 text-white"
-                              aria-hidden="true"
-                            />
+                            <div className="mr-4 flex-shrink-0 flex items-start text-primary text-2xl">
+                              {item.icon}
+                            </div>
                             {item.name}
                           </p>
                         </Link>

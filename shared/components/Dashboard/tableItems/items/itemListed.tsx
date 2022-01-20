@@ -20,7 +20,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
   const { icon, label, value, value2, id, breed_count, price, timeAgo } = props;
 
   return (
-    <tr className="border-b-2 border-overlay-border">
+    <tr className="border-b-2 border-primary-disabled">
       <td className="py-4 pl-4">
         <div className="flex gap-x-2">
           <img src={icon} className="h-10 w-10" alt="" />
@@ -80,7 +80,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
           </Typography>
         </div>
       </td>
-      <td className="bg-primary-disabled cursor-pointer py-4 text-center w-8">
+      <td className="bg-secondary  cursor-pointer py-4 text-center w-8">
         <Link href="/NFTDetail">
           <a href="/NFTDetail" className="flex justify-center shrink-0">
             <img src={Icons.arrowLeft} className="w-5" alt="" />
