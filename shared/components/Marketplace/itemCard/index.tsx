@@ -23,11 +23,8 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
         )}
       >
         <div className="w-full flex flex-col text-xs mb-4 gap-1">
-          <div className="bg-primary p-2 rounded-md w-2/3 ">
-            <span>#234243982743</span>
-          </div>
           <div>
-            <span>Axie #1235</span>
+            <span>Card #1235</span>
           </div>
           <div>
             <span>Breed count:4</span>

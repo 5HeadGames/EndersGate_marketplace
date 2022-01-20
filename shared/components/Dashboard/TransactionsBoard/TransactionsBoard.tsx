@@ -32,7 +32,7 @@ const platformItems = [
     },
   },
   {
-    title: "AXIE SOLD",
+    title: "CARD SOLD",
     value: "1,200",
     icon: Icons.logo,
     css: {

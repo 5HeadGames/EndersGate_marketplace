@@ -15,10 +15,7 @@ const ItemSold = ({ transaction }) => {
         <div className="flex gap-x-2">
           <img src={icon} className="h-10 w-10" alt="" />
           <div className="flex flex-col items-center gap-4">
-            <Typography type="span" className="bg-white text-dark px-4 py-1">
-              # <TransactionText text={id} />
-            </Typography>
-            <Typography type="caption" className="text-gray-200">
+            <Typography type="span" className="text-gray-200">
               Breed Count: {breed_count}
             </Typography>
           </div>
