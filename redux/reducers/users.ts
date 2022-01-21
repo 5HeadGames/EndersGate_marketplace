@@ -1,7 +1,7 @@
 import {createReducer} from "@reduxjs/toolkit";
 import * as actions from "../actions";
 
-const INITIAL_STATE = {
+const INITIAL_STATE: User = {
     address: "",
     email: "",
     name: "",
@@ -9,7 +9,7 @@ const INITIAL_STATE = {
     userStatus: "",
     walletType: "",
     id: "",
-    nfts: [],
+    activity: [],
 };
 
 export const userReducer = createReducer(INITIAL_STATE, (builder) => {

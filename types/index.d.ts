@@ -1,5 +1,11 @@
 interface NFT {
+  tokenId: number | string;
+}
 
+type Activity = {
+  createdAt: string;
+  type: 'sell' | 'buy' | 'login';
+  nft?: NFT;
 }
 
 interface User {
@@ -10,4 +16,5 @@ interface User {
   profile_picture: string;
   userStatus: string;
   walletType?: string;
+  activity: Activity[];
 }

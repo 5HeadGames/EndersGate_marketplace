@@ -9,8 +9,8 @@ import {
 } from "@ant-design/icons";
 import {useRouter} from "next/router";
 import {useAppDispatch, useAppSelector} from "redux/store";
-import {onApproveERC1155} from "@redux/actions";
-import {onSellERC1155} from "@redux/actions";
+import {getUserPath} from 'shared/firebase'
+import {onApproveERC1155, onSellERC1155, onBuyERC1155, onUpdateFirebaseUser} from "@redux/actions";
 import {Button} from "../common/button/button";
 import {Icons} from "@shared/const/Icons";
 import DeploymentAddresses from "Contracts/addresses.harmony_test.json";
@@ -23,20 +23,62 @@ const NFTDetailComponent = () => {
   const user = useAppSelector((state) => state.user);
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const userPath = getUserPath(user)
 
   const sellNft = async () => {
-    console.log("approve",user.walletType,marketplace);
     await dispatch(
       onApproveERC1155({
         walletType: user.walletType,
         tx: {to: marketplace, from: user.address},
       })
     );
-    console.log('sell',user.walletType)
     await dispatch(
       onSellERC1155({
         walletType: user.walletType,
         tx: {from: user.address, startingPrice: "1", tokenId: 2},
+      })
+    );
+    await dispatch(
+      onUpdateFirebaseUser({
+        userPath,
+        updateData: {
+          activity: [
+            ...user.activity,
+            {
+              type: "sell",
+              createdAt: new Date().toISOString(),
+              nft: {
+                tokenId: 2,
+              },
+            },
+          ],
+        },
+      })
+    );
+  };
+
+  const buyNft = async () => {
+    await dispatch(
+      onBuyERC1155({
+        walletType: user.walletType,
+        tx: {from: user.address, bid: '5', tokenId: 2},
+      })
+    );
+    await dispatch(
+      onUpdateFirebaseUser({
+        userPath,
+        updateData: {
+          activity: [
+            ...user.activity,
+            {
+              type: "buy",
+              createdAt: new Date().toISOString(),
+              nft: {
+                tokenId: 2,
+              },
+            },
+          ],
+        },
       })
     );
   };
@@ -71,7 +113,7 @@ const NFTDetailComponent = () => {
               $116.15
             </Typography>
           </div>
-          <Button decoration="fillPrimary" size="small">
+          <Button decoration="fillPrimary" size="small" onClick={buyNft}>
             <img src={Icons.harmony} className="h-6 w-6" alt="" /> Buy now
           </Button>
           <Button decoration="fillPrimary" size="small" onClick={sellNft}>

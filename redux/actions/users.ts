@@ -103,6 +103,24 @@ export const onUpdateUserCredentials = createAsyncThunk(
   }
 );
 
+export const onUpdateFirebaseUser = createAsyncThunk(
+  actionTypes.UPDATE_USER,
+  async function prepare({
+    userPath,
+    updateData,
+  }: {
+    userPath: string;
+    updateData: Partial<User>;
+  }) {
+    try {
+      await writeUser(userPath, updateData);
+      return updateData;
+    } catch (err) {
+      return false;
+    }
+  }
+);
+
 export const onUpdateUser = createAction(
   actionTypes.UPDATE_USER,
   function prepare(updateData: Partial<User>) {
@@ -182,7 +200,7 @@ export const onSellERC1155 = createAsyncThunk(
         });
     } else if (walletType === "harmony") {
       const harmonyExt = await new HarmonyExtension((window as any).onewallet);
-      await harmonyExt.login()
+      await harmonyExt.login();
       const marketplaceContract = harmonyExt.contracts.createContract(
         MarketplaceContract.abi,
         marketplace
@@ -193,13 +211,50 @@ export const onSellERC1155 = createAsyncThunk(
           gasLimit: "1000001",
           gasPrice: 1000000000,
         });
-    } else if (walletType === 'wallet_connect') {
-
+    } else if (walletType === "wallet_connect") {
     }
   }
 );
 
-export const onBuyNFT = createAsyncThunk(
+export const onBuyERC1155 = createAsyncThunk(
   actionTypes.BUY_NFT,
-  async function prepare(tx: {walletType: User["walletType"]; transaction: any}) {}
+  async function prepare({
+    walletType,
+    tx,
+  }: {
+    walletType: User["walletType"];
+    tx: {from: string; tokenId: number | string; bid: string | number};
+  }) {
+    const {marketplace, erc1155} = DeploymentAddresses;
+    if (walletType === "metamask") {
+      const web3 = new Web3((window as any).ethereum);
+      const marketplaceContract = new web3.eth.Contract(
+        MarketplaceContract.abi as AbiItem[],
+        marketplace
+      );
+      const erc1155Contract = new web3.eth.Contract(ERC1155.abi as AbiItem[], erc1155);
+
+      await marketplaceContract.methods
+        .bid(erc1155, tx.tokenId)
+        .send({
+          from: tx.from,
+          value: tx.bid,
+        });
+    } else if (walletType === "harmony") {
+      const harmonyExt = await new HarmonyExtension((window as any).onewallet);
+      await harmonyExt.login();
+      const marketplaceContract = harmonyExt.contracts.createContract(
+        MarketplaceContract.abi,
+        marketplace
+      );
+      await marketplaceContract.methods
+        .createAuction(erc1155, tx.tokenId)
+        .send({
+          gasLimit: "1000001",
+          gasPrice: 1000000000,
+          value: tx.bid
+        });
+    } else if (walletType === "wallet_connect") {
+    }
+  }
 );

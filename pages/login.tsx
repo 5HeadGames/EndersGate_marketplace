@@ -52,7 +52,6 @@ const Login = () => {
     const account = await loginHarmonyWallet();
     if (!account) return show("harmony");
     setLoading(true);
-    console.log({login:account,thi:(window as any).onewallet})
     await dispatch(onLoginUser({address: account.address}));
     setLoading(false);
     dispatch(
@@ -82,7 +81,6 @@ const Login = () => {
   };
 
   const handleQRCode = () => {
-    console.log(connector);
     if (!connector.connected) {
       // create new session
       connector.createSession();
@@ -133,15 +131,6 @@ const Login = () => {
           onClick={handleMetamaskConnect}
         >
           {loading ? "..." : "Login with Metamask Wallet"}
-        </Button>
-        <Button
-          disabled={loading}
-          decoration="line-primary"
-          size="medium"
-          className="w-full mb-2"
-          onClick={handleQRCode}
-        >
-          {loading ? "..." : "Login By QR Code"}
         </Button>
         {openForm ? (
           <EmailPasswordForm onSubmit={handleSubmit} loading={loading} />

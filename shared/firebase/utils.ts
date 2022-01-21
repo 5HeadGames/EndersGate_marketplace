@@ -47,3 +47,7 @@ export const getFileUrl = async ({path}: {path: string}) => {
   const storageRef = getStorageRef(getStorage(), path);
   return await getDownloadURL(storageRef);
 }
+
+export const getUserPath = (user: User) => {
+  return `users/${user.address}`;
+}
