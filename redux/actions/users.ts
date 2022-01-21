@@ -40,6 +40,12 @@ export const onLoginUser = createAsyncThunk(
       userStatus: "",
       walletType: "",
       address: (userData as any).address,
+      activity: [
+        {
+          createdAt: new Date().toISOString(),
+          type: 'login'
+        }
+      ]
     };
     if (userData.email) {
       try {
@@ -51,7 +57,6 @@ export const onLoginUser = createAsyncThunk(
         const user = await readUser(`users/${userData.address}`);
         return user || placeholderData;
       } catch (err) {
-        console.log({err});
         const {user: userAuth} = await createUserWithEmailAndPassword(
           auth,
           userData.email,
@@ -59,19 +64,21 @@ export const onLoginUser = createAsyncThunk(
         );
         await writeUser(`users/${(userData as any).address}`, {
           email: userData.email,
+          activity: [
+            {
+              createdAt: new Date().toISOString(),
+              type: 'login'
+            }
+          ]
         });
         const user = await readUser(`users/${userData.address}`);
-        //writeUser(
-        //`users/${userAuth.uid}`,
-        //{email: userData.email}
-        //);
 
         return user || placeholderData;
       }
     } else {
       const user = await readUser(`users/${(userData as any).address}`);
       if (!user) {
-        await writeUser(`users/${(userData as any).address}`, placeholderData);
+        await writeUser(`users/${(userData as any).address}`, placeholderData as any);
       }
       const newUser = await readUser(`users/${(userData as any).address}`);
       return newUser || placeholderData;
@@ -144,7 +151,7 @@ export const onLogout = createAsyncThunk(
 );
 
 export const onApproveERC1155 = createAsyncThunk(
-  actionTypes.BUY_NFT,
+  actionTypes.APPROVE_NFT,
   async function prepare({
     walletType,
     tx,
