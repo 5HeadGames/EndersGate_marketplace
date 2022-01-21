@@ -13,10 +13,10 @@ interface Props {
 export const CollapseMenu: React.FunctionComponent<Props> = ({
   children,
   title,
-  defaultOpen,
+  defaultOpen = false,
   classes,
 }) => {
-  const [open, setOpen] = React.useState(defaultOpen || false);
+  const [open, setOpen] = React.useState(false);
 
   return (
     <div className={clsx("text-right", classes?.root)}>

@@ -1,14 +1,23 @@
 import React from "react";
-import {AppstoreOutlined, UnorderedListOutlined} from "@ant-design/icons";
-import {useRouter} from 'next/router'
+import {
+  AppstoreOutlined,
+  CaretDownOutlined,
+  CaretUpOutlined,
+  UnorderedListOutlined,
+} from "@ant-design/icons";
+import { useRouter } from "next/router";
 
-import NftCard from 'shared/components/Marketplace/itemCard'
+import NftCard from "shared/components/Marketplace/itemCard";
 import FiltersBoard from "./filters/filters";
-import {DropdownActions} from "../common/dropdownActions/dropdownActions";
+import { DropdownActions } from "../common/dropdownActions/dropdownActions";
+import { Dropdown } from "../common/dropdown/dropdown";
+import clsx from "clsx";
+import { Typography } from "../common/typography";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("lowest_price");
-  const router = useRouter()
+  const [filterMobile, setFilterMobile] = React.useState(false);
+  const router = useRouter();
 
   const orderMapper = {
     lowest_price: "Lowest Price",
@@ -48,8 +57,10 @@ const MarketplaceComponent = () => {
       <FiltersBoard filter={filter} setFilter={setFilter} />
       <div className="xl:w-2/3 xl:mt-0 mt-6 flex flex-col">
         <div>
-          <div className="w-full flex justify-between sm:flex-row flex-col">
-            <h3 className="text-2xl text-primary ml-4">619,801 Axies</h3>
+          <div className="w-full flex justify-between items-center sm:flex-row flex-col">
+            <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">
+              619,801 Axies
+            </h3>
             <div className="flex">
               <DropdownActions
                 title={orderMapper[currentOrder]}
@@ -83,10 +94,18 @@ const MarketplaceComponent = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-wrap w-full justify-center items-center">
+          <div className="flex flex-wrap w-full justify-center items-center relative">
             {new Array(6).fill(0).map((a, id) => (
-              <NftCard classes={{root: "m-4 cursor-pointer"}} onClick={() => router.push(`collectable/${id}`)} />
+              <NftCard
+                classes={{ root: "m-4 cursor-pointer" }}
+                onClick={() => router.push(`collectable/${id}`)}
+              />
             ))}
+            {filterMobile && (
+              <div className={clsx("flex absolute w-screen")}>
+                <FiltersBoard filter={filter} setFilter={setFilter} />{" "}
+              </div>
+            )}
           </div>
         </div>
       </div>

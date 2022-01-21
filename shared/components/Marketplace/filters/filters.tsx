@@ -201,7 +201,8 @@ const FiltersBoard = ({filter, setFilter}) => {
                 "bg-primary": filter[nftType],
               },
               "cursor-pointer px-0 py-2 flex-1",
-              index !== 2 && "border-r-2 border-primary"
+              index !== 2 &&
+                "sm:border-r-2 sm:border-b-0 border-b-2 border-primary"
             )}
             onClick={() =>
               setFilter((prev) => ({
