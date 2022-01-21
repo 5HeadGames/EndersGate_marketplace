@@ -13,6 +13,9 @@ import {
   AppstoreFilled,
   AreaChartOutlined,
   ShopOutlined,
+  TwitterOutlined,
+  TwitterSquareFilled,
+  WalletOutlined,
 } from "@ant-design/icons";
 
 const styles = {
@@ -39,46 +42,46 @@ const navItems = [
     icon: <AppstoreFilled />,
     items: [
       {
-        title: "Marketplace",
+        title: "Enders Gate Website",
         description:
           "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: <ShopOutlined />,
       },
       {
-        title: "Marketplace",
+        title: "Enders Gate Discord",
         description:
           "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: <ShopOutlined />,
       },
       {
-        title: "Marketplace",
+        title: "Enders Gate Twitter",
         description:
           "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
-        icon: <ShopOutlined />,
+        icon: <TwitterOutlined />,
       },
       {
-        title: "Marketplace",
+        title: "Harmony Block Explorer",
         description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+          "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
-        icon: <ShopOutlined />,
+        icon: <WalletOutlined />,
       },
       {
-        title: "Marketplace",
+        title: "Harmony Wallet",
         description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+          "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
-        icon: <ShopOutlined />,
+        icon: <WalletOutlined />,
       },
       {
-        title: "Marketplace",
+        title: "Harmony Bridge",
         description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+          "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
-        icon: <ShopOutlined />,
+        icon: <WalletOutlined />,
       },
     ],
   },
