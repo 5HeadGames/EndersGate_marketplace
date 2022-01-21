@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@harmony-js/utils": "^0.1.56",
     "@openzeppelin/contracts": "^4.4.1",
     "@reduxjs/toolkit": "^1.7.1",
     "@typechain/ethers-v5": "^8.0.5",

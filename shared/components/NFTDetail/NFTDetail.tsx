@@ -1,3 +1,4 @@
+import React from "react";
 import {
   FireFilled,
   HeartFilled,
@@ -6,18 +7,40 @@ import {
   StarFilled,
   ThunderboltFilled,
 } from "@ant-design/icons";
-import { Icons } from "@shared/const/Icons";
-import { useRouter } from "next/router";
-import React from "react";
-import { Button } from "../common/button/button";
-import {
-  AddressText,
-  TransactionText,
-} from "../common/specialFields/SpecialFields";
-import { Typography } from "../common/typography";
+import {useRouter} from "next/router";
+import {useAppDispatch, useAppSelector} from "redux/store";
+import {onApproveERC1155} from "@redux/actions";
+import {onSellERC1155} from "@redux/actions";
+import {Button} from "../common/button/button";
+import {Icons} from "@shared/const/Icons";
+import DeploymentAddresses from "Contracts/addresses.harmony_test.json";
+import {AddressText, TransactionText} from "../common/specialFields/SpecialFields";
+import {Typography} from "../common/typography";
+
+const {marketplace} = DeploymentAddresses;
 
 const NFTDetailComponent = () => {
+  const user = useAppSelector((state) => state.user);
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const sellNft = async () => {
+    console.log("approve",user.walletType,marketplace);
+    await dispatch(
+      onApproveERC1155({
+        walletType: user.walletType,
+        tx: {to: marketplace, from: user.address},
+      })
+    );
+    console.log('sell',user.walletType)
+    await dispatch(
+      onSellERC1155({
+        walletType: user.walletType,
+        tx: {from: user.address, startingPrice: "1", tokenId: 2},
+      })
+    );
+  };
+
   return (
     <div className="min-h-screen w-full flex flex-col xl:px-20 md:px-10 sm:px-6 pt-32">
       <div className="flex sm:flex-row flex-col sm:justify-between  w-full">
@@ -31,15 +54,11 @@ const NFTDetailComponent = () => {
           </div>
           <Typography type="span" className="bg-white text-dark px-4 py-1">
             #
-            <TransactionText
-              text={"16545646486486489781156566544864864615468486471"}
-            />
+            <TransactionText text={"16545646486486489781156566544864864615468486471"} />
           </Typography>
           <Typography type="title" className="text-primary">
             Axie #
-            <TransactionText
-              text={"16545646486486489781156566544864864615468486471"}
-            />
+            <TransactionText text={"16545646486486489781156566544864864615468486471"} />
           </Typography>
         </div>
         <div className="flex gap-2 items-start sm:mt-0 mt-4 sm:justify-end justify-between">
@@ -54,6 +73,9 @@ const NFTDetailComponent = () => {
           </div>
           <Button decoration="fillPrimary" size="small">
             <img src={Icons.harmony} className="h-6 w-6" alt="" /> Buy now
+          </Button>
+          <Button decoration="fillPrimary" size="small" onClick={sellNft}>
+            <img src={Icons.harmony} className="h-6 w-6" alt="" /> Sell now
           </Button>
         </div>
       </div>
@@ -71,30 +93,18 @@ const NFTDetailComponent = () => {
             <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
               <div className="flex flex-row gap-4">
                 <div className="flex flex-col">
-                  <Typography
-                    type="smallTitle"
-                    className="text-white font-bold"
-                  >
+                  <Typography type="smallTitle" className="text-white font-bold">
                     CLASS
                   </Typography>
-                  <Typography
-                    type="smallTitle"
-                    className="text-primary opacity-75"
-                  >
+                  <Typography type="smallTitle" className="text-primary opacity-75">
                     Earth
                   </Typography>
                 </div>
                 <div className="flex flex-col">
-                  <Typography
-                    type="smallTitle"
-                    className="text-white font-bold"
-                  >
+                  <Typography type="smallTitle" className="text-white font-bold">
                     BREED COUNT
                   </Typography>
-                  <Typography
-                    type="smallTitle"
-                    className="text-primary opacity-75"
-                  >
+                  <Typography type="smallTitle" className="text-primary opacity-75">
                     0/7
                   </Typography>
                 </div>
@@ -102,16 +112,10 @@ const NFTDetailComponent = () => {
               <div>
                 {" "}
                 <div className="flex flex-col">
-                  <Typography
-                    type="smallTitle"
-                    className="text-white font-bold"
-                  >
+                  <Typography type="smallTitle" className="text-white font-bold">
                     OWNER
                   </Typography>
-                  <Typography
-                    type="smallTitle"
-                    className="text-primary opacity-75"
-                  >
+                  <Typography type="smallTitle" className="text-primary opacity-75">
                     Maria
                     <Typography type="span" className="text-gray-500 pl-2">
                       <AddressText text="one1hhe8ztms7cz2pmxwdm6js9mhna9u9ah6t255q9" />

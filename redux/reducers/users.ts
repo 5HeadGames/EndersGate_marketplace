@@ -2,14 +2,14 @@ import {createReducer} from "@reduxjs/toolkit";
 import * as actions from "../actions";
 
 const INITIAL_STATE = {
-  address: "",
-  email: "",
-  name: "",
-  profile_picture: "",
-  userStatus: "",
-  walletType: "",
-  id: "",
-  nfts: [],
+    address: "",
+    email: "",
+    name: "",
+    profile_picture: "",
+    userStatus: "",
+    walletType: "",
+    id: "",
+    nfts: [],
 };
 
 export const userReducer = createReducer(INITIAL_STATE, (builder) => {
@@ -35,10 +35,13 @@ export const userReducer = createReducer(INITIAL_STATE, (builder) => {
                 state[section[0]] = section[1]
             })
         })
-        .addCase(actions.onBuyNFT.fulfilled, (state: typeof INITIAL_STATE, action) => {
+        .addCase(actions.onApproveERC1155.fulfilled, (state: typeof INITIAL_STATE, action) => {
 
         })
-        .addCase(actions.onSellNFT.fulfilled, (state: typeof INITIAL_STATE, action) => {
+        //.addCase(actions.onBuyNFT.fulfilled, (state: typeof INITIAL_STATE, action) => {
+
+        //})
+        .addCase(actions.onSellERC1155.fulfilled, (state: typeof INITIAL_STATE, action) => {
 
         });
 });

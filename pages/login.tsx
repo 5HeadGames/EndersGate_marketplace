@@ -4,17 +4,13 @@ import {useRouter} from "next/router";
 
 import {useModal} from "@shared/hooks/modal";
 import {useAppDispatch, useAppSelector} from "redux/store";
-import { onLoginUser, onMessage, onUpdateUser } from "redux/actions";
-import {
-  loginHarmonyWallet,
-  loginMetamaskWallet,
-  getWalletConnect,
-} from "@shared/web3";
-import { Button } from "shared/components/common/button";
+import {onLoginUser, onMessage, onUpdateUser} from "redux/actions";
+import {loginHarmonyWallet, loginMetamaskWallet, getWalletConnect} from "@shared/web3";
+import {Button} from "shared/components/common/button";
 import Dialog from "shared/components/common/dialog";
-import { Typography } from "shared/components/common/typography";
-import { InputPassword } from "shared/components/common/form/input-password";
-import { InputEmail } from "shared/components/common/form/input-email";
+import {Typography} from "shared/components/common/typography";
+import {InputPassword} from "shared/components/common/form/input-password";
+import {InputEmail} from "shared/components/common/form/input-email";
 
 type Values = {
   email?: string;
@@ -26,8 +22,8 @@ type Values = {
 const Login = () => {
   const [openForm, setOpenForm] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const { Modal, isShow, show, hide } = useModal();
-  const { address } = useAppSelector((state) => state.user);
+  const {Modal, isShow, show, hide} = useModal();
+  const {address} = useAppSelector((state) => state.user);
   const [connector, setConnector] = React.useState(getWalletConnect());
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -38,13 +34,13 @@ const Login = () => {
     setLoading(true);
     await dispatch(
       onLoginUser({
-        address: (await web3.eth.getAccounts())[0],
+        address: (window as any).ethereum.selectedAddress,
       })
     );
     setLoading(false);
-    await dispatch(
+    dispatch(
       onUpdateUser({
-        address: (await web3.eth.getAccounts())[0],
+        address: (window as any).ethereum.selectedAddress,
         walletType: "metamask",
       })
     );
@@ -56,9 +52,10 @@ const Login = () => {
     const account = await loginHarmonyWallet();
     if (!account) return show("harmony");
     setLoading(true);
-    await dispatch(onLoginUser({ address: account.address }));
+    console.log({login:account,thi:(window as any).onewallet})
+    await dispatch(onLoginUser({address: account.address}));
     setLoading(false);
-    await dispatch(
+    dispatch(
       onUpdateUser({
         address: account.address,
         walletType: "harmony",
@@ -71,9 +68,9 @@ const Login = () => {
   const handleSubmit = async (user: Values) => {
     setLoading(true);
     const account = await loginHarmonyWallet();
-    dispatch(onLoginUser({ ...user, address: account.address }));
+    await dispatch(onLoginUser({...user, address: account.address}));
     setLoading(false);
-    await dispatch(
+    dispatch(
       onUpdateUser({
         ...user,
         address: account.address,
@@ -93,14 +90,20 @@ const Login = () => {
   };
 
   React.useEffect(() => {
-    connector.on("connect", (error, payload) => {
+    connector.on("connect", async (error, payload) => {
       if (error) {
         throw error;
       }
 
-      const { accounts, chainId } = payload.params[0];
+      const {accounts, chainId} = payload.params[0];
       console.log(accounts);
-      dispatch(onLoginUser({ address: accounts[0] }));
+      await dispatch(onLoginUser({address: accounts[0]}));
+      setLoading(false);
+      dispatch(
+        onUpdateUser({
+          walletType: "wallet_connect",
+        })
+      );
       dispatch(onMessage("Login successful!"));
       setTimeout(dispatch, 2000, onMessage(""));
     });
