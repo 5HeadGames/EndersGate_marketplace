@@ -53,13 +53,13 @@ export const Button: React.FC<
           onClick={onClick}
           className={clsx(
             // with border
-            {"border-none": !withBorder},
+            { "border-none": !withBorder },
             //size
-            {"w-full": size === "full"},
+            { "w-full": size === "full" },
 
             //fill
             {
-              "bg-primary-disabled border-primary-disabled shadow-md text-primary":
+              "bg-primary border-transparent shadow-md text-white":
                 decoration === "fill" && !social && !tag,
             },
             {
@@ -76,7 +76,8 @@ export const Button: React.FC<
             },
             //not fill white
             {
-              "text-gray-0 border-gray-0": decoration === "line-white" && !social,
+              "text-gray-0 border-gray-0":
+                decoration === "line-white" && !social,
             },
             {
               "hover:bg-primary hover:text-gray-0 hover:border-primary":
@@ -97,13 +98,13 @@ export const Button: React.FC<
                 !social && !tag,
             },
             //facebook
-            {"text-facebook border-facebook": social === "facebook"},
+            { "text-facebook border-facebook": social === "facebook" },
             {
               "hover:text-gray-0 hover:bg-facebook":
                 social === "facebook" && !disabled,
             },
             //google
-            {"text-gray-500 border-gray-500": social === "google"},
+            { "text-gray-500 border-gray-500": social === "google" },
             {
               "hover:text-gray-0 hover:bg-gray-500":
                 social === "google" && !disabled,
@@ -118,8 +119,8 @@ export const Button: React.FC<
             "group flex items-center justify-center border rounded-[8px] outline-none transition-colors duration-200",
             "focus:outline-none",
             "disabled:cursor-not-allowed",
-            {"px-6 py-2": size === "small"},
-            {"px-10 py-4": size === "medium"},
+            { "px-6 py-2": size === "small" },
+            { "px-10 py-4": size === "medium" },
             "font-medium",
 
             // tag
@@ -141,24 +142,23 @@ export const Button: React.FC<
             >
               {icon && (
                 <div className="mr-2 w-4 h-4 flex shrink-0 items-center">
-                  {
-                    typeof icon === 'string' ?
-                      <img
-                        alt="icon"
-                        src={icon}
-                        className={clsx(
-                          {
-                            "text-facebook ": social === "facebook",
-                          },
-                          {
-                            "group-hover:text-gray-0":
-                              social === "facebook" && !disabled,
-                          }
-                        )}
-                      />
-                      :
-                      icon
-                  }
+                  {typeof icon === "string" ? (
+                    <img
+                      alt="icon"
+                      src={icon}
+                      className={clsx(
+                        {
+                          "text-facebook ": social === "facebook",
+                        },
+                        {
+                          "group-hover:text-gray-0":
+                            social === "facebook" && !disabled,
+                        }
+                      )}
+                    />
+                  ) : (
+                    icon
+                  )}
                 </div>
               )}
               {loading && <Spinner type="loadingButton" />}

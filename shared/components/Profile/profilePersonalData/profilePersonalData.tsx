@@ -4,35 +4,48 @@ import {Icons} from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
 import "shared/firebase";
-import {CheckCircleOutlined, LogoutOutlined} from "@ant-design/icons";
-import {useAppSelector, useAppDispatch} from "redux/store";
-import {onLogout, onMessage} from "redux/actions";
-import {useModal} from "@shared/hooks/modal";
-import {useForm} from "react-hook-form";
-import {Input} from "@shared/components/common/form/input";
+import {
+  CheckCircleOutlined,
+  FormOutlined,
+  GoldenFilled,
+  GoldFilled,
+  GoldOutlined,
+  IdcardOutlined,
+  LogoutOutlined,
+  SettingFilled,
+  SettingOutlined,
+} from "@ant-design/icons";
+import { useAppSelector, useAppDispatch } from "redux/store";
+import { onLogout, onMessage } from "redux/actions";
+import { useModal } from "@shared/hooks/modal";
+import { useForm } from "react-hook-form";
+import { Input } from "@shared/components/common/form/input";
+import Inventory2Icon from "@mui/icons-material/Inventory2";
 
-type ButtonsTypes = {logout: boolean};
+type ButtonsTypes = { logout: boolean };
 
-const ProfileDataAndActions = ({name, photo, email}) => {
-  const [disabled, setDisabled] = React.useState<ButtonsTypes>({logout: false});
-  const {Modal, isShow, show, hide} = useModal();
+const ProfileDataAndActions = ({ name, photo, email }) => {
+  const [disabled, setDisabled] = React.useState<ButtonsTypes>({
+    logout: false,
+  });
+  const { Modal, isShow, show, hide } = useModal();
   const {
     register,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
   const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   const disableButton = (option: ButtonsTypes) => {
-    setDisabled((prev) => ({...prev, ...option}));
+    setDisabled((prev) => ({ ...prev, ...option }));
   };
 
   const handleSignOut = async () => {
-    console.log('handleSignOut')
-    disableButton({logout: true});
+    console.log("handleSignOut");
+    disableButton({ logout: true });
     const isLoggedOut = await dispatch(onLogout(user));
-    disableButton({logout: false});
+    disableButton({ logout: false });
     if (isLoggedOut) {
       dispatch(onMessage("Logged out successfully!"));
       setTimeout(dispatch, 2000, onMessage(""));
@@ -40,11 +53,11 @@ const ProfileDataAndActions = ({name, photo, email}) => {
   };
 
   const links = [
-    {href: "/profile", label: "Account", icon: Icons.id},
+    { href: "/profile", label: "Account", icon: <IdcardOutlined /> },
     {
       href: "/profile/inventory",
       label: "Inventory",
-      icon: Icons.inventory,
+      icon: <GoldenFilled />,
     },
     {
       href: "/profile/activity",
@@ -54,7 +67,7 @@ const ProfileDataAndActions = ({name, photo, email}) => {
     {
       href: "/profile/accountSettings",
       label: "Account Settings",
-      icon: Icons.settings,
+      icon: <SettingOutlined />,
     },
     {
       label: "Logout",
@@ -70,11 +83,20 @@ const ProfileDataAndActions = ({name, photo, email}) => {
       <Modal isShow={isShow}>
         <div className="flex flex-col items-center p-6">
           <form action="" className="flex flex-col items-center w-full">
-            <input type="file" accept="image/*" id="profile_picture" className="hidden" />
+            <input
+              type="file"
+              accept="image/*"
+              id="profile_picture"
+              className="hidden"
+            />
             <div className="flex md:flex-row flex-col items-center mb-4">
               <div className="h-24 w-24 rounded-full relative">
                 <img
-                  src={user.profile_picture !== "" ? user.profile_picture : Icons.logo}
+                  src={
+                    user.profile_picture !== ""
+                      ? user.profile_picture
+                      : Icons.logo
+                  }
                   alt=""
                 />
               </div>
@@ -94,7 +116,12 @@ const ProfileDataAndActions = ({name, photo, email}) => {
               placeholder="Nickname"
               value={user.name}
             />
-            <Button decoration="fillPrimary" size="small" type="submit" className="mt-4">
+            <Button
+              decoration="fillPrimary"
+              size="small"
+              type="submit"
+              className="mt-4"
+            >
               Save
             </Button>
           </form>
@@ -111,16 +138,19 @@ const ProfileDataAndActions = ({name, photo, email}) => {
           className="h-16 w-16 rounded-full"
           alt=""
         />
-        <Typography type="title" className="text-primary flex items-center mt-2">
+        <Typography
+          type="title"
+          className="text-primary flex items-center mt-2"
+        >
           {user.name}
         </Typography>
         <div
           onClick={() => {
             show();
           }}
-          className="cursor-pointer"
+          className="cursor-pointer h-4 w-4 text-primary"
         >
-          <img src={Icons.edit} className="h-4 w-4" alt="edit" />
+          <FormOutlined />
         </div>
         <Typography type="span" className="text-white md:text-xs text-caption">
           {user.email}

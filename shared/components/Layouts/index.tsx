@@ -9,6 +9,11 @@ import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
 import {MenuIcon} from "@heroicons/react/outline";
 import {SidebarMobile} from "./sidebars/mobile";
 import {useAppSelector} from "redux/store";
+import {
+  AppstoreFilled,
+  AreaChartOutlined,
+  ShopOutlined,
+} from "@ant-design/icons";
 
 const styles = {
   content: {
@@ -31,53 +36,62 @@ const navItems = [
     name: "Menu",
     link: "/menu",
     menu: true,
-    icon: Icons.menu,
+    icon: <AppstoreFilled />,
     items: [
       {
         title: "Marketplace",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
-        icon: Icons.marketplaceWhite,
+        icon: <ShopOutlined />,
       },
       {
         title: "Marketplace",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
-        icon: Icons.marketplaceWhite,
+        icon: <ShopOutlined />,
       },
       {
         title: "Marketplace",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
-        icon: Icons.marketplaceWhite,
+        icon: <ShopOutlined />,
       },
       {
         title: "Marketplace",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
-        icon: Icons.marketplaceWhite,
+        icon: <ShopOutlined />,
       },
       {
         title: "Marketplace",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
-        icon: Icons.marketplaceWhite,
+        icon: <ShopOutlined />,
       },
       {
         title: "Marketplace",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
-        icon: Icons.marketplaceWhite,
+        icon: <ShopOutlined />,
       },
     ],
   },
-  {name: "Dashboard", link: "/dashboard", icon: Icons.dashboard},
-  {name: "Marketplace", link: "/marketplace", icon: Icons.marketplace},
+  { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
+  { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
 ];
 
-export default function AppLayout({children}) {
+export default function AppLayout({ children }) {
   const router = useRouter();
-  const {blur, message, address} = useAppSelector((state) => ({...state.layout, ...state.user}));
+  const { blur, message, address } = useAppSelector((state) => ({
+    ...state.layout,
+    ...state.user,
+  }));
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
   //   const [inputValue, setInputValue] = React.useState("explore");
@@ -98,8 +112,7 @@ export default function AppLayout({children}) {
         className={clsx(
           "fixed top-0 z-10",
           "bg-overlay",
-          "w-screen md:px-16 px-8 flex flex-row items-center justify-between shadow-md",
-          "border-2 border-overlay-border"
+          "w-screen md:px-16 px-8 flex flex-row items-center justify-between shadow-md"
         )}
       >
         <div className="flex items-center">
@@ -107,20 +120,25 @@ export default function AppLayout({children}) {
           <div className="md:flex hidden items-center">
             {navItems.map((item, index) => {
               return item.menu ? (
-                <DropdownMenu
-                  icon={item.icon}
-                  title={item.name}
-                  navElementsLinks={item.items}
-                  key={index}
-                />
+                <>
+                  <DropdownMenu
+                    icon={item.icon}
+                    title={item.name}
+                    navElementsLinks={item.items}
+                    key={index}
+                  />
+                  <div className="h-full border border-transparent"></div>
+                </>
               ) : (
-                <NavbarItem
-                  key={index}
-                  name={item.name}
-                  icon={item.icon}
-                  link={item.link}
-                  route={router.asPath}
-                />
+                <>
+                  <NavbarItem
+                    key={index}
+                    name={item.name}
+                    icon={item.icon}
+                    link={item.link}
+                    route={router.asPath}
+                  />
+                </>
               );
             })}
           </div>
@@ -159,10 +177,11 @@ export default function AppLayout({children}) {
   );
 }
 
-export const Message: React.FunctionComponent<{content: string; open: boolean}> = (
-  props
-) => {
-  const {content, open} = props;
+export const Message: React.FunctionComponent<{
+  content: string;
+  open: boolean;
+}> = (props) => {
+  const { content, open } = props;
 
   return (
     <div
@@ -178,26 +197,32 @@ export const Message: React.FunctionComponent<{content: string; open: boolean}> 
 };
 
 export const Logo = () => (
-  <div className="py-4">
-    <img className="h-12 w-12 " src={Icons.logo} alt="logo" />
-  </div>
+  <Link href="/dashboard">
+    <div className="mr-4 md:py-0 py-2 cursor-pointer">
+      <img className="h-12 w-12" src={Icons.logo} alt="logo" />
+    </div>
+  </Link>
 );
 
-export const NavbarItem = ({name, link, route, icon}) => {
+export const NavbarItem = ({ name, link, route, icon }) => {
   return (
     <Link href={link}>
-      <a className={clsx("md:ml-12 ml-8 py-8 relative")} href={link}>
-        <div className="flex items-center">
-          <img src={icon} className={clsx({"opacity-50": link !== route}, "h-4 w-4 mr-2")} />
-          <h3 className={clsx({"opacity-50": link !== route}, "text-base text-primary")}>
-            {name}
-          </h3>
-        </div>
+      <a
+        className={clsx("md:px-6 px-4 py-6 relative", {
+          [`bg-primary text-white`]: link === route,
+        })}
+        href={link}
+      >
         <div
-          className={clsx({
-            "absolute bottom-0 w-full bg-primary h-1.5 rounded-t-md": link === route,
-          })}
-        ></div>
+          className={clsx(
+            { "opacity-50 text-primary": link !== route },
+            { "text-white": link === route },
+            "gap-2 flex items-center"
+          )}
+        >
+          <div className="flex items-center text-2xl">{icon}</div>
+          <h3 className={clsx("text-base")}>{name}</h3>
+        </div>
       </a>
     </Link>
   );

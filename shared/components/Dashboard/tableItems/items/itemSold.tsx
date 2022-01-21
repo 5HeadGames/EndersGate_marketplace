@@ -10,15 +10,12 @@ const ItemSold = ({ transaction }) => {
   const { icon, id, breed_count, buyer, seller, price, timeAgo } = transaction;
   
   return (
-    <tr className="border-b-2 border-overlay-border">
+    <tr className="border-b-2 border-primary-disabled">
       <td className="py-4 pl-4">
         <div className="flex gap-x-2">
           <img src={icon} className="h-10 w-10" alt="" />
           <div className="flex flex-col items-center gap-4">
-            <Typography type="span" className="bg-white text-dark px-4 py-1">
-              # <TransactionText text={id} />
-            </Typography>
-            <Typography type="caption" className="text-gray-200">
+            <Typography type="span" className="text-gray-200">
               Breed Count: {breed_count}
             </Typography>
           </div>
@@ -51,7 +48,7 @@ const ItemSold = ({ transaction }) => {
           </Typography>
         </div>
       </td>
-      <td className="bg-primary-disabled cursor-pointer py-4 text-center w-8">
+      <td className="bg-secondary cursor-pointer py-4 text-center w-8">
         <div className="flex justify-center shrink-0">
           <img src={Icons.arrowLeft} className="w-5" alt="" />
         </div>

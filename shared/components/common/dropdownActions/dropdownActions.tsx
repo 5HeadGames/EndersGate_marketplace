@@ -4,6 +4,7 @@ import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { Typography } from "../typography";
 import { Icons } from "@shared/const/Icons";
+import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 
 export const DropdownActions: React.FC<any> = ({ title, actions }) => {
   return (
@@ -15,12 +16,9 @@ export const DropdownActions: React.FC<any> = ({ title, actions }) => {
             <>
               <div>
                 <Menu.Button className="inline-flex justify-center w-full font-medium bg-transparent focus:outline-none">
-                  <div className="flex justify-center items-center cursor-pointer rounded-md border-2 border-primary p-2">
-                    <img
-                      src={Icons.upArrow}
-                      style={{ transform: `rotate(${open ? "180deg" : "0"})` }}
-                    />
-                    <Typography type="subTitle" className="text-primary ml-2">
+                  <div className="flex justify-center items-center cursor-pointer rounded-md border-2 border-primary text-primary p-2">
+                    {open ? <CaretUpOutlined /> : <CaretDownOutlined />}
+                    <Typography type="subTitle" className="ml-2">
                       {title}
                     </Typography>
                   </div>

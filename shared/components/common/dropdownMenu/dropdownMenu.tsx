@@ -4,10 +4,11 @@ import { Menu, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { Typography } from "../typography";
+import Styles from "./styles.module.scss";
 export type navElementsAuth = {
   navElementsLinks: any[];
   className?: string;
-  icon: string;
+  icon: any;
 };
 export const DropdownMenu: React.FC<
   navElementsAuth & React.InputHTMLAttributes<HTMLInputElement>
@@ -19,27 +20,20 @@ export const DropdownMenu: React.FC<
           <div>
             <Menu.Button className="flex text-sm rounded-full focus:outline-none focus:ring-none">
               <span className="sr-only">Open user menu</span>
-              <div className={clsx("md:ml-12 ml-8 py-8 relative")}>
-                <div className="flex items-center">
-                  <img
-                    src={icon}
-                    className={clsx({ "opacity-50": !open }, "h-4 w-4 mr-2")}
-                  />
-                  <h3
-                    className={clsx(
-                      { "opacity-50": !open },
-                      "text-base text-primary"
-                    )}
-                  >
-                    {title}
-                  </h3>
-                </div>
+              <div
+                className={clsx("md:px-6 px-4 py-6 relative", {
+                  [`bg-primary text-white`]: open,
+                })}
+              >
                 <div
-                  className={clsx({
-                    "absolute bottom-0 w-full bg-primary h-1.5 rounded-t-md":
-                      open,
-                  })}
-                ></div>
+                  className={clsx(
+                    { "opacity-50 text-primary": !open },
+                    "flex items-center  gap-2"
+                  )}
+                >
+                  <div className="flex items-center text-2xl">{icon}</div>
+                  <h3 className={clsx("text-base")}>{title}</h3>
+                </div>
               </div>
             </Menu.Button>
           </div>
@@ -52,7 +46,7 @@ export const DropdownMenu: React.FC<
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="w-max grid xl:grid-cols-3 md:grid-cols-2  gap-4 p-6 origin-top-left absolute left-0 mt-2  rounded-md shadow-button bg-primary-disabled  focus:outline-none">
+            <Menu.Items className="w-max grid xl:grid-cols-3 md:grid-cols-2  gap-4 p-6 origin-top-left absolute left-0 mt-2  rounded-md shadow-button degradated  focus:outline-none">
               {navElementsLinks.map((item, index) => {
                 return (
                   <Menu.Item key={index}>
@@ -62,14 +56,12 @@ export const DropdownMenu: React.FC<
                           href={item.href}
                           onClick={item?.onClick}
                           className={clsx(
-                            "flex cursor-pointer items-start gap-x-2 px-4 py-4 f-14 text-normal text-dark-1 bg-overlay rounded-xl"
+                            "flex cursor-pointer items-start gap-x-2 px-4 py-4 f-14 text-normal text-dark-1 bg-overlay rounded-md"
                           )}
                         >
-                          <img
-                            src={item.icon}
-                            alt=""
-                            className="p-2 bg-primary rounded-md md:flex hidden"
-                          />
+                          <div className="p-2 degradated rounded-md md:flex hidden text-white text-2xl">
+                            {item.icon}
+                          </div>
                           <div className="flex flex-col ">
                             <Typography
                               type="subTitle"
