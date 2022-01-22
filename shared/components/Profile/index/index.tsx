@@ -119,7 +119,10 @@ export const Activity = ({ date, type }) => {
     <div className="flex sm:gap-4 gap-2 text-primary items-primary sm:px-10">
       <div className="flex flex-col items-center justify-center text-sm">
         <div>
-          {new Date(date).getUTCHours()}:{new Date(date).getUTCMinutes()}
+          {new Date(date).getUTCHours()}:
+          {new Date(date).getUTCMinutes() < 10
+            ? `0${new Date(date).getUTCMinutes()}`
+            : new Date(date).getUTCMinutes()}
         </div>
         <div>
           {new Date(date).getMonth() + 1}-{new Date(date).getDate()}-
