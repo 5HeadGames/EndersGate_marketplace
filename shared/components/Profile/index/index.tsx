@@ -4,18 +4,17 @@ import { useAppSelector } from "redux/store";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 import { Icons } from "@shared/const/Icons";
-import { CopyOutlined, SelectOutlined } from "@ant-design/icons";
+import { CopyOutlined, LoginOutlined, SelectOutlined } from "@ant-design/icons";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
 import { useToasts } from "react-toast-notifications";
 import Styles from "./styles.module.scss";
+import { Logo } from "@shared/components/Layouts";
+import Link from "next/link";
 
 const ProfileIndexPage = () => {
   const user = useAppSelector((state) => state.user);
   const router = useRouter();
   React.useEffect(() => {
-    // if (user && !user.address) {
-    //   router.push("/login");
-    // }
     console.log(user);
   }, [user]);
 
@@ -72,28 +71,79 @@ const ProfileIndexPage = () => {
           <Typography type="title" className="text-white">
             Activities
           </Typography>
-          <Typography type="span" className="text-primary cursor-pointer">
-            View More
-          </Typography>
+          <Link href="/profile/activity">
+            <a href="/profile/activity">
+              <Typography type="span" className="text-primary cursor-pointer">
+                View More
+              </Typography>
+            </a>
+          </Link>
         </div>
         <hr className="w-full mt-4" />
         <div
           className={clsx(
-            Styles.gray,
-            "h-72 w-full ",
-            "flex flex-col justify-center items-center gap-6"
+            "w-full ",
+            "flex flex-col",
+            {
+              [`${Styles.gray} justify-center items-center gap-6 h-72`]:
+                !user.activity,
+            },
+            {
+              ["py-10 gap-y-2"]: user.activity,
+            }
           )}
         >
-          <img src={Icons.logo} className="h-40 w-40" alt="" />
-          <Typography
-            type="subTitle"
-            className={clsx(Styles.title, "text-primary")}
-          >
-            You don't have any activity yet
-          </Typography>
+          {user.activity ? (
+            user.activity.map(({ createdAt, type }, index) => {
+              return <Activity date={createdAt} type={type} />;
+            })
+          ) : (
+            <>
+              <img src={Icons.logo} className="h-40 w-40" alt="" />
+              <Typography
+                type="subTitle"
+                className={clsx(Styles.title, "text-primary")}
+              >
+                You don't have any activity yet
+              </Typography>
+            </>
+          )}
         </div>
       </div>
     </>
+  );
+};
+
+export const Activity = ({ date, type }) => {
+  return (
+    <div className="flex sm:gap-4 gap-2 text-primary items-primary sm:px-10">
+      <div className="flex flex-col items-center justify-center text-sm">
+        <div>
+          {new Date(date).getUTCHours()}:{new Date(date).getUTCMinutes()}
+        </div>
+        <div>
+          {new Date(date).getMonth() + 1}-{new Date(date).getDate()}-
+          {new Date(date).getFullYear()}
+        </div>
+      </div>
+      <div className="bg-overlay-border p-4 rounded-full flex items-center">
+        {type === "login" && (
+          <div className="text-xl h-6 w-6 flex items-center justify-center">
+            {" "}
+            <LoginOutlined />
+          </div>
+        )}
+        {type !== "login" && (
+          <img className="h-6 w-6" src={Icons.logo} alt="" />
+        )}
+      </div>
+
+      <div className="flex items-center justify-center">
+        {type === "login" && "You loged in for first time"}
+        {type === "buy" && "You bought an NFT"}
+        {type === "sell" && "You sold an NFT"}
+      </div>
+    </div>
   );
 };
 
