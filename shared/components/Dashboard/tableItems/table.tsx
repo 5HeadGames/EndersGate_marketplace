@@ -20,7 +20,7 @@ const Table: React.FunctionComponent<Props> = ({title, data}) => {
     <div className="w-full flex flex-col">
       <h2 className="text-white py-2">{title}</h2>
       <div className="w-full">
-        <div className="flex rounded-t-md border-2 border-primary-disabled">
+        <div className="flex rounded-t-md border-2 border-primary-disabled overflow-hidden">
           {navItems.map((item, index) => {
             return (
               <div

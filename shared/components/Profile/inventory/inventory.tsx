@@ -16,6 +16,7 @@ const navItems = [
 
 const Inventory = () => {
   const user = useAppSelector((state) => state.user);
+  const inventory = false;
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
   return (
     <div className="flex flex-col w-full">
@@ -25,21 +26,23 @@ const Inventory = () => {
           0 ONE
         </Typography>
       </div>
-      <div className="flex rounded-t-md border-2 border-overlay-border mt-4 mb-4">
+      <div className="flex rounded-t-md border-2 border-overlay-border mt-4 mb-4 overflow-hidden">
         {navItems.map((item, index) => {
           return (
             <div
               className={clsx(
                 {
-                  "bg-primary-disabled": columnSelected === item.value,
+                  "bg-primary-disabled text-white":
+                    columnSelected === item.value,
+                },
+                {
+                  "text-primary": columnSelected !== item.value,
                 },
                 "border-r-2 border-overlay-border cursor-pointer px-4 py-2 "
               )}
               onClick={() => setColumnSelected(item.value)}
             >
-              <Typography type="subTitle" className={clsx("text-primary")}>
-                {item.title}
-              </Typography>
+              <Typography type="subTitle">{item.title}</Typography>
             </div>
           );
         })}
@@ -56,9 +59,14 @@ const Inventory = () => {
       </div>
       <div
         className={clsx(
-          Styles.gray,
-          "h-72 w-full ",
-          "flex flex-col justify-center items-center gap-6"
+          "flex",
+          {
+            [`${Styles.gray} flex-col justify-center items-center gap-6 h-72`]:
+              !inventory,
+          },
+          {
+            ["gap-2 flex-wrap gap-2"]: inventory,
+          }
         )}
       >
         <img src={Icons.logo} className="h-40 w-40" alt="" />

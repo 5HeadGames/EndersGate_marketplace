@@ -45,7 +45,8 @@ const ProfileIndexPage = () => {
       </div>
       <div className="flex justify-between border border-t-0 border-overlay-border p-4 rounded-b-md">
         <Typography type="subTitle" className="text-primary">
-          Harmony Address: <AddressText text={user.address} />
+          {user.walletType[0]?.toUpperCase() + user.walletType.substr(1)}{" "}
+          Address: <AddressText text={user.address} />
         </Typography>
         <div className="flex items-center text-primary gap-4">
           <div
@@ -132,7 +133,6 @@ export const Activity = ({ date, type }) => {
       <div className="bg-overlay-border p-4 rounded-full flex items-center">
         {type === "login" && (
           <div className="text-xl h-6 w-6 flex items-center justify-center">
-            {" "}
             <LoginOutlined />
           </div>
         )}
