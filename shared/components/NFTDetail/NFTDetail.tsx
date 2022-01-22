@@ -35,7 +35,7 @@ const NFTDetailComponent = () => {
     await dispatch(
       onSellERC1155({
         walletType: user.walletType,
-        tx: {from: user.address, startingPrice: "1", tokenId: 2},
+        tx: {from: user.address, startingPrice: "1", tokenId: 3},
       })
     );
     await dispatch(
@@ -48,7 +48,7 @@ const NFTDetailComponent = () => {
               type: "sell",
               createdAt: new Date().toISOString(),
               nft: {
-                tokenId: 2,
+                tokenId: 3,
               },
             },
           ],

@@ -11,6 +11,7 @@ import {update} from "firebase/database";
 import {Harmony, HarmonyExtension} from "@harmony-js/core";
 import {Messenger} from "@harmony-js/network";
 import {ChainType, ChainID} from "@harmony-js/utils";
+import HarmonyWallet from "shared/web3/harmonyWallet";
 import Web3 from "web3";
 import {AbiItem} from "web3-utils";
 import MarketplaceContract from "shared/contracts/ClockAuction.json";
@@ -43,9 +44,9 @@ export const onLoginUser = createAsyncThunk(
       activity: [
         {
           createdAt: new Date().toISOString(),
-          type: 'login'
-        }
-      ]
+          type: "login",
+        },
+      ],
     };
     if (userData.email) {
       try {
@@ -67,9 +68,9 @@ export const onLoginUser = createAsyncThunk(
           activity: [
             {
               createdAt: new Date().toISOString(),
-              type: 'login'
-            }
-          ]
+              type: "login",
+            },
+          ],
         });
         const user = await readUser(`users/${userData.address}`);
 
@@ -168,11 +169,21 @@ export const onApproveERC1155 = createAsyncThunk(
           from: tx.from,
         });
       } else if (walletType === "harmony") {
-        const harmonyExt = await new HarmonyExtension((window as any).onewallet);
-        const erc1155Contract = harmonyExt.contracts.createContract(ERC1155.abi, erc1155);
+        const wallet = new HarmonyWallet();
+        await wallet.signin();
+        const hmy = new Harmony(
+          // let's assume we deploy smart contract to this end-point URL
+          "https://api.s0.b.hmny.io",
+          {
+            chainType: ChainType.Harmony,
+            chainId: 2,
+          }
+        );
+        let erc1155Contract = hmy.contracts.createContract(ERC1155.abi, erc1155);
+        erc1155Contract = wallet.attachToContract(erc1155Contract);
         await erc1155Contract.methods.setApprovalForAll(tx.to, true).send({
-          gasLimit: "1000001",
-          gasPrice: 1000000000,
+          gasPrice: 100000000000,
+          gasLimit: 410000,
         });
       } else if (walletType === "wallet_connect") {
       }
@@ -198,7 +209,6 @@ export const onSellERC1155 = createAsyncThunk(
         MarketplaceContract.abi as AbiItem[],
         marketplace
       );
-      const erc1155Contract = new web3.eth.Contract(ERC1155.abi as AbiItem[], erc1155);
 
       await marketplaceContract.methods
         .createAuction(erc1155, tx.tokenId, tx.startingPrice, tx.startingPrice, 10000000)
@@ -206,17 +216,23 @@ export const onSellERC1155 = createAsyncThunk(
           from: tx.from,
         });
     } else if (walletType === "harmony") {
-      const harmonyExt = await new HarmonyExtension((window as any).onewallet);
-      await harmonyExt.login();
-      const marketplaceContract = harmonyExt.contracts.createContract(
-        MarketplaceContract.abi,
-        marketplace
+      const wallet = new HarmonyWallet();
+      await wallet.signin();
+      const hmy = new Harmony(
+        // let's assume we deploy smart contract to this end-point URL
+        "https://api.s0.b.hmny.io",
+        {
+          chainType: ChainType.Harmony,
+          chainId: 2,
+        }
       );
-      await marketplaceContract.methods
+      let marketplace = hmy.contracts.createContract(MarketplaceContract.abi, erc1155);
+      marketplace = wallet.attachToContract(marketplace);
+      await marketplace.methods
         .createAuction(erc1155, tx.tokenId, tx.startingPrice, tx.startingPrice, 10000000)
         .send({
-          gasLimit: "1000001",
-          gasPrice: 1000000000,
+          gasPrice: 100000000000,
+          gasLimit: 410000,
         });
     } else if (walletType === "wallet_connect") {
     }
@@ -239,28 +255,27 @@ export const onBuyERC1155 = createAsyncThunk(
         MarketplaceContract.abi as AbiItem[],
         marketplace
       );
-      const erc1155Contract = new web3.eth.Contract(ERC1155.abi as AbiItem[], erc1155);
-
-      await marketplaceContract.methods
-        .bid(erc1155, tx.tokenId)
-        .send({
-          from: tx.from,
-          value: tx.bid,
-        });
+      await marketplaceContract.methods.bid(erc1155, tx.tokenId).send({
+        from: tx.from,
+        value: tx.bid,
+      });
     } else if (walletType === "harmony") {
-      const harmonyExt = await new HarmonyExtension((window as any).onewallet);
-      await harmonyExt.login();
-      const marketplaceContract = harmonyExt.contracts.createContract(
-        MarketplaceContract.abi,
-        marketplace
+      const wallet = new HarmonyWallet();
+      await wallet.signin();
+      const hmy = new Harmony(
+        // let's assume we deploy smart contract to this end-point URL
+        "https://api.s0.b.hmny.io",
+        {
+          chainType: ChainType.Harmony,
+          chainId: 2,
+        }
       );
-      await marketplaceContract.methods
-        .createAuction(erc1155, tx.tokenId)
-        .send({
-          gasLimit: "1000001",
-          gasPrice: 1000000000,
-          value: tx.bid
-        });
+      let marketplaceContract = hmy.contracts.createContract(MarketplaceContract.abi, erc1155);
+      marketplaceContract = wallet.attachToContract(marketplaceContract);
+      await marketplaceContract.methods.bid(erc1155, tx.tokenId).send({
+        gasPrice: 100000000000,
+        gasLimit: 410000,
+      });
     } else if (walletType === "wallet_connect") {
     }
   }
