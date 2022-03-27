@@ -19,10 +19,10 @@ const NFTSaddress = "0x0d5ea610c7c7ab1b2e5f8a8ae3f1a43384bf8026";
 
 export const getNftsMetadata = async () => {
    //await (window.ethereum as any).request({method: "eth_requestAccounts"});
-   const web3 = new Web3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER_MAINNET);
+   const web3 = new Web3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER);
    //address from a test contract on harmony one
    const contract = new web3.eth.Contract(
-      contracts['ERC1155data'].abi as AbiItem[],
+      contracts['ERC1155'].abi as AbiItem[],
       "0x3e8e62520db86bcdc3beda30fd6362f95f3662ef"
    );
 
@@ -49,7 +49,7 @@ export const loginMetamaskWallet = async () => {
    const provider = await (window as any).ethereum
    if (!provider)
       return false
-   await (window.ethereum as any).request({method: "eth_requestAccounts"});
+   await (window as any).ethereum.request({method: "eth_requestAccounts"});
    return new Web3(provider)
 };
 
@@ -73,5 +73,5 @@ export const getAddresses = () => {
    const testAddresses = require('../../Contracts/addresses.harmony_test.json')
    const addresses = require('../../Contracts/addresses.harmony.json')
 
-   return process.env.NEXT_PUBLIC_DEVELOPMENT ? testAddresses : addresses;
+   return process.env.NEXT_PUBLIC_HARMONY_PROVIDER === 'https://api.harmony.one' ? testAddresses : addresses;
 }

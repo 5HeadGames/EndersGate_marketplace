@@ -4,7 +4,7 @@ import * as actionTypes from "../constants";
 import {getAddresses, getContract} from "@shared/web3";
 import cards from "../../cards.json";
 
-export const getListed = createAsyncThunk(
+export const onGetListed = createAsyncThunk(
   actionTypes.GET_LISTED_NFTS,
   async function prepare() {
     const addresses = getAddresses();
@@ -24,15 +24,38 @@ export const getListed = createAsyncThunk(
       proxyAddress: event.returnValues.proxy,
       appId: event.returnValues.appId,
     }));
-    console.log({auctionCreated})
+    console.log({auctionCreated});
   }
 );
 
-export const onMessage = createAction(
-  actionTypes.MESSAGE_LAYOUT,
-  function prepare(message: string) {
+export const onGetAssets = createAsyncThunk(
+  actionTypes.GET_ASSETS,
+  async function prepare(address: string) {
+    const {endersGate, pack} = getAddresses();
+    const cardsContract = getContract("ERC1155", endersGate);
+    const packsContract = getContract("ERC1155", pack);
+    const packsIds = [0, 1, 2, 3];
+    const cardsIds = Object.values(cards)
+      .reduce((acc: any[], cur) => acc.concat(cur), [])
+      .map((card) => card.properties.id.value);
+
+    const balancePacks = await packsContract.methods
+      .balanceOfBatch(
+        packsIds.map(() => address),
+        packsIds
+      )
+      .call();
+    const balanceCards = await cardsContract.methods
+      .balanceOfBatch(
+        cardsIds.map(() => address),
+        cardsIds
+      )
+      .call();
+
     return {
-      payload: message,
+      balanceCards: cardsIds.map((id, i) => ({id, balance: balanceCards[i]})),
+      balancePacks: packsIds.map((id, i) => ({id, balance: balancePacks[i]})),
     };
   }
 );
+

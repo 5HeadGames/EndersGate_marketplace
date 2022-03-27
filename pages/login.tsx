@@ -4,7 +4,7 @@ import {useRouter} from "next/router";
 
 import {useModal} from "@shared/hooks/modal";
 import {useAppDispatch, useAppSelector} from "redux/store";
-import {onLoginUser, onMessage, onUpdateUser} from "redux/actions";
+import {onLoginUser, onMessage, onUpdateUser, onGetAssets} from "redux/actions";
 import {loginHarmonyWallet, loginMetamaskWallet, getWalletConnect} from "@shared/web3";
 import {Button} from "shared/components/common/button";
 import Dialog from "shared/components/common/dialog";
@@ -30,6 +30,7 @@ const Login = () => {
 
   const handleMetamaskConnect = async () => {
     const web3 = await loginMetamaskWallet();
+    await dispatch(onGetAssets((window as any).ethereum.selectedAddress))
     if (!web3) return show("metamask");
     setLoading(true);
     await dispatch(
@@ -50,6 +51,7 @@ const Login = () => {
 
   const handleHarmonyConnect = async () => {
     const account = await loginHarmonyWallet();
+    await dispatch(onGetAssets(account.address))
     if (!account) return show("harmony");
     setLoading(true);
     await dispatch(onLoginUser({address: account.address}));
@@ -67,6 +69,7 @@ const Login = () => {
   const handleSubmit = async (user: Values) => {
     setLoading(true);
     const account = await loginHarmonyWallet();
+    await dispatch(onGetAssets(account.address))
     await dispatch(onLoginUser({...user, address: account.address}));
     setLoading(false);
     dispatch(
@@ -78,13 +81,6 @@ const Login = () => {
     );
     dispatch(onMessage("Login successful!"));
     setTimeout(dispatch, 2000, onMessage(""));
-  };
-
-  const handleQRCode = () => {
-    if (!connector.connected) {
-      // create new session
-      connector.createSession();
-    }
   };
 
   React.useEffect(() => {

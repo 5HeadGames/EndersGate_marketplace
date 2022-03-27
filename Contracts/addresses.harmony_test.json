@@ -1,4 +1,12 @@
 {
   "marketplace": "0x9414Eee0B0F63f053BF7D77F7c6501B05Cd9F2Ce",
-  "nft": "0x3C97Ee05a2e0F5DB7990F7e161bd7cA29cB7C285"
+  "nft": "0x3C97Ee05a2e0F5DB7990F7e161bd7cA29cB7C285",
+  "endersGate": "0x6C8E17CCC40acf0ea83eA86dd42c732FEe0bB1e4",
+  "dracul": "0x1bEcA23439c1c6238f1AeF303b94BE03ECf319e7",
+  "eross": "0x0c35203B209cE2Ad1DC91e5A2c19890406033C16",
+  "exchange": "0xec729958a6c3d994a64692Ae7e7B58eB577f8a6D",
+  "ipfs": "https://ipfs.moralis.io:2053/ipfs/QmXWojzVzRo2NERK3LtrscCXwJ5CrZ8xbnchTgWnTyLDvw",
+  "pack": "0x1d6985ff624475719e29133D72ea6Bf7614F957A",
+  "packIpfs": "https://ipfs.moralis.io:2053/ipfs/QmSug6ooWW4iWQkCCeo9aQhTYfqWD9BMDLMh33thYFbp5h",
+  "library": "0x7e36df953FC6f3b41A6bdf70D731d25428023345"
 }
