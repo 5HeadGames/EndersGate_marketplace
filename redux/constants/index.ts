@@ -8,4 +8,5 @@ export const BLUR_LAYOUT = 'blur_layout';
 export const MESSAGE_LAYOUT = "message_layout";
 export const BUY_NFT = "buy_nft";
 export const APPROVE_NFT = "approve_nft";
-export const SELL_NFT = "sell_nft"; 
+export const SELL_NFT = "sell_nft";
+export const GET_LISTED_NFTS = "get_listed_nfts"; 
