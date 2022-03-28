@@ -96,11 +96,15 @@ const NFTDetailComponent = () => {
           </div>
           <Typography type="span" className="bg-white text-dark px-4 py-1">
             #
-            <TransactionText text={"16545646486486489781156566544864864615468486471"} />
+            <TransactionText
+              text={"16545646486486489781156566544864864615468486471"}
+            />
           </Typography>
           <Typography type="title" className="text-primary">
-            Axie #
-            <TransactionText text={"16545646486486489781156566544864864615468486471"} />
+            Card #
+            <TransactionText
+              text={"16545646486486489781156566544864864615468486471"}
+            />
           </Typography>
         </div>
         <div className="flex gap-2 items-start sm:mt-0 mt-4 sm:justify-end justify-between">
@@ -113,11 +117,26 @@ const NFTDetailComponent = () => {
               $116.15
             </Typography>
           </div>
-          <Button decoration="fillPrimary" size="small" onClick={buyNft}>
+          <Button
+            decoration="fillPrimary"
+            className="degradated hover:text-white border-none"
+            size="small"
+            onClick={buyNft}
+          >
             <img src={Icons.harmony} className="h-6 w-6" alt="" /> Buy now
           </Button>
-          <Button decoration="fillPrimary" size="small" onClick={sellNft}>
-            <img src={Icons.harmony} className="h-6 w-6" alt="" /> Sell now
+          <Button
+            decoration="fillPrimary"
+            className="degradated hover:text-white border-none"
+            size="small"
+            onClick={sellNft}
+          >
+            <img
+              src={Icons.harmony}
+              className="h-6 w-6 rounded-full mr-2"
+              alt=""
+            />{" "}
+            Sell now
           </Button>
         </div>
       </div>
@@ -135,18 +154,30 @@ const NFTDetailComponent = () => {
             <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
               <div className="flex flex-row gap-4">
                 <div className="flex flex-col">
-                  <Typography type="smallTitle" className="text-white font-bold">
+                  <Typography
+                    type="smallTitle"
+                    className="text-white font-bold"
+                  >
                     CLASS
                   </Typography>
-                  <Typography type="smallTitle" className="text-primary opacity-75">
+                  <Typography
+                    type="smallTitle"
+                    className="text-primary opacity-75"
+                  >
                     Earth
                   </Typography>
                 </div>
                 <div className="flex flex-col">
-                  <Typography type="smallTitle" className="text-white font-bold">
+                  <Typography
+                    type="smallTitle"
+                    className="text-white font-bold"
+                  >
                     BREED COUNT
                   </Typography>
-                  <Typography type="smallTitle" className="text-primary opacity-75">
+                  <Typography
+                    type="smallTitle"
+                    className="text-primary opacity-75"
+                  >
                     0/7
                   </Typography>
                 </div>
@@ -154,10 +185,16 @@ const NFTDetailComponent = () => {
               <div>
                 {" "}
                 <div className="flex flex-col">
-                  <Typography type="smallTitle" className="text-white font-bold">
+                  <Typography
+                    type="smallTitle"
+                    className="text-white font-bold"
+                  >
                     OWNER
                   </Typography>
-                  <Typography type="smallTitle" className="text-primary opacity-75">
+                  <Typography
+                    type="smallTitle"
+                    className="text-primary opacity-75"
+                  >
                     Maria
                     <Typography type="span" className="text-gray-500 pl-2">
                       <AddressText text="one1hhe8ztms7cz2pmxwdm6js9mhna9u9ah6t255q9" />

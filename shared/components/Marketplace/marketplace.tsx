@@ -59,7 +59,7 @@ const MarketplaceComponent = () => {
         <div>
           <div className="w-full flex justify-between items-center sm:flex-row flex-col">
             <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">
-              619,801 Axies
+              619,801 Cards
             </h3>
             <div className="flex">
               <DropdownActions

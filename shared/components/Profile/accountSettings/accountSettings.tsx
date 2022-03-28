@@ -99,15 +99,15 @@ const AccountSettingsComponent = () => {
         )}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Typography type="title" className="text-primary mb-4">
-          {" "}
-          PROFILE
-        </Typography>
         <div className="flex md:flex-row flex-col items-start w-full md:gap-6">
           <div className="flex md:flex-col sm:flex-row flex-col mb-4 items-center">
             <div className="xl:h-40 xl:w-40 md:h-32 md:w-32 h-40 w-40 rounded-full relative">
               <img
-                src={user.profile_picture !== "" ? user.profile_picture : Icons.logo}
+                src={
+                  user.profile_picture !== ""
+                    ? user.profile_picture
+                    : Icons.logo
+                }
                 alt=""
               />
             </div>
@@ -156,7 +156,10 @@ const AccountSettingsComponent = () => {
           </div>
         </div>
         <div
-          className={clsx("w-full flex flex-col items-center", !openEmailPassword && "hidden")}
+          className={clsx(
+            "w-full flex flex-col items-center",
+            !openEmailPassword && "hidden"
+          )}
         >
           {user.email && (
             <>
@@ -181,7 +184,7 @@ const AccountSettingsComponent = () => {
               />
               <div
                 className="w-full bg-primary mt-5 mb-2 rounded"
-                style={{height: "1px"}}
+                style={{ height: "1px" }}
               ></div>
             </>
           )}
