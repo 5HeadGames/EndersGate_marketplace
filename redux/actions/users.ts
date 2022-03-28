@@ -7,16 +7,15 @@ import {
   updatePassword,
   signOut,
 } from "firebase/auth";
-import {update} from "firebase/database";
-import {Harmony, HarmonyExtension} from "@harmony-js/core";
+import {Harmony} from "@harmony-js/core";
 import {Messenger} from "@harmony-js/network";
-import {ChainType, ChainID} from "@harmony-js/utils";
+import {ChainType} from "@harmony-js/utils";
 import HarmonyWallet from "shared/web3/harmonyWallet";
 import Web3 from "web3";
 import {AbiItem} from "web3-utils";
 import MarketplaceContract from "shared/contracts/ClockAuction.json";
-import ERC1155 from "shared/contracts/ERC1155card.json";
-import DeploymentAddresses from "Contracts/addresses.harmony_test.json";
+import ERC1155 from "shared/contracts/ERC1155.json";
+import {getAddresses, getContract} from "@shared/web3";
 import {readUser, writeUser} from "shared/firebase";
 import * as actionTypes from "../constants";
 
@@ -160,11 +159,11 @@ export const onApproveERC1155 = createAsyncThunk(
     walletType: User["walletType"];
     tx: {to: string; from: string};
   }) {
-    const {erc1155} = DeploymentAddresses;
+    const {marketplace, endersGate} = getAddresses();
     try {
       if (walletType === "metamask") {
         const web3 = new Web3((window as any).ethereum);
-        const erc1155Contract = new web3.eth.Contract(ERC1155.abi as AbiItem[], erc1155);
+        const erc1155Contract = getContract('ERC1155', endersGate)
         await erc1155Contract.methods.setApprovalForAll(tx.to, true).send({
           from: tx.from,
         });
@@ -179,7 +178,7 @@ export const onApproveERC1155 = createAsyncThunk(
             chainId: 2,
           }
         );
-        let erc1155Contract = hmy.contracts.createContract(ERC1155.abi, erc1155);
+        let erc1155Contract = hmy.contracts.createContract(ERC1155.abi, endersGate);
         erc1155Contract = wallet.attachToContract(erc1155Contract);
         await erc1155Contract.methods.setApprovalForAll(tx.to, true).send({
           gasPrice: 100000000000,
@@ -202,7 +201,7 @@ export const onSellERC1155 = createAsyncThunk(
     walletType: User["walletType"];
     tx: {from: string; tokenId: number | string; startingPrice: number | string};
   }) {
-    const {marketplace, erc1155} = DeploymentAddresses;
+    const {marketplace, endersGate} = getAddresses();
     if (walletType === "metamask") {
       const web3 = new Web3((window as any).ethereum);
       const marketplaceContract = new web3.eth.Contract(
@@ -211,7 +210,7 @@ export const onSellERC1155 = createAsyncThunk(
       );
 
       await marketplaceContract.methods
-        .createAuction(erc1155, tx.tokenId, tx.startingPrice, tx.startingPrice, 10000000)
+        .createAuction(endersGate, tx.tokenId, tx.startingPrice, tx.startingPrice, 10000000)
         .send({
           from: tx.from,
         });
@@ -226,10 +225,10 @@ export const onSellERC1155 = createAsyncThunk(
           chainId: 2,
         }
       );
-      let marketplace = hmy.contracts.createContract(MarketplaceContract.abi, erc1155);
+      let marketplace = hmy.contracts.createContract(MarketplaceContract.abi, endersGate);
       marketplace = wallet.attachToContract(marketplace);
       await marketplace.methods
-        .createAuction(erc1155, tx.tokenId, tx.startingPrice, tx.startingPrice, 10000000)
+        .createAuction(endersGate, tx.tokenId, tx.startingPrice, tx.startingPrice, 10000000)
         .send({
           gasPrice: 100000000000,
           gasLimit: 410000,
@@ -248,7 +247,7 @@ export const onBuyERC1155 = createAsyncThunk(
     walletType: User["walletType"];
     tx: {from: string; tokenId: number | string; bid: string | number};
   }) {
-    const {marketplace, erc1155} = DeploymentAddresses;
+    const {marketplace, erc1155} = getAddresses();
     if (walletType === "metamask") {
       const web3 = new Web3((window as any).ethereum);
       const marketplaceContract = new web3.eth.Contract(

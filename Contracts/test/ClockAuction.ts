@@ -65,6 +65,8 @@ describe("[ClockAuction]", function () {
       3600
     );
     const auction = await marketplace.getAuction(nft.address, 1);
+    //const auctionArray = await marketplace.getAuctions([nft.address], [1]);
+
     expect(auction[0]).to.equal(accounts[0].address);
     expect(auction[1]).to.equal(ethers.utils.parseEther("1"));
     expect(auction[2]).to.equal(ethers.utils.parseEther("1"));

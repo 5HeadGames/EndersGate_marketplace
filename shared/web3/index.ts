@@ -1,10 +1,10 @@
 import Web3 from "web3";
+import {AbiItem} from 'web3-utils'
 import axios from "axios";
-import Web3Modal from "web3modal";
-import ERC1155data from "shared/contracts/GameItems.json";
+import contracts from 'shared/contracts'
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
-import {Harmony} from '@harmony-js/core'
+
 
 const mockNftID = [
    "1035205086292954408150852752291366796139603653328",
@@ -19,10 +19,10 @@ const NFTSaddress = "0x0d5ea610c7c7ab1b2e5f8a8ae3f1a43384bf8026";
 
 export const getNftsMetadata = async () => {
    //await (window.ethereum as any).request({method: "eth_requestAccounts"});
-   const web3 = new Web3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER_MAINNET);
+   const web3 = new Web3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER);
    //address from a test contract on harmony one
    const contract = new web3.eth.Contract(
-      ERC1155data.abi as any,
+      contracts['ERC1155'].abi as AbiItem[],
       "0x3e8e62520db86bcdc3beda30fd6362f95f3662ef"
    );
 
@@ -49,7 +49,7 @@ export const loginMetamaskWallet = async () => {
    const provider = await (window as any).ethereum
    if (!provider)
       return false
-   await (window.ethereum as any).request({method: "eth_requestAccounts"});
+   await (window as any).ethereum.request({method: "eth_requestAccounts"});
    return new Web3(provider)
 };
 
@@ -60,3 +60,18 @@ export const getWalletConnect = () => {
    });
 }
 
+export const getWeb3 = (provider?: string) => {
+   return new Web3(provider ? provider : (window as any).ethereum);
+}
+
+export const getContract = (factory: keyof typeof contracts, address: string) => {
+   const web3 = getWeb3()
+   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address)
+}
+
+export const getAddresses = () => {
+   const testAddresses = require('../../Contracts/addresses.harmony_test.json')
+   const addresses = require('../../Contracts/addresses.harmony.json')
+
+   return process.env.NEXT_PUBLIC_HARMONY_PROVIDER === 'https://api.harmony.one' ? testAddresses : addresses;
+}

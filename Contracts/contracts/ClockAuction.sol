@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
-import "hardhat/console.sol";
 
 import "./interfaces/IERC1155Custom.sol";
 
@@ -31,11 +30,12 @@ contract ClockAuction is Ownable, Pausable, ERC1155Holder {
   // Cut owner takes on each auction, measured in basis points (1/100 of a percent).
   // Values 0-10,000 map to 0%-100%
   uint256 public ownerCut;
+  uint256 public genesisBlock;
 
   // Map from token ID to their corresponding auction.
   mapping(address => mapping(uint256 => Auction)) public auctions;
   // Nfts allowed in marketplace
-  mapping(address => bool) private _nftsAllowed;
+  mapping(address => bool) public isAllowed;
 
   event AuctionCreated(
     address indexed _nftAddress,
@@ -62,6 +62,7 @@ contract ClockAuction is Ownable, Pausable, ERC1155Holder {
   constructor(uint256 _ownerCut) {
     require(_ownerCut <= 10000);
     ownerCut = _ownerCut;
+    genesisBlock = block.number;
   }
 
   /// @dev DON'T give me your money.
@@ -79,6 +80,20 @@ contract ClockAuction is Ownable, Pausable, ERC1155Holder {
   modifier canBeStoredWith128Bits(uint256 _value) {
     require(_value < 340282366920938463463374607431768211455);
     _;
+  }
+
+  function getAuctions(address[] memory _nftAddresses, uint256[] memory _tokenIds)
+    external
+    view
+    returns (Auction[] memory)
+  {
+    require(_nftAddresses.length == _tokenIds.length, "Invalid input lenghts");
+    Auction[] memory response = new Auction[](_tokenIds.length);
+
+    for (uint256 i = 0; i < _tokenIds.length; i++)
+      response[i] = auctions[_nftAddresses[i]][_tokenIds[i]];
+
+    return response;
   }
 
   /// @dev Returns auction info for an NFT on auction.
@@ -140,7 +155,7 @@ contract ClockAuction is Ownable, Pausable, ERC1155Holder {
     canBeStoredWith128Bits(_endingPrice)
     canBeStoredWith64Bits(_duration)
   {
-    require(_nftsAllowed[_nftAddress], "Nft not allowed");
+    require(isAllowed[_nftAddress], "Nft not allowed");
     address _seller = _msgSender();
     require(_owns(_nftAddress, _seller, _tokenId), "User doesn't owns nft");
     _escrow(_nftAddress, _seller, _tokenId);
@@ -161,7 +176,7 @@ contract ClockAuction is Ownable, Pausable, ERC1155Holder {
   /// @param _tokenId - ID of token to bid on.
   function bid(address _nftAddress, uint256 _tokenId) external payable whenNotPaused {
     // _bid will throw if the bid or funds transfer fails
-    require(_nftsAllowed[_nftAddress], "Nft not allowed");
+    require(isAllowed[_nftAddress], "Nft not allowed");
     _bid(_nftAddress, _tokenId, msg.value);
     _transfer(_nftAddress, msg.sender, _tokenId);
   }
@@ -194,8 +209,8 @@ contract ClockAuction is Ownable, Pausable, ERC1155Holder {
     _cancelAuction(_nftAddress, _tokenId, _auction.seller);
   }
 
-  function setNftAllowed(address nftAddress, bool isAllowed) external onlyOwner {
-    _nftsAllowed[nftAddress] = isAllowed;
+  function setNftAllowed(address nftAddress, bool allow) external onlyOwner {
+    isAllowed[nftAddress] = allow;
   }
 
   /// @dev Returns true if the NFT is on auction.

@@ -10,14 +10,14 @@ import {
 import {useRouter} from "next/router";
 import {useAppDispatch, useAppSelector} from "redux/store";
 import {getUserPath} from 'shared/firebase'
-import {onApproveERC1155, onSellERC1155, onBuyERC1155, onUpdateFirebaseUser} from "@redux/actions";
+import {onApproveERC1155, onSellERC1155, onBuyERC1155, onUpdateFirebaseUser, onGetListed} from "@redux/actions";
 import {Button} from "../common/button/button";
 import {Icons} from "@shared/const/Icons";
-import DeploymentAddresses from "Contracts/addresses.harmony_test.json";
 import {AddressText, TransactionText} from "../common/specialFields/SpecialFields";
+import {getAddresses} from '@shared/web3'
 import {Typography} from "../common/typography";
 
-const {marketplace} = DeploymentAddresses;
+const {marketplace} = getAddresses();
 
 const NFTDetailComponent = () => {
   const user = useAppSelector((state) => state.user);
@@ -55,6 +55,7 @@ const NFTDetailComponent = () => {
         },
       })
     );
+    await dispatch(onGetListed())
   };
 
   const buyNft = async () => {
