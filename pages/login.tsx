@@ -51,6 +51,7 @@ const Login = () => {
 
   const handleHarmonyConnect = async () => {
     const account = await loginHarmonyWallet();
+    console.log('on get assets')
     await dispatch(onGetAssets(account.address))
     if (!account) return show("harmony");
     setLoading(true);

@@ -8,7 +8,8 @@ import {Button} from "../common/button/button";
 import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
 import {MenuIcon} from "@heroicons/react/outline";
 import {SidebarMobile} from "./sidebars/mobile";
-import {useAppSelector} from "redux/store";
+import {useAppSelector, useAppDispatch} from "redux/store";
+import {onGetListedSold} from 'redux/actions'
 import {
   AppstoreFilled,
   AreaChartOutlined,
@@ -85,18 +86,29 @@ const navItems = [
       },
     ],
   },
-  { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
-  { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
+  {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
+  {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
 ];
 
-export default function AppLayout({ children }) {
+export default function AppLayout({children}) {
   const router = useRouter();
-  const { blur, message, address } = useAppSelector((state) => ({
+  const {blur, message, address} = useAppSelector((state) => ({
     ...state.layout,
     ...state.user,
   }));
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
+  const dispatch = useAppDispatch()
+
+  const initApp = async () => {
+    console.log('init app')
+    dispatch(onGetListedSold())
+  }
+
+  React.useEffect(() => {
+    initApp()
+  }, [])
+
   //   const [inputValue, setInputValue] = React.useState("explore");
   return (
     <Layout
@@ -105,9 +117,9 @@ export default function AppLayout({ children }) {
         overflow: "auto",
         ...(blur
           ? {
-              filter: "blur(8px)",
-              "-webkit-filter": "blur(8px)",
-            }
+            filter: "blur(8px)",
+            "-webkit-filter": "blur(8px)",
+          }
           : {}),
       }}
     >
@@ -184,7 +196,7 @@ export const Message: React.FunctionComponent<{
   content: string;
   open: boolean;
 }> = (props) => {
-  const { content, open } = props;
+  const {content, open} = props;
 
   return (
     <div
@@ -207,7 +219,7 @@ export const Logo = () => (
   </Link>
 );
 
-export const NavbarItem = ({ name, link, route, icon }) => {
+export const NavbarItem = ({name, link, route, icon}) => {
   return (
     <Link href={link}>
       <a
@@ -218,8 +230,8 @@ export const NavbarItem = ({ name, link, route, icon }) => {
       >
         <div
           className={clsx(
-            { "opacity-50 text-primary": link !== route },
-            { "text-white": link === route },
+            {"opacity-50 text-primary": link !== route},
+            {"text-white": link === route},
             "gap-2 flex items-center"
           )}
         >

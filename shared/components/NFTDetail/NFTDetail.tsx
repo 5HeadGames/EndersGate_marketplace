@@ -8,6 +8,8 @@ import {
   ThunderboltFilled,
 } from "@ant-design/icons";
 import {useRouter} from "next/router";
+import Web3 from 'web3'
+
 import {useAppDispatch, useAppSelector} from "redux/store";
 import {getUserPath} from 'shared/firebase'
 import {onApproveERC1155, onSellERC1155, onBuyERC1155, onUpdateFirebaseUser, onGetListed} from "@redux/actions";
@@ -15,12 +17,12 @@ import {Button} from "../common/button/button";
 import {Icons} from "@shared/const/Icons";
 import {AddressText, TransactionText} from "../common/specialFields/SpecialFields";
 import {getAddresses} from '@shared/web3'
-import { Typography } from "../common/typography";
+import {Typography} from "../common/typography";
 import cards from "../../cards.json";
 
-const { marketplace } = getAddresses();
+const {marketplace} = getAddresses();
 
-const NFTDetailComponent: React.FC<any> = ({ id }) => {
+const NFTDetailComponent: React.FC<any> = ({id}) => {
   const user = useAppSelector((state) => state.user);
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
@@ -31,13 +33,13 @@ const NFTDetailComponent: React.FC<any> = ({ id }) => {
     await dispatch(
       onApproveERC1155({
         walletType: user.walletType,
-        tx: { to: marketplace, from: user.address },
+        tx: {to: marketplace, from: user.address},
       })
     );
     await dispatch(
       onSellERC1155({
         walletType: user.walletType,
-        tx: { from: user.address, startingPrice: "1", tokenId: id },
+        tx: {from: user.address, startingPrice: Web3.utils.toWei("4.3"), tokenId: id, duration: '1'},
       })
     );
     await dispatch(
@@ -72,7 +74,7 @@ const NFTDetailComponent: React.FC<any> = ({ id }) => {
     await dispatch(
       onBuyERC1155({
         walletType: user.walletType,
-        tx: { from: user.address, bid: "5", tokenId: id },
+        tx: {from: user.address, bid: "5", tokenId: id},
       })
     );
     await dispatch(
