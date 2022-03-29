@@ -233,7 +233,6 @@ export const onSellERC1155 = createAsyncThunk(
           gasPrice: 100000000000,
           gasLimit: 410000,
         });
-    } else if (walletType === "wallet_connect") {
     }
   }
 );
