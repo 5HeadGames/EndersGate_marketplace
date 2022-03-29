@@ -24,7 +24,7 @@ import Inventory2Icon from "@mui/icons-material/Inventory2";
 
 type ButtonsTypes = { logout: boolean };
 
-const ProfileDataAndActions = ({ name, photo, email }) => {
+const ProfileDataAndActions = () => {
   const [disabled, setDisabled] = React.useState<ButtonsTypes>({
     logout: false,
   });

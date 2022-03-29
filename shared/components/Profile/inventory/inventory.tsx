@@ -7,6 +7,8 @@ import "shared/firebase";
 import { useAppSelector } from "redux/store";
 import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import Styles from "./styles.module.scss";
+import NFTCard from "@shared/components/Marketplace/itemCard";
+import cards from "../../../cards.json";
 
 const navItems = [
   { title: "Trading Cards", value: "trading_cards" },
@@ -15,9 +17,12 @@ const navItems = [
 ];
 
 const Inventory = () => {
-  const user = useAppSelector((state) => state.user);
-  const inventory = false;
+  const user = useAppSelector((state) => state.nfts);
+  const inventory = user.balanceCards;
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
+  React.useEffect(() => {
+    console.log(user);
+  }, []);
   return (
     <div className="flex flex-col w-full">
       <div className="flex items-center rounded-md border border-overlay-border p-4 w-56 gap-4">
@@ -47,7 +52,7 @@ const Inventory = () => {
           );
         })}
       </div>
-      <div className="flex justify-end">
+      {/* <div className="flex justify-end">
         <div className=" border-2 border rounded-md border-primary flex justify-center items-center overflow-hidden text-primary h-10">
           <div className="flex flex-1 justify-center items-center text-prymary h-10 border-r-2 border-primary p-2  cursor-pointer hover:bg-primary hover:text-secondary">
             <AppstoreOutlined />
@@ -56,26 +61,43 @@ const Inventory = () => {
             <UnorderedListOutlined />
           </div>
         </div>
-      </div>
+      </div> */}
       <div
         className={clsx(
-          "flex",
+          "flex mb-10  justify-center",
           {
-            [`${Styles.gray} flex-col justify-center items-center gap-6 h-72`]:
-              !inventory,
+            [`${Styles.gray} flex-col items-center gap-6 h-72`]:
+              inventory.length == 0,
           },
           {
-            ["gap-2 flex-wrap gap-2"]: inventory,
+            ["gap-2 flex-wrap gap-2"]: inventory.length > 0,
           }
         )}
       >
-        <img src={Icons.logo} className="h-40 w-40" alt="" />
-        <Typography
-          type="subTitle"
-          className={clsx(Styles.title, "text-primary")}
-        >
-          You don't have any item yet
-        </Typography>
+        {inventory.length > 0 ? (
+          inventory.map((card) => {
+            return (
+              card.balance > 0 && (
+                <NFTCard
+                  id={card.id}
+                  icon={cards.All[card.id].properties.image.value}
+                  name={cards.All[card.id].properties.name.value}
+                  balance={card.balance}
+                />
+              )
+            );
+          })
+        ) : (
+          <>
+            <img src={Icons.logo} className="h-40 w-40" alt="" />
+            <Typography
+              type="subTitle"
+              className={clsx(Styles.title, "text-primary")}
+            >
+              You don't have any item yet
+            </Typography>
+          </>
+        )}
       </div>
     </div>
   );

@@ -9,33 +9,40 @@ interface Props
     HTMLDivElement
   > {
   classes?: Partial<Record<"root", string>>;
+  icon?: string;
+  id?: any;
+  name?: any;
+  balance?: any;
 }
 
 const NFTCard: React.FunctionComponent<Props> = (props) => {
   const { classes, ...rest } = props;
 
   return (
-    <Link href="/NFTDetail">
+    <Link href={`/NFTDetail/${props.id}`}>
       <div
         className={clsx(
-          "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary",
+          "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer",
           classes?.root
         )}
       >
-        <div className="w-full flex flex-col text-xs mb-4 gap-1">
-          <div>
-            <span>Card #1235</span>
+        <div className="w-full flex flex-col text-xs gap-1">
+          <div className="w-full flex justify-between">
+            <span>Card #{props.id !== undefined ? props.id : "12345"}</span>
+            <span>x{props.balance}</span>
           </div>
-          <div>
+          {/* <div>
             <span>Breed count:4</span>
-          </div>
+          </div> */}
         </div>
-        <div className="w-full h-30 flex justify-center my-4">
-          <img src={Icons.logo} className="w-24 h-24" />
+        <div className="w-full h-36 flex justify-center items-center my-4">
+          <img
+            src={props.icon || Icons.logo}
+            className={props.icon ? "h-36" : "h-24"}
+          />
         </div>
         <div className="flex flex-col text-sm text-center">
-          <span>0.0017</span>
-          <span>$253.77</span>
+          <span>{props.name || "Enders Gate"}</span>
         </div>
       </div>
     </Link>

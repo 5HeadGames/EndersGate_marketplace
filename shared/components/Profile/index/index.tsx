@@ -10,13 +10,23 @@ import { useToasts } from "react-toast-notifications";
 import Styles from "./styles.module.scss";
 import { Logo } from "@shared/components/Layouts";
 import Link from "next/link";
+import Web3 from "web3";
+import { getBalance } from "@shared/web3";
 
 const ProfileIndexPage = () => {
   const user = useAppSelector((state) => state.user);
   const router = useRouter();
+  const [balance, setBalance] = React.useState("0");
   React.useEffect(() => {
-    console.log(user);
+    if (user.address) {
+      handleSetBalance();
+    }
   }, [user]);
+
+  const handleSetBalance = async () => {
+    const balance = await getBalance(user.address);
+    setBalance(balance);
+  };
 
   const { addToast } = useToasts();
 
@@ -34,12 +44,13 @@ const ProfileIndexPage = () => {
         />
         <div className="flex flex-row">
           <div className="flex flex-col">
-            <h1 className="text-white" style={{ fontSize: "32px" }}>
-              0 ONE
-            </h1>
+            {" "}
             <Typography type="title" className="text-primary ">
-              0 USD
+              Balance
             </Typography>
+            <h1 className="text-white" style={{ fontSize: "32px" }}>
+              {balance} ONE
+            </h1>
           </div>
         </div>
       </div>

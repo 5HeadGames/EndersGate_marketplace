@@ -15,27 +15,29 @@ import {Button} from "../common/button/button";
 import {Icons} from "@shared/const/Icons";
 import {AddressText, TransactionText} from "../common/specialFields/SpecialFields";
 import {getAddresses} from '@shared/web3'
-import {Typography} from "../common/typography";
+import { Typography } from "../common/typography";
+import cards from "../../cards.json";
 
-const {marketplace} = getAddresses();
+const { marketplace } = getAddresses();
 
-const NFTDetailComponent = () => {
+const NFTDetailComponent: React.FC<any> = ({ id }) => {
   const user = useAppSelector((state) => state.user);
+  const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const userPath = getUserPath(user)
+  const userPath = getUserPath(user);
 
   const sellNft = async () => {
     await dispatch(
       onApproveERC1155({
         walletType: user.walletType,
-        tx: {to: marketplace, from: user.address},
+        tx: { to: marketplace, from: user.address },
       })
     );
     await dispatch(
       onSellERC1155({
         walletType: user.walletType,
-        tx: {from: user.address, startingPrice: "1", tokenId: 3},
+        tx: { from: user.address, startingPrice: "1", tokenId: id },
       })
     );
     await dispatch(
@@ -48,21 +50,29 @@ const NFTDetailComponent = () => {
               type: "sell",
               createdAt: new Date().toISOString(),
               nft: {
-                tokenId: 3,
+                tokenId: id,
               },
             },
           ],
         },
       })
     );
-    await dispatch(onGetListed())
+    await dispatch(onGetListed());
   };
 
+  React.useEffect(() => {
+    console.log("nfts", NFTs);
+  }, []);
+
   const buyNft = async () => {
+    console.log("user", user);
+    if (user.address === "") {
+      router.push("/login");
+    }
     await dispatch(
       onBuyERC1155({
         walletType: user.walletType,
-        tx: {from: user.address, bid: '5', tokenId: 2},
+        tx: { from: user.address, bid: "5", tokenId: id },
       })
     );
     await dispatch(
@@ -75,7 +85,7 @@ const NFTDetailComponent = () => {
               type: "buy",
               createdAt: new Date().toISOString(),
               nft: {
-                tokenId: 2,
+                tokenId: id,
               },
             },
           ],
@@ -85,128 +95,161 @@ const NFTDetailComponent = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col xl:px-20 md:px-10 sm:px-6 pt-32">
-      <div className="flex sm:flex-row flex-col sm:justify-between  w-full">
-        <div className="flex flex-col gap-2">
-          <div
-            className="cursor-pointer text-white flex font-bold items-center gap-1"
-            onClick={() => router.back()}
-          >
-            <LeftOutlined />
-            Back
-          </div>
-          <Typography type="span" className="bg-white text-dark px-4 py-1">
-            #
-            <TransactionText
-              text={"16545646486486489781156566544864864615468486471"}
-            />
-          </Typography>
-          <Typography type="title" className="text-primary">
-            Card #
-            <TransactionText
-              text={"16545646486486489781156566544864864615468486471"}
-            />
-          </Typography>
-        </div>
-        <div className="flex gap-2 items-start sm:mt-0 mt-4 sm:justify-end justify-between">
-          <div className="flex flex-col items-end">
-            <div className="text-primary font-bold flex items-center gap-2">
-              <MenuOutlined />
-              <Typography type="title">0.035</Typography>
-            </div>
-            <Typography type="subTitle" className="text-white">
-              $116.15
-            </Typography>
-          </div>
-          <Button
-            decoration="fillPrimary"
-            className="degradated hover:text-white border-none"
-            size="small"
-            onClick={buyNft}
-          >
-            <img src={Icons.harmony} className="h-6 w-6" alt="" /> Buy now
-          </Button>
-          <Button
-            decoration="fillPrimary"
-            className="degradated hover:text-white border-none"
-            size="small"
-            onClick={sellNft}
-          >
-            <img
-              src={Icons.harmony}
-              className="h-6 w-6 rounded-full mr-2"
-              alt=""
-            />{" "}
-            Sell now
-          </Button>
-        </div>
-      </div>
-      <div className="w-full flex md:flex-row flex-col mt-10">
-        <div className="flex relative justify-center md:w-1/2 xl:px-24">
-          <div className="sm:sticky sm:top-32 h-min w-72">
-            <img src={Icons.logo} className="w-72" alt="" />
-          </div>
-        </div>
-        <div className="flex flex-col md:w-1/2">
-          <div className="flex flex-col">
-            <Typography type="title" className="text-primary font-bold">
-              About
-            </Typography>
-            <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
-              <div className="flex flex-row gap-4">
-                <div className="flex flex-col">
-                  <Typography
-                    type="smallTitle"
-                    className="text-white font-bold"
-                  >
-                    CLASS
-                  </Typography>
-                  <Typography
-                    type="smallTitle"
-                    className="text-primary opacity-75"
-                  >
-                    Earth
-                  </Typography>
-                </div>
-                <div className="flex flex-col">
-                  <Typography
-                    type="smallTitle"
-                    className="text-white font-bold"
-                  >
-                    BREED COUNT
-                  </Typography>
-                  <Typography
-                    type="smallTitle"
-                    className="text-primary opacity-75"
-                  >
-                    0/7
-                  </Typography>
-                </div>
+    <>
+      {id ? (
+        <div className="min-h-screen w-full flex flex-col xl:px-20 md:px-10 sm:px-6 pt-32">
+          <div className="flex sm:flex-row flex-col sm:justify-between  w-full">
+            <div className="flex flex-col gap-2">
+              <div
+                className="cursor-pointer text-white flex font-bold items-center gap-1"
+                onClick={() => router.back()}
+              >
+                <LeftOutlined />
+                Back
               </div>
-              <div>
-                {" "}
-                <div className="flex flex-col">
-                  <Typography
-                    type="smallTitle"
-                    className="text-white font-bold"
-                  >
-                    OWNER
-                  </Typography>
-                  <Typography
-                    type="smallTitle"
-                    className="text-primary opacity-75"
-                  >
-                    Maria
-                    <Typography type="span" className="text-gray-500 pl-2">
-                      <AddressText text="one1hhe8ztms7cz2pmxwdm6js9mhna9u9ah6t255q9" />
-                    </Typography>
-                  </Typography>
-                </div>
-              </div>
+              <Typography type="title" className="text-primary">
+                Card #{id}
+              </Typography>
             </div>
-          </div>
+            <div className="flex gap-2 items-start sm:mt-0 mt-4 sm:justify-end justify-between">
+              <div className="flex flex-col items-end">
+                <div className="text-primary font-bold flex items-center gap-2">
+                  <MenuOutlined />
+                  <Typography type="title">0.035</Typography>
+                </div>
+                <Typography type="subTitle" className="text-white">
+                  $116.15
+                </Typography>
+              </div>
 
-          <div className="flex flex-col mt-4">
+              <Button
+                decoration="fillPrimary"
+                className="degradated hover:text-white border-none"
+                size="small"
+                onClick={buyNft}
+              >
+                <img src={Icons.harmony} className="h-6 w-6" alt="" /> Buy now
+              </Button>
+
+              {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && (
+                <Button
+                  decoration="fillPrimary"
+                  className="degradated hover:text-white border-none"
+                  size="small"
+                  onClick={sellNft}
+                >
+                  <img
+                    src={Icons.harmony}
+                    className="h-6 w-6 rounded-full mr-2"
+                    alt=""
+                  />{" "}
+                  Sell now
+                </Button>
+              )}
+            </div>
+          </div>
+          <div className="w-full flex md:flex-row flex-col mt-10">
+            <div className="flex relative justify-center md:w-1/2 xl:px-24">
+              <div className="sm:sticky sm:top-32 h-min w-72">
+                <img
+                  src={cards.All[id].properties.image?.value || Icons.logo}
+                  className="w-72"
+                  alt=""
+                />
+              </div>
+            </div>
+            <div className="flex flex-col md:w-1/2">
+              <div className="flex flex-col">
+                <Typography type="title" className="text-primary font-bold">
+                  About
+                </Typography>
+                <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
+                  <div className="flex flex-row gap-4">
+                    <div className="flex flex-col">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
+                        NAME
+                      </Typography>
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
+                        {cards.All[id].properties.name?.value}
+                      </Typography>
+                    </div>
+                    {cards.All[id].properties.type?.value && (
+                      <div className="flex flex-col">
+                        <Typography
+                          type="subTitle"
+                          className="text-white font-bold"
+                        >
+                          TYPE
+                        </Typography>
+                        <Typography
+                          type="subTitle"
+                          className="text-primary opacity-75"
+                        >
+                          {cards.All[id].properties.type?.value}
+                        </Typography>
+                      </div>
+                    )}
+                    {cards.All[id].properties.rarity?.value && (
+                      <div className="flex flex-col">
+                        <Typography
+                          type="subTitle"
+                          className="text-white font-bold"
+                        >
+                          RARITY
+                        </Typography>
+                        <Typography
+                          type="subTitle"
+                          className="text-primary opacity-75"
+                        >
+                          {cards.All[id].properties.rarity?.value}
+                        </Typography>
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <div className="flex flex-col">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
+                        DESCRIPTION
+                      </Typography>
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
+                        {cards.All[id].properties.description?.value}
+                      </Typography>
+                    </div>
+                  </div>
+                  {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && (
+                    <div>
+                      <div className="flex flex-col">
+                        <Typography
+                          type="subTitle"
+                          className="text-white font-bold"
+                        >
+                          YOUR BALANCE
+                        </Typography>
+                        <Typography
+                          type="subTitle"
+                          className="text-primary opacity-75"
+                        >
+                          {NFTs.balanceCards[id].balance}
+                        </Typography>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* <div className="flex flex-col mt-4">
             <Typography type="title" className="text-primary font-bold">
               Stats
             </Typography>
@@ -248,10 +291,14 @@ const NFTDetailComponent = () => {
                 </div>
               </div>
             </div>
+          </div> */}
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      ) : (
+        ""
+      )}
+    </>
   );
 };
 
