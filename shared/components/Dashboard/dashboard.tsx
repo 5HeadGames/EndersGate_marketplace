@@ -1,9 +1,7 @@
 import React from "react";
 
-import { Icons } from "@shared/const/Icons";
 import Table from "./tableItems/table";
 import TransactionsBoard from "./TransactionsBoard/TransactionsBoard";
-import ItemSold from "./tableItems/items/itemSold";
 import ItemListed from "./tableItems/items/itemListed";
 import {getNftsMetadata} from 'shared/web3'
 
