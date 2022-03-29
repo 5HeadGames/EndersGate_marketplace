@@ -9,7 +9,7 @@ import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
 import {MenuIcon} from "@heroicons/react/outline";
 import {SidebarMobile} from "./sidebars/mobile";
 import {useAppSelector, useAppDispatch} from "redux/store";
-import {onGetListedSold} from 'redux/actions'
+import {onLoadSales} from 'redux/actions'
 import {
   AppstoreFilled,
   AreaChartOutlined,
@@ -102,7 +102,7 @@ export default function AppLayout({children}) {
 
   const initApp = async () => {
     console.log('init app')
-    dispatch(onGetListedSold())
+    dispatch(onLoadSales())
   }
 
   React.useEffect(() => {

@@ -15,46 +15,77 @@ const getEventsWithTimestamp = async (events: EventData[]) => {
   );
 };
 
-export const onGetListedSold = createAsyncThunk(
+const loadAuctionCreated = async (marketplace: Contract, fromBlock: string) => {
+  return (
+    await getEventsWithTimestamp(
+      await marketplace.getPastEvents("AuctionCreated", {
+        fromBlock,
+        toBlock: "latest",
+      })
+    )
+  ).reduce(
+    (acc, event) => ({
+      ...acc,
+      [`${event.returnValues._nftAddress}@${event.returnValues._tokenId}`]: {
+        nft: event.returnValues._nftAddress,
+        elementId: event.returnValues._tokenId,
+        startingPrice: event.returnValues._startingPrice,
+        endingPrice: event.returnValues._endingPrice,
+        duration: event.returnValues._duration,
+        seller: event.returnValues._seller,
+        timestamp: event.timestamp,
+      },
+    }),
+    {}
+  );
+};
+
+const loadAuctionSuccessfull = async (marketplace: Contract, fromBlock: string) => {
+  return (
+    await getEventsWithTimestamp(
+      await marketplace.getPastEvents("AuctionSuccessful", {
+        fromBlock,
+        toBlock: "latest",
+      })
+    )
+  ).map((event) => ({
+    nftAddress: event.returnValues._nftAddress,
+    tokenId: event.returnValues._tokenId,
+    totalPrice: event.returnValues._totalPrice,
+    winner: event.returnValues._winner,
+    timestamp: event.timestamp,
+  }));
+};
+
+const loadSales = async (events: {timestamp: number | string; totalPrice: any}[]) => {
+  const startOfDay = new Date();
+  startOfDay.setUTCHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setUTCHours(23, 59, 59, 999);
+  return {
+    totalSales: events.reduce((acc, cur) => acc + Number(cur.totalPrice), 0),
+    dailyVolume: events.reduce(
+      (acc, cur) =>
+        acc +
+        (cur.timestamp > startOfDay.getTime() / 1000 &&
+          cur.timestamp < endOfDay.getTime() / 1000
+          ? cur.totalPrice
+          : 0),
+      0
+    ),
+    cardsSold: events.length,
+  };
+};
+
+export const onLoadSales = createAsyncThunk(
   actionTypes.GET_LISTED_NFTS,
   async function prepare() {
     const addresses = getAddresses();
     const marketplace = getContract("ClockAuction", addresses.marketplace);
     const fromBlock = await marketplace.methods.genesisBlock().call();
-
-    const auctionCreated = (await getEventsWithTimestamp(
-      await marketplace.getPastEvents("AuctionCreated", {
-        fromBlock,
-        toBlock: "latest",
-      })
-    )).reduce(
-      (acc, event) => ({
-        ...acc,
-        [`${event.returnValues._nftAddress}@${event.returnValues._tokenId}`]: {
-          nft: event.returnValues._nftAddress,
-          elementId: event.returnValues._tokenId,
-          startingPrice: event.returnValues._startingPrice,
-          endingPrice: event.returnValues._endingPrice,
-          duration: event.returnValues._duration,
-          seller: event.returnValues._seller,
-          timestamp: event.timestamp
-        },
-      }),
-      {}
-    );
-
-    const auctionSuccessfull = (await getEventsWithTimestamp(
-      await marketplace.getPastEvents("AuctionSuccessful", {
-        fromBlock,
-        toBlock: "latest",
-      })
-    )).map((event) => ({
-      nftAddress: event.returnValues._nftAddress,
-      tokenId: event.returnValues._tokenId,
-      totalPrice: event.returnValues._totalPrice,
-      winner: event.returnValues._winner,
-      timestamp: event.timestamp,
-    }));
+    const auctionCreated = await loadAuctionCreated(marketplace, fromBlock);
+    const auctionSuccessfull = await loadAuctionSuccessfull(marketplace, fromBlock);
+    const {totalSales, dailyVolume, cardsSold} = await loadSales(auctionSuccessfull);
 
     auctionSuccessfull.forEach((auction) => {
       const map = `${auction.nftAddress}@${auction.tokenId}`;
@@ -73,7 +104,10 @@ export const onGetListedSold = createAsyncThunk(
 
     return {
       auctionCreated: Object.values(auctionCreated),
-      auctionSuccessfull
+      auctionSuccessfull,
+      totalSales,
+      dailyVolume,
+      cardsSold,
     };
   }
 );
