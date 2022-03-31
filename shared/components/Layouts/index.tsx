@@ -97,7 +97,39 @@ export default function AppLayout({ children }) {
   }));
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
-  //   const [inputValue, setInputValue] = React.useState("explore");
+  const [isExecuted, setIsExecuted] = React.useState(false);
+  const [notAvailable, setNotAvailable] = React.useState({
+    message: "",
+    value: false,
+  });
+
+  const chainChangedHandler = () => {
+    // window.location.reload();
+    setNotAvailable({
+      message: "Change your network to SHARD-0 please",
+      value: true,
+    });
+  };
+
+  const accountChangedHandler = async (newAccount: any) => {
+    setNotAvailable({
+      message:
+        "You have changed your account please go to login/register section and login again",
+      value: true,
+    });
+    // window.location.reload();
+  };
+  if (
+    typeof window !== "undefined" &&
+    (window as any).ethereum?.isConnected() &&
+    !isExecuted
+  ) {
+    // Client-side-only code
+    // connectWallet();
+    (window as any).ethereum.on("accountsChanged", accountChangedHandler);
+    (window as any).ethereum.on("chainChanged", chainChangedHandler);
+    setIsExecuted(true);
+  }
   return (
     <Layout
       style={{
@@ -172,10 +204,12 @@ export default function AppLayout({ children }) {
         setSidebarOpen={setSidebarOpen}
         sidebarOpen={sidebarOpen}
       />
-      <div className="bg-overlay md:px-10 px-6" style={styles.content}>
-        {children}
-        <Message content={message} open={Boolean(message)} />
-      </div>
+      {
+        <div className="bg-overlay md:px-10 px-6" style={styles.content}>
+          {children}
+          <Message content={message} open={Boolean(message)} />
+        </div>
+      }
     </Layout>
   );
 }
