@@ -19,6 +19,8 @@ import {
   WalletOutlined,
 } from "@ant-design/icons";
 
+import {getAddresses, getContract} from '@shared/web3'
+
 const styles = {
   content: {
     display: "flex",
@@ -101,7 +103,19 @@ export default function AppLayout({children}) {
   const dispatch = useAppDispatch()
 
   const initApp = async () => {
-    console.log('init app')
+    const addresses = getAddresses()
+    const marketplace = getContract('ClockAuction', addresses.marketplace);
+
+    marketplace.events.AuctionCreated({}, (err, event) => {
+      console.log({err, event}) //idk what this function handles
+    }).on('connected', (subscriptionId) => {
+      console.log({subscriptionId}) //handles when connected
+    }).on('data', (event) => {
+      console.log({event}) //handles the event
+    }).on('error', (err, receipt) => {
+      console.log({err, receipt}) //handles errors
+    })
+
     dispatch(onLoadSales())
   }
 
