@@ -68,6 +68,7 @@ export const getContract = (factory: keyof typeof contracts, address: string) =>
    const web3 = getWeb3()
    return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address)
 }
+
 export const getBalance = async (address: string) => {
   const web3 = getWeb3();
   const balance = await web3.eth.getBalance(address);

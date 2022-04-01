@@ -199,7 +199,7 @@ export const onSellERC1155 = createAsyncThunk(
     tx,
   }: {
     walletType: User["walletType"];
-    tx: {from: string; tokenId: number | string; startingPrice: number | string};
+    tx: {from: string; tokenId: number | string; startingPrice: number | string; duration: string};
   }) {
     const {marketplace, endersGate} = getAddresses();
     if (walletType === "metamask") {
@@ -210,7 +210,7 @@ export const onSellERC1155 = createAsyncThunk(
       );
 
       await marketplaceContract.methods
-        .createAuction(endersGate, tx.tokenId, tx.startingPrice, tx.startingPrice, 10000000)
+        .createAuction(endersGate, tx.tokenId, tx.startingPrice, tx.startingPrice, 24 * 3600 * 30)
         .send({
           from: tx.from,
         });
@@ -228,7 +228,7 @@ export const onSellERC1155 = createAsyncThunk(
       let marketplace = hmy.contracts.createContract(MarketplaceContract.abi, endersGate);
       marketplace = wallet.attachToContract(marketplace);
       await marketplace.methods
-        .createAuction(endersGate, tx.tokenId, tx.startingPrice, tx.startingPrice, 10000000)
+        .createAuction(endersGate, tx.tokenId, tx.startingPrice, tx.startingPrice, 24 * 3600 * 30)
         .send({
           gasPrice: 100000000000,
           gasLimit: 410000,

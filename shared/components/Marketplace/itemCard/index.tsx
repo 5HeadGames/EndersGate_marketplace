@@ -1,22 +1,22 @@
 import React from "react";
 import clsx from "clsx";
-import { Icons } from "@shared/const/Icons";
+import {Icons} from "@shared/const/Icons";
 import Link from "next/link";
 
 interface Props
   extends React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
+  React.HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
   > {
   classes?: Partial<Record<"root", string>>;
   icon?: string;
-  id?: any;
+  id: string |number;
   name?: any;
   balance?: any;
 }
 
 const NFTCard: React.FunctionComponent<Props> = (props) => {
-  const { classes, ...rest } = props;
+  const {classes, ...rest} = props;
 
   return (
     <Link href={`/NFTDetail/${props.id}`}>

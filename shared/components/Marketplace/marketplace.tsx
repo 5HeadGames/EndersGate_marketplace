@@ -5,14 +5,14 @@ import {
   CaretUpOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 import NftCard from "shared/components/Marketplace/itemCard";
 import FiltersBoard from "./filters/filters";
-import { DropdownActions } from "../common/dropdownActions/dropdownActions";
-import { Dropdown } from "../common/dropdown/dropdown";
+import {DropdownActions} from "../common/dropdownActions/dropdownActions";
+import {Dropdown} from "../common/dropdown/dropdown";
 import clsx from "clsx";
-import { Typography } from "../common/typography";
+import {Typography} from "../common/typography";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("lowest_price");
@@ -97,8 +97,8 @@ const MarketplaceComponent = () => {
           <div className="flex flex-wrap w-full justify-center items-center relative">
             {new Array(6).fill(0).map((a, id) => (
               <NftCard
-                classes={{ root: "m-4 cursor-pointer" }}
-                onClick={() => router.push(`collectable/${id}`)}
+                classes={{root: "m-4 cursor-pointer"}}
+                id={id}
               />
             ))}
             {filterMobile && (

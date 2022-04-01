@@ -9,6 +9,7 @@ import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
 import Styles from "./styles.module.scss";
 import NFTCard from "@shared/components/Marketplace/itemCard";
 import cards from "../../../cards.json";
+import { getBalance } from "@shared/web3";
 
 const navItems = [
   { title: "Trading Cards", value: "trading_cards" },
@@ -17,18 +18,31 @@ const navItems = [
 ];
 
 const Inventory = () => {
-  const user = useAppSelector((state) => state.nfts);
-  const inventory = user.balanceCards;
+  const nfts = useAppSelector((state) => state.nfts);
+  const user = useAppSelector((state) => state.user);
+  const inventory = nfts.balanceCards;
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
+  const [balance, setBalance] = React.useState("0");
   React.useEffect(() => {
-    console.log(user);
+    if (user.address) {
+      handleSetBalance();
+    }
+  }, [user]);
+
+  const handleSetBalance = async () => {
+    const balance = await getBalance(user.address);
+    setBalance(balance);
+  };
+
+  React.useEffect(() => {
+    console.log(nfts);
   }, []);
   return (
     <div className="flex flex-col w-full">
       <div className="flex items-center rounded-md border border-overlay-border p-4 w-56 gap-4">
         <img src={Icons.harmony} className="h-16 w-16" alt="" />
         <Typography type="title" className="text-primary">
-          0 ONE
+          {balance} ONE
         </Typography>
       </div>
       <div className="flex rounded-t-md border-2 border-overlay-border mt-4 mb-4 overflow-hidden">
