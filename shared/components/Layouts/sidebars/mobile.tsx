@@ -259,9 +259,9 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                   })}
                   {address !== "" ? (
                     <ProfileDataAndActions
-                      name={"AN-Drew207"}
-                      email="andrescontrerasoviedo740@gmail.com"
-                      photo=""
+                    // name={"AN-Drew207"}
+                    // email="andrescontrerasoviedo740@gmail.com"
+                    // photo=""
                     />
                   ) : (
                     <div className="mb-4">

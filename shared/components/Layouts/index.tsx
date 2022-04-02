@@ -1,15 +1,20 @@
 import React from "react";
 import Link from "next/link";
-import {Layout} from "antd";
-import {Icons} from "@shared/const/Icons";
-import {useRouter} from "next/dist/client/router";
+import { Layout } from "antd";
+import { Icons } from "@shared/const/Icons";
+import { useRouter } from "next/dist/client/router";
 import clsx from "clsx";
-import {Button} from "../common/button/button";
-import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
-import {MenuIcon} from "@heroicons/react/outline";
-import {SidebarMobile} from "./sidebars/mobile";
-import {useAppSelector, useAppDispatch} from "redux/store";
-import {onLoadSales} from 'redux/actions'
+import { Button } from "../common/button/button";
+import { DropdownMenu } from "../common/dropdownMenu/dropdownMenu";
+import { MenuIcon } from "@heroicons/react/outline";
+import { SidebarMobile } from "./sidebars/mobile";
+import { useAppSelector, useAppDispatch } from "redux/store";
+import {
+  onGetAssets,
+  onLoadSales,
+  onLoginUser,
+  onUpdateUser,
+} from "redux/actions";
 import {
   AppstoreFilled,
   AreaChartOutlined,
@@ -19,7 +24,12 @@ import {
   WalletOutlined,
 } from "@ant-design/icons";
 
-import {getAddresses, getContract} from '@shared/web3'
+import {
+  getAddresses,
+  getContract,
+  getWeb3,
+  loginMetamaskWallet,
+} from "@shared/web3";
 
 const styles = {
   content: {
@@ -88,40 +98,109 @@ const navItems = [
       },
     ],
   },
-  {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
-  {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
+  { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
+  { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
 ];
 
-export default function AppLayout({children}) {
+export default function AppLayout({ children }) {
   const router = useRouter();
-  const {blur, message, address} = useAppSelector((state) => ({
+  const { blur, message, address } = useAppSelector((state) => ({
     ...state.layout,
     ...state.user,
   }));
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
-  const dispatch = useAppDispatch()
+  const [isExecuted, setIsExecuted] = React.useState(false);
+  const [notAvailable, setNotAvailable] = React.useState({
+    message: "",
+    value: false,
+  });
 
-  const initApp = async () => {
-    const addresses = getAddresses()
-    const marketplace = getContract('ClockAuction', addresses.marketplace);
+  const chainChangedHandler = async () => {
+    // window.location.reload();
+    const web3 = await getWeb3();
+    const networkId = await web3.eth.net.getId();
+    if (networkId != 1666700000) {
+      setNotAvailable({
+        message: "Change your network to harmony testnet please",
+        value: true,
+      });
+    } else {
+      setNotAvailable({
+        message: "",
+        value: false,
+      });
+    }
+  };
 
-    marketplace.events.AuctionCreated({}, (err, event) => {
-      console.log({err, event}) //idk what this function handles
-    }).on('connected', (subscriptionId) => {
-      console.log({subscriptionId}) //handles when connected
-    }).on('data', (event) => {
-      console.log({event}) //handles the event
-    }).on('error', (err, receipt) => {
-      console.log({err, receipt}) //handles errors
-    })
-
-    dispatch(onLoadSales())
+  const accountChangedHandler = async (newAccount: any) => {
+    // if (timesAccountChange > 0) {
+    //   setNotAvailable({
+    //     message:
+    //       "You have changed your account please go to login/register section and login again",
+    //     value: true,
+    //   });
+    // } else {
+    //   setTimesAccountChange((prev) => prev + 1);
+    // }
+    // window.location.reload();
+    const web3 = await loginMetamaskWallet();
+    await dispatch(onGetAssets((window as any).ethereum.selectedAddress));
+    if (!web3) return;
+    // setLoading(true);
+    await dispatch(
+      onLoginUser({
+        address: (window as any).ethereum.selectedAddress,
+      })
+    );
+    // setLoading(false);
+    dispatch(
+      onUpdateUser({
+        address: (window as any).ethereum.selectedAddress,
+        walletType: "metamask",
+      })
+    );
+    // dispatch(onMessage("Login successful!"));
+    // setTimeout(dispatch, 2000, onMessage(""));
+  };
+  if (
+    typeof window !== "undefined" &&
+    (window as any).ethereum?.isConnected() &&
+    !isExecuted
+  ) {
+    // Client-side-only code
+    // connectWallet();
+    (window as any).ethereum.on("accountsChanged", accountChangedHandler);
+    (window as any).ethereum.on("chainChanged", chainChangedHandler);
+    setIsExecuted(true);
   }
 
+  const dispatch = useAppDispatch();
+
+  const initApp = async () => {
+    const addresses = getAddresses();
+    const marketplace = getContract("ClockAuction", addresses.marketplace);
+
+    marketplace.events
+      .AuctionCreated({}, (err, event) => {
+        console.log({ err, event }); //idk what this function handles
+      })
+      .on("connected", (subscriptionId) => {
+        console.log({ subscriptionId }); //handles when connected
+      })
+      .on("data", (event) => {
+        console.log({ event }); //handles the event
+      })
+      .on("error", (err, receipt) => {
+        console.log({ err, receipt }); //handles errors
+      });
+
+    dispatch(onLoadSales());
+  };
+
   React.useEffect(() => {
-    initApp()
-  }, [])
+    initApp();
+  }, []);
 
   //   const [inputValue, setInputValue] = React.useState("explore");
   return (
@@ -131,9 +210,9 @@ export default function AppLayout({children}) {
         overflow: "auto",
         ...(blur
           ? {
-            filter: "blur(8px)",
-            "-webkit-filter": "blur(8px)",
-          }
+              filter: "blur(8px)",
+              "-webkit-filter": "blur(8px)",
+            }
           : {}),
       }}
     >
@@ -198,10 +277,16 @@ export default function AppLayout({children}) {
         setSidebarOpen={setSidebarOpen}
         sidebarOpen={sidebarOpen}
       />
-      <div className="bg-overlay md:px-10 px-6" style={styles.content}>
-        {children}
-        <Message content={message} open={Boolean(message)} />
-      </div>
+      {notAvailable.value ? (
+        <div className="bg-overlay md:px-10 px-6 flex flex-col items-center justify-center w-screen h-screen text-primary text-3xl font-bold">
+          {notAvailable.message}
+        </div>
+      ) : (
+        <div className="bg-overlay md:px-10 px-6" style={styles.content}>
+          {children}
+          <Message content={message} open={Boolean(message)} />
+        </div>
+      )}
     </Layout>
   );
 }
@@ -210,7 +295,7 @@ export const Message: React.FunctionComponent<{
   content: string;
   open: boolean;
 }> = (props) => {
-  const {content, open} = props;
+  const { content, open } = props;
 
   return (
     <div
@@ -233,7 +318,7 @@ export const Logo = () => (
   </Link>
 );
 
-export const NavbarItem = ({name, link, route, icon}) => {
+export const NavbarItem = ({ name, link, route, icon }) => {
   return (
     <Link href={link}>
       <a
@@ -244,8 +329,8 @@ export const NavbarItem = ({name, link, route, icon}) => {
       >
         <div
           className={clsx(
-            {"opacity-50 text-primary": link !== route},
-            {"text-white": link === route},
+            { "opacity-50 text-primary": link !== route },
+            { "text-white": link === route },
             "gap-2 flex items-center"
           )}
         >
