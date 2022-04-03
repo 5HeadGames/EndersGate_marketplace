@@ -15,10 +15,10 @@ const getEventsWithTimestamp = async (events: EventData[]) => {
   );
 };
 
-const loadAuctionCreated = async (marketplace: Contract, fromBlock: string) => {
+const loadSaleCreated = async (marketplace: Contract, fromBlock: string) => {
   return (
     await getEventsWithTimestamp(
-      await marketplace.getPastEvents("AuctionCreated", {
+      await marketplace.getPastEvents("SaleCreated", {
         fromBlock,
         toBlock: "latest",
       })
@@ -26,11 +26,10 @@ const loadAuctionCreated = async (marketplace: Contract, fromBlock: string) => {
   ).reduce(
     (acc, event) => ({
       ...acc,
-      [`${event.returnValues._nftAddress}@${event.returnValues._tokenId}`]: {
-        nft: event.returnValues._nftAddress,
-        elementId: event.returnValues._tokenId,
-        startingPrice: event.returnValues._startingPrice,
-        endingPrice: event.returnValues._endingPrice,
+      [event.returnValues._auctionId]: {
+        auctionId: event.returnValues._auctionId,
+        amount: event.returnValues._amount,
+        price: event.returnValues._price,
         duration: event.returnValues._duration,
         seller: event.returnValues._seller,
         timestamp: event.timestamp,
@@ -40,19 +39,16 @@ const loadAuctionCreated = async (marketplace: Contract, fromBlock: string) => {
   );
 };
 
-const loadAuctionSuccessfull = async (marketplace: Contract, fromBlock: string) => {
+const loadSaleSuccessfull = async (marketplace: Contract, fromBlock: string) => {
   return (
     await getEventsWithTimestamp(
-      await marketplace.getPastEvents("AuctionSuccessful", {
+      await marketplace.getPastEvents("SaleSuccessful", {
         fromBlock,
         toBlock: "latest",
       })
     )
   ).map((event) => ({
-    nftAddress: event.returnValues._nftAddress,
-    tokenId: event.returnValues._tokenId,
-    totalPrice: event.returnValues._totalPrice,
-    winner: event.returnValues._winner,
+    saleId: event.returnValues._aucitonId,
     timestamp: event.timestamp,
   }));
 };
@@ -81,33 +77,28 @@ export const onLoadSales = createAsyncThunk(
   actionTypes.GET_LISTED_NFTS,
   async function prepare() {
     const addresses = getAddresses();
-    const marketplace = getContract("ClockAuction", addresses.marketplace);
+    const marketplace = getContract("ClockSale", addresses.marketplace);
     const fromBlock = await marketplace.methods.genesisBlock().call();
-    const auctionCreated = await loadAuctionCreated(marketplace, fromBlock);
-    const auctionSuccessfull = await loadAuctionSuccessfull(marketplace, fromBlock);
-    const {totalSales, dailyVolume, cardsSold} = await loadSales(auctionSuccessfull);
-
-    auctionSuccessfull.forEach((auction) => {
-      const map = `${auction.nftAddress}@${auction.tokenId}`;
-      if (auctionCreated[map]) delete auctionCreated[map];
-    });
+    const saleCreated = await loadSaleCreated(marketplace, fromBlock);
+    const saleSuccessfull = await loadSaleSuccessfull(marketplace, fromBlock);
+    //const {totalSales, dailyVolume, cardsSold} = await loadSales(saleSuccessfull);
 
     (
-      await marketplace.getPastEvents("AuctionCancelled", {
+      await marketplace.getPastEvents("SaleCancelled", {
         fromBlock,
         toBlock: "latest",
       })
     ).map((event) => {
-      const map = `${event.returnValues._nftAddress}@${event.returnValues._tokenId}`;
-      if (auctionCreated[map]) delete auctionCreated[map];
+      const id = event.returnValues._auctionId
+      if (saleCreated[id]) delete saleCreated[id];
     });
 
     return {
-      auctionCreated: Object.values(auctionCreated),
-      auctionSuccessfull,
-      totalSales,
-      dailyVolume,
-      cardsSold,
+      saleCreated: Object.values(saleCreated),
+      saleSuccessfull,
+      //totalSales,
+      //dailyVolume,
+      //cardsSold,
     };
   }
 );

@@ -5,7 +5,7 @@ import type {BigNumber} from "@ethersproject/bignumber";
 import type {Block} from "@ethersproject/abstract-provider";
 import type {ClockSale, EndersPack} from "../typechain";
 
-import {getLogs} from '../utils'
+import {getLogs} from "../utils";
 
 const parseSale = (
   sale: [string, string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]
@@ -131,7 +131,7 @@ describe("[ClockSale]", function () {
           await marketplace.createSale(nft.address, id, price, amount, duration)
         ).wait();
 
-        const logs = getLogs(marketplace.interface, tx)
+        const logs = getLogs(marketplace.interface, tx);
         const saleId = logs.find(({name}: {name: string}) => name === "SaleCreated")
           ?.args[0];
         sales.push(saleId);
@@ -169,28 +169,59 @@ describe("[ClockSale]", function () {
         "only owner of sale"
       ).to.be.revertedWith("");
 
-      const prevBalance = await nft.balanceOf(accounts[0].address, salesData[0].id)
-      const logs = getLogs(marketplace.interface, await (await marketplace.cancelSale(sales[0])).wait());
+      const prevBalance = await nft.balanceOf(accounts[0].address, salesData[0].id);
+      const logs = getLogs(
+        marketplace.interface,
+        await (await marketplace.cancelSale(sales[0])).wait()
+      );
       const saleId = logs.find(({name}: {name: string}) => name === "SaleCancelled")
         ?.args[0];
-      const postBalance = await nft.balanceOf(accounts[0].address, salesData[0].id)
+      const postBalance = await nft.balanceOf(accounts[0].address, salesData[0].id);
 
-      await expect(marketplace.ownerOf(saleId), 'not burned sale').to.be.revertedWith('')
-      expect(prevBalance.add(salesData[0].amount).toString()).to.be.equal(postBalance.toString())
-      expect(saleId, 'removed wrong sale id').to.be.equal('0')
+      await expect(marketplace.ownerOf(saleId), "not burned sale").to.be.revertedWith("");
+      expect(prevBalance.add(salesData[0].amount).toString()).to.be.equal(
+        postBalance.toString()
+      );
+      expect(saleId, "removed wrong sale id").to.be.equal("0");
     });
 
-    it('Should not buy cancelled sales', async () => {
-      await expect(marketplace.buy(sales[0], salesData[0].amount)).to.be.revertedWith('')
-    })
+    it("Should not buy cancelled sales", async () => {
+      await expect(marketplace.buy(sales[0], salesData[0].amount)).to.be.revertedWith("");
+    });
 
-    it('Should buy sales by given amounts', async () => {
-      console.log('sales by given amount')
-      const receipt = await (await marketplace.buy(sales[1], 1, {value: salesData[1].price})).wait();
-      const log = getLogs(marketplace.interface, receipt).find(({name}) => name === 'BuySuccessful')
+    it("Should buy sales by given amounts", async () => {
+      const amount = 2;
+      const cost = salesData[1].price.mul(amount).toString();
+      const buyer = accounts[1];
+      const [buyerBalance, sellerBalance, feeReceiverBalance] = await Promise.all([
+        await ethers.provider.getBalance(buyer.address),
+        await ethers.provider.getBalance(accounts[0].address),
+        await ethers.provider.getBalance(feeReceiver.address),
+      ]);
+      const receipt = await (
+        await marketplace.connect(buyer).buy(sales[1], amount, {value: cost})
+      ).wait();
+      console.log(receipt)
+      const log = getLogs(marketplace.interface, receipt).find(
+        ({name}) => name === "BuySuccessful"
+      );
 
-      console.log(log?.args)
-      //expect(log.args)
-    })
+      const [postBuyerBalance, postSellerBalance, postFeeReceiverBalance] = await Promise.all([
+        await ethers.provider.getBalance(buyer.address),
+        await ethers.provider.getBalance(accounts[0].address),
+        await ethers.provider.getBalance(feeReceiver.address),
+      ]);
+
+      console.log({
+        buyerBalance: buyerBalance.sub(postBuyerBalance),
+        cost,
+        sellerBalance: postSellerBalance.sub(sellerBalance),
+      });
+
+      expect(log?.args[0].toString(), "Wrong sales id").to.be.equal(sales[1]);
+      expect(log?.args[1].toString(), "Wrong buyer").to.be.equal(buyer.address); //buyer
+      expect(log?.args[2].toString(), "Wrong cost").to.be.equal(cost.toString());
+      expect(log?.args[3].toString(), "Wrong nft amount").to.be.equal(String(amount));
+    });
   });
 });

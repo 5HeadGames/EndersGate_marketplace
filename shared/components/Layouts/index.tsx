@@ -1,14 +1,14 @@
 import React from "react";
 import Link from "next/link";
-import { Layout } from "antd";
-import { Icons } from "@shared/const/Icons";
-import { useRouter } from "next/dist/client/router";
+import {Layout} from "antd";
+import {Icons} from "@shared/const/Icons";
+import {useRouter} from "next/dist/client/router";
 import clsx from "clsx";
-import { Button } from "../common/button/button";
-import { DropdownMenu } from "../common/dropdownMenu/dropdownMenu";
-import { MenuIcon } from "@heroicons/react/outline";
-import { SidebarMobile } from "./sidebars/mobile";
-import { useAppSelector, useAppDispatch } from "redux/store";
+import {Button} from "../common/button/button";
+import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
+import {MenuIcon} from "@heroicons/react/outline";
+import {SidebarMobile} from "./sidebars/mobile";
+import {useAppSelector, useAppDispatch} from "redux/store";
 import {
   onGetAssets,
   onLoadSales,
@@ -98,13 +98,13 @@ const navItems = [
       },
     ],
   },
-  { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
-  { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
+  {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
+  {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
 ];
 
-export default function AppLayout({ children }) {
+export default function AppLayout({children}) {
   const router = useRouter();
-  const { blur, message, address } = useAppSelector((state) => ({
+  const {blur, message, address} = useAppSelector((state) => ({
     ...state.layout,
     ...state.user,
   }));
@@ -179,20 +179,20 @@ export default function AppLayout({ children }) {
 
   const initApp = async () => {
     const addresses = getAddresses();
-    const marketplace = getContract("ClockAuction", addresses.marketplace);
+    const marketplace = getContract("ClockSale", addresses.marketplace);
 
     marketplace.events
-      .AuctionCreated({}, (err, event) => {
-        console.log({ err, event }); //idk what this function handles
+      .SaleCreated({}, (err, event) => {
+        console.log({err, event}); //idk what this function handles
       })
       .on("connected", (subscriptionId) => {
-        console.log({ subscriptionId }); //handles when connected
+        console.log({subscriptionId}); //handles when connected
       })
       .on("data", (event) => {
-        console.log({ event }); //handles the event
+        console.log({event}); //handles the event
       })
       .on("error", (err, receipt) => {
-        console.log({ err, receipt }); //handles errors
+        console.log({err, receipt}); //handles errors
       });
 
     dispatch(onLoadSales());
@@ -210,9 +210,9 @@ export default function AppLayout({ children }) {
         overflow: "auto",
         ...(blur
           ? {
-              filter: "blur(8px)",
-              "-webkit-filter": "blur(8px)",
-            }
+            filter: "blur(8px)",
+            "-webkit-filter": "blur(8px)",
+          }
           : {}),
       }}
     >
@@ -295,7 +295,7 @@ export const Message: React.FunctionComponent<{
   content: string;
   open: boolean;
 }> = (props) => {
-  const { content, open } = props;
+  const {content, open} = props;
 
   return (
     <div
@@ -318,7 +318,7 @@ export const Logo = () => (
   </Link>
 );
 
-export const NavbarItem = ({ name, link, route, icon }) => {
+export const NavbarItem = ({name, link, route, icon}) => {
   return (
     <Link href={link}>
       <a
@@ -329,8 +329,8 @@ export const NavbarItem = ({ name, link, route, icon }) => {
       >
         <div
           className={clsx(
-            { "opacity-50 text-primary": link !== route },
-            { "text-white": link === route },
+            {"opacity-50 text-primary": link !== route},
+            {"text-white": link === route},
             "gap-2 flex items-center"
           )}
         >

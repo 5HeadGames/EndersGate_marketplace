@@ -13,7 +13,7 @@ import {ChainType} from "@harmony-js/utils";
 import HarmonyWallet from "shared/web3/harmonyWallet";
 import Web3 from "web3";
 import {AbiItem} from "web3-utils";
-import MarketplaceContract from "shared/contracts/ClockAuction.json";
+import MarketplaceContract from "shared/contracts/ClockSale.json";
 import ERC1155 from "shared/contracts/ERC1155.json";
 import {getAddresses, getContract} from "@shared/web3";
 import {readUser, writeUser} from "shared/firebase";
