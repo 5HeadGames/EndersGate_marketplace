@@ -1,10 +1,9 @@
 import Web3 from "web3";
-import {AbiItem} from 'web3-utils'
+import {AbiItem} from "web3-utils";
 import axios from "axios";
-import contracts from 'shared/contracts'
+import contracts from "shared/contracts";
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
-
 
 const mockNftID = [
    "1035205086292954408150852752291366796139603653328",
@@ -22,14 +21,12 @@ export const getNftsMetadata = async () => {
    const web3 = new Web3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER);
    //address from a test contract on harmony one
    const contract = new web3.eth.Contract(
-      contracts['ERC1155'].abi as AbiItem[],
+      contracts["ERC1155"].abi as AbiItem[],
       "0x3e8e62520db86bcdc3beda30fd6362f95f3662ef"
    );
 
    const ipfsUrl = await Promise.all(mockNftID.map((id) => contract.methods.uri(id).call()));
-   const nftsData = (await Promise.all(ipfsUrl.map((url) => axios(url)))).map(
-      ({data}) => data
-   );
+   const nftsData = (await Promise.all(ipfsUrl.map((url) => axios(url)))).map(({data}) => data);
 
    return nftsData.map((data, i) => ({
       ...data,
@@ -39,18 +36,16 @@ export const getNftsMetadata = async () => {
 };
 
 export const loginHarmonyWallet = async () => {
-   const account = await (window as any)?.onewallet.getAccount()
-   if (!account)
-      return false
-   return account
+   const account = await (window as any)?.onewallet.getAccount();
+   if (!account) return false;
+   return account;
 };
 
 export const loginMetamaskWallet = async () => {
-   const provider = await (window as any).ethereum
-   if (!provider)
-      return false
+   const provider = await (window as any).ethereum;
+   if (!provider) return false;
    await (window as any).ethereum.request({method: "eth_requestAccounts"});
-   return new Web3(provider)
+   return new Web3(provider);
 };
 
 export const getWalletConnect = () => {
@@ -58,29 +53,29 @@ export const getWalletConnect = () => {
       bridge: "https://bridge.walletconnect.org", // Required
       qrcodeModal: QRCodeModal,
    });
-}
+};
 
 export const getWeb3 = (provider?: string) => {
    return new Web3(provider ? provider : (window as any).ethereum);
-}
+};
 
 export const getContract = (factory: keyof typeof contracts, address: string) => {
-   const web3 = getWeb3()
-   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address)
-}
+   const web3 = getWeb3();
+   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
+};
 
 export const getBalance = async (address: string) => {
-  const web3 = getWeb3();
-  const balance = await web3.eth.getBalance(address);
-  console.log(web3.utils.fromWei(balance));
-  return web3.utils
-    .fromWei(balance)
-    .substr(0, web3.utils.fromWei(balance).indexOf(".") + 5);
+   const web3 = getWeb3();
+   const balance = await web3.eth.getBalance(address);
+   console.log(web3.utils.fromWei(balance));
+   return web3.utils.fromWei(balance).substr(0, web3.utils.fromWei(balance).indexOf(".") + 5);
 };
 
 export const getAddresses = () => {
-   const testAddresses = require('../../Contracts/addresses.harmony_test.json')
-   const addresses = require('../../Contracts/addresses.harmony.json')
+   const testAddresses = require("../../Contracts/addresses.harmony_test.json");
+   const addresses = require("../../Contracts/addresses.harmony.json");
 
-   return process.env.NEXT_PUBLIC_HARMONY_PROVIDER === 'https://api.harmony.one' ? testAddresses : addresses;
-}
+   return process.env.NEXT_PUBLIC_HARMONY_PROVIDER === "https://api.harmony.one"
+      ? addresses
+      : testAddresses;
+};
