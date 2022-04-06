@@ -1,24 +1,42 @@
 import {createAction, createAsyncThunk} from "@reduxjs/toolkit";
 import {Contract, EventData} from "web3-eth-contract";
+import Web3 from "web3";
 
 import * as actionTypes from "../constants";
 import {getAddresses, getContract, getWeb3} from "@shared/web3";
 import cards from "../../cards.json";
 
-const getDailyVolume = (successfulSales: Sale) => {
+const getCardSold = (successfulSales: Sale[]) => {
+  return successfulSales.reduce(
+    (acc, cur) => acc.add(Web3.utils.toBN(cur.amount)),
+    Web3.utils.toBN(0)
+  );
+};
+
+const getDailyVolume = (successfulSales: Sale[]) => {
+  const startOfDay = new Date();
+  startOfDay.setUTCHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setUTCHours(23, 59, 59, 999);
+
   return successfulSales.reduce((acc, cur) => {
-    const started = new Date(Number(cur.startedAt) * 1000);
-  });
+    const started = new Date(Number(cur.startedAt) * 1000).getTime();
+    return acc.add(
+      started > startOfDay.getTime() && started < endOfDay.getTime()
+        ? Web3.utils.toBN(cur.price)
+        : Web3.utils.toBN(0)
+    );
+  }, Web3.utils.toBN(0));
 };
 
 export const onLoadSales = createAsyncThunk(actionTypes.GET_LISTED_NFTS, async function prepare() {
   const addresses = getAddresses();
   const marketplace = getContract("ClockSale", addresses.marketplace);
   const lastSale = Number(await marketplace.methods.tokenIdTracker().call());
-
   const rawSales = await marketplace.methods
     .getSales(new Array(lastSale).fill(0).map((a, i) => i))
     .call();
+
   const allSales = rawSales.map((sale: string[], i) => ({
     id: i,
     seller: sale[0],
@@ -32,14 +50,15 @@ export const onLoadSales = createAsyncThunk(actionTypes.GET_LISTED_NFTS, async f
   }));
   const created = allSales.filter((sale: Sale) => sale.status === "0");
   const successful = allSales.filter((sale: Sale) => sale.status === "1");
-  //const dailyVolume = getDailyVolume(successful);
+  const dailyVolume = getDailyVolume(successful);
+  const cardsSold = getCardSold(successful);
 
   return {
     saleCreated: created,
     saleSuccessful: successful,
     totalSales: created.length,
-    dailyVolume: 0,
-    cardsSold: 0,
+    dailyVolume: dailyVolume.toString(),
+    cardsSold: cardsSold.toString(),
   };
 });
 
