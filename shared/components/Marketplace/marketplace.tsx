@@ -13,17 +13,32 @@ import {DropdownActions} from "../common/dropdownActions/dropdownActions";
 import {Dropdown} from "../common/dropdown/dropdown";
 import clsx from "clsx";
 import {Typography} from "../common/typography";
+import { getAddresses, getContract } from "@shared/web3";
+import { onLoadSales } from "@redux/actions";
+import { useAppDispatch } from "@redux/store";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("lowest_price");
   const [filterMobile, setFilterMobile] = React.useState(false);
+  const [sales, setSales] = React.useState([]);
+
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const orderMapper = {
     lowest_price: "Lowest Price",
     highest_price: "Highest Price",
     recently_listed: "Recently Listed",
     older_listed: "Older Listed",
+  };
+
+  React.useEffect(() => {
+    // getSales();
+  }, []);
+
+  const getSales = async () => {
+    // const sales = await dispatch(onLoadSales());
+    // setSales((sales as any).payload?.saleCreated);
   };
 
   const [filter, setFilter] = React.useState({
@@ -95,10 +110,11 @@ const MarketplaceComponent = () => {
             </div>
           </div>
           <div className="flex flex-wrap w-full justify-center items-center relative">
-            {new Array(6).fill(0).map((a, id) => (
+            {sales?.map((a, id) => (
               <NftCard
-                classes={{root: "m-4 cursor-pointer"}}
+                classes={{ root: "m-4 cursor-pointer" }}
                 id={id}
+                byId={false}
               />
             ))}
             {filterMobile && (

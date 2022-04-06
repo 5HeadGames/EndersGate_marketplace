@@ -146,9 +146,11 @@ describe("[ClockSale]", function () {
     });
 
     it("Should get batch sales", async () => {
-      const allSales = (await marketplace.getSales(sales)).map((sale) => parseSale(sale));
-      allSales.forEach((sale, i) => {
-        const {id, amount, price, duration} = salesData[i];
+      const allSales = (await marketplace.getSales(sales)).map((sale: any) =>
+        parseSale(sale)
+      );
+      allSales.forEach((sale: any, i: any) => {
+        const { id, amount, price, duration } = salesData[i];
         expect(sale.seller).to.be.equal(accounts[0].address);
         expect(sale.nft).to.be.equal(nft.address);
         expect(sale.nftId).to.be.equal(id);

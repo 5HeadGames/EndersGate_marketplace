@@ -39,7 +39,11 @@ const loadSaleCreated = async (marketplace: Contract, fromBlock: string) => {
   );
 };
 
-const loadSaleSuccessfull = async (marketplace: Contract, fromBlock: string) => {
+
+const loadSaleSuccessfull = async (
+  marketplace: Contract,
+  fromBlock: string
+) => {
   return (
     await getEventsWithTimestamp(
       await marketplace.getPastEvents("SaleSuccessful", {
@@ -53,7 +57,9 @@ const loadSaleSuccessfull = async (marketplace: Contract, fromBlock: string) => 
   }));
 };
 
-const loadSales = async (events: {timestamp: number | string; totalPrice: any}[]) => {
+const loadSales = async (
+  events: { timestamp: number | string; totalPrice: any }[]
+) => {
   const startOfDay = new Date();
   startOfDay.setUTCHours(0, 0, 0, 0);
   const endOfDay = new Date();
@@ -64,7 +70,7 @@ const loadSales = async (events: {timestamp: number | string; totalPrice: any}[]
       (acc, cur) =>
         acc +
         (cur.timestamp > startOfDay.getTime() / 1000 &&
-          cur.timestamp < endOfDay.getTime() / 1000
+        cur.timestamp < endOfDay.getTime() / 1000
           ? cur.totalPrice
           : 0),
       0
@@ -89,7 +95,7 @@ export const onLoadSales = createAsyncThunk(
         toBlock: "latest",
       })
     ).map((event) => {
-      const id = event.returnValues._auctionId
+      const id = event.returnValues._auctionId;
       if (saleCreated[id]) delete saleCreated[id];
     });
 
@@ -100,6 +106,16 @@ export const onLoadSales = createAsyncThunk(
       //dailyVolume,
       //cardsSold,
     };
+  }
+);
+
+export const onLoadSale = createAsyncThunk(
+  actionTypes.GET_LISTED_NFT,
+  async function prepare(tokenId: any) {
+    const addresses = getAddresses();
+    const marketplace = getContract("ClockSale", addresses.marketplace);
+    const saleCreated = await marketplace.methods.sales(tokenId).call();
+    return saleCreated;
   }
 );
 

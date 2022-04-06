@@ -199,9 +199,15 @@ export const onSellERC1155 = createAsyncThunk(
     tx,
   }: {
     walletType: User["walletType"];
-    tx: {from: string; tokenId: number | string; startingPrice: number | string; duration: string};
+    tx: {
+      from: string;
+      tokenId: number | string;
+      startingPrice: number | string;
+      amount: number | string;
+      duration: string;
+    };
   }) {
-    const {marketplace, endersGate} = getAddresses();
+    const { marketplace, endersGate } = getAddresses();
     if (walletType === "metamask") {
       const web3 = new Web3((window as any).ethereum);
       const marketplaceContract = new web3.eth.Contract(
@@ -210,7 +216,13 @@ export const onSellERC1155 = createAsyncThunk(
       );
 
       await marketplaceContract.methods
-        .createAuction(endersGate, tx.tokenId, tx.startingPrice, tx.startingPrice, 24 * 3600 * 30)
+        .createAuction(
+          endersGate,
+          tx.tokenId,
+          tx.startingPrice,
+          tx.amount,
+          24 * 3600 * 30
+        )
         .send({
           from: tx.from,
         });
@@ -225,10 +237,19 @@ export const onSellERC1155 = createAsyncThunk(
           chainId: 2,
         }
       );
-      let marketplace = hmy.contracts.createContract(MarketplaceContract.abi, endersGate);
+      let marketplace = hmy.contracts.createContract(
+        MarketplaceContract.abi,
+        endersGate
+      );
       marketplace = wallet.attachToContract(marketplace);
       await marketplace.methods
-        .createAuction(endersGate, tx.tokenId, tx.startingPrice, tx.startingPrice, 24 * 3600 * 30)
+        .createAuction(
+          endersGate,
+          tx.tokenId,
+          tx.startingPrice,
+          tx.amount,
+          24 * 3600 * 30
+        )
         .send({
           gasPrice: 100000000000,
           gasLimit: 410000,

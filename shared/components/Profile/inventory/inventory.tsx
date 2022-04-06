@@ -97,6 +97,7 @@ const Inventory = () => {
                   icon={cards.All[card.id].properties.image.value}
                   name={cards.All[card.id].properties.name.value}
                   balance={card.balance}
+                  byId
                 />
               )
             );
