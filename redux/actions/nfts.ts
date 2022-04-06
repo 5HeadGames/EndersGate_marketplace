@@ -39,11 +39,7 @@ const loadSaleCreated = async (marketplace: Contract, fromBlock: string) => {
   );
 };
 
-
-const loadSaleSuccessfull = async (
-  marketplace: Contract,
-  fromBlock: string
-) => {
+const loadSaleSuccessfull = async (marketplace: Contract, fromBlock: string) => {
   return (
     await getEventsWithTimestamp(
       await marketplace.getPastEvents("SaleSuccessful", {
@@ -57,9 +53,7 @@ const loadSaleSuccessfull = async (
   }));
 };
 
-const loadSales = async (
-  events: { timestamp: number | string; totalPrice: any }[]
-) => {
+const loadSales = async (events: {timestamp: number | string; totalPrice: any}[]) => {
   const startOfDay = new Date();
   startOfDay.setUTCHours(0, 0, 0, 0);
   const endOfDay = new Date();
@@ -69,8 +63,7 @@ const loadSales = async (
     dailyVolume: events.reduce(
       (acc, cur) =>
         acc +
-        (cur.timestamp > startOfDay.getTime() / 1000 &&
-        cur.timestamp < endOfDay.getTime() / 1000
+        (cur.timestamp > startOfDay.getTime() / 1000 && cur.timestamp < endOfDay.getTime() / 1000
           ? cur.totalPrice
           : 0),
       0
@@ -79,35 +72,22 @@ const loadSales = async (
   };
 };
 
-export const onLoadSales = createAsyncThunk(
-  actionTypes.GET_LISTED_NFTS,
-  async function prepare() {
-    const addresses = getAddresses();
-    const marketplace = getContract("ClockSale", addresses.marketplace);
-    const fromBlock = await marketplace.methods.genesisBlock().call();
-    const saleCreated = await loadSaleCreated(marketplace, fromBlock);
-    const saleSuccessfull = await loadSaleSuccessfull(marketplace, fromBlock);
-    //const {totalSales, dailyVolume, cardsSold} = await loadSales(saleSuccessfull);
+export const onLoadSales = createAsyncThunk(actionTypes.GET_LISTED_NFTS, async function prepare() {
+  const addresses = getAddresses();
+  const marketplace = getContract("ClockSale", addresses.marketplace);
+  const lastSale = Number(await marketplace.methods.tokenIdTracker().call());
 
-    (
-      await marketplace.getPastEvents("SaleCancelled", {
-        fromBlock,
-        toBlock: "latest",
-      })
-    ).map((event) => {
-      const id = event.returnValues._auctionId;
-      if (saleCreated[id]) delete saleCreated[id];
-    });
+  const allSales = await marketplace.methods.getSales(new Array(lastSale).map((a, i) => i)).call();
+  //TODO:load rest of data
 
-    return {
-      saleCreated: Object.values(saleCreated),
-      saleSuccessfull,
-      //totalSales,
-      //dailyVolume,
-      //cardsSold,
-    };
-  }
-);
+  return {
+    saleCreated: allSales,
+    saleSuccessful: allSales,
+    totalSales: 0,
+    dailyVolume: 0,
+    cardsSold: 0,
+  };
+});
 
 export const onLoadSale = createAsyncThunk(
   actionTypes.GET_LISTED_NFT,
