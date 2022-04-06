@@ -33,12 +33,13 @@ const MarketplaceComponent = () => {
   };
 
   React.useEffect(() => {
-    // getSales();
+    getSales();
   }, []);
 
   const getSales = async () => {
-    // const sales = await dispatch(onLoadSales());
-    // setSales((sales as any).payload?.saleCreated);
+    const sales = await dispatch(onLoadSales());
+    setSales((sales as any).payload?.saleCreated);
+    console.log(sales, "sales");
   };
 
   const [filter, setFilter] = React.useState({

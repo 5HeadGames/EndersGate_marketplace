@@ -15,8 +15,8 @@ import Web3 from "web3";
 import {AbiItem} from "web3-utils";
 import MarketplaceContract from "shared/contracts/ClockSale.json";
 import ERC1155 from "shared/contracts/ERC1155.json";
-import {getAddresses, getContract} from "@shared/web3";
-import {readUser, writeUser} from "shared/firebase";
+import { getAddresses, getContract, getContractMetamask } from "@shared/web3";
+import { readUser, writeUser } from "shared/firebase";
 import * as actionTypes from "../constants";
 
 export const onGetNfts = createAction(actionTypes.GET_NFTS, function prepare() {
@@ -31,7 +31,11 @@ const auth = getAuth();
 
 export const onLoginUser = createAsyncThunk(
   actionTypes.LOGIN_USER,
-  async function prepare(userData: {email?: string; password?: string; address: string}) {
+  async function prepare(userData: {
+    email?: string;
+    password?: string;
+    address: string;
+  }) {
     console.log(userData);
     const placeholderData = {
       email: "",
@@ -49,7 +53,7 @@ export const onLoginUser = createAsyncThunk(
     };
     if (userData.email) {
       try {
-        const {user: userAuth} = await signInWithEmailAndPassword(
+        const { user: userAuth } = await signInWithEmailAndPassword(
           auth,
           (userData as any).email,
           (userData as any).password
@@ -57,7 +61,7 @@ export const onLoginUser = createAsyncThunk(
         const user = await readUser(`users/${userData.address}`);
         return user || placeholderData;
       } catch (err) {
-        const {user: userAuth} = await createUserWithEmailAndPassword(
+        const { user: userAuth } = await createUserWithEmailAndPassword(
           auth,
           userData.email,
           userData.password
@@ -78,7 +82,10 @@ export const onLoginUser = createAsyncThunk(
     } else {
       const user = await readUser(`users/${(userData as any).address}`);
       if (!user) {
-        await writeUser(`users/${(userData as any).address}`, placeholderData as any);
+        await writeUser(
+          `users/${(userData as any).address}`,
+          placeholderData as any
+        );
       }
       const newUser = await readUser(`users/${(userData as any).address}`);
       return newUser || placeholderData;
@@ -102,11 +109,15 @@ export const onUpdateUserCredentials = createAsyncThunk(
     userPath: string;
   }) {
     const currentAuth = getAuth();
-    const credential = await signInWithEmailAndPassword(currentAuth, oldEmail, oldPassword);
+    const credential = await signInWithEmailAndPassword(
+      currentAuth,
+      oldEmail,
+      oldPassword
+    );
     await updateEmail(credential.user, newEmail);
     await updatePassword(credential.user, newPassword);
-    await writeUser(userPath, {email: newEmail});
-    return {email: newEmail};
+    await writeUser(userPath, { email: newEmail });
+    return { email: newEmail };
   }
 );
 
@@ -131,7 +142,7 @@ export const onUpdateFirebaseUser = createAsyncThunk(
 export const onUpdateUser = createAction(
   actionTypes.UPDATE_USER,
   function prepare(updateData: Partial<User>) {
-    return {payload: updateData};
+    return { payload: updateData };
   }
 );
 
@@ -143,7 +154,7 @@ export const onLogout = createAsyncThunk(
       if (user.email) await signOut(auth);
       else return true;
     } catch (err) {
-      console.log({err});
+      console.log({ err });
       return false;
     }
     return true;
@@ -157,14 +168,14 @@ export const onApproveERC1155 = createAsyncThunk(
     tx,
   }: {
     walletType: User["walletType"];
-    tx: {to: string; from: string};
+    tx: { to: string; from: string };
   }) {
-    const {marketplace, endersGate} = getAddresses();
+    const { marketplace, endersGate } = getAddresses();
     try {
       console.log("entró");
       if (walletType === "metamask") {
         const web3 = new Web3((window as any).ethereum);
-        const erc1155Contract = getContract("ERC1155", endersGate);
+        const erc1155Contract = getContractMetamask("ERC1155", endersGate);
         const txResult = await erc1155Contract.methods
           .setApprovalForAll(tx.to, true)
           .send({
@@ -194,7 +205,7 @@ export const onApproveERC1155 = createAsyncThunk(
       } else if (walletType === "wallet_connect") {
       }
     } catch (err) {
-      console.log("errorcito",{err});
+      console.log("errorcito", { err });
     }
   }
 );

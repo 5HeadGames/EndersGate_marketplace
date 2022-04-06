@@ -70,6 +70,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         },
       })
     );
+    console.log("c");
     await dispatch(
       onUpdateFirebaseUser({
         userPath,
@@ -161,7 +162,9 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               decoration="line-primary"
               className="hover:text-white border-primary"
               size="small"
-              onClick={sellNft}
+              onClick={() => {
+                hide();
+              }}
             >
               Cancel
             </Button>
