@@ -15,6 +15,7 @@ import clsx from "clsx";
 import {Typography} from "../common/typography";
 import { getAddresses, getContract } from "@shared/web3";
 import { onLoadSales } from "@redux/actions";
+import cards from "../../cards.json";
 import { useAppDispatch } from "@redux/store";
 
 const MarketplaceComponent = () => {
@@ -36,10 +37,13 @@ const MarketplaceComponent = () => {
     getSales();
   }, []);
 
+  React.useEffect(() => {
+    console.log("sales", sales);
+  }, [sales]);
+
   const getSales = async () => {
     const sales = await dispatch(onLoadSales());
     setSales((sales as any).payload?.saleCreated);
-    console.log(sales, "sales");
   };
 
   const [filter, setFilter] = React.useState({
@@ -111,13 +115,18 @@ const MarketplaceComponent = () => {
             </div>
           </div>
           <div className="flex flex-wrap w-full justify-center items-center relative">
-            {sales?.map((a, id) => (
-              <NftCard
-                classes={{ root: "m-4 cursor-pointer" }}
-                id={id}
-                byId={false}
-              />
-            ))}
+            {sales?.map((a, id) => {
+              console.log("a", a);
+              return (
+                <NftCard
+                  classes={{ root: "m-4 cursor-pointer" }}
+                  id={a[2]}
+                  icon={cards.All[a[2]].properties.image.value}
+                  name={cards.All[a[2]].properties.name.value}
+                  byId={false}
+                />
+              );
+            })}
             {filterMobile && (
               <div className={clsx("flex absolute w-screen")}>
                 <FiltersBoard filter={filter} setFilter={setFilter} />{" "}

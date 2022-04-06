@@ -238,7 +238,7 @@ export const onSellERC1155 = createAsyncThunk(
         "ClockSale",
         marketplace
       );
-      console.log(marketplaceContract.methods);
+      console.log(tx,"Tx");
       await marketplaceContract.methods
         .createSale(
           endersGate,
@@ -265,7 +265,7 @@ export const onSellERC1155 = createAsyncThunk(
       );
       marketplace = wallet.attachToContract(marketplace);
       await marketplace.methods
-        .createAuction(
+        .createSale(
           endersGate,
           tx.tokenId,
           tx.startingPrice,

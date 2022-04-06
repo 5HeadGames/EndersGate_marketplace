@@ -55,6 +55,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
       return alert("You don't have enough tokens to sell");
     }
+    const tokenId = id;
     setMessage("Allowing us to sell your tokens");
     await dispatch(
       onApproveERC1155({
@@ -70,7 +71,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           from: user.address,
           startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
           amount: sellNFTData.amount,
-          tokenId: id,
+          tokenId: tokenId,
           duration: "1",
         },
       })
@@ -86,7 +87,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               type: "sell",
               createdAt: new Date().toISOString(),
               nft: {
-                tokenId: id,
+                tokenId: tokenId,
               },
             },
           ],
