@@ -5,71 +5,10 @@ import * as actionTypes from "../constants";
 import {getAddresses, getContract, getWeb3} from "@shared/web3";
 import cards from "../../cards.json";
 
-const getEventsWithTimestamp = async (events: EventData[]) => {
-  const web3 = getWeb3();
-  return await Promise.all(
-    events.map(async (ev) => ({
-      ...ev,
-      timestamp: (await web3.eth.getBlock(ev.blockNumber)).timestamp,
-    }))
-  );
-};
-
-const loadSaleCreated = async (marketplace: Contract, fromBlock: string) => {
-  return (
-    await getEventsWithTimestamp(
-      await marketplace.getPastEvents("SaleCreated", {
-        fromBlock,
-        toBlock: "latest",
-      })
-    )
-  ).reduce(
-    (acc, event) => ({
-      ...acc,
-      [event.returnValues._auctionId]: {
-        auctionId: event.returnValues._auctionId,
-        amount: event.returnValues._amount,
-        price: event.returnValues._price,
-        duration: event.returnValues._duration,
-        seller: event.returnValues._seller,
-        timestamp: event.timestamp,
-      },
-    }),
-    {}
-  );
-};
-
-const loadSaleSuccessfull = async (marketplace: Contract, fromBlock: string) => {
-  return (
-    await getEventsWithTimestamp(
-      await marketplace.getPastEvents("SaleSuccessful", {
-        fromBlock,
-        toBlock: "latest",
-      })
-    )
-  ).map((event) => ({
-    saleId: event.returnValues._aucitonId,
-    timestamp: event.timestamp,
-  }));
-};
-
-const loadSales = async (events: {timestamp: number | string; totalPrice: any}[]) => {
-  const startOfDay = new Date();
-  startOfDay.setUTCHours(0, 0, 0, 0);
-  const endOfDay = new Date();
-  endOfDay.setUTCHours(23, 59, 59, 999);
-  return {
-    totalSales: events.reduce((acc, cur) => acc + Number(cur.totalPrice), 0),
-    dailyVolume: events.reduce(
-      (acc, cur) =>
-        acc +
-        (cur.timestamp > startOfDay.getTime() / 1000 && cur.timestamp < endOfDay.getTime() / 1000
-          ? cur.totalPrice
-          : 0),
-      0
-    ),
-    cardsSold: events.length,
-  };
+const getDailyVolume = (successfulSales: Sale) => {
+  return successfulSales.reduce((acc, cur) => {
+    const started = new Date(Number(cur.startedAt) * 1000);
+  });
 };
 
 export const onLoadSales = createAsyncThunk(actionTypes.GET_LISTED_NFTS, async function prepare() {
@@ -80,7 +19,8 @@ export const onLoadSales = createAsyncThunk(actionTypes.GET_LISTED_NFTS, async f
   const rawSales = await marketplace.methods
     .getSales(new Array(lastSale).fill(0).map((a, i) => i))
     .call();
-  const allSales = rawSales.map((sale) => ({
+  const allSales = rawSales.map((sale: string[], i) => ({
+    id: i,
     seller: sale[0],
     nft: sale[1],
     nftId: sale[2],
@@ -90,12 +30,14 @@ export const onLoadSales = createAsyncThunk(actionTypes.GET_LISTED_NFTS, async f
     startedAt: sale[6],
     status: sale[7],
   }));
-  //TODO:load rest of data
+  const created = allSales.filter((sale: Sale) => sale.status === "0");
+  const successful = allSales.filter((sale: Sale) => sale.status === "1");
+  //const dailyVolume = getDailyVolume(successful);
 
   return {
-    saleCreated: allSales,
-    saleSuccessful: allSales,
-    totalSales: 0,
+    saleCreated: created,
+    saleSuccessful: successful,
+    totalSales: created.length,
     dailyVolume: 0,
     cardsSold: 0,
   };

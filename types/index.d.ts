@@ -4,9 +4,9 @@ interface NFT {
 
 type Activity = {
   createdAt: string;
-  type: 'sell' | 'buy' | 'login';
+  type: "sell" | "buy" | "login";
   nft?: NFT;
-}
+};
 
 interface User {
   id: string;
@@ -17,4 +17,15 @@ interface User {
   userStatus: string;
   walletType?: string;
   activity: Activity[];
+}
+
+interface Sale {
+  seller: string;
+  nft: string;
+  nftId: string;
+  amount: string;
+  price: string;
+  duration: string;
+  startedAt: string;
+  status: "0" | "1" | "2";
 }
