@@ -73,7 +73,7 @@ const MarketplaceComponent = () => {
   });
 
   return (
-    <div className="w-full flex xl:flex-row flex-col md:px-8 px-4 pt-36 pb-10">
+    <div className="w-full flex xl:flex-row flex-col md:px-8 px-4 pt-36 pb-10 min-h-screen">
       <FiltersBoard filter={filter} setFilter={setFilter} />
       <div className="xl:w-2/3 xl:mt-0 mt-6 flex flex-col">
         <div>
