@@ -9,12 +9,7 @@ import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
 import {MenuIcon} from "@heroicons/react/outline";
 import {SidebarMobile} from "./sidebars/mobile";
 import {useAppSelector, useAppDispatch} from "redux/store";
-import {
-  onGetAssets,
-  onLoadSales,
-  onLoginUser,
-  onUpdateUser,
-} from "redux/actions";
+import {onGetAssets, onLoadSales, onLoginUser, onUpdateUser} from "redux/actions";
 import {
   AppstoreFilled,
   AreaChartOutlined,
@@ -24,12 +19,7 @@ import {
   WalletOutlined,
 } from "@ant-design/icons";
 
-import {
-  getAddresses,
-  getContract,
-  getWeb3,
-  loginMetamaskWallet,
-} from "@shared/web3";
+import {getAddresses, getContract, getWeb3, loginMetamaskWallet} from "@shared/web3";
 
 const styles = {
   content: {
@@ -56,43 +46,37 @@ const navItems = [
     items: [
       {
         title: "Enders Gate Website",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: <ShopOutlined />,
       },
       {
         title: "Enders Gate Discord",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: <ShopOutlined />,
       },
       {
         title: "Enders Gate Twitter",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: <TwitterOutlined />,
       },
       {
         title: "Harmony Block Explorer",
-        description:
-          "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
         icon: <WalletOutlined />,
       },
       {
         title: "Harmony Wallet",
-        description:
-          "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
         icon: <WalletOutlined />,
       },
       {
         title: "Harmony Bridge",
-        description:
-          "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
         icon: <WalletOutlined />,
       },
@@ -163,11 +147,7 @@ export default function AppLayout({children}) {
     // dispatch(onMessage("Login successful!"));
     // setTimeout(dispatch, 2000, onMessage(""));
   };
-  if (
-    typeof window !== "undefined" &&
-    (window as any).ethereum?.isConnected() &&
-    !isExecuted
-  ) {
+  if (typeof window !== "undefined" && (window as any).ethereum?.isConnected() && !isExecuted) {
     // Client-side-only code
     // connectWallet();
     (window as any).ethereum.on("accountsChanged", accountChangedHandler);
@@ -181,19 +161,19 @@ export default function AppLayout({children}) {
     const addresses = getAddresses();
     const marketplace = getContract("ClockSale", addresses.marketplace);
 
-    marketplace.events
-      .SaleCreated({}, (err, event) => {
-        console.log({err, event}); //idk what this function handles
-      })
-      .on("connected", (subscriptionId) => {
-        console.log({subscriptionId}); //handles when connected
-      })
-      .on("data", (event) => {
-        console.log({event}); //handles the event
-      })
-      .on("error", (err, receipt) => {
-        console.log({err, receipt}); //handles errors
-      });
+    //marketplace.events
+    //.SaleCreated({}, (err, event) => {
+    //console.log({err, event}); //idk what this function handles
+    //})
+    //.on("connected", (subscriptionId) => {
+    //console.log({subscriptionId}); //handles when connected
+    //})
+    //.on("data", (event) => {
+    //console.log({event}); //handles the event
+    //})
+    //.on("error", (err, receipt) => {
+    //console.log({err, receipt}); //handles errors
+    //});
 
     dispatch(onLoadSales());
   };
@@ -266,10 +246,7 @@ export default function AppLayout({children}) {
             setSidebarOpen(true);
           }}
         >
-          <MenuIcon
-            className="h-6 w-6 text-primary cursor-pointer"
-            aria-hidden="true"
-          />
+          <MenuIcon className="h-6 w-6 text-primary cursor-pointer" aria-hidden="true" />
         </div>
       </nav>
       <SidebarMobile
