@@ -16,6 +16,12 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
   using Counters for Counters.Counter;
   using Address for address payable;
 
+  enum SaleStatus {
+      Created,
+      Successful,
+      Canceled
+  }
+
   struct Sale {
     address seller;
     address nft;
@@ -24,17 +30,18 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     uint256 price;
     uint256 duration;
     uint256 startedAt;
+    SaleStatus status;
   }
 
   // Cut owner takes on each auction, measured in basis points (1/100 of a percent).
   // Values 0-10,000 map to 0%-100%
-  Counters.Counter private _tokenIdTracker;
+  Counters.Counter public tokenIdTracker;
   address public feeReceiver;
   uint256 public ownerCut;
   uint256 public genesisBlock;
 
   // Map from token ID to their corresponding auction.
-  mapping(uint256 => Sale) public auctions;
+  mapping(uint256 => Sale) public sales;
   // Nfts allowed in marketplace
   mapping(address => bool) public isAllowed;
 
@@ -45,7 +52,6 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     uint256 _duration,
     address _seller
   );
-
   event SaleSuccessful(uint256 indexed _aucitonId);
   event BuySuccessful(
     uint256 indexed _aucitonId,
@@ -74,13 +80,13 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
   function getSales(uint256[] memory _tokenIds) external view returns (Sale[] memory) {
     Sale[] memory response = new Sale[](_tokenIds.length);
 
-    for (uint256 i = 0; i < _tokenIds.length; i++) response[i] = auctions[_tokenIds[i]];
+    for (uint256 i = 0; i < _tokenIds.length; i++) response[i] = sales[_tokenIds[i]];
 
     return response;
   }
 
   function getCurrentPrice(uint256 _tokenId) external view returns (uint256) {
-    Sale storage _auction = auctions[_tokenId];
+    Sale storage _auction = sales[_tokenId];
     require(_isOnSale(_auction));
     return _auction.price;
   }
@@ -103,13 +109,14 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
       _amount,
       _price,
       _duration,
-      block.timestamp
+      block.timestamp,
+      SaleStatus.Created
     );
     _addSale(_auction);
   }
 
   function buy(uint256 _tokenId, uint256 amount) external payable whenNotPaused {
-    Sale storage _auction = auctions[_tokenId];
+    Sale storage _auction = sales[_tokenId];
     uint256 cost = _auction.price * amount;
     address buyer = _msgSender();
     _auction.amount -= amount; //this will underflow if is x < 0
@@ -128,13 +135,14 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
   }
 
   function _finalizeSale(uint256 tokenId) internal {
-    Sale storage _auction = auctions[tokenId];
+    Sale storage _auction = sales[tokenId];
+    _auction.status = SaleStatus.Successful;
     _burn(tokenId);
     emit SaleSuccessful(tokenId);
   }
 
   function cancelSale(uint256 _tokenId) external {
-    Sale storage _auction = auctions[_tokenId];
+    Sale storage _auction = sales[_tokenId];
     require(_isOnSale(_auction));
     require(ownerOf(_tokenId) == _msgSender());
     _cancelSale(_tokenId);
@@ -173,10 +181,10 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
   function _addSale(Sale memory _auction) internal {
     require(_auction.duration >= 1 minutes);
 
-    uint256 auctionID = _tokenIdTracker.current();
-    auctions[auctionID] = _auction;
+    uint256 auctionID = tokenIdTracker.current();
+    sales[auctionID] = _auction;
     _mint(_auction.seller, auctionID);
-    _tokenIdTracker.increment();
+    tokenIdTracker.increment();
 
     emit SaleCreated(
       auctionID,
@@ -192,7 +200,8 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
   }
 
   function _cancelSale(uint256 _tokenId) internal {
-    Sale storage _auction = auctions[_tokenId];
+    Sale storage _auction = sales[_tokenId];
+    _auction.status = SaleStatus.Canceled;
     _removeSale(_tokenId);
     _transfer(_tokenId, _auction.amount, _auction.seller);
     emit SaleCancelled(_tokenId);
@@ -214,7 +223,7 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     uint256 amount,
     address _receiver
   ) internal {
-    Sale storage _auction = auctions[_tokenId];
+    Sale storage _auction = sales[_tokenId];
     IERC1155Custom _nftContract = _getNftContract(_auction.nft);
 
     _nftContract.safeTransferFrom(address(this), _receiver, _auction.nftId, amount, "");

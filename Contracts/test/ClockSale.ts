@@ -7,8 +7,14 @@ import type {ClockSale, EndersPack} from "../typechain";
 
 import {getLogs} from "../utils";
 
+const SALE_STATUS = {
+  created: 0,
+  successful: 1,
+  cancel: 2,
+};
+
 const parseSale = (
-  sale: [string, string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]
+  sale: [string, string, BigNumber, BigNumber, BigNumber, BigNumber, BigNumber, number]
 ) => {
   return {
     seller: sale[0],
@@ -18,6 +24,7 @@ const parseSale = (
     price: sale[4],
     duration: sale[5],
     startedAt: sale[6],
+    status: sale[7],
   };
 };
 
@@ -125,7 +132,7 @@ describe("[ClockSale]", function () {
         const saleId = logs.find(({name}: {name: string}) => name === "SaleCreated")?.args[0];
         sales.push(saleId);
 
-        const sale = parseSale(await marketplace.auctions(saleId));
+        const sale = parseSale(await marketplace.sales(saleId));
         block = await ethers.provider.getBlock(tx.blockNumber);
 
         expect(sale.seller).to.be.equal(accounts[0].address);
@@ -148,6 +155,7 @@ describe("[ClockSale]", function () {
         expect(sale.amount).to.be.equal(amount);
         expect(sale.price).to.be.equal(price);
         expect(sale.duration).to.be.equal(duration);
+        expect(sale.status).to.be.equal(SALE_STATUS.created);
         //expect(sale.startedAt).to.be.equal(block.timestamp.toString());
       });
     });
@@ -165,8 +173,10 @@ describe("[ClockSale]", function () {
       );
       const saleId = logs.find(({name}: {name: string}) => name === "SaleCancelled")?.args[0];
       const postBalance = await nft.balanceOf(accounts[0].address, salesData[0].id);
+      const [singleSale] = await marketplace.getSales([sales[0]]);
 
       await expect(marketplace.ownerOf(saleId), "not burned sale").to.be.revertedWith("");
+      expect(singleSale.status).to.be.equal(SALE_STATUS.cancel);
       expect(prevBalance.add(salesData[0].amount).toString()).to.be.equal(postBalance.toString());
       expect(saleId, "removed wrong sale id").to.be.equal("0");
     });
