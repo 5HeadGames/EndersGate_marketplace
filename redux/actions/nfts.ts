@@ -77,9 +77,19 @@ export const onLoadSales = createAsyncThunk(actionTypes.GET_LISTED_NFTS, async f
   const marketplace = getContract("ClockSale", addresses.marketplace);
   const lastSale = Number(await marketplace.methods.tokenIdTracker().call());
 
-  const allSales = await marketplace.methods
+  const rawSales = await marketplace.methods
     .getSales(new Array(lastSale).fill(0).map((a, i) => i))
     .call();
+  const allSales = rawSales.map((sale) => ({
+    seller: sale[0],
+    nft: sale[1],
+    nftId: sale[2],
+    amount: sale[3],
+    price: sale[4],
+    duration: sale[5],
+    startedAt: sale[6],
+    status: sale[7],
+  }));
   //TODO:load rest of data
 
   return {
