@@ -220,21 +220,21 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               </Typography>
             </div>
             <div className="flex gap-2 items-start sm:mt-0 mt-4 sm:justify-end justify-between">
-              {/* {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && ( */}
-              <Button
-                decoration="fillPrimary"
-                className="degradated hover:text-white border-none"
-                size="small"
-                onClick={() => show()}
-              >
-                <img
-                  src={Icons.harmony}
-                  className="h-6 w-6 rounded-full mr-2"
-                  alt=""
-                />{" "}
-                Sell now
-              </Button>
-              {/* )} */}
+              {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && (
+                <Button
+                  decoration="fillPrimary"
+                  className="degradated hover:text-white border-none"
+                  size="small"
+                  onClick={() => show()}
+                >
+                  <img
+                    src={Icons.harmony}
+                    className="h-6 w-6 rounded-full mr-2"
+                    alt=""
+                  />{" "}
+                  Sell now
+                </Button>
+              )}
             </div>
           </div>
           <div className="w-full flex md:flex-row flex-col mt-10">
