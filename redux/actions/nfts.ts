@@ -77,7 +77,9 @@ export const onLoadSales = createAsyncThunk(actionTypes.GET_LISTED_NFTS, async f
   const marketplace = getContract("ClockSale", addresses.marketplace);
   const lastSale = Number(await marketplace.methods.tokenIdTracker().call());
 
-  const allSales = await marketplace.methods.getSales(new Array(lastSale).map((a, i) => i)).call();
+  const allSales = await marketplace.methods
+    .getSales(new Array(lastSale).fill(0).map((a, i) => i))
+    .call();
   //TODO:load rest of data
 
   return {
