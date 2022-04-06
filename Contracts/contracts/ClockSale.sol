@@ -220,6 +220,15 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     _nftContract.safeTransferFrom(address(this), _receiver, _auction.nftId, amount, "");
   }
 
+  function _beforeTokenTransfer(
+    address from,
+    address to,
+    uint256 tokenId
+  ) internal virtual override(ERC721) {
+    require(address(0)==from || address(0)==to,"CANNOT_TRANSFER"); 
+  }
+
+
   function supportsInterface(bytes4 interfaceId)
     public
     view

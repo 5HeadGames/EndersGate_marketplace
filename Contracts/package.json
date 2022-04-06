@@ -10,6 +10,8 @@
     "test": "npx hardhat test",
     "console_test": "npx hardhat console --network harmony_test",
     "console": "npx hardhat console --network harmony",
+    "deploy": "npx hardhat run scripts/deploy.ts --network harmony",
+    "deploy_test": "npx hardhat run scripts/deploy.ts --network harmony_test",
     "build": "npx hardhat compile"
   },
   "keywords": [],

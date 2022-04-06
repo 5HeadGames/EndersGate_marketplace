@@ -55,11 +55,11 @@ const config: any = {
     },
     harmony: {
       url: `https://api.harmony.one`,
-      accounts: [process.env.PRIVATE_KEY]
+      accounts: [process.env.PRIVATE_KEY],
     },
     harmony_test: {
       url: `https://api.s0.b.hmny.io`,
-      accounts: [process.env.PRIVATE_KEY]
+      accounts: [process.env.PRIVATE_KEY],
     },
   },
   solidity: {
@@ -69,9 +69,6 @@ const config: any = {
       },
     ],
   },
-  etherscan: {
-    apiKey: ETHERSCAN_API_KEY as any,
-  } as any,
   gasReporter: {
     currency: "USD",
     gasPrice: 100,

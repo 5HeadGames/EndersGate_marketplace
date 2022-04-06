@@ -22,10 +22,7 @@ const parseSale = (
 };
 
 describe("[ClockSale]", function () {
-  let accounts: SignerWithAddress[],
-    marketplace: ClockSale,
-    nft: EndersPack,
-    genesisBlock: number;
+  let accounts: SignerWithAddress[], marketplace: ClockSale, nft: EndersPack, genesisBlock: number;
   const feeReceiver = ethers.Wallet.createRandom();
 
   const OWNER_CUT = "400";
@@ -78,9 +75,7 @@ describe("[ClockSale]", function () {
     it("Owner should whitelist nfts", async () => {
       await marketplace.setNftAllowed(nft.address, true);
 
-      expect(await marketplace.isAllowed(nft.address), "Not allowed properly").to.be.equal(
-        true
-      );
+      expect(await marketplace.isAllowed(nft.address), "Not allowed properly").to.be.equal(true);
       await expect(
         marketplace.connect(accounts[1]).setNftAllowed(nft.address, true),
         "Not owner"
@@ -89,10 +84,7 @@ describe("[ClockSale]", function () {
 
     it("Owner should stop marketplace", async () => {
       expect(await marketplace.paused(), "Stopped at beggining").to.be.equal(false);
-      await expect(
-        marketplace.restartTrading(),
-        "restart when not stopped"
-      ).to.be.revertedWith("");
+      await expect(marketplace.restartTrading(), "restart when not stopped").to.be.revertedWith("");
       await expect(
         marketplace.connect(accounts[1]).stopTrading(),
         "not owner should stop trading"
@@ -101,9 +93,7 @@ describe("[ClockSale]", function () {
       await marketplace.stopTrading();
 
       expect(await marketplace.paused(), "should be paused").to.be.equal(true);
-      await expect(marketplace.stopTrading(), "trading already stopped").to.be.revertedWith(
-        ""
-      );
+      await expect(marketplace.stopTrading(), "trading already stopped").to.be.revertedWith("");
       await expect(
         marketplace.connect(accounts[1]).restartTrading(),
         "only owner should restart"
@@ -132,8 +122,7 @@ describe("[ClockSale]", function () {
         ).wait();
 
         const logs = getLogs(marketplace.interface, tx);
-        const saleId = logs.find(({name}: {name: string}) => name === "SaleCreated")
-          ?.args[0];
+        const saleId = logs.find(({name}: {name: string}) => name === "SaleCreated")?.args[0];
         sales.push(saleId);
 
         const sale = parseSale(await marketplace.auctions(saleId));
@@ -174,14 +163,11 @@ describe("[ClockSale]", function () {
         marketplace.interface,
         await (await marketplace.cancelSale(sales[0])).wait()
       );
-      const saleId = logs.find(({name}: {name: string}) => name === "SaleCancelled")
-        ?.args[0];
+      const saleId = logs.find(({name}: {name: string}) => name === "SaleCancelled")?.args[0];
       const postBalance = await nft.balanceOf(accounts[0].address, salesData[0].id);
 
       await expect(marketplace.ownerOf(saleId), "not burned sale").to.be.revertedWith("");
-      expect(prevBalance.add(salesData[0].amount).toString()).to.be.equal(
-        postBalance.toString()
-      );
+      expect(prevBalance.add(salesData[0].amount).toString()).to.be.equal(postBalance.toString());
       expect(saleId, "removed wrong sale id").to.be.equal("0");
     });
 
@@ -189,9 +175,15 @@ describe("[ClockSale]", function () {
       await expect(marketplace.buy(sales[0], salesData[0].amount)).to.be.revertedWith("");
     });
 
+    it("Should not transfer sales", async () => {
+      await expect(
+        marketplace.transferFrom(accounts[0].address, accounts[5].address, sales[1])
+      ).to.be.revertedWith("");
+    });
+
     it("Should buy sales by given amounts", async () => {
       const amount = 2;
-      const cost = salesData[1].price.mul(amount).toString();
+      const cost = salesData[1].price.mul(amount);
       const buyer = accounts[1];
       const [buyerBalance, sellerBalance, feeReceiverBalance] = await Promise.all([
         await ethers.provider.getBalance(buyer.address),
@@ -201,23 +193,23 @@ describe("[ClockSale]", function () {
       const receipt = await (
         await marketplace.connect(buyer).buy(sales[1], amount, {value: cost})
       ).wait();
-      console.log(receipt)
       const log = getLogs(marketplace.interface, receipt).find(
         ({name}) => name === "BuySuccessful"
       );
-
       const [postBuyerBalance, postSellerBalance, postFeeReceiverBalance] = await Promise.all([
         await ethers.provider.getBalance(buyer.address),
         await ethers.provider.getBalance(accounts[0].address),
         await ethers.provider.getBalance(feeReceiver.address),
       ]);
+      const feeAmount = cost.div(10000).mul(OWNER_CUT);
 
-      console.log({
-        buyerBalance: buyerBalance.sub(postBuyerBalance),
-        cost,
-        sellerBalance: postSellerBalance.sub(sellerBalance),
-      });
-
+      expect(postFeeReceiverBalance.sub(feeReceiverBalance).toString()).to.be.equal(
+        feeAmount.toString()
+      );
+      expect(postSellerBalance.sub(sellerBalance).toString()).to.be.equal(
+        cost.sub(feeAmount).toString()
+      );
+      expect(buyerBalance.sub(postBuyerBalance)).to.be.gt(cost.toString());
       expect(log?.args[0].toString(), "Wrong sales id").to.be.equal(sales[1]);
       expect(log?.args[1].toString(), "Wrong buyer").to.be.equal(buyer.address); //buyer
       expect(log?.args[2].toString(), "Wrong cost").to.be.equal(cost.toString());
