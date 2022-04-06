@@ -22,7 +22,7 @@ const DashboardComponent = () => {
   }
 
   React.useEffect(()=>{
-    // getListedAndSold();
+    getListedAndSold();
   },[]);
 
   return (

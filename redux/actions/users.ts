@@ -161,12 +161,16 @@ export const onApproveERC1155 = createAsyncThunk(
   }) {
     const {marketplace, endersGate} = getAddresses();
     try {
+      console.log("entró");
       if (walletType === "metamask") {
         const web3 = new Web3((window as any).ethereum);
-        const erc1155Contract = getContract('ERC1155', endersGate)
-        await erc1155Contract.methods.setApprovalForAll(tx.to, true).send({
-          from: tx.from,
-        });
+        const erc1155Contract = getContract("ERC1155", endersGate);
+        const txResult = await erc1155Contract.methods
+          .setApprovalForAll(tx.to, true)
+          .send({
+            from: tx.from,
+          });
+        console.log(txResult);
       } else if (walletType === "harmony") {
         const wallet = new HarmonyWallet();
         await wallet.signin();
@@ -178,7 +182,10 @@ export const onApproveERC1155 = createAsyncThunk(
             chainId: 2,
           }
         );
-        let erc1155Contract = hmy.contracts.createContract(ERC1155.abi, endersGate);
+        let erc1155Contract = hmy.contracts.createContract(
+          ERC1155.abi,
+          endersGate
+        );
         erc1155Contract = wallet.attachToContract(erc1155Contract);
         await erc1155Contract.methods.setApprovalForAll(tx.to, true).send({
           gasPrice: 100000000000,
@@ -187,7 +194,7 @@ export const onApproveERC1155 = createAsyncThunk(
       } else if (walletType === "wallet_connect") {
       }
     } catch (err) {
-      console.log({err});
+      console.log("errorcito",{err});
     }
   }
 );

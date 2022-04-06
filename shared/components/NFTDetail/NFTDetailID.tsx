@@ -47,16 +47,17 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { Modal, show, hide, isShow } = useModal();
 
   const sellNft = async () => {
-    console.log("a");
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
       return alert("You don't have enough tokens to sell");
     }
+    console.log("a");
     await dispatch(
       onApproveERC1155({
         walletType: user.walletType,
         tx: { to: marketplace, from: user.address },
       })
     );
+    console.log("b");
     await dispatch(
       onSellERC1155({
         walletType: user.walletType,
@@ -130,7 +131,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           <h2 className="font-bold text-primary text-center">Sell NFT</h2>
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
             <label className="text-primary font-medium">
-              Starting Price (ONE)
+              Starting price for each NFT (ONE)
             </label>
             <input
               type="number"
