@@ -60,12 +60,12 @@ export const getWeb3 = (provider?: string) => {
 };
 
 export const getContract = (factory: keyof typeof contracts, address: string) => {
-   const web3 = getWeb3();
+   const web3 = getWeb3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER);
    return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 
 export const getBalance = async (address: string) => {
-   const web3 = getWeb3();
+   const web3 = getWeb3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER);
    const balance = await web3.eth.getBalance(address);
    console.log(web3.utils.fromWei(balance));
    return web3.utils.fromWei(balance).substr(0, web3.utils.fromWei(balance).indexOf(".") + 5);
