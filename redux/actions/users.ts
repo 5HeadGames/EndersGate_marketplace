@@ -15,7 +15,12 @@ import Web3 from "web3";
 import {AbiItem} from "web3-utils";
 import MarketplaceContract from "shared/contracts/ClockSale.json";
 import ERC1155 from "shared/contracts/ERC1155.json";
-import { getAddresses, getContract, getContractMetamask } from "@shared/web3";
+import {
+  getAddresses,
+  getContract,
+  getContractMetamask,
+  getWeb3,
+} from "@shared/web3";
 import { readUser, writeUser } from "shared/firebase";
 import * as actionTypes from "../constants";
 
@@ -225,25 +230,24 @@ export const onSellERC1155 = createAsyncThunk(
       duration: string;
     };
   }) {
+    console.log("será?");
     const { marketplace, endersGate } = getAddresses();
     if (walletType === "metamask") {
-      const web3 = new Web3((window as any).ethereum);
-      const marketplaceContract = new web3.eth.Contract(
-        MarketplaceContract.abi as AbiItem[],
+      const web3 = getWeb3();
+      const marketplaceContract = await getContractMetamask(
+        "ClockSale",
         marketplace
       );
-
+      console.log(marketplaceContract.methods);
       await marketplaceContract.methods
-        .createAuction(
+        .createSale(
           endersGate,
           tx.tokenId,
           tx.startingPrice,
           tx.amount,
           24 * 3600 * 30
         )
-        .send({
-          from: tx.from,
-        });
+        .send({ from: tx.from });
     } else if (walletType === "harmony") {
       const wallet = new HarmonyWallet();
       await wallet.signin();

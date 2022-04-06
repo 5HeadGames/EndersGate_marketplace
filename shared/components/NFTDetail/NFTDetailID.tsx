@@ -3,6 +3,7 @@ import {
   FireFilled,
   HeartFilled,
   LeftOutlined,
+  LoadingOutlined,
   MenuOutlined,
   StarFilled,
   ThunderboltFilled,
@@ -39,6 +40,10 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const dispatch = useAppDispatch();
   const userPath = getUserPath(user);
 
+  const [message, setMessage] = React.useState(
+    "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
+  );
+
   const [sellNFTData, setSellNFTData] = React.useState({
     startingPrice: 0,
     amount: 0,
@@ -50,14 +55,14 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
       return alert("You don't have enough tokens to sell");
     }
-    console.log("a");
+    setMessage("Allowing us to sell your tokens");
     await dispatch(
       onApproveERC1155({
         walletType: user.walletType,
         tx: { to: marketplace, from: user.address },
       })
     );
-    console.log("b");
+    setMessage("Listing your tokens");
     await dispatch(
       onSellERC1155({
         walletType: user.walletType,
@@ -89,6 +94,10 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       })
     );
     await dispatch(onLoadSales());
+    setMessage(
+      "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
+    );
+    hide();
   };
 
   React.useEffect(() => {
@@ -128,7 +137,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   return (
     <>
       <Modal isShow={isShow} withoutX>
-        <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8">
+        <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
           <h2 className="font-bold text-primary text-center">Sell NFT</h2>
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
             <label className="text-primary font-medium">
@@ -155,6 +164,18 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                 });
               }}
             />
+          </div>
+          <div className="py-6">
+            <div className="text-primary text-sm text-center flex items-center justify-center">
+              {message ===
+              "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
+                message
+              ) : (
+                <span className="flex gap-4 items-center justify-center">
+                  {message} <LoadingOutlined />
+                </span>
+              )}
+            </div>
           </div>
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
             <Button
