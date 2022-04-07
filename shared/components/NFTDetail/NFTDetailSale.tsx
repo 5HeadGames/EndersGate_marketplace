@@ -31,6 +31,7 @@ import { getAddresses, getContract } from "@shared/web3";
 import { Typography } from "../common/typography";
 import cards from "../../cards.json";
 import { TimeConverter } from "../common/unixDateConverter/unixConverter";
+import { useModal } from "@shared/hooks/modal";
 
 const { marketplace } = getAddresses();
 
@@ -42,6 +43,10 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
   const userPath = getUserPath(user);
 
   const [sale, setSale] = React.useState<any>();
+
+  const [buyNFTData, setBuyNFTData] = React.useState(0);
+
+  const { Modal, show, hide, isShow } = useModal();
 
   React.useEffect(() => {
     if (id) {
@@ -56,14 +61,18 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
   };
 
   const buyNft = async () => {
-    console.log("user", user);
     if (user.address === "") {
       router.push("/login");
     }
     await dispatch(
       onBuyERC1155({
         walletType: user.walletType,
-        tx: { from: user.address, bid: "5", tokenId: id },
+        tx: {
+          from: user.address,
+          amount: buyNFTData,
+          bid: buyNFTData * sale.price,
+          tokenId: id,
+        },
       })
     );
     await dispatch(
@@ -87,6 +96,52 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
 
   return (
     <>
+      <Modal isShow={isShow} withoutX>
+        <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
+          <h2 className="font-bold text-primary text-center">Buy NFT</h2>
+          <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
+            <label className="text-primary font-medium">Amount of NFTs</label>
+            <input
+              type="number"
+              className="bg-overlay text-primary text-center w-24"
+              onChange={(e) => {
+                setBuyNFTData(parseInt(e.target.value));
+              }}
+            />
+          </div>
+          <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
+            <label className="text-primary font-medium">Total Price:</label>
+            {sale && (
+              <span className="text-white">
+                {buyNFTData * parseInt(Web3.utils.fromWei(sale.price, "ether"))}
+              </span>
+            )}
+          </div>
+          <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
+            <Button
+              // className="px-4 py-2 border border-primary text-primary"
+              decoration="line-primary"
+              className="hover:text-white border-primary"
+              size="small"
+              onClick={() => {
+                setBuyNFTData(0);
+                hide();
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              // className="px-4 py-2 border border-primary text-primary"
+              decoration="fillPrimary"
+              className="degradated hover:text-white border-none"
+              size="small"
+              onClick={buyNft}
+            >
+              Buy NFT/s
+            </Button>
+          </div>
+        </div>
+      </Modal>
       {id !== undefined && sale !== undefined ? (
         <div className="min-h-screen w-full flex flex-col xl:px-20 md:px-10 sm:px-6 pt-32 pb-20">
           <div className="flex sm:flex-row flex-col sm:justify-between  w-full">
@@ -126,7 +181,9 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
                 decoration="fillPrimary"
                 className="degradated hover:text-white border-none"
                 size="small"
-                onClick={buyNft}
+                onClick={() => {
+                  show();
+                }}
               >
                 <img src={Icons.harmony} className="h-6 w-6" alt="" /> Buy now
               </Button>
@@ -136,7 +193,9 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
             <div className="flex relative justify-center md:w-1/2 xl:px-24">
               <div className="sm:sticky sm:top-32 h-min w-72">
                 <img
-                  src={cards.All[id].properties.image?.value || Icons.logo}
+                  src={
+                    cards.All[sale.nftId].properties.image?.value || Icons.logo
+                  }
                   className="w-72"
                   alt=""
                 />
@@ -160,10 +219,10 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
                         type="subTitle"
                         className="text-primary opacity-75"
                       >
-                        {cards.All[id].properties.name?.value}
+                        {cards.All[sale.nftId].properties.name?.value}
                       </Typography>
                     </div>
-                    {cards.All[id].properties.type?.value && (
+                    {cards.All[sale.nftId].properties.type?.value && (
                       <div className="flex flex-col">
                         <Typography
                           type="subTitle"
@@ -175,11 +234,11 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
                           type="subTitle"
                           className="text-primary opacity-75"
                         >
-                          {cards.All[id].properties.type?.value}
+                          {cards.All[sale.nftId].properties.type?.value}
                         </Typography>
                       </div>
                     )}
-                    {cards.All[id].properties.rarity?.value && (
+                    {cards.All[sale.nftId].properties.rarity?.value && (
                       <div className="flex flex-col">
                         <Typography
                           type="subTitle"
@@ -191,7 +250,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
                           type="subTitle"
                           className="text-primary opacity-75"
                         >
-                          {cards.All[id].properties.rarity?.value}
+                          {cards.All[sale.nftId].properties.rarity?.value}
                         </Typography>
                       </div>
                     )}
@@ -208,7 +267,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
                         type="subTitle"
                         className="text-primary opacity-75"
                       >
-                        {cards.All[id].properties.description?.value}
+                        {cards.All[sale.nftId].properties.description?.value}
                       </Typography>
                     </div>
                   </div>

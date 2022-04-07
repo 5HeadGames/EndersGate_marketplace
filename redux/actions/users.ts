@@ -287,16 +287,21 @@ export const onBuyERC1155 = createAsyncThunk(
     tx,
   }: {
     walletType: User["walletType"];
-    tx: {from: string; tokenId: number | string; bid: string | number};
+    tx: {
+      from: string;
+      tokenId: number | string;
+      bid: string | number;
+      amount: string | number;
+    };
   }) {
-    const {marketplace, erc1155} = getAddresses();
+    const { marketplace, erc1155 } = getAddresses();
     if (walletType === "metamask") {
       const web3 = new Web3((window as any).ethereum);
       const marketplaceContract = new web3.eth.Contract(
         MarketplaceContract.abi as AbiItem[],
         marketplace
       );
-      await marketplaceContract.methods.bid(erc1155, tx.tokenId).send({
+      await marketplaceContract.methods.buy(tx.tokenId, tx.amount).send({
         from: tx.from,
         value: tx.bid,
       });
@@ -311,7 +316,10 @@ export const onBuyERC1155 = createAsyncThunk(
           chainId: 2,
         }
       );
-      let marketplaceContract = hmy.contracts.createContract(MarketplaceContract.abi, erc1155);
+      let marketplaceContract = hmy.contracts.createContract(
+        MarketplaceContract.abi,
+        erc1155
+      );
       marketplaceContract = wallet.attachToContract(marketplaceContract);
       await marketplaceContract.methods.bid(erc1155, tx.tokenId).send({
         gasPrice: 100000000000,
