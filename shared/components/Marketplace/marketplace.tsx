@@ -13,9 +13,9 @@ import {DropdownActions} from "../common/dropdownActions/dropdownActions";
 import {Dropdown} from "../common/dropdown/dropdown";
 import clsx from "clsx";
 import {Typography} from "../common/typography";
-import { getAddresses, getContract } from "@shared/web3";
-import { onLoadSales } from "@redux/actions";
-import { useAppDispatch } from "@redux/store";
+import {getAddresses, getContract} from "@shared/web3";
+import {onLoadSales} from "@redux/actions";
+import {useAppDispatch} from "@redux/store";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("lowest_price");
@@ -69,14 +69,12 @@ const MarketplaceComponent = () => {
   });
 
   return (
-    <div className="w-full flex xl:flex-row flex-col md:px-8 px-4 pt-36 pb-10">
+    <div className="w-full flex xl:flex-row flex-col md:px-8 px-4 pt-36 pb-10 min-h-screen">
       <FiltersBoard filter={filter} setFilter={setFilter} />
       <div className="xl:w-2/3 xl:mt-0 mt-6 flex flex-col">
         <div>
           <div className="w-full flex justify-between items-center sm:flex-row flex-col">
-            <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">
-              619,801 Cards
-            </h3>
+            <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">619,801 Cards</h3>
             <div className="flex">
               <DropdownActions
                 title={orderMapper[currentOrder]}
@@ -112,11 +110,7 @@ const MarketplaceComponent = () => {
           </div>
           <div className="flex flex-wrap w-full justify-center items-center relative">
             {sales?.map((a, id) => (
-              <NftCard
-                classes={{ root: "m-4 cursor-pointer" }}
-                id={id}
-                byId={false}
-              />
+              <NftCard classes={{root: "m-4 cursor-pointer"}} id={id} byId={false} />
             ))}
             {filterMobile && (
               <div className={clsx("flex absolute w-screen")}>
