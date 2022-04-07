@@ -105,35 +105,6 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     console.log("nft data", sellNFTData);
   }, [sellNFTData]);
 
-  const buyNft = async () => {
-    console.log("user", user);
-    if (user.address === "") {
-      router.push("/login");
-    }
-    await dispatch(
-      onBuyERC1155({
-        walletType: user.walletType,
-        tx: { from: user.address, bid: "5", tokenId: id },
-      })
-    );
-    await dispatch(
-      onUpdateFirebaseUser({
-        userPath,
-        updateData: {
-          activity: [
-            ...user.activity,
-            {
-              type: "buy",
-              createdAt: new Date().toISOString(),
-              nft: {
-                tokenId: id,
-              },
-            },
-          ],
-        },
-      })
-    );
-  };
 
   return (
     <>
