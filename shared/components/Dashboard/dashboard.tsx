@@ -13,8 +13,8 @@ const DashboardComponent = () => {
     <div className="w-full flex flex-col md:px-16 px-4 min-h-screen pt-36">
       <TransactionsBoard />
       <div className="grid xl:grid-cols-2 grid-cols-1 xl:gap-8 mt-6">
-        {/* <Table title="Recently Listed" data={saleCreated} /> */}
-        {/* <Table title="Recently Sold" data={saleSuccessfull} /> */}
+        <Table title="Recently Listed" data={[]} />
+        <Table title="Recently Sold" data={[]} />
       </div>
     </div>
   );

@@ -52,7 +52,7 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
           </div>
         </Link>
       ) : (
-        <Link href={`/NFTDetailSale/${props.id}`}>
+        <Link href={`/NFTDetailSale/${props.transactionId}`}>
           <div
             className={clsx(
               "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer",

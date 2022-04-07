@@ -84,7 +84,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
 
   return (
     <>
-      {id ? (
+      {sale !== undefined ? (
         <div className="min-h-screen w-full flex flex-col xl:px-20 md:px-10 sm:px-6 pt-32 pb-20">
           <div className="flex sm:flex-row flex-col sm:justify-between  w-full">
             <div className="flex flex-col gap-2">
@@ -96,7 +96,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
                 Back
               </div>
               <Typography type="title" className="text-primary">
-                Card #{id}
+                Card #{sale?.id}
               </Typography>
               <Typography type="title" className="text-primary">
                 Transaction #{id}
@@ -106,7 +106,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
               <div className="flex flex-col items-end">
                 <div className="text-primary font-bold flex items-center gap-2">
                   <MenuOutlined />
-                  <Typography type="title">0.035</Typography>
+                  <Typography type="title">{sale.price}</Typography>
                 </div>
                 <Typography type="subTitle" className="text-white">
                   $116.15

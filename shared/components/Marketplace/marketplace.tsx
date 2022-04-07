@@ -120,9 +120,10 @@ const MarketplaceComponent = () => {
               return (
                 <NftCard
                   classes={{ root: "m-4 cursor-pointer" }}
-                  id={a[2]}
-                  icon={cards.All[a[2]].properties.image.value}
-                  name={cards.All[a[2]].properties.name.value}
+                  id={a.nftId}
+                  transactionId={a.id}
+                  icon={cards.All[a.nftId].properties.image.value}
+                  name={cards.All[a.nftId].properties.name.value}
                   byId={false}
                 />
               );
