@@ -3,6 +3,7 @@ import {
   FireFilled,
   HeartFilled,
   LeftOutlined,
+  LoadingOutlined,
   MenuOutlined,
   StarFilled,
   ThunderboltFilled,
@@ -29,6 +30,7 @@ import {
 import { getAddresses, getContract } from "@shared/web3";
 import { Typography } from "../common/typography";
 import cards from "../../cards.json";
+import { TimeConverter } from "../common/unixDateConverter/unixConverter";
 
 const { marketplace } = getAddresses();
 
@@ -39,7 +41,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
   const dispatch = useAppDispatch();
   const userPath = getUserPath(user);
 
-  const [sale, setSale] = React.useState();
+  const [sale, setSale] = React.useState<any>();
 
   React.useEffect(() => {
     if (id) {
@@ -49,7 +51,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
 
   const getSale = async () => {
     const sale = await dispatch(onLoadSale(id));
-    console.log("sale", sale);
+    console.log(sale.payload);
+    setSale(sale.payload);
   };
 
   const buyNft = async () => {
@@ -84,7 +87,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
 
   return (
     <>
-      {sale !== undefined ? (
+      {id !== undefined && sale !== undefined ? (
         <div className="min-h-screen w-full flex flex-col xl:px-20 md:px-10 sm:px-6 pt-32 pb-20">
           <div className="flex sm:flex-row flex-col sm:justify-between  w-full">
             <div className="flex flex-col gap-2">
@@ -96,20 +99,26 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
                 Back
               </div>
               <Typography type="title" className="text-primary">
-                Card #{sale?.id}
+                Card #{sale?.nftId}
               </Typography>
               <Typography type="title" className="text-primary">
                 Transaction #{id}
               </Typography>
             </div>
-            <div className="flex gap-2 items-start sm:mt-0 mt-4 sm:justify-end justify-between">
+            <div className="flex gap-2 items-center sm:mt-0 mt-4 sm:justify-end justify-between">
               <div className="flex flex-col items-end">
                 <div className="text-primary font-bold flex items-center gap-2">
                   <MenuOutlined />
-                  <Typography type="title">{sale.price}</Typography>
+                  <Typography type="title">
+                    {Web3.utils.fromWei(sale.price, "ether")}
+                  </Typography>
+                  <Typography type="subTitle" className="text-white">
+                    $116.15
+                  </Typography>
                 </div>
+
                 <Typography type="subTitle" className="text-white">
-                  $116.15
+                  Amount Available: {sale.amount}
                 </Typography>
               </div>
 
@@ -121,22 +130,6 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
               >
                 <img src={Icons.harmony} className="h-6 w-6" alt="" /> Buy now
               </Button>
-
-              {/* {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && (
-                <Button
-                  decoration="fillPrimary"
-                  className="degradated hover:text-white border-none"
-                  size="small"
-                  onClick={sellNft}
-                >
-                  <img
-                    src={Icons.harmony}
-                    className="h-6 w-6 rounded-full mr-2"
-                    alt=""
-                  />{" "}
-                  Sell now
-                </Button>
-              )} */}
             </div>
           </div>
           <div className="w-full flex md:flex-row flex-col mt-10">
@@ -152,7 +145,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
             <div className="flex flex-col md:w-1/2">
               <div className="flex flex-col">
                 <Typography type="title" className="text-primary font-bold">
-                  About
+                  About NFT
                 </Typography>
                 <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
                   <div className="flex flex-row gap-4">
@@ -219,31 +212,90 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id, inventory }) => {
                       </Typography>
                     </div>
                   </div>
-                  {/* {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && (
-                    <div>
-                      <div className="flex flex-col">
-                        <Typography
-                          type="subTitle"
-                          className="text-white font-bold"
-                        >
-                          YOUR BALANCE
-                        </Typography>
-                        <Typography
-                          type="subTitle"
-                          className="text-primary opacity-75"
-                        >
-                          {NFTs.balanceCards[id].balance}
-                        </Typography>
-                      </div>
+                </div>
+              </div>
+              <div className="flex flex-col pt-6">
+                <Typography type="title" className="text-primary font-bold">
+                  Sale Details
+                </Typography>
+                <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
+                  <div className="flex flex-row gap-4">
+                    <div className="flex flex-col">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
+                        OWNER
+                      </Typography>
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
+                        <AddressText text={sale.seller}></AddressText>
+                      </Typography>
                     </div>
-                  )} */}
+                    <div className="flex flex-col">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
+                        AMOUNT OF CARDS AVAILABLE
+                      </Typography>
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
+                        {sale.amount}
+                      </Typography>
+                    </div>
+                  </div>
+                  <div className="flex flex-row gap-4">
+                    <div className="flex flex-col">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
+                        FINISH AT
+                      </Typography>
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
+                        <TimeConverter
+                          UNIX_timestamp={
+                            parseInt(sale.duration) + parseInt(sale.startedAt)
+                          }
+                        ></TimeConverter>
+                      </Typography>
+                    </div>
+                    <div className="flex flex-col">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
+                        STATUS
+                      </Typography>
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
+                        {sale.status == 0
+                          ? "Active"
+                          : sale.status == 1
+                          ? "Sold"
+                          : "Cancelled"}
+                      </Typography>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       ) : (
-        ""
+        <div className="h-screen w-screen bg-overlay flex items-center justify-center text-3xl text-primary">
+          <LoadingOutlined />
+        </div>
       )}
     </>
   );

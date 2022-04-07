@@ -78,7 +78,9 @@ const MarketplaceComponent = () => {
       <div className="xl:w-2/3 xl:mt-0 mt-6 flex flex-col">
         <div>
           <div className="w-full flex justify-between items-center sm:flex-row flex-col">
-            <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">619,801 Cards</h3>
+            <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">
+              619,801 Cards
+            </h3>
             <div className="flex">
               <DropdownActions
                 title={orderMapper[currentOrder]}
@@ -114,7 +116,6 @@ const MarketplaceComponent = () => {
           </div>
           <div className="flex flex-wrap w-full justify-center items-center relative">
             {sales?.map((a, id) => {
-              console.log("a", a);
               return (
                 <NftCard
                   classes={{ root: "m-4 cursor-pointer" }}

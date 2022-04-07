@@ -62,7 +62,7 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
             <div className="w-full flex flex-col text-xs gap-1">
               <div className="w-full flex justify-between">
                 <span>Card #{props.id !== undefined ? props.id : "12345"}</span>
-                {props.transactionId && <span>#{props.transactionId}</span>}
+                {<span>#{props.transactionId}</span>}
                 {props.balance && <span>x{props.balance}</span>}
               </div>
               {/* <div>
