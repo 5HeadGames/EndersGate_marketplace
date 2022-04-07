@@ -12,7 +12,7 @@ import FiltersBoard from "./filters/filters";
 import {DropdownActions} from "../common/dropdownActions/dropdownActions";
 import {Dropdown} from "../common/dropdown/dropdown";
 import clsx from "clsx";
-import {Typography} from "../common/typography";
+import { Typography } from "../common/typography";
 import { getAddresses, getContract } from "@shared/web3";
 import { onLoadSales } from "@redux/actions";
 import cards from "../../cards.json";
@@ -78,9 +78,7 @@ const MarketplaceComponent = () => {
       <div className="xl:w-2/3 xl:mt-0 mt-6 flex flex-col">
         <div>
           <div className="w-full flex justify-between items-center sm:flex-row flex-col">
-            <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">
-              619,801 Cards
-            </h3>
+            <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">619,801 Cards</h3>
             <div className="flex">
               <DropdownActions
                 title={orderMapper[currentOrder]}
