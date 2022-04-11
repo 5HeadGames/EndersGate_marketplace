@@ -1,12 +1,4 @@
 import {createAction, createAsyncThunk} from "@reduxjs/toolkit";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  updateEmail,
-  updatePassword,
-  signOut,
-} from "firebase/auth";
 import {Harmony} from "@harmony-js/core";
 import {Messenger} from "@harmony-js/network";
 import {ChainType} from "@harmony-js/utils";
@@ -15,13 +7,7 @@ import Web3 from "web3";
 import {AbiItem} from "web3-utils";
 import MarketplaceContract from "shared/contracts/ClockSale.json";
 import ERC1155 from "shared/contracts/ERC1155.json";
-import {
-  getAddresses,
-  getContract,
-  getContractMetamask,
-  getWeb3,
-} from "@shared/web3";
-import { readUser, writeUser } from "shared/firebase";
+import {getAddresses, getContract, getContractMetamask, getWeb3} from "@shared/web3";
 import * as actionTypes from "../constants";
 
 export const onGetNfts = createAction(actionTypes.GET_NFTS, function prepare() {
@@ -32,15 +18,9 @@ export const onGetNfts = createAction(actionTypes.GET_NFTS, function prepare() {
   };
 });
 
-const auth = getAuth();
-
 export const onLoginUser = createAsyncThunk(
   actionTypes.LOGIN_USER,
-  async function prepare(userData: {
-    email?: string;
-    password?: string;
-    address: string;
-  }) {
+  async function prepare(userData: {email?: string; password?: string; address: string}) {
     console.log(userData);
     const placeholderData = {
       email: "",
@@ -56,45 +36,6 @@ export const onLoginUser = createAsyncThunk(
         },
       ],
     };
-    if (userData.email) {
-      try {
-        const { user: userAuth } = await signInWithEmailAndPassword(
-          auth,
-          (userData as any).email,
-          (userData as any).password
-        );
-        const user = await readUser(`users/${userData.address}`);
-        return user || placeholderData;
-      } catch (err) {
-        const { user: userAuth } = await createUserWithEmailAndPassword(
-          auth,
-          userData.email,
-          userData.password
-        );
-        await writeUser(`users/${(userData as any).address}`, {
-          email: userData.email,
-          activity: [
-            {
-              createdAt: new Date().toISOString(),
-              type: "login",
-            },
-          ],
-        });
-        const user = await readUser(`users/${userData.address}`);
-
-        return user || placeholderData;
-      }
-    } else {
-      const user = await readUser(`users/${(userData as any).address}`);
-      if (!user) {
-        await writeUser(
-          `users/${(userData as any).address}`,
-          placeholderData as any
-        );
-      }
-      const newUser = await readUser(`users/${(userData as any).address}`);
-      return newUser || placeholderData;
-    }
   }
 );
 
@@ -112,18 +53,7 @@ export const onUpdateUserCredentials = createAsyncThunk(
     newPassword: string;
     oldPassword: string;
     userPath: string;
-  }) {
-    const currentAuth = getAuth();
-    const credential = await signInWithEmailAndPassword(
-      currentAuth,
-      oldEmail,
-      oldPassword
-    );
-    await updateEmail(credential.user, newEmail);
-    await updatePassword(credential.user, newPassword);
-    await writeUser(userPath, { email: newEmail });
-    return { email: newEmail };
-  }
+  }) {}
 );
 
 export const onUpdateFirebaseUser = createAsyncThunk(
@@ -134,37 +64,19 @@ export const onUpdateFirebaseUser = createAsyncThunk(
   }: {
     userPath: string;
     updateData: Partial<User>;
-  }) {
-    try {
-      await writeUser(userPath, updateData);
-      return updateData;
-    } catch (err) {
-      return false;
-    }
-  }
+  }) {}
 );
 
 export const onUpdateUser = createAction(
   actionTypes.UPDATE_USER,
   function prepare(updateData: Partial<User>) {
-    return { payload: updateData };
+    return {payload: updateData};
   }
 );
 
-export const onLogout = createAsyncThunk(
-  actionTypes.LOGOUT,
-  async function prepare(user: User) {
-    const auth = getAuth();
-    try {
-      if (user.email) await signOut(auth);
-      else return true;
-    } catch (err) {
-      console.log({ err });
-      return false;
-    }
-    return true;
-  }
-);
+export const onLogout = createAsyncThunk(actionTypes.LOGOUT, async function prepare(user: User) {
+  return true;
+});
 
 export const onApproveERC1155 = createAsyncThunk(
   actionTypes.APPROVE_NFT,
@@ -173,19 +85,17 @@ export const onApproveERC1155 = createAsyncThunk(
     tx,
   }: {
     walletType: User["walletType"];
-    tx: { to: string; from: string };
+    tx: {to: string; from: string};
   }) {
-    const { marketplace, endersGate } = getAddresses();
+    const {marketplace, endersGate} = getAddresses();
     try {
       console.log("entró");
       if (walletType === "metamask") {
         const web3 = new Web3((window as any).ethereum);
         const erc1155Contract = getContractMetamask("ERC1155", endersGate);
-        const txResult = await erc1155Contract.methods
-          .setApprovalForAll(tx.to, true)
-          .send({
-            from: tx.from,
-          });
+        const txResult = await erc1155Contract.methods.setApprovalForAll(tx.to, true).send({
+          from: tx.from,
+        });
         console.log(txResult);
       } else if (walletType === "harmony") {
         const wallet = new HarmonyWallet();
@@ -198,10 +108,7 @@ export const onApproveERC1155 = createAsyncThunk(
             chainId: 2,
           }
         );
-        let erc1155Contract = hmy.contracts.createContract(
-          ERC1155.abi,
-          endersGate
-        );
+        let erc1155Contract = hmy.contracts.createContract(ERC1155.abi, endersGate);
         erc1155Contract = wallet.attachToContract(erc1155Contract);
         await erc1155Contract.methods.setApprovalForAll(tx.to, true).send({
           gasPrice: 100000000000,
@@ -210,7 +117,7 @@ export const onApproveERC1155 = createAsyncThunk(
       } else if (walletType === "wallet_connect") {
       }
     } catch (err) {
-      console.log("errorcito", { err });
+      console.log("errorcito", {err});
     }
   }
 );
@@ -231,23 +138,14 @@ export const onSellERC1155 = createAsyncThunk(
     };
   }) {
     console.log("será?");
-    const { marketplace, endersGate } = getAddresses();
+    const {marketplace, endersGate} = getAddresses();
     if (walletType === "metamask") {
       const web3 = getWeb3();
-      const marketplaceContract = await getContractMetamask(
-        "ClockSale",
-        marketplace
-      );
-      console.log(tx,"Tx");
+      const marketplaceContract = await getContractMetamask("ClockSale", marketplace);
+      console.log(tx, "Tx");
       await marketplaceContract.methods
-        .createSale(
-          endersGate,
-          tx.tokenId,
-          tx.startingPrice,
-          tx.amount,
-          24 * 3600 * 30
-        )
-        .send({ from: tx.from });
+        .createSale(endersGate, tx.tokenId, tx.startingPrice, tx.amount, 24 * 3600 * 30)
+        .send({from: tx.from});
     } else if (walletType === "harmony") {
       const wallet = new HarmonyWallet();
       await wallet.signin();
@@ -259,19 +157,10 @@ export const onSellERC1155 = createAsyncThunk(
           chainId: 2,
         }
       );
-      let marketplace = hmy.contracts.createContract(
-        MarketplaceContract.abi,
-        endersGate
-      );
+      let marketplace = hmy.contracts.createContract(MarketplaceContract.abi, endersGate);
       marketplace = wallet.attachToContract(marketplace);
       await marketplace.methods
-        .createSale(
-          endersGate,
-          tx.tokenId,
-          tx.startingPrice,
-          tx.amount,
-          24 * 3600 * 30
-        )
+        .createSale(endersGate, tx.tokenId, tx.startingPrice, tx.amount, 24 * 3600 * 30)
         .send({
           gasPrice: 100000000000,
           gasLimit: 410000,
@@ -294,7 +183,7 @@ export const onBuyERC1155 = createAsyncThunk(
       amount: string | number;
     };
   }) {
-    const { marketplace, erc1155 } = getAddresses();
+    const {marketplace, erc1155} = getAddresses();
     if (walletType === "metamask") {
       const web3 = new Web3((window as any).ethereum);
       const marketplaceContract = new web3.eth.Contract(
@@ -316,10 +205,7 @@ export const onBuyERC1155 = createAsyncThunk(
           chainId: 2,
         }
       );
-      let marketplaceContract = hmy.contracts.createContract(
-        MarketplaceContract.abi,
-        erc1155
-      );
+      let marketplaceContract = hmy.contracts.createContract(MarketplaceContract.abi, erc1155);
       marketplaceContract = wallet.attachToContract(marketplaceContract);
       await marketplaceContract.methods.bid(erc1155, tx.tokenId).send({
         gasPrice: 100000000000,
