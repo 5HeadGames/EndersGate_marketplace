@@ -2,7 +2,6 @@ import {createAction, createAsyncThunk} from "@reduxjs/toolkit";
 import {Harmony} from "@harmony-js/core";
 import {Messenger} from "@harmony-js/network";
 import {ChainType} from "@harmony-js/utils";
-import HarmonyWallet from "shared/web3/harmonyWallet";
 import Web3 from "web3";
 import {AbiItem} from "web3-utils";
 import MarketplaceContract from "shared/contracts/ClockSale.json";
@@ -97,24 +96,6 @@ export const onApproveERC1155 = createAsyncThunk(
           from: tx.from,
         });
         console.log(txResult);
-      } else if (walletType === "harmony") {
-        const wallet = new HarmonyWallet();
-        await wallet.signin();
-        const hmy = new Harmony(
-          // let's assume we deploy smart contract to this end-point URL
-          "https://api.s0.b.hmny.io",
-          {
-            chainType: ChainType.Harmony,
-            chainId: 2,
-          }
-        );
-        let erc1155Contract = hmy.contracts.createContract(ERC1155.abi, endersGate);
-        erc1155Contract = wallet.attachToContract(erc1155Contract);
-        await erc1155Contract.methods.setApprovalForAll(tx.to, true).send({
-          gasPrice: 100000000000,
-          gasLimit: 410000,
-        });
-      } else if (walletType === "wallet_connect") {
       }
     } catch (err) {
       console.log("errorcito", {err});
@@ -194,24 +175,6 @@ export const onBuyERC1155 = createAsyncThunk(
         from: tx.from,
         value: tx.bid,
       });
-    } else if (walletType === "harmony") {
-      const wallet = new HarmonyWallet();
-      await wallet.signin();
-      const hmy = new Harmony(
-        // let's assume we deploy smart contract to this end-point URL
-        "https://api.s0.b.hmny.io",
-        {
-          chainType: ChainType.Harmony,
-          chainId: 2,
-        }
-      );
-      let marketplaceContract = hmy.contracts.createContract(MarketplaceContract.abi, erc1155);
-      marketplaceContract = wallet.attachToContract(marketplaceContract);
-      await marketplaceContract.methods.bid(erc1155, tx.tokenId).send({
-        gasPrice: 100000000000,
-        gasLimit: 410000,
-      });
-    } else if (walletType === "wallet_connect") {
     }
   }
 );

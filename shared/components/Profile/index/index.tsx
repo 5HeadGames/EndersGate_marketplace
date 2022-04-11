@@ -1,34 +1,33 @@
-import { Typography } from "@shared/components/common/typography";
+import {Typography} from "@shared/components/common/typography";
 import React from "react";
-import { useAppSelector } from "redux/store";
-import { useRouter } from "next/router";
+import {useAppSelector} from "redux/store";
+import {useRouter} from "next/router";
 import clsx from "clsx";
-import { Icons } from "@shared/const/Icons";
-import { CopyOutlined, LoginOutlined, SelectOutlined } from "@ant-design/icons";
-import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
-import { useToasts } from "react-toast-notifications";
+import {useMoralis} from "react-moralis";
+import {Icons} from "@shared/const/Icons";
+import {CopyOutlined, LoginOutlined, SelectOutlined} from "@ant-design/icons";
+import {AddressText} from "@shared/components/common/specialFields/SpecialFields";
+import {useToasts} from "react-toast-notifications";
 import Styles from "./styles.module.scss";
-import { Logo } from "@shared/components/Layouts";
 import Link from "next/link";
-import Web3 from "web3";
-import { getBalance } from "@shared/web3";
+import {getBalance} from "@shared/web3";
 
 const ProfileIndexPage = () => {
-  const user = useAppSelector((state) => state.user);
-  const router = useRouter();
   const [balance, setBalance] = React.useState("0");
+  const {user, isAuthenticated} = useMoralis();
+  const router = useRouter();
+
   React.useEffect(() => {
-    if (user.address) {
-      handleSetBalance();
-    }
+    if (!isAuthenticated) return router.push("/login");
+    handleSetBalance();
   }, [user]);
 
   const handleSetBalance = async () => {
-    const balance = await getBalance(user.address);
+    const balance = await getBalance(user?.get("ethAddress"));
     setBalance(balance);
   };
 
-  const { addToast } = useToasts();
+  const {addToast} = useToasts();
 
   return (
     <>
@@ -37,18 +36,14 @@ const ProfileIndexPage = () => {
           "flex flex-col justify-between border border-overlay-border p-4 rounded-t-md h-52 relative overflow-hidden"
         )}
       >
-        <img
-          src={Icons.harmony}
-          className="absolute top-[-80px] right-[-80px]"
-          alt=""
-        />
+        <img src={Icons.harmony} className="absolute top-[-80px] right-[-80px]" alt="" />
         <div className="flex flex-row">
           <div className="flex flex-col">
             {" "}
             <Typography type="title" className="text-primary ">
               Balance
             </Typography>
-            <h1 className="text-white" style={{ fontSize: "32px" }}>
+            <h1 className="text-white" style={{fontSize: "32px"}}>
               {balance} ONE
             </h1>
           </div>
@@ -56,14 +51,13 @@ const ProfileIndexPage = () => {
       </div>
       <div className="flex justify-between border border-t-0 border-overlay-border p-4 rounded-b-md">
         <Typography type="subTitle" className="text-primary">
-          {user.walletType[0]?.toUpperCase() + user.walletType.substr(1)}{" "}
-          Address: <AddressText text={user.address} />
+          Address: <AddressText text={user?.get("ethAddress") || ""} />
         </Typography>
         <div className="flex items-center text-primary gap-4">
           <div
             onClick={() => {
-              navigator.clipboard.writeText(user.address);
-              addToast("Copied to clipboard", { appearance: "info" });
+              navigator.clipboard.writeText(user?.get("ethAddress"));
+              addToast("Copied to clipboard", {appearance: "info"});
             }}
             className="cursor-pointer"
           >
@@ -72,7 +66,7 @@ const ProfileIndexPage = () => {
           <a
             target="_blank"
             rel="noreferrer"
-            href={`https://explorer.harmony.one/address/${user.address}`}
+            href={`https://explorer.harmony.one/address/${user?.get("ethAddress")}`}
           >
             <SelectOutlined />
           </a>
@@ -97,25 +91,21 @@ const ProfileIndexPage = () => {
             "w-full ",
             "flex flex-col",
             {
-              [`${Styles.gray} justify-center items-center gap-6 h-72`]:
-                !user.activity,
+              [`${Styles.gray} justify-center items-center gap-6 h-72`]: !user?.activity,
             },
             {
-              ["py-10 gap-y-2"]: user.activity,
+              ["py-10 gap-y-2"]: user?.activity,
             }
           )}
         >
-          {user.activity ? (
-            user.activity.map(({ createdAt, type }, index) => {
+          {user?.activity ? (
+            user?.activity.map(({createdAt, type}, index) => {
               return <Activity date={createdAt} type={type} />;
             })
           ) : (
             <>
               <img src={Icons.logo} className="h-40 w-40" alt="" />
-              <Typography
-                type="subTitle"
-                className={clsx(Styles.title, "text-primary")}
-              >
+              <Typography type="subTitle" className={clsx(Styles.title, "text-primary")}>
                 You don't have any activity yet
               </Typography>
             </>
@@ -126,7 +116,7 @@ const ProfileIndexPage = () => {
   );
 };
 
-export const Activity = ({ date, type }) => {
+export const Activity = ({date, type}) => {
   return (
     <div className="flex sm:gap-4 gap-2 text-primary items-primary sm:px-10">
       <div className="flex flex-col items-center justify-center text-sm">
@@ -137,8 +127,7 @@ export const Activity = ({ date, type }) => {
             : new Date(date).getUTCMinutes()}
         </div>
         <div>
-          {new Date(date).getMonth() + 1}-{new Date(date).getDate()}-
-          {new Date(date).getFullYear()}
+          {new Date(date).getMonth() + 1}-{new Date(date).getDate()}-{new Date(date).getFullYear()}
         </div>
       </div>
       <div className="bg-overlay-border p-4 rounded-full flex items-center">
@@ -147,9 +136,7 @@ export const Activity = ({ date, type }) => {
             <LoginOutlined />
           </div>
         )}
-        {type !== "login" && (
-          <img className="h-6 w-6" src={Icons.logo} alt="" />
-        )}
+        {type !== "login" && <img className="h-6 w-6" src={Icons.logo} alt="" />}
       </div>
 
       <div className="flex items-center justify-center">

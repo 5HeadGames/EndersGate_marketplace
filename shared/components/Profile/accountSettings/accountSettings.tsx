@@ -1,16 +1,13 @@
 import {Button} from "@shared/components/common/button";
-import {Typography} from "@shared/components/common/typography";
 import {Icons} from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
-import "shared/firebase";
 import {useAppSelector, useAppDispatch} from "redux/store";
 import {useForm} from "react-hook-form";
 import {Input} from "@shared/components/common/form/input";
 import {InputEmail} from "@shared/components/common/form/input-email";
 import {InputPassword} from "@shared/components/common/form/input-password";
-import {writeUser, uploadFile, getFileUrl} from "@shared/firebase";
-import {onUpdateUser, onMessage, onLoginUser, onUpdateUserCredentials} from "@redux/actions";
+import {onMessage, onLoginUser, onUpdateUserCredentials} from "@redux/actions";
 
 const AccountSettingsComponent = () => {
   const {
@@ -30,34 +27,15 @@ const AccountSettingsComponent = () => {
     console.log({load});
   };
 
-  const onSuccessImageSubmit = (arg: {path: string}) => async () => {
-    const fileUrl = await getFileUrl(arg);
-    const writeData = {profile_picture: fileUrl};
-    writeUser(userPath, writeData);
-    dispatch(onUpdateUser(writeData));
-  };
+  const onSuccessImageSubmit = (arg: {path: string}) => async () => {};
 
   const onErrorImageSubmit = (error: unknown) => {
     console.log({error});
   };
 
-  const handleChangePicture = (e: React.ChangeEvent<any>) => {
-    const file = e.target.files[0];
-    const path = `${userPath}/${file.name}`;
-    uploadFile({
-      file,
-      path,
-      metadata: {name: file.name, size: file.size, type: file.type},
-      onLoad: onLoadingImageSubmit,
-      onError: onErrorImageSubmit,
-      onSuccess: onSuccessImageSubmit({path}),
-    });
-    setImage("");
-  };
+  const handleChangePicture = (e: React.ChangeEvent<any>) => {};
 
-  const handleSetField = (field: "name" | "userStatus") => (e: React.ChangeEvent<any>) => {
-    writeUser(userPath, {[field]: e.target.value as string});
-  };
+  const handleSetField = (field: "name" | "userStatus") => (e: React.ChangeEvent<any>) => {};
 
   const onSubmit = async ({
     oldEmail,
@@ -102,14 +80,7 @@ const AccountSettingsComponent = () => {
         <div className="flex md:flex-row flex-col items-start w-full md:gap-6">
           <div className="flex md:flex-col sm:flex-row flex-col mb-4 items-center">
             <div className="xl:h-40 xl:w-40 md:h-32 md:w-32 h-40 w-40 rounded-full relative">
-              <img
-                src={
-                  user.profile_picture !== ""
-                    ? user.profile_picture
-                    : Icons.logo
-                }
-                alt=""
-              />
+              <img src={user.profile_picture !== "" ? user.profile_picture : Icons.logo} alt="" />
             </div>
             <input
               type="file"
@@ -155,12 +126,7 @@ const AccountSettingsComponent = () => {
             />
           </div>
         </div>
-        <div
-          className={clsx(
-            "w-full flex flex-col items-center",
-            !openEmailPassword && "hidden"
-          )}
-        >
+        <div className={clsx("w-full flex flex-col items-center", !openEmailPassword && "hidden")}>
           {user.email && (
             <>
               <InputEmail
@@ -182,10 +148,7 @@ const AccountSettingsComponent = () => {
                 labelVisible
                 className="text-primary mt-2"
               />
-              <div
-                className="w-full bg-primary mt-5 mb-2 rounded"
-                style={{ height: "1px" }}
-              ></div>
+              <div className="w-full bg-primary mt-5 mb-2 rounded" style={{height: "1px"}}></div>
             </>
           )}
           <InputEmail

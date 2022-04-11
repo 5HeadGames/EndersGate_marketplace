@@ -1,9 +1,7 @@
 import React from "react";
-import "shared/firebase";
-import { uploadFile, getFileUrl } from "shared/firebase/utils";
 import ProfileDataAndActions from "./profilePersonalData/profilePersonalData";
 
-const ProfileLayoutComponent = ({ children }) => {
+const ProfileLayoutComponent = ({children}) => {
   const [testUrl, setTestUrl] = React.useState("");
   const inputFile = React.useRef(null);
 
@@ -13,11 +11,11 @@ const ProfileLayoutComponent = ({ children }) => {
   };
 
   const onLoad = (load: unknown) => {
-    console.log({ load });
+    console.log({load});
   };
 
   const onError = (error: unknown) => {
-    console.log({ error });
+    console.log({error});
   };
 
   const onSuccess = () => {};
@@ -34,10 +32,6 @@ const ProfileLayoutComponent = ({ children }) => {
       size: file.size,
       type: file.type,
     };
-    const url = await getFileUrl({ path: `firstImage/${metadata.name}` });
-    //uploadFile({path: `firstImage/${metadata.name}`, file, metadata, onLoad, onError, onSuccess});
-    console.log(url);
-    setTestUrl(url);
   };
 
   return (

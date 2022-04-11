@@ -5,12 +5,6 @@ import contracts from "shared/contracts";
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "@walletconnect/qrcode-modal";
 
-export const loginHarmonyWallet = async () => {
-   const account = await (window as any)?.onewallet.getAccount();
-   if (!account) return false;
-   return account;
-};
-
 export const loginMetamaskWallet = async () => {
    const provider = await (window as any).ethereum;
    if (!provider) return false;
@@ -34,12 +28,9 @@ export const getContract = (factory: keyof typeof contracts, address: string) =>
    return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 
-export const getContractMetamask = (
-  factory: keyof typeof contracts,
-  address: string
-) => {
-  const web3 = getWeb3();
-  return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
+export const getContractMetamask = (factory: keyof typeof contracts, address: string) => {
+   const web3 = getWeb3();
+   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 
 export const getBalance = async (address: string) => {
