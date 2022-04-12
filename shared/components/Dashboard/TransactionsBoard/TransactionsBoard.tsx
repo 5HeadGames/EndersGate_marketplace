@@ -3,6 +3,10 @@ import React from "react";
 import clsx from "clsx";
 import { Icons } from "@shared/const/Icons";
 import { PieChartFilled } from "@ant-design/icons";
+import Web3 from "web3";
+import { getAddresses, getContractWebSocket } from "@shared/web3";
+import contracts from "@shared/contracts";
+
 const navItems = [
   { title: "Last 24h", value: "last_24h" },
   { title: "7 days", value: "last_7d" },

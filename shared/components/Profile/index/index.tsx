@@ -154,8 +154,8 @@ export const Activity = ({ date, type }) => {
 
       <div className="flex items-center justify-center">
         {type === "login" && "You loged in for first time"}
-        {type === "buy" && "You bought an NFT"}
-        {type === "sell" && "You sold an NFT"}
+        {type === "buy" && "You bought an/some NFT/s"}
+        {type === "sell" && "You have listed an/some NFT/s"}
       </div>
     </div>
   );
