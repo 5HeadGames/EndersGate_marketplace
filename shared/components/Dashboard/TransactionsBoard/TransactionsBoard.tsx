@@ -13,41 +13,46 @@ const navItems = [
   { title: "30 days", value: "last_30d" },
 ];
 
-const platformItems = [
-  {
-    title: "TOTAL SALE",
-    value: "48,580",
-    iconHtml: <PieChartFilled />,
-    css: {
-      /* Chrome 10-25, Safari 5.1-6 */
-      background:
-        "linear-gradient(to right, #00bf8f, #004515)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
-    },
-  },
-  {
-    title: "TOTAL VOLUME",
-    value: "1,541",
-    value2: "$1,57M",
-    icon: Icons.harmony,
-    css: {
-      /* Chrome 10-25, Safari 5.1-6 */
-      background:
-        "linear-gradient(to right, #2c3e50, #3498db)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
-    },
-  },
-  {
-    title: "CARD SOLD",
-    value: "1,200",
-    icon: Icons.logo,
-    css: {
-      /* Chrome 10-25, Safari 5.1-6 */
-      background:
-        "linear-gradient(to right, #6441a5, #2b1045)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
-    },
-  },
-];
 
-const TransactionsBoard = () => {
+
+const TransactionsBoard: React.FC<any> = ({
+  totalSale,
+  totalVolume,
+  cardsSold,
+}) => {
+  const platformItems = [
+    {
+      title: "TOTAL SALE",
+      value: totalSale,
+      iconHtml: <PieChartFilled />,
+      css: {
+        /* Chrome 10-25, Safari 5.1-6 */
+        background:
+          "linear-gradient(to right, #00bf8f, #004515)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
+      },
+    },
+    {
+      title: "TOTAL VOLUME",
+      value: totalVolume + " ONE",
+      // value2: "$1,57M",
+      icon: Icons.harmony,
+      css: {
+        /* Chrome 10-25, Safari 5.1-6 */
+        background:
+          "linear-gradient(to right, #2c3e50, #3498db)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
+      },
+    },
+    {
+      title: "CARDS SOLD",
+      value: cardsSold,
+      icon: Icons.logo,
+      css: {
+        /* Chrome 10-25, Safari 5.1-6 */
+        background:
+          "linear-gradient(to right, #6441a5, #2b1045)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
+      },
+    },
+  ];
   const [columnSelected, setColumnSelected] = React.useState("last_24h");
   return (
     <div className="w-full flex flex-col">

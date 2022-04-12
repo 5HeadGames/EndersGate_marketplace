@@ -1,18 +1,22 @@
 import React from "react";
 
-import { useAppSelector } from "@redux/store";
+import { useAppDispatch, useAppSelector } from "@redux/store";
 import Table from "./tableItems/table";
 import TransactionsBoard from "./TransactionsBoard/TransactionsBoard";
 import ItemListed from "./tableItems/items/itemListed";
 import Web3 from "web3";
 import { getAddresses, getContractWebSocket } from "@shared/web3";
+import { onLoadSales } from "@redux/actions";
 
 const DashboardComponent = () => {
-  const { nfts } = useAppSelector((state) => state);
-  const { saleCreated, saleSuccessfull } = nfts;
-
   const [recentlyListed, setRecentlyListed] = React.useState([]);
   const [recentlySold, setRecentlySold] = React.useState([]);
+  const [transactionsBoard, setTransactionsBoard] = React.useState({
+    totalSale: 0,
+    totalVolume: 0,
+    cardsSold: 0,
+  });
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     getData();
@@ -24,6 +28,16 @@ const DashboardComponent = () => {
       "ClockSale",
       addresses.marketplace
     );
+    const transactionsBoard = {
+      totalSale: 0,
+      totalVolume: 0,
+      cardsSold: 0,
+    };
+    const sales = await dispatch(onLoadSales());
+    transactionsBoard.totalSale = (sales as any).payload?.saleCreated.length;
+    (sales as any).payload?.saleCreated.forEach((sale) => {
+      transactionsBoard.totalVolume += parseInt(sale.amount);
+    });
     const eventsListedSold = await Promise.all([
       contract.getPastEvents("SaleCreated", {
         fromBlock: 23662353,
@@ -34,7 +48,6 @@ const DashboardComponent = () => {
         toBlock: "latest",
       }),
     ]);
-    console.log("testing both", eventsListedSold);
     const eventsListed = eventsListedSold[0];
     const recentlyListed = [];
     eventsListed.forEach((event) => {
@@ -46,7 +59,6 @@ const DashboardComponent = () => {
         seller: event.returnValues._seller,
       });
     });
-    console.log(recentlyListed, "listed");
     setRecentlyListed(recentlyListed);
     const eventsSold = eventsListedSold[1];
     const recentlySold = [];
@@ -57,14 +69,20 @@ const DashboardComponent = () => {
         cost: Web3.utils.fromWei(event.returnValues._cost),
         buyer: event.returnValues._buyer,
       });
+      transactionsBoard.cardsSold += parseInt(event.returnValues._nftAmount);
     });
-    console.log(recentlySold, "sold");
     setRecentlySold(recentlySold);
+    console.log("transaction", transactionsBoard);
+    setTransactionsBoard(transactionsBoard);
   };
 
   return (
     <div className="w-full flex flex-col md:px-16 px-4 min-h-screen pt-36">
-      <TransactionsBoard />
+      <TransactionsBoard
+        totalSale={transactionsBoard.totalSale}
+        totalVolume={transactionsBoard.totalVolume}
+        cardsSold={transactionsBoard.cardsSold}
+      />
       <div className="grid xl:grid-cols-2 grid-cols-1 xl:gap-8 mt-6">
         <Table title="Recently Listed" data={recentlyListed} />
         <Table title="Recently Sold" data={recentlySold} />
