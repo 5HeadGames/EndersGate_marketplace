@@ -187,9 +187,9 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               <Typography type="title" className="text-primary">
                 Card #{id}
               </Typography>
-              <Typography type="title" className="text-primary">
+              {/* <Typography type="title" className="text-primary">
                 Transaction #{id}
-              </Typography>
+              </Typography> */}
             </div>
             <div className="flex gap-2 items-start sm:mt-0 mt-4 sm:justify-end justify-between">
               {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && (

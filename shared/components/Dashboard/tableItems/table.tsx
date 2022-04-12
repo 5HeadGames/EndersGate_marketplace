@@ -1,20 +1,20 @@
 import {Typography} from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
+import ItemListed from "./items/itemListed";
 
 const navItems = [
-  {title: "Trading Cards", value: "trading_cards"},
-  {title: "Packs", value: "packs"},
-  {title: "Comics", value: "comics"},
+  { title: "Trading Cards", value: "trading_cards" },
+  { title: "Packs", value: "packs" },
+  { title: "Comics", value: "comics" },
 ];
-
 
 interface Props {
   title: string;
-  data: (Record<string, string> & {render: React.FunctionComponent<any>})[];
+  data: (Record<string, string> & { render: React.FunctionComponent<any> })[];
 }
 
-const Table: React.FunctionComponent<Props> = ({title, data}) => {
+const Table: React.FunctionComponent<Props> = ({ title, data }) => {
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
   return (
     <div className="w-full flex flex-col">
@@ -51,9 +51,22 @@ const Table: React.FunctionComponent<Props> = ({title, data}) => {
           <div className="w-full overflow-x-auto">
             <table className="w-full min-w-max ">
               <tbody>
-                {data.map((item, index) => (
-                  <item.render key={index} {...item} />
-                ))}
+                {data.map((item, index) =>
+                  title === "Recently Listed" ? (
+                    <ItemListed
+                      id={item.id}
+                      type={title}
+                      seller={item.seller}
+                    ></ItemListed>
+                  ) : (
+                    <ItemListed
+                      id={item.id}
+                      type={title}
+                      amount={item.amount}
+                      buyer={item.buyer}
+                    ></ItemListed>
+                  )
+                )}
               </tbody>
             </table>
           </div>

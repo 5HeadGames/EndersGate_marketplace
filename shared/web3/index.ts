@@ -34,6 +34,14 @@ export const getContract = (factory: keyof typeof contracts, address: string) =>
    return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 
+export const getContractWebSocket = (
+  factory: keyof typeof contracts,
+  address: string
+) => {
+  const web3 = getWeb3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER_WSS);
+  return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
+};
+
 export const getContractMetamask = (
   factory: keyof typeof contracts,
   address: string
