@@ -9,20 +9,23 @@ import {Icons} from "@shared/const/Icons";
 import {getAddresses} from "@shared/web3";
 import {Typography} from "../common/typography";
 import cards from "../../cards.json";
+import { useMoralis } from "react-moralis";
 
-const {marketplace} = getAddresses();
+const { marketplace } = getAddresses();
 
-const NFTDetailComponent: React.FC<any> = ({id}) => {
-  const user = useAppSelector((state) => state.user);
+const NFTDetailComponent: React.FC<any> = ({ id }) => {
+  const { user } = useMoralis();
+
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
+  console.log(user.get("ethAddress"), "user");
 
   const sellNft = async () => {
     await dispatch(
       onApproveERC1155({
-        walletType: user.walletType,
-        tx: {to: marketplace, from: user.address},
+        walletType: "metamask",
+        tx: { to: marketplace, from: user.get("ethAddress") },
       })
     );
     //await dispatch(
@@ -61,8 +64,7 @@ const NFTDetailComponent: React.FC<any> = ({id}) => {
   }, []);
 
   const buyNft = async () => {
-    console.log("user", user);
-    if (user.address === "") {
+    if (user.get("ethAddress") === null) {
       router.push("/login");
     }
     //await dispatch(
@@ -134,7 +136,12 @@ const NFTDetailComponent: React.FC<any> = ({id}) => {
                   size="small"
                   onClick={sellNft}
                 >
-                  <img src={Icons.harmony} className="h-6 w-6 rounded-full mr-2" alt="" /> Sell now
+                  <img
+                    src={Icons.harmony}
+                    className="h-6 w-6 rounded-full mr-2"
+                    alt=""
+                  />{" "}
+                  Sell now
                 </Button>
               )}
             </div>
@@ -157,29 +164,47 @@ const NFTDetailComponent: React.FC<any> = ({id}) => {
                 <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
                   <div className="flex flex-row gap-4">
                     <div className="flex flex-col">
-                      <Typography type="subTitle" className="text-white font-bold">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
                         NAME
                       </Typography>
-                      <Typography type="subTitle" className="text-primary opacity-75">
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
                         {cards.All[id].properties.name?.value}
                       </Typography>
                     </div>
                     {cards.All[id].properties.type?.value && (
                       <div className="flex flex-col">
-                        <Typography type="subTitle" className="text-white font-bold">
+                        <Typography
+                          type="subTitle"
+                          className="text-white font-bold"
+                        >
                           TYPE
                         </Typography>
-                        <Typography type="subTitle" className="text-primary opacity-75">
+                        <Typography
+                          type="subTitle"
+                          className="text-primary opacity-75"
+                        >
                           {cards.All[id].properties.type?.value}
                         </Typography>
                       </div>
                     )}
                     {cards.All[id].properties.rarity?.value && (
                       <div className="flex flex-col">
-                        <Typography type="subTitle" className="text-white font-bold">
+                        <Typography
+                          type="subTitle"
+                          className="text-white font-bold"
+                        >
                           RARITY
                         </Typography>
-                        <Typography type="subTitle" className="text-primary opacity-75">
+                        <Typography
+                          type="subTitle"
+                          className="text-primary opacity-75"
+                        >
                           {cards.All[id].properties.rarity?.value}
                         </Typography>
                       </div>
@@ -187,10 +212,16 @@ const NFTDetailComponent: React.FC<any> = ({id}) => {
                   </div>
                   <div>
                     <div className="flex flex-col">
-                      <Typography type="subTitle" className="text-white font-bold">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
                         DESCRIPTION
                       </Typography>
-                      <Typography type="subTitle" className="text-primary opacity-75">
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
                         {cards.All[id].properties.description?.value}
                       </Typography>
                     </div>
@@ -198,10 +229,16 @@ const NFTDetailComponent: React.FC<any> = ({id}) => {
                   {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && (
                     <div>
                       <div className="flex flex-col">
-                        <Typography type="subTitle" className="text-white font-bold">
+                        <Typography
+                          type="subTitle"
+                          className="text-white font-bold"
+                        >
                           YOUR BALANCE
                         </Typography>
-                        <Typography type="subTitle" className="text-primary opacity-75">
+                        <Typography
+                          type="subTitle"
+                          className="text-primary opacity-75"
+                        >
                           {NFTs.balanceCards[id].balance}
                         </Typography>
                       </div>
