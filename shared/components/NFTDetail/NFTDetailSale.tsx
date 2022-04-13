@@ -1,47 +1,29 @@
 import React from "react";
-import {
-  FireFilled,
-  HeartFilled,
-  LeftOutlined,
-  LoadingOutlined,
-  MenuOutlined,
-  StarFilled,
-  ThunderboltFilled,
-} from "@ant-design/icons";
+import {LeftOutlined, LoadingOutlined, MenuOutlined} from "@ant-design/icons";
 import {useRouter} from "next/router";
 import Web3 from "web3";
+import {useMoralis} from "react-moralis";
 
 import {useAppDispatch, useAppSelector} from "redux/store";
-import {
-  onApproveERC1155,
-  onSellERC1155,
-  onBuyERC1155,
-  onUpdateFirebaseUser,
-  onLoadSales,
-  onLoadSale,
-} from "@redux/actions";
+import {onBuyERC1155, onUpdateFirebaseUser, onLoadSale} from "@redux/actions";
 import {Button} from "../common/button/button";
 import {Icons} from "@shared/const/Icons";
-import {AddressText, TransactionText} from "../common/specialFields/SpecialFields";
-import {getAddresses, getContract} from "@shared/web3";
+import {AddressText} from "../common/specialFields/SpecialFields";
+import {getAddresses} from "@shared/web3";
 import {Typography} from "../common/typography";
 import cards from "../../cards.json";
 import {TimeConverter} from "../common/unixDateConverter/unixConverter";
 import {useModal} from "@shared/hooks/modal";
 
-const {marketplace} = getAddresses();
-
-const NFTDetailSaleComponent: React.FC<any> = ({id, inventory}) => {
+const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
   const user = useAppSelector((state) => state.user);
   // const NFTs = useAppSelector((state) => state.nfts);
+  const [sale, setSale] = React.useState<any>();
+  const [buyNFTData, setBuyNFTData] = React.useState(0);
+  const {Modal, show, hide, isShow} = useModal();
+  const {isAuthenticated} = useMoralis();
   const router = useRouter();
   const dispatch = useAppDispatch();
-
-  const [sale, setSale] = React.useState<any>();
-
-  const [buyNFTData, setBuyNFTData] = React.useState(0);
-
-  const {Modal, show, hide, isShow} = useModal();
 
   React.useEffect(() => {
     if (id) {
@@ -51,12 +33,11 @@ const NFTDetailSaleComponent: React.FC<any> = ({id, inventory}) => {
 
   const getSale = async () => {
     const sale = await dispatch(onLoadSale(id));
-    console.log(sale.payload);
     setSale(sale.payload);
   };
 
   const buyNft = async () => {
-    if (user.address === "") {
+    if (!isAuthenticated) {
       router.push("/login");
     }
     await dispatch(
@@ -70,23 +51,23 @@ const NFTDetailSaleComponent: React.FC<any> = ({id, inventory}) => {
         },
       })
     );
-    await dispatch(
-      onUpdateFirebaseUser({
-        userPath: "userPath",
-        updateData: {
-          activity: [
-            ...user.activity,
-            {
-              type: "buy",
-              createdAt: new Date().toISOString(),
-              nft: {
-                tokenId: id,
-              },
-            },
-          ],
-        },
-      })
-    );
+    //await dispatch(
+    //onUpdateFirebaseUser({
+    //userPath: "userPath",
+    //updateData: {
+    //activity: [
+    //...user.activity,
+    //{
+    //type: "buy",
+    //createdAt: new Date().toISOString(),
+    //nft: {
+    //tokenId: id,
+    //},
+    //},
+    //],
+    //},
+    //})
+    //);
   };
 
   return (

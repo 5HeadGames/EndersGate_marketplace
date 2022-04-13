@@ -27,7 +27,7 @@ const ProfileDataAndActions = () => {
   const [image, setImage] = React.useState<File | null>(null);
   const {Modal, isShow, show, hide} = useModal();
   const {register, handleSubmit} = useForm();
-  const {logout, user} = useMoralis();
+  const {logout, user, setUserData} = useMoralis();
   const {saveFile} = useMoralisFile();
   const profileImage = user.get("profileImage") ? user.get("profileImage").url() : Icons.logo;
 
@@ -37,15 +37,16 @@ const ProfileDataAndActions = () => {
 
   const onSubmit = async (values: any) => {
     const toggleForm = handleDisabled("userData");
+    let moralisFile = null;
     toggleForm(true);
     if (image) {
-      const moralisFile = await saveFile(image.name, image, {
+      moralisFile = await saveFile(image.name, image, {
         type: "image/png",
       });
-      user.set("profileImage", moralisFile);
     }
-    user.set("name", values.name);
-    await user.save();
+    await setUserData(
+      moralisFile ? {profileImage: moralisFile, name: values.name} : {name: values.name}
+    );
     toggleForm(false);
   };
 

@@ -20,7 +20,7 @@ const AccountSettingsComponent = () => {
   const [image, setImage] = React.useState<File | null>(null);
   const [loadingForm, setLoading] = React.useState(false);
   const [openEmailPassword, setOpenEmailPassword] = React.useState(false);
-  const {user} = useMoralis();
+  const {user, setUserData} = useMoralis();
   const {saveFile} = useMoralisFile();
   const dispatch = useAppDispatch();
 
@@ -30,8 +30,7 @@ const AccountSettingsComponent = () => {
       const moralisFile = await saveFile(file.name, file, {
         type: "image/png",
       });
-      user.set("profileImage", moralisFile);
-      await user.save();
+      await setUserData({profileImage: moralisFile});
       setImage(file);
     } catch (error) {
       console.log({error});
@@ -41,8 +40,7 @@ const AccountSettingsComponent = () => {
   const handleSetField = (field: "name" | "userStatus") => async (e: React.ChangeEvent<any>) => {
     try {
       const value = e.target.value;
-      user.set(field, value);
-      await user.save();
+      await setUserData({[field]: value});
     } catch (error) {
       console.log({error});
     }

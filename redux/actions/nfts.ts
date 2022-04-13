@@ -1,9 +1,8 @@
-import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { Contract, EventData } from "web3-eth-contract";
+import {createAction, createAsyncThunk} from "@reduxjs/toolkit";
 import Web3 from "web3";
 
 import * as actionTypes from "../constants";
-import { getAddresses, getContract, getWeb3 } from "@shared/web3";
+import {getAddresses, getContract} from "@shared/web3";
 import cards from "../../cards.json";
 
 const getCardSold = (successfulSales: Sale[]) => {
@@ -29,41 +28,38 @@ const getDailyVolume = (successfulSales: Sale[]) => {
   }, Web3.utils.toBN(0));
 };
 
-export const onLoadSales = createAsyncThunk(
-  actionTypes.GET_LISTED_NFTS,
-  async function prepare() {
-    const addresses = getAddresses();
-    const marketplace = getContract("ClockSale", addresses.marketplace);
-    const lastSale = Number(await marketplace.methods.tokenIdTracker().call());
-    const rawSales = await marketplace.methods
-      .getSales(new Array(lastSale).fill(0).map((a, i) => i))
-      .call();
+export const onLoadSales = createAsyncThunk(actionTypes.GET_LISTED_NFTS, async function prepare() {
+  const addresses = getAddresses();
+  const marketplace = getContract("ClockSale", addresses.marketplace);
+  const lastSale = Number(await marketplace.methods.tokenIdTracker().call());
+  const rawSales = await marketplace.methods
+    .getSales(new Array(lastSale).fill(0).map((a, i) => i))
+    .call();
 
-    const allSales = rawSales.map((sale: string[], i) => ({
-      id: i,
-      seller: sale[0],
-      nft: sale[1],
-      nftId: sale[2],
-      amount: sale[3],
-      price: sale[4],
-      duration: sale[5],
-      startedAt: sale[6],
-      status: sale[7],
-    }));
-    const created = allSales.filter((sale: Sale) => sale.status === "0");
-    const successful = allSales.filter((sale: Sale) => sale.status === "1");
-    const dailyVolume = getDailyVolume(successful);
-    const cardsSold = getCardSold(successful);
+  const allSales = rawSales.map((sale: string[], i) => ({
+    id: i,
+    seller: sale[0],
+    nft: sale[1],
+    nftId: sale[2],
+    amount: sale[3],
+    price: sale[4],
+    duration: sale[5],
+    startedAt: sale[6],
+    status: sale[7],
+  }));
+  const created = allSales.filter((sale: Sale) => sale.status === "0");
+  const successful = allSales.filter((sale: Sale) => sale.status === "1");
+  const dailyVolume = getDailyVolume(successful);
+  const cardsSold = getCardSold(successful);
 
-    return {
-      saleCreated: created,
-      saleSuccessful: successful,
-      totalSales: created.length,
-      dailyVolume: dailyVolume.toString(),
-      cardsSold: cardsSold.toString(),
-    };
-  }
-);
+  return {
+    saleCreated: created,
+    saleSuccessful: successful,
+    totalSales: created.length,
+    dailyVolume: dailyVolume.toString(),
+    cardsSold: cardsSold.toString(),
+  };
+});
 
 export const onLoadSale = createAsyncThunk(
   actionTypes.GET_LISTED_NFT,
@@ -78,7 +74,7 @@ export const onLoadSale = createAsyncThunk(
 export const onGetAssets = createAsyncThunk(
   actionTypes.GET_ASSETS,
   async function prepare(address: string) {
-    const { endersGate, pack } = getAddresses();
+    const {endersGate, pack} = getAddresses();
     const cardsContract = getContract("ERC1155", endersGate);
     const packsContract = getContract("ERC1155", pack);
     const packsIds = [0, 1, 2, 3];
@@ -100,8 +96,8 @@ export const onGetAssets = createAsyncThunk(
       .call();
 
     return {
-      balanceCards: cardsIds.map((id, i) => ({ id, balance: balanceCards[i] })),
-      balancePacks: packsIds.map((id, i) => ({ id, balance: balancePacks[i] })),
+      balanceCards: cardsIds.map((id, i) => ({id, balance: balanceCards[i]})),
+      balancePacks: packsIds.map((id, i) => ({id, balance: balancePacks[i]})),
     };
   }
 );
