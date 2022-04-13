@@ -2,15 +2,17 @@ import React from "react";
 import {LeftOutlined, LoadingOutlined} from "@ant-design/icons";
 import {useRouter} from "next/router";
 import Web3 from "web3";
+import {useMoralis} from "react-moralis";
 
 import {useAppDispatch, useAppSelector} from "redux/store";
-import {onApproveERC1155, onSellERC1155, onUpdateFirebaseUser, onLoadSales} from "@redux/actions";
+import {onSellERC1155, onUpdateFirebaseUser, onLoadSales} from "@redux/actions";
 import {Button} from "../common/button/button";
 import {Icons} from "@shared/const/Icons";
 import {getAddresses} from "@shared/web3";
 import {Typography} from "../common/typography";
 import cards from "../../cards.json";
 import {useModal} from "@shared/hooks/modal";
+import {approveERC1155} from "@shared/web3";
 
 const {marketplace} = getAddresses();
 
@@ -19,6 +21,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const {web3} = useMoralis();
 
   const [message, setMessage] = React.useState(
     "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
@@ -37,12 +40,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
     }
     const tokenId = id;
     setMessage("Allowing us to sell your tokens");
-    await dispatch(
-      onApproveERC1155({
-        walletType: user.walletType,
-        tx: {to: marketplace, from: user.address},
-      })
-    );
+    await approveERC1155({provider: web3, from: user.address, to: marketplace});
     setMessage("Listing your tokens");
     await dispatch(
       onSellERC1155({
