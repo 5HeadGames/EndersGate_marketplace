@@ -1,18 +1,15 @@
-import { Button } from "@shared/components/common/button";
-import { Typography } from "@shared/components/common/typography";
-import { Icons } from "@shared/const/Icons";
+import {Typography} from "@shared/components/common/typography";
+import {Icons} from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
-import "shared/firebase";
-import { useAppSelector } from "redux/store";
-import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import {useAppSelector} from "redux/store";
 import Styles from "./styles.module.scss";
-import { Activity } from "../index/index";
+import {Activity} from "../index/index";
 
 const navItems = [
-  { title: "Trading Cards", value: "trading_cards" },
-  { title: "Packs", value: "packs" },
-  { title: "Comics", value: "comics" },
+  {title: "Trading Cards", value: "trading_cards"},
+  {title: "Packs", value: "packs"},
+  {title: "Comics", value: "comics"},
 ];
 
 const Activities = () => {
@@ -31,8 +28,7 @@ const Activities = () => {
           "w-full ",
           "flex flex-col",
           {
-            [`${Styles.gray} justify-center items-center gap-6 h-72`]:
-              !user.activity,
+            [`${Styles.gray} justify-center items-center gap-6 h-72`]: !user.activity,
           },
           {
             ["gap-y-2"]: user.activity,
@@ -40,16 +36,13 @@ const Activities = () => {
         )}
       >
         {user.activity ? (
-          user.activity.map(({ createdAt, type }, index) => {
+          user.activity.map(({createdAt, type}, index) => {
             return <Activity date={createdAt} type={type} />;
           })
         ) : (
           <>
             <img src={Icons.logo} className="h-40 w-40" alt="" />
-            <Typography
-              type="subTitle"
-              className={clsx(Styles.title, "text-primary")}
-            >
+            <Typography type="subTitle" className={clsx(Styles.title, "text-primary")}>
               You don't have any activity yet
             </Typography>
           </>

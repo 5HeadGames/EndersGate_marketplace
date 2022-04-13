@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import {Layout} from "antd";
+import {useMoralis} from "react-moralis";
+
 import {Icons} from "@shared/const/Icons";
 import {useRouter} from "next/dist/client/router";
 import clsx from "clsx";
@@ -87,11 +89,6 @@ const navItems = [
 ];
 
 export default function AppLayout({children}) {
-  const router = useRouter();
-  const {blur, message, address} = useAppSelector((state) => ({
-    ...state.layout,
-    ...state.user,
-  }));
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
   const [isExecuted, setIsExecuted] = React.useState(false);
@@ -99,6 +96,12 @@ export default function AppLayout({children}) {
     message: "",
     value: false,
   });
+  const {blur, message} = useAppSelector((state) => ({
+    ...state.layout,
+    ...state.user,
+  }));
+  const router = useRouter();
+  const {authenticate, isAuthenticated, user} = useMoralis();
 
   const chainChangedHandler = async () => {
     // window.location.reload();
@@ -182,7 +185,6 @@ export default function AppLayout({children}) {
     initApp();
   }, []);
 
-  //   const [inputValue, setInputValue] = React.useState("explore");
   return (
     <Layout
       style={{
@@ -235,9 +237,9 @@ export default function AppLayout({children}) {
           <Button
             decoration="fill"
             size="small"
-            onClick={() => router.push(address ? "/profile" : "/login")}
+            onClick={() => router.push(isAuthenticated ? "/profile" : "/login")}
           >
-            {address ? "Profile" : "Log In"}
+            {isAuthenticated ? "Profile" : "Log In"}
           </Button>
         </div>
         <div

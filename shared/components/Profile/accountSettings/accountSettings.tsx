@@ -1,16 +1,14 @@
 import {Button} from "@shared/components/common/button";
-import {Typography} from "@shared/components/common/typography";
 import {Icons} from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
-import "shared/firebase";
+import {useMoralis, useMoralisFile} from "react-moralis";
 import {useAppSelector, useAppDispatch} from "redux/store";
 import {useForm} from "react-hook-form";
 import {Input} from "@shared/components/common/form/input";
 import {InputEmail} from "@shared/components/common/form/input-email";
 import {InputPassword} from "@shared/components/common/form/input-password";
-import {writeUser, uploadFile, getFileUrl} from "@shared/firebase";
-import {onUpdateUser, onMessage, onLoginUser, onUpdateUserCredentials} from "@redux/actions";
+import {onMessage, onLoginUser, onUpdateUserCredentials} from "@redux/actions";
 
 const AccountSettingsComponent = () => {
   const {
@@ -19,44 +17,35 @@ const AccountSettingsComponent = () => {
     watch,
     formState: {errors},
   } = useForm();
-  const [image, setImage] = React.useState("");
+  const [image, setImage] = React.useState<File | null>(null);
   const [loadingForm, setLoading] = React.useState(false);
   const [openEmailPassword, setOpenEmailPassword] = React.useState(false);
+  const {user} = useMoralis();
+  const {saveFile} = useMoralisFile();
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);
-  const userPath = `users/${user.address}`;
 
-  const onLoadingImageSubmit = (load: unknown) => {
-    console.log({load});
+  const handleChangePicture = async (e: React.ChangeEvent<any>) => {
+    try {
+      const file = e.target.files[0];
+      const moralisFile = await saveFile(file.name, file, {
+        type: "image/png",
+      });
+      user.set("profileImage", moralisFile);
+      await user.save();
+      setImage(file);
+    } catch (error) {
+      console.log({error});
+    }
   };
 
-  const onSuccessImageSubmit = (arg: {path: string}) => async () => {
-    const fileUrl = await getFileUrl(arg);
-    const writeData = {profile_picture: fileUrl};
-    writeUser(userPath, writeData);
-    dispatch(onUpdateUser(writeData));
-  };
-
-  const onErrorImageSubmit = (error: unknown) => {
-    console.log({error});
-  };
-
-  const handleChangePicture = (e: React.ChangeEvent<any>) => {
-    const file = e.target.files[0];
-    const path = `${userPath}/${file.name}`;
-    uploadFile({
-      file,
-      path,
-      metadata: {name: file.name, size: file.size, type: file.type},
-      onLoad: onLoadingImageSubmit,
-      onError: onErrorImageSubmit,
-      onSuccess: onSuccessImageSubmit({path}),
-    });
-    setImage("");
-  };
-
-  const handleSetField = (field: "name" | "userStatus") => (e: React.ChangeEvent<any>) => {
-    writeUser(userPath, {[field]: e.target.value as string});
+  const handleSetField = (field: "name" | "userStatus") => async (e: React.ChangeEvent<any>) => {
+    try {
+      const value = e.target.value;
+      user.set(field, value);
+      await user.save();
+    } catch (error) {
+      console.log({error});
+    }
   };
 
   const onSubmit = async ({
@@ -72,14 +61,6 @@ const AccountSettingsComponent = () => {
   }) => {
     setLoading(true);
     try {
-      if (!user.email)
-        await dispatch(
-          onLoginUser({email: newEmail, password: newPassword, address: user.address})
-        );
-      else
-        await dispatch(
-          onUpdateUserCredentials({oldEmail, oldPassword, newEmail, newPassword, userPath})
-        );
     } catch (err) {
       console.log({err});
       setLoading(false);
@@ -103,11 +84,7 @@ const AccountSettingsComponent = () => {
           <div className="flex md:flex-col sm:flex-row flex-col mb-4 items-center">
             <div className="xl:h-40 xl:w-40 md:h-32 md:w-32 h-40 w-40 rounded-full relative">
               <img
-                src={
-                  user.profile_picture !== ""
-                    ? user.profile_picture
-                    : Icons.logo
-                }
+                src={user.get("profileImage") ? user.get("profileImage").url() : Icons.logo}
                 alt=""
               />
             </div>
@@ -138,7 +115,7 @@ const AccountSettingsComponent = () => {
               title="User Name"
               labelVisible
               className="text-primary mt-2"
-              defaultValue={user.name}
+              defaultValue={user.get("name")}
               onBlur={handleSetField("name")}
             />
 
@@ -150,18 +127,13 @@ const AccountSettingsComponent = () => {
               title="Status"
               labelVisible
               className="text-primary mt-2"
-              defaultValue={user.userStatus}
+              defaultValue={user.get("userStatus")}
               onBlur={handleSetField("userStatus")}
             />
           </div>
         </div>
-        <div
-          className={clsx(
-            "w-full flex flex-col items-center",
-            !openEmailPassword && "hidden"
-          )}
-        >
-          {user.email && (
+        <div className={clsx("w-full flex flex-col items-center", !openEmailPassword && "hidden")}>
+          {user?.email && (
             <>
               <InputEmail
                 register={register}
@@ -171,7 +143,7 @@ const AccountSettingsComponent = () => {
                 title="Old email"
                 labelVisible
                 className="text-primary mt-2"
-                defaultValue={user.email}
+                defaultValue={user?.email}
               />
               <InputPassword
                 register={register}
@@ -182,10 +154,7 @@ const AccountSettingsComponent = () => {
                 labelVisible
                 className="text-primary mt-2"
               />
-              <div
-                className="w-full bg-primary mt-5 mb-2 rounded"
-                style={{ height: "1px" }}
-              ></div>
+              <div className="w-full bg-primary mt-5 mb-2 rounded" style={{height: "1px"}}></div>
             </>
           )}
           <InputEmail
@@ -193,7 +162,7 @@ const AccountSettingsComponent = () => {
             error={errors.newEmail}
             isFill={!!watch("newEmail")}
             name="newEmail"
-            title={user.email ? "New email" : "Email"}
+            title={user?.email ? "New email" : "Email"}
             labelVisible
             className="text-primary mt-2"
           />
@@ -202,7 +171,7 @@ const AccountSettingsComponent = () => {
             error={errors.newPassword}
             isFill={!!watch("newPassword")}
             name="newPassword"
-            title={user.email ? "New password" : "Password"}
+            title={user?.email ? "New password" : "Password"}
             labelVisible
             className="text-primary mt-2"
           />
@@ -223,7 +192,7 @@ const AccountSettingsComponent = () => {
             type="button"
             onClick={() => setOpenEmailPassword(!openEmailPassword)}
           >
-            {`${user.email ? "Change" : "Set"} email and password`}
+            {`${user?.email ? "Change" : "Set"} email and password`}
           </Button>
         )}
       </form>
