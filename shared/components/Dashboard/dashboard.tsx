@@ -9,6 +9,7 @@ import { getAddresses, getContractWebSocket } from "@shared/web3";
 import { onLoadSales } from "@redux/actions";
 
 const DashboardComponent = () => {
+  
   const [recentlyListed, setRecentlyListed] = React.useState([]);
   const [recentlySold, setRecentlySold] = React.useState([]);
   const [transactionsBoard, setTransactionsBoard] = React.useState({
@@ -17,64 +18,28 @@ const DashboardComponent = () => {
     cardsSold: 0,
   });
   const dispatch = useAppDispatch();
+  const { nfts } = useAppSelector((state) => state);
 
   React.useEffect(() => {
-    getData();
-  }, []);
+    if (nfts) {
+      setRecentlyListed(nfts.saleCreated);
+      setRecentlySold(nfts.saleSuccessfull);
 
-  const getData = async () => {
-    const addresses = await getAddresses();
-    const contract = await getContractWebSocket(
-      "ClockSale",
-      addresses.marketplace
-    );
-    const transactionsBoard = {
-      totalSale: 0,
-      totalVolume: 0,
-      cardsSold: 0,
-    };
-    const sales = await dispatch(onLoadSales());
-    transactionsBoard.totalSale = (sales as any).payload?.saleCreated.length;
-    (sales as any).payload?.saleCreated.forEach((sale) => {
-      transactionsBoard.totalVolume += parseInt(sale.amount);
-    });
-    const eventsListedSold = await Promise.all([
-      contract.getPastEvents("SaleCreated", {
-        fromBlock: 23662353,
-        toBlock: "latest",
-      }),
-      contract.getPastEvents("BuySuccessful", {
-        fromBlock: 23662353,
-        toBlock: "latest",
-      }),
-    ]);
-    const eventsListed = eventsListedSold[0];
-    const recentlyListed = [];
-    eventsListed.forEach((event) => {
-      recentlyListed.push({
-        amount: event.returnValues._amount,
-        duration: event.returnValues._duration,
-        id: event.returnValues._auctionId,
-        price: Web3.utils.fromWei(event.returnValues._price),
-        seller: event.returnValues._seller,
+      setTransactionsBoard({
+        totalSale: nfts.totalSales,
+        totalVolume:
+          nfts.saleCreated.length > 0
+            ? nfts.saleCreated
+                ?.map((sale) => parseFloat(sale.price))
+                ?.reduce((acc, cur) => {
+                  return acc + cur;
+                })
+            : 0,
+        cardsSold: nfts.cardsSold,
       });
-    });
-    setRecentlyListed(recentlyListed);
-    const eventsSold = eventsListedSold[1];
-    const recentlySold = [];
-    eventsSold.forEach((event) => {
-      recentlySold.push({
-        amount: event.returnValues._nftAmount,
-        id: event.returnValues._aucitonId,
-        cost: Web3.utils.fromWei(event.returnValues._cost),
-        buyer: event.returnValues._buyer,
-      });
-      transactionsBoard.cardsSold += parseInt(event.returnValues._nftAmount);
-    });
-    setRecentlySold(recentlySold);
-    console.log("transaction", transactionsBoard);
-    setTransactionsBoard(transactionsBoard);
-  };
+      console.log(nfts.saleCreated);
+    }
+  }, [nfts]);
 
   return (
     <div className="w-full flex flex-col md:px-16 px-4 min-h-screen pt-36">
