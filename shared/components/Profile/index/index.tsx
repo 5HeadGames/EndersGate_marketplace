@@ -1,6 +1,5 @@
 import {Typography} from "@shared/components/common/typography";
 import React from "react";
-import {useAppSelector} from "redux/store";
 import {useRouter} from "next/router";
 import clsx from "clsx";
 import {useMoralis} from "react-moralis";

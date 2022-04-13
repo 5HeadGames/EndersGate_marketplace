@@ -17,7 +17,7 @@ const AccountSettingsComponent = () => {
     watch,
     formState: {errors},
   } = useForm();
-  const [image, setImage] = React.useState("");
+  const [image, setImage] = React.useState<File | null>(null);
   const [loadingForm, setLoading] = React.useState(false);
   const [openEmailPassword, setOpenEmailPassword] = React.useState(false);
   const {user} = useMoralis();
@@ -30,14 +30,23 @@ const AccountSettingsComponent = () => {
       const moralisFile = await saveFile(file.name, file, {
         type: "image/png",
       });
-      user.set("profilePicture", file);
+      user.set("profileImage", moralisFile);
       await user.save();
+      setImage(file);
     } catch (error) {
       console.log({error});
     }
   };
 
-  const handleSetField = (field: "name" | "userStatus") => (e: React.ChangeEvent<any>) => {};
+  const handleSetField = (field: "name" | "userStatus") => async (e: React.ChangeEvent<any>) => {
+    try {
+      const value = e.target.value;
+      user.set(field, value);
+      await user.save();
+    } catch (error) {
+      console.log({error});
+    }
+  };
 
   const onSubmit = async ({
     oldEmail,
@@ -74,7 +83,10 @@ const AccountSettingsComponent = () => {
         <div className="flex md:flex-row flex-col items-start w-full md:gap-6">
           <div className="flex md:flex-col sm:flex-row flex-col mb-4 items-center">
             <div className="xl:h-40 xl:w-40 md:h-32 md:w-32 h-40 w-40 rounded-full relative">
-              <img src={user?.profile_picture !== "" ? user?.profile_picture : Icons.logo} alt="" />
+              <img
+                src={user.get("profileImage") ? user.get("profileImage").url() : Icons.logo}
+                alt=""
+              />
             </div>
             <input
               type="file"
@@ -103,7 +115,7 @@ const AccountSettingsComponent = () => {
               title="User Name"
               labelVisible
               className="text-primary mt-2"
-              defaultValue={user?.name}
+              defaultValue={user.get("name")}
               onBlur={handleSetField("name")}
             />
 
@@ -115,7 +127,7 @@ const AccountSettingsComponent = () => {
               title="Status"
               labelVisible
               className="text-primary mt-2"
-              defaultValue={user?.userStatus}
+              defaultValue={user.get("userStatus")}
               onBlur={handleSetField("userStatus")}
             />
           </div>

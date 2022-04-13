@@ -1,11 +1,9 @@
 import {createAction, createAsyncThunk} from "@reduxjs/toolkit";
 import {Harmony} from "@harmony-js/core";
-import {Messenger} from "@harmony-js/network";
 import {ChainType} from "@harmony-js/utils";
 import Web3 from "web3";
 import {AbiItem} from "web3-utils";
 import MarketplaceContract from "shared/contracts/ClockSale.json";
-import ERC1155 from "shared/contracts/ERC1155.json";
 import {getAddresses, getContract, getContractMetamask, getWeb3} from "@shared/web3";
 import * as actionTypes from "../constants";
 
