@@ -1,124 +1,74 @@
 import React from "react";
 import {useForm} from "react-hook-form";
 import {useRouter} from "next/router";
+import {useMoralis} from "react-moralis";
 
 import {useModal} from "@shared/hooks/modal";
-import {useAppDispatch, useAppSelector} from "redux/store";
-import {onLoginUser, onMessage, onUpdateUser, onGetAssets} from "redux/actions";
-import {
-  loginHarmonyWallet,
-  loginMetamaskWallet,
-  getWalletConnect,
-  getWeb3,
-} from "@shared/web3";
-import { Button } from "shared/components/common/button";
+import {useAppDispatch} from "redux/store";
+import {Button} from "shared/components/common/button";
 import Dialog from "shared/components/common/dialog";
-import { Typography } from "shared/components/common/typography";
-import { InputPassword } from "shared/components/common/form/input-password";
-import { InputEmail } from "shared/components/common/form/input-email";
+import {Typography} from "shared/components/common/typography";
+import {InputPassword} from "shared/components/common/form/input-password";
+import {InputEmail} from "shared/components/common/form/input-email";
 
 type Values = {
   email?: string;
   password?: string;
   address: string;
-  walletType: "metamask" | "harmony" | "wallet_connect";
+  walletType: "metamask" | "wallet_connect";
 };
 
 const Login = () => {
   const [openForm, setOpenForm] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const { Modal, isShow, show, hide } = useModal();
-  const { address } = useAppSelector((state) => state.user);
-  const [connector, setConnector] = React.useState(getWalletConnect());
+  const {Modal, isShow, show, hide} = useModal();
+  const {authenticate, signup, login, enableWeb3, isAuthenticated} = useMoralis();
+
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const handleMetamaskConnect = async () => {
-    const web3 = await loginMetamaskWallet();
-    await dispatch(onGetAssets((window as any).ethereum.selectedAddress));
-    const web3xd = await getWeb3();
-    const networkId = await web3xd.eth.net.getId();
-    if (networkId != 1666700000) {
-      return alert(
-        "You are not in the harmony testnet, please set it up and login again"
-      );
-    }
-    if (!web3) return show("metamask");
     setLoading(true);
-    await dispatch(
-      onLoginUser({
-        address: (window as any).ethereum.selectedAddress,
-      })
-    );
+    try {
+      await enableWeb3();
+      const user = await authenticate();
+    } catch (err) {
+      console.log({err});
+    }
     setLoading(false);
-    dispatch(
-      onUpdateUser({
-        address: (window as any).ethereum.selectedAddress,
-        walletType: "metamask",
-      })
-    );
-    dispatch(onMessage("Login successful!"));
-    setTimeout(dispatch, 2000, onMessage(""));
   };
 
-  const handleHarmonyConnect = async () => {
-    const account = await loginHarmonyWallet();
-    console.log("on get assets");
-    await dispatch(onGetAssets(account.address));
-    if (!account) return show("harmony");
+  const handleWalletConnect = async () => {
     setLoading(true);
-    await dispatch(onLoginUser({ address: account.address }));
+    try {
+      await enableWeb3({
+        provider: "walletconnect",
+        chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
+      });
+      const user = await authenticate({
+        provider: "walletconnect",
+        chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
+      });
+    } catch (err) {
+      console.log({err});
+    }
     setLoading(false);
-    dispatch(
-      onUpdateUser({
-        address: account.address,
-        walletType: "harmony",
-      })
-    );
-    dispatch(onMessage("Login successful!"));
-    setTimeout(dispatch, 2000, onMessage(""));
   };
 
   const handleSubmit = async (user: Values) => {
     setLoading(true);
-    const account = await loginHarmonyWallet();
-    await dispatch(onGetAssets(account.address));
-    await dispatch(onLoginUser({ ...user, address: account.address }));
+    try {
+      await login(user.email, user.password);
+      await handleMetamaskConnect();
+    } catch (err) {
+      console.log({err});
+    }
     setLoading(false);
-    dispatch(
-      onUpdateUser({
-        ...user,
-        address: account.address,
-        walletType: "harmony",
-      })
-    );
-    dispatch(onMessage("Login successful!"));
-    setTimeout(dispatch, 2000, onMessage(""));
   };
 
   React.useEffect(() => {
-    connector.on("connect", async (error, payload) => {
-      if (error) {
-        throw error;
-      }
-
-      const { accounts, chainId } = payload.params[0];
-      console.log(accounts);
-      await dispatch(onLoginUser({ address: accounts[0] }));
-      setLoading(false);
-      dispatch(
-        onUpdateUser({
-          walletType: "wallet_connect",
-        })
-      );
-      dispatch(onMessage("Login successful!"));
-      setTimeout(dispatch, 2000, onMessage(""));
-    });
-  }, []);
-
-  React.useEffect(() => {
-    if (address) router.push("/dashboard");
-  }, [address]);
+    if (isAuthenticated) router.push("/dashboard");
+  }, [isAuthenticated]);
 
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center">
@@ -128,9 +78,9 @@ const Login = () => {
           decoration="fillPrimary"
           size="medium"
           className="w-full mb-2 bg-primary text-white"
-          onClick={handleHarmonyConnect}
+          onClick={handleWalletConnect}
         >
-          {loading ? "..." : "Login with Harmony Wallet"}
+          {loading ? "..." : "Login with WalletConnect"}
         </Button>
         <Button
           disabled={loading}
@@ -205,12 +155,7 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-4 flex flex-col bg-secondary rounded-md">
           <div className="mb-4 w-full">
-            <InputEmail
-              register={register}
-              placeholder="email"
-              name="email"
-              error={errors.email}
-            />
+            <InputEmail register={register} placeholder="email" name="email" error={errors.email} />
           </div>
           <div className="mb-4">
             <InputPassword

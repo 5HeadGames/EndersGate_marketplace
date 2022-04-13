@@ -1,21 +1,18 @@
-import { Typography } from "@shared/components/common/typography";
 import ProfileLayoutComponent from "@shared/components/Profile/profile";
-import { Icons } from "@shared/const/Icons";
+import {useMoralis} from "react-moralis";
 import React from "react";
-import "shared/firebase";
-import { useAppSelector } from "redux/store";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 import AccountSettingsComponent from "@shared/components/Profile/accountSettings/accountSettings";
 
 const ProfileSettings = () => {
-  const user = useAppSelector((state) => state.user);
+  const {isAuthenticated} = useMoralis();
   const router = useRouter();
+
   React.useEffect(() => {
-    if (user && !user.address) {
+    if (!isAuthenticated) {
       router.push("/login");
     }
-    console.log(user);
-  }, [user]);
+  }, [isAuthenticated]);
   return (
     <ProfileLayoutComponent>
       <AccountSettingsComponent />

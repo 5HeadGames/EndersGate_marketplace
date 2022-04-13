@@ -1,27 +1,11 @@
 import React from "react";
-import {
-  FireFilled,
-  HeartFilled,
-  LeftOutlined,
-  MenuOutlined,
-  StarFilled,
-  ThunderboltFilled,
-} from "@ant-design/icons";
+import {LeftOutlined, MenuOutlined} from "@ant-design/icons";
 import {useRouter} from "next/router";
-import Web3 from "web3";
 
 import {useAppDispatch, useAppSelector} from "redux/store";
-import {getUserPath} from "shared/firebase";
-import {
-  onApproveERC1155,
-  onSellERC1155,
-  onBuyERC1155,
-  onUpdateFirebaseUser,
-  onGetListed,
-} from "@redux/actions";
+import {onApproveERC1155} from "@redux/actions";
 import {Button} from "../common/button/button";
 import {Icons} from "@shared/const/Icons";
-import {AddressText, TransactionText} from "../common/specialFields/SpecialFields";
 import {getAddresses} from "@shared/web3";
 import {Typography} from "../common/typography";
 import cards from "../../cards.json";
@@ -33,7 +17,6 @@ const NFTDetailComponent: React.FC<any> = ({id}) => {
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const userPath = getUserPath(user);
 
   const sellNft = async () => {
     await dispatch(
@@ -42,35 +25,35 @@ const NFTDetailComponent: React.FC<any> = ({id}) => {
         tx: {to: marketplace, from: user.address},
       })
     );
-    await dispatch(
-      onSellERC1155({
-        walletType: user.walletType,
-        tx: {
-          from: user.address,
-          startingPrice: Web3.utils.toWei("4.3"),
-          tokenId: id,
-          duration: "1",
-        },
-      })
-    );
-    await dispatch(
-      onUpdateFirebaseUser({
-        userPath,
-        updateData: {
-          activity: [
-            ...user.activity,
-            {
-              type: "sell",
-              createdAt: new Date().toISOString(),
-              nft: {
-                tokenId: id,
-              },
-            },
-          ],
-        },
-      })
-    );
-    await dispatch(onGetListed());
+    //await dispatch(
+    //onSellERC1155({
+    //walletType: user.walletType,
+    //tx: {
+    //from: user.address,
+    //startingPrice: Web3.utils.toWei("4.3"),
+    //tokenId: id,
+    //duration: "1",
+    //},
+    //})
+    //);
+    //await dispatch(
+    //onUpdateFirebaseUser({
+    //userPath,
+    //updateData: {
+    //activity: [
+    //...user.activity,
+    //{
+    //type: "sell",
+    //createdAt: new Date().toISOString(),
+    //nft: {
+    //tokenId: id,
+    //},
+    //},
+    //],
+    //},
+    //})
+    //);
+    //await dispatch(onGetListed());
   };
 
   React.useEffect(() => {
@@ -82,29 +65,29 @@ const NFTDetailComponent: React.FC<any> = ({id}) => {
     if (user.address === "") {
       router.push("/login");
     }
-    await dispatch(
-      onBuyERC1155({
-        walletType: user.walletType,
-        tx: {from: user.address, bid: "5", tokenId: id},
-      })
-    );
-    await dispatch(
-      onUpdateFirebaseUser({
-        userPath,
-        updateData: {
-          activity: [
-            ...user.activity,
-            {
-              type: "buy",
-              createdAt: new Date().toISOString(),
-              nft: {
-                tokenId: id,
-              },
-            },
-          ],
-        },
-      })
-    );
+    //await dispatch(
+    //onBuyERC1155({
+    //walletType: user.walletType,
+    //tx: {from: user.address, bid: "5", tokenId: id},
+    //})
+    //);
+    //await dispatch(
+    //onUpdateFirebaseUser({
+    //userPath,
+    //updateData: {
+    //activity: [
+    //...user.activity,
+    //{
+    //type: "buy",
+    //createdAt: new Date().toISOString(),
+    //nft: {
+    //tokenId: id,
+    //},
+    //},
+    //],
+    //},
+    //})
+    //);
   };
 
   return (

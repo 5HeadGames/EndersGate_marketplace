@@ -1,11 +1,10 @@
 import React from "react";
-import "shared/firebase";
 import NFTDetailSaleComponent from "@shared/components/NFTDetail/NFTDetailSale";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 const NFTDetailSale = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const {id} = router.query;
   return <NFTDetailSaleComponent id={id} />;
 };
 

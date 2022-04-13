@@ -1,20 +1,19 @@
-import { Button } from "@shared/components/common/button";
-import { Typography } from "@shared/components/common/typography";
-import { Icons } from "@shared/const/Icons";
+import {Button} from "@shared/components/common/button";
+import {Typography} from "@shared/components/common/typography";
+import {Icons} from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
-import "shared/firebase";
-import { useAppSelector } from "redux/store";
-import { AppstoreOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import {useAppSelector} from "redux/store";
+import {AppstoreOutlined, UnorderedListOutlined} from "@ant-design/icons";
 import Styles from "./styles.module.scss";
 import NFTCard from "@shared/components/Marketplace/itemCard";
 import cards from "../../../cards.json";
-import { getBalance } from "@shared/web3";
+import {getBalance} from "@shared/web3";
 
 const navItems = [
-  { title: "Trading Cards", value: "trading_cards" },
-  { title: "Packs", value: "packs" },
-  { title: "Comics", value: "comics" },
+  {title: "Trading Cards", value: "trading_cards"},
+  {title: "Packs", value: "packs"},
+  {title: "Comics", value: "comics"},
 ];
 
 const Inventory = () => {
@@ -51,8 +50,7 @@ const Inventory = () => {
             <div
               className={clsx(
                 {
-                  "bg-primary-disabled text-white":
-                    columnSelected === item.value,
+                  "bg-primary-disabled text-white": columnSelected === item.value,
                 },
                 {
                   "text-primary": columnSelected !== item.value,
@@ -80,8 +78,7 @@ const Inventory = () => {
         className={clsx(
           "flex mb-10  justify-center",
           {
-            [`${Styles.gray} flex-col items-center gap-6 h-72`]:
-              inventory.length == 0,
+            [`${Styles.gray} flex-col items-center gap-6 h-72`]: inventory.length == 0,
           },
           {
             ["gap-2 flex-wrap gap-2"]: inventory.length > 0,
@@ -105,10 +102,7 @@ const Inventory = () => {
         ) : (
           <>
             <img src={Icons.logo} className="h-40 w-40" alt="" />
-            <Typography
-              type="subTitle"
-              className={clsx(Styles.title, "text-primary")}
-            >
+            <Typography type="subTitle" className={clsx(Styles.title, "text-primary")}>
               You don't have any item yet
             </Typography>
           </>
