@@ -21,7 +21,7 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
             state.saleCreated = action.payload.saleCreated;
             state.saleSuccessfull = action.payload.saleSuccessful;
             state.totalSales = action.payload.totalSales;
-            state.dailyVolume = action.payload.dailyVolume;
-            state.cardsSold = action.payload.cardsSold;
+            //state.dailyVolume = action.payload.dailyVolume;
+            //state.cardsSold = action.payload.cardsSold;
         });
 });
