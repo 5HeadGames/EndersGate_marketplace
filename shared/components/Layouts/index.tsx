@@ -107,7 +107,7 @@ export default function AppLayout({children}) {
     // window.location.reload();
     const web3 = await getWeb3();
     const networkId = await web3.eth.net.getId();
-    if (networkId != 1666700000) {
+    if (networkId != 1666700000 && networkId != 1666600000) {
       setNotAvailable({
         message: "Change your network to harmony testnet please",
         value: true,
