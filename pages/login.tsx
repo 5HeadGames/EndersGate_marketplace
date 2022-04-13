@@ -41,17 +41,11 @@ const Login = () => {
   const handleWalletConnect = async () => {
     setLoading(true);
     try {
-      const adf = await enableWeb3({
+      await enableWeb3({
         provider: "walletconnect",
-        chainId: 1666600000,
-      });
-      console.log({
-        provider: "walletconnect",
-        chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
       });
       await authenticate({
         provider: "walletconnect",
-        chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
       });
     } catch (err) {
       console.log({err});
