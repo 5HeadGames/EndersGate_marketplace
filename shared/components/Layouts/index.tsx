@@ -134,12 +134,16 @@ export default function AppLayout({children}) {
   const initApp = async () => {
     const addresses = getAddresses();
     const marketplace = getContract("ClockSale", addresses.marketplace);
-    dispatch(onLoadSales());
+    await dispatch(onLoadSales());
   };
 
   React.useEffect(() => {
     initApp();
   }, []);
+
+  React.useEffect(() => {
+    if (isAuthenticated) dispatch(onGetAssets(user.get("ethAddress")));
+  }, [isAuthenticated]);
 
   return (
     <Layout
