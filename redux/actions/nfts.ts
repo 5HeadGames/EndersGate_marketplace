@@ -1,8 +1,9 @@
 import {createAction, createAsyncThunk} from "@reduxjs/toolkit";
 import Web3 from "web3";
+import Moralis from "moralis";
 
 import * as actionTypes from "../constants";
-import {getAddresses, getContract} from "@shared/web3";
+import {getAddresses, getContract, getContractCustom, createSale} from "@shared/web3";
 import cards from "../../cards.json";
 import Address from "@shared/components/Address/Address";
 
@@ -104,5 +105,55 @@ export const onGetAssets = createAsyncThunk(
     } catch (err) {
       console.log({err});
     }
+  }
+);
+
+export const onSellERC1155 = createAsyncThunk(
+  actionTypes.SELL_NFT,
+  async function prepare(args: {
+    from: string;
+    tokenId: number | string;
+    startingPrice: number | string;
+    amount: number | string;
+    duration: string;
+    address: string;
+    moralis: Moralis;
+  }) {
+    const {from, tokenId, startingPrice, amount, duration, address, moralis} = args;
+    const provider = moralis.web3;
+    const user = Moralis.User.current();
+    const relation = user.relation("sales");
+    const sale = createSale(args);
+    await sale.save();
+
+    relation.add(sale);
+
+    const {marketplace} = getAddresses();
+    const marketplaceContract = getContractCustom("ClockSale", marketplace, provider);
+    await marketplaceContract.methods
+      .createSale(address, tokenId, startingPrice, amount, duration)
+      .send({from: from});
+
+    await user.save();
+
+    return args;
+  }
+);
+
+export const onBuyERC1155 = createAsyncThunk(
+  actionTypes.BUY_NFT,
+  async function prepare({
+    walletType,
+    tx,
+  }: {
+    walletType: User["walletType"];
+    tx: {
+      from: string;
+      tokenId: number | string;
+      bid: string | number;
+      amount: string | number;
+    };
+  }) {
+    const {marketplace, erc1155} = getAddresses();
   }
 );

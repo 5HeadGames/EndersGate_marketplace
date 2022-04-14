@@ -39,12 +39,12 @@ export const getContractMetamask = (factory: keyof typeof contracts, address: st
 };
 
 export const getContractCustom = (
-  factory: keyof typeof contracts,
-  address: string,
-  provider: any
+   factory: keyof typeof contracts,
+   address: string,
+   provider: any
 ) => {
-  const web3 = getWeb3(provider);
-  return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
+   const web3 = getWeb3(provider);
+   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 
 export const getBalance = async (address: string) => {
@@ -64,19 +64,20 @@ export const getAddresses = () => {
 };
 
 export const approveERC1155 = async ({
-  provider,
-  from,
-  to,
+   provider,
+   from,
+   to,
+   address,
 }: {
-  provider: any;
-  from: string;
-      to: string;
-  address: string;
+   provider: any;
+   from: string;
+   to: string;
+   address: string;
 }) => {
-  const erc1155Contract = getContractCustom("ERC1155", address, provider);
-  return await erc1155Contract.methods.setApprovalForAll(to, true).send({
-    from,
-  });
+   const erc1155Contract = getContractCustom("ERC1155", address, provider);
+   return await erc1155Contract.methods.setApprovalForAll(to, true).send({
+      from,
+   });
 };
 
 // export const approveERC1155Pack = async ({
@@ -94,4 +95,29 @@ export const approveERC1155 = async ({
 //      from,
 //    });
 //  };
- 
+
+export const createSale = ({
+   from,
+   tokenId,
+   startingPrice,
+   amount,
+   duration,
+   address,
+}: {
+   from: string;
+   tokenId: number | string;
+   startingPrice: number | string;
+   amount: number | string;
+   duration: string;
+   address: string;
+}) => {
+   const Sale = Moralis.Object.extend("Sale");
+   const sale = new Sale();
+   sale.set("from", from);
+   sale.set("tokenId", tokenId);
+   sale.set("startingPrice", startingPrice);
+   sale.set("amount", amount);
+   sale.set("duration", duration);
+   sale.set("address", address);
+   return sale;
+};
