@@ -11,13 +11,12 @@ import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
 import {MenuIcon} from "@heroicons/react/outline";
 import {SidebarMobile} from "./sidebars/mobile";
 import {useAppSelector, useAppDispatch} from "redux/store";
-import {onGetAssets, onLoadSales, onLoginUser, onUpdateUser} from "redux/actions";
+import {onGetAssets, onLoadSales} from "redux/actions";
 import {
   AppstoreFilled,
   AreaChartOutlined,
   ShopOutlined,
   TwitterOutlined,
-  TwitterSquareFilled,
   WalletOutlined,
 } from "@ant-design/icons";
 
@@ -121,38 +120,11 @@ export default function AppLayout({children}) {
   };
 
   const accountChangedHandler = async (newAccount: any) => {
-    // if (timesAccountChange > 0) {
-    //   setNotAvailable({
-    //     message:
-    //       "You have changed your account please go to login/register section and login again",
-    //     value: true,
-    //   });
-    // } else {
-    //   setTimesAccountChange((prev) => prev + 1);
-    // }
-    // window.location.reload();
     const web3 = await loginMetamaskWallet();
     await dispatch(onGetAssets((window as any).ethereum.selectedAddress));
     if (!web3) return;
-    // setLoading(true);
-    await dispatch(
-      onLoginUser({
-        address: (window as any).ethereum.selectedAddress,
-      })
-    );
-    // setLoading(false);
-    dispatch(
-      onUpdateUser({
-        address: (window as any).ethereum.selectedAddress,
-        walletType: "metamask",
-      })
-    );
-    // dispatch(onMessage("Login successful!"));
-    // setTimeout(dispatch, 2000, onMessage(""));
   };
   if (typeof window !== "undefined" && (window as any).ethereum?.isConnected() && !isExecuted) {
-    // Client-side-only code
-    // connectWallet();
     (window as any).ethereum.on("accountsChanged", accountChangedHandler);
     (window as any).ethereum.on("chainChanged", chainChangedHandler);
     setIsExecuted(true);
@@ -163,21 +135,6 @@ export default function AppLayout({children}) {
   const initApp = async () => {
     const addresses = getAddresses();
     const marketplace = getContract("ClockSale", addresses.marketplace);
-
-    //marketplace.events
-    //.SaleCreated({}, (err, event) => {
-    //console.log({err, event}); //idk what this function handles
-    //})
-    //.on("connected", (subscriptionId) => {
-    //console.log({subscriptionId}); //handles when connected
-    //})
-    //.on("data", (event) => {
-    //console.log({event}); //handles the event
-    //})
-    //.on("error", (err, receipt) => {
-    //console.log({err, receipt}); //handles errors
-    //});
-
     dispatch(onLoadSales());
   };
 

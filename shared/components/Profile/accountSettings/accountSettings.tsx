@@ -2,13 +2,12 @@ import {Button} from "@shared/components/common/button";
 import {Icons} from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
-import {useMoralis, useMoralisFile} from "react-moralis";
-import {useAppSelector, useAppDispatch} from "redux/store";
+import {useMoralis, useMoralisFile, useMoralisCloudFunction} from "react-moralis";
+import {useAppDispatch} from "redux/store";
 import {useForm} from "react-hook-form";
 import {Input} from "@shared/components/common/form/input";
 import {InputEmail} from "@shared/components/common/form/input-email";
 import {InputPassword} from "@shared/components/common/form/input-password";
-import {onMessage, onLoginUser, onUpdateUserCredentials} from "@redux/actions";
 
 const AccountSettingsComponent = () => {
   const {
@@ -20,7 +19,7 @@ const AccountSettingsComponent = () => {
   const [image, setImage] = React.useState<File | null>(null);
   const [loadingForm, setLoading] = React.useState(false);
   const [openEmailPassword, setOpenEmailPassword] = React.useState(false);
-  const {user, setUserData} = useMoralis();
+  const {user, setUserData, signup, Moralis} = useMoralis();
   const {saveFile} = useMoralisFile();
   const dispatch = useAppDispatch();
 
@@ -57,16 +56,33 @@ const AccountSettingsComponent = () => {
     oldPassword: string;
     newPassword: string;
   }) => {
-    setLoading(true);
+    console.log({
+      oldEmail,
+      newEmail,
+      oldPassword,
+      newPassword,
+    });
     try {
+      if (!user.get("emailVerified")) {
+        console.log("new email");
+        const res = await signup(newEmail, newPassword, newEmail);
+        await Moralis.Cloud.run("sendVerificationEmail", {
+          email: newEmail,
+          name: newEmail,
+        });
+        console.log({res});
+      } else {
+        console.log("old email");
+        const res = await Moralis.User.requestPasswordReset(newEmail);
+        await Moralis.Cloud.run("sendResetPasswordEmail", {
+          email: newEmail,
+          name: newEmail,
+        });
+        console.log({res});
+      }
     } catch (err) {
       console.log({err});
-      setLoading(false);
-      return;
     }
-    setLoading(false);
-    dispatch(onMessage("Changes submitted!"));
-    setTimeout(dispatch, 2000, onMessage(""));
   };
 
   return (
@@ -131,7 +147,7 @@ const AccountSettingsComponent = () => {
           </div>
         </div>
         <div className={clsx("w-full flex flex-col items-center", !openEmailPassword && "hidden")}>
-          {user?.email && (
+          {user.get("email") && (
             <>
               <InputEmail
                 register={register}
@@ -141,7 +157,7 @@ const AccountSettingsComponent = () => {
                 title="Old email"
                 labelVisible
                 className="text-primary mt-2"
-                defaultValue={user?.email}
+                defaultValue={user.get("email")}
               />
               <InputPassword
                 register={register}
@@ -160,7 +176,7 @@ const AccountSettingsComponent = () => {
             error={errors.newEmail}
             isFill={!!watch("newEmail")}
             name="newEmail"
-            title={user?.email ? "New email" : "Email"}
+            title={user.get("email") ? "New email" : "Email"}
             labelVisible
             className="text-primary mt-2"
           />
@@ -169,7 +185,7 @@ const AccountSettingsComponent = () => {
             error={errors.newPassword}
             isFill={!!watch("newPassword")}
             name="newPassword"
-            title={user?.email ? "New password" : "Password"}
+            title={user.get("email") ? "New password" : "Password"}
             labelVisible
             className="text-primary mt-2"
           />
@@ -190,7 +206,7 @@ const AccountSettingsComponent = () => {
             type="button"
             onClick={() => setOpenEmailPassword(!openEmailPassword)}
           >
-            {`${user?.email ? "Change" : "Set"} email and password`}
+            {`${user.get("email") ? "Change" : "Set"} email and password`}
           </Button>
         )}
       </form>
