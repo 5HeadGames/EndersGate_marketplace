@@ -70,11 +70,28 @@ export const approveERC1155 = async ({
 }: {
   provider: any;
   from: string;
-  to: string;
+      to: string;
+  address: string;
 }) => {
-  const { endersGate } = getAddresses();
-  const erc1155Contract = getContractCustom("ERC1155", endersGate, provider);
+  const erc1155Contract = getContractCustom("ERC1155", address, provider);
   return await erc1155Contract.methods.setApprovalForAll(to, true).send({
     from,
   });
 };
+
+// export const approveERC1155Pack = async ({
+//    provider,
+//    from,
+//    to,
+//  }: {
+//    provider: any;
+//    from: string;
+//    to: string;
+//  }) => {
+//    const cntracts = getAddresses();
+//    const erc1155Contract = getContractCustom("ERC1155", endersGate, provider);
+//    return await erc1155Contract.methods.setApprovalForAll(to, true).send({
+//      from,
+//    });
+//  };
+ 

@@ -16,7 +16,7 @@ import { approveERC1155 } from "@shared/web3";
 
 const { marketplace } = getAddresses();
 
-const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
+const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { user } = useMoralis();
   const { web3 } = useMoralis();
   const NFTs = useAppSelector((state) => state.nfts);
@@ -35,24 +35,24 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { Modal, show, hide, isShow } = useModal();
 
   const sellNft = async () => {
-    if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
-      return alert("You don't have enough tokens to sell");
+    if (sellNFTData.amount > NFTs.balancePacks[id].balance) {
+      return alert("You don't have enough packs to sell");
     }
     const tokenId = id;
-    setMessage("Allowing us to sell your tokens");
-    const { endersGate } = getAddresses();
+    setMessage("Allowing us to sell your packs");
+    const { pack } = getAddresses();
     await approveERC1155({
       provider: web3,
       from: user.get("ethAddress"),
       to: marketplace,
-      address: endersGate,
+      address: pack,
     });
-    setMessage("Listing your tokens");
+    setMessage("Listing your packs");
     await dispatch(
       onSellERC1155({
         walletType: "metamask",
         tx: {
-          address: endersGate,
+          address: pack,
           from: user.get("ethAddress"),
           startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
           amount: sellNFTData.amount,
@@ -285,4 +285,4 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   );
 };
 
-export default NFTDetailIDComponent;
+export default PackDetailIDComponent;

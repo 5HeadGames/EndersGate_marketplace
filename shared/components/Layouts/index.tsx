@@ -95,9 +95,8 @@ export default function AppLayout({children}) {
     message: "",
     value: false,
   });
-  const {blur, message} = useAppSelector((state) => ({
+  const { blur, message } = useAppSelector((state) => ({
     ...state.layout,
-    ...state.user,
   }));
   const router = useRouter();
   const {authenticate, isAuthenticated, user} = useMoralis();

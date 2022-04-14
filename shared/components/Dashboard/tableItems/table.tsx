@@ -12,10 +12,16 @@ const navItems = [
 interface Props {
   title: string;
   data: (Record<string, string> & { render: React.FunctionComponent<any> })[];
+  columnSelected: string;
+  setColumnSelected: (arg1: string) => void;
 }
 
-const Table: React.FunctionComponent<Props> = ({ title, data }) => {
-  const [columnSelected, setColumnSelected] = React.useState("trading_cards");
+const Table: React.FunctionComponent<Props> = ({
+  title,
+  data,
+  columnSelected,
+  setColumnSelected,
+}) => {
   return (
     <div className="w-full flex flex-col">
       <h2 className="text-white py-2">{title}</h2>

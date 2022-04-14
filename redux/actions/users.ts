@@ -20,17 +20,27 @@ export const onSellERC1155 = createAsyncThunk(
       startingPrice: number | string;
       amount: number | string;
       duration: string;
+      address: string;
     };
   }) {
     console.log("será?");
-    const {marketplace, endersGate} = getAddresses();
+    const { marketplace, endersGate } = getAddresses();
     if (walletType === "metamask") {
       const web3 = getWeb3();
-      const marketplaceContract = await getContractMetamask("ClockSale", marketplace);
+      const marketplaceContract = await getContractMetamask(
+        "ClockSale",
+        marketplace
+      );
       console.log(tx, "Tx");
       await marketplaceContract.methods
-        .createSale(endersGate, tx.tokenId, tx.startingPrice, tx.amount, 24 * 3600 * 30)
-        .send({from: tx.from});
+        .createSale(
+          tx.address,
+          tx.tokenId,
+          tx.startingPrice,
+          tx.amount,
+          24 * 3600 * 30
+        )
+        .send({ from: tx.from });
     } else if (walletType === "harmony") {
       const wallet = new HarmonyWallet();
       await wallet.signin();
@@ -42,10 +52,19 @@ export const onSellERC1155 = createAsyncThunk(
           chainId: 2,
         }
       );
-      let marketplace = hmy.contracts.createContract(MarketplaceContract.abi, endersGate);
+      let marketplace = hmy.contracts.createContract(
+        MarketplaceContract.abi,
+        endersGate
+      );
       marketplace = wallet.attachToContract(marketplace);
       await marketplace.methods
-        .createSale(endersGate, tx.tokenId, tx.startingPrice, tx.amount, 24 * 3600 * 30)
+        .createSale(
+          endersGate,
+          tx.tokenId,
+          tx.startingPrice,
+          tx.amount,
+          24 * 3600 * 30
+        )
         .send({
           gasPrice: 100000000000,
           gasLimit: 410000,
