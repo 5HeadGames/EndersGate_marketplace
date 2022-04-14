@@ -1,22 +1,24 @@
 import React from "react";
-import {LeftOutlined, LoadingOutlined} from "@ant-design/icons";
-import {useRouter} from "next/router";
+import { LeftOutlined, LoadingOutlined } from "@ant-design/icons";
+import { useRouter } from "next/router";
 import Web3 from "web3";
+import { useMoralis } from "react-moralis";
 
-import {useAppDispatch, useAppSelector} from "redux/store";
-import { onApproveERC1155, onSellERC1155, onLoadSales } from "@redux/actions";
+import { useAppDispatch, useAppSelector } from "redux/store";
+import { onSellERC1155, onLoadSales } from "@redux/actions";
 import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import { getAddresses } from "@shared/web3";
 import { Typography } from "../common/typography";
 import cards from "../../cards.json";
 import { useModal } from "@shared/hooks/modal";
-import { useMoralis } from "react-moralis";
+import { approveERC1155 } from "@shared/web3";
 
 const { marketplace } = getAddresses();
 
 const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { user } = useMoralis();
+  const { web3 } = useMoralis();
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -38,12 +40,11 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     }
     const tokenId = id;
     setMessage("Allowing us to sell your tokens");
-    await dispatch(
-      onApproveERC1155({
-        walletType: "metamask",
-        tx: { to: marketplace, from: user.get("ethAddress") },
-      })
-    );
+    await approveERC1155({
+      provider: web3,
+      from: user.get("ethAddress"),
+      to: marketplace,
+    });
     setMessage("Listing your tokens");
     await dispatch(
       onSellERC1155({

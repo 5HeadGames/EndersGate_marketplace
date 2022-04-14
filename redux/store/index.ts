@@ -1,10 +1,9 @@
 import {configureStore} from "@reduxjs/toolkit";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
-import {userReducer, layoutReducer, nftReducer} from "../reducers";
+import {layoutReducer, nftReducer} from "../reducers";
 
 export const store = configureStore({
   reducer: {
-    user: userReducer,
     layout: layoutReducer,
     nfts: nftReducer,
   },

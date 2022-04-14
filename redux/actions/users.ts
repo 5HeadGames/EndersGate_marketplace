@@ -7,32 +7,6 @@ import MarketplaceContract from "shared/contracts/ClockSale.json";
 import {getAddresses, getContract, getContractMetamask, getWeb3} from "@shared/web3";
 import * as actionTypes from "../constants";
 
-export const onApproveERC1155 = createAsyncThunk(
-  actionTypes.APPROVE_NFT,
-  async function prepare({
-    walletType,
-    tx,
-  }: {
-    walletType: User["walletType"];
-    tx: {to: string; from: string};
-  }) {
-    const {marketplace, endersGate} = getAddresses();
-    try {
-      console.log("entró");
-      if (walletType === "metamask") {
-        const web3 = new Web3((window as any).ethereum);
-        const erc1155Contract = getContractMetamask("ERC1155", endersGate);
-        const txResult = await erc1155Contract.methods.setApprovalForAll(tx.to, true).send({
-          from: tx.from,
-        });
-        console.log(txResult);
-      }
-    } catch (err) {
-      console.log("errorcito", {err});
-    }
-  }
-);
-
 export const onSellERC1155 = createAsyncThunk(
   actionTypes.SELL_NFT,
   async function prepare({

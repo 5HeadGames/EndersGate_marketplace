@@ -22,7 +22,7 @@ const Login = () => {
   const [openForm, setOpenForm] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const {Modal, isShow, show, hide} = useModal();
-  const {authenticate, signup, login, enableWeb3, isAuthenticated} = useMoralis();
+  const {authenticate, signup, login, enableWeb3, isAuthenticated, isWeb3Enabled} = useMoralis();
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -41,11 +41,15 @@ const Login = () => {
   const handleWalletConnect = async () => {
     setLoading(true);
     try {
-      await enableWeb3({
+      const adf = await enableWeb3({
+        provider: "walletconnect",
+        chainId: 1666600000,
+      });
+      console.log({
         provider: "walletconnect",
         chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
       });
-      const user = await authenticate({
+      await authenticate({
         provider: "walletconnect",
         chainId: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
       });
@@ -108,20 +112,12 @@ const Login = () => {
       <Modal isShow={Boolean(isShow)}>
         <div className="flex flex-col items-center p-6">
           <Typography type="title" className="text-purple-400/75">
-            {`Install ${isShow === "metamask" ? "Metamask" : "Harmony"} Wallet`}
+            {`Install Metamask`}
           </Typography>
           <p className="text-purple-200/75">
             You must install{" "}
-            <a
-              href={
-                isShow === "metamask"
-                  ? "https://metamask.io/"
-                  : "https://chrome.google.com/webstore/detail/harmony-chrome-extension/fnnegphlobjdpkhecapkijjdkgcjhkib"
-              }
-              className="text-primary"
-              target="_blank"
-            >
-              {isShow === "metamask" ? "metamask" : "harmony one"}
+            <a href={"https://metamask.io/"} className="text-primary" target="_blank">
+              metamask
             </a>{" "}
             official wallet to connect through this method
           </p>

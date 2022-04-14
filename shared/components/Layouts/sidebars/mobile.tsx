@@ -1,15 +1,14 @@
-import React, { Fragment, useRef } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+import React, {Fragment, useRef} from "react";
+import {Dialog, Transition} from "@headlessui/react";
 import clsx from "clsx";
-import { XIcon } from "@heroicons/react/outline";
+import {XIcon} from "@heroicons/react/outline";
 import Link from "next/link";
-// import Image from 'next/image';
-import { useRouter } from "next/router";
-import { Icons } from "@shared/const/Icons";
-import { Typography } from "@shared/components/common/typography";
-import { Button } from "@shared/components/common/button/button";
+import {useMoralis} from "react-moralis";
+
+import {useRouter} from "next/router";
+import {Icons} from "@shared/const/Icons";
+import {Button} from "@shared/components/common/button/button";
 import ProfileDataAndActions from "@shared/components/Profile/profilePersonalData/profilePersonalData";
-import { useAppSelector } from "redux/store";
 import {
   AppstoreFilled,
   AreaChartOutlined,
@@ -34,6 +33,8 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
   initialFocus = null,
 }) => {
   const router = useRouter();
+  const {user} = useMoralis();
+  const address = user?.get("ethAddress") || "";
 
   const navItems = [
     {
@@ -44,57 +45,47 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
       items: [
         {
           title: "Marketplace",
-          description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
+          description: "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
           icon: <ShopOutlined />,
         },
         {
           title: "Marketplace",
-          description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
+          description: "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
           icon: <ShopOutlined />,
         },
         {
           title: "Marketplace",
-          description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
+          description: "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
           icon: <ShopOutlined />,
         },
         {
           title: "Marketplace",
-          description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
+          description: "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
           icon: <ShopOutlined />,
         },
         {
           title: "Marketplace",
-          description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
+          description: "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
           icon: <ShopOutlined />,
         },
         {
           title: "Marketplace",
-          description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
+          description: "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
           icon: <ShopOutlined />,
         },
       ],
     },
-    { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
-    { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
+    {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
+    {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
   ];
 
-  const { address } = useAppSelector((state) => state.user);
-
-  const [collapse, setCollapse] = React.useState(
-    new Array(navItems.length).fill(false)
-  );
+  const [collapse, setCollapse] = React.useState(new Array(navItems.length).fill(false));
 
   return (
     <>
@@ -154,11 +145,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
               <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                 <div className="flex-shrink-0 flex items-center px-4">
                   <Link href="/">
-                    <a
-                      className={clsx(
-                        "cursor-pointer flex items-center justify-center"
-                      )}
-                    >
+                    <a className={clsx("cursor-pointer flex items-center justify-center")}>
                       <img className="w-40" src={Icons.logo} alt="" />
                     </a>
                   </Link>
@@ -201,14 +188,10 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                           </p>
 
                           <div className="flex-shrink-0 text-primary flex items-center text-xl">
-                            {!collapse[index] ? (
-                              <RightOutlined />
-                            ) : (
-                              <DownOutlined />
-                            )}
+                            {!collapse[index] ? <RightOutlined /> : <DownOutlined />}
                           </div>
                         </div>
-                        <div className={clsx({ ["hidden"]: !collapse[index] })}>
+                        <div className={clsx({["hidden"]: !collapse[index]})}>
                           {item?.items?.map((subItem) => {
                             return (
                               <Link key={subItem.title} href={subItem.href}>
@@ -216,8 +199,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                                   className={clsx(
                                     "flex items-center px-3 py-4  text-base my-1 relative text-primary",
                                     {
-                                      "opacity-50":
-                                        subItem.href !== router.asPath,
+                                      "opacity-50": subItem.href !== router.asPath,
                                     }
                                   )}
                                   href="#"
