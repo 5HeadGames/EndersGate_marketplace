@@ -39,12 +39,12 @@ export const getContractMetamask = (factory: keyof typeof contracts, address: st
 };
 
 export const getContractCustom = (
-   factory: keyof typeof contracts,
-   address: string,
-   provider: Moralis.Web3Provider
+  factory: keyof typeof contracts,
+  address: string,
+  provider: any
 ) => {
-   const web3 = getWeb3(provider);
-   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
+  const web3 = getWeb3(provider);
+  return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 
 export const getBalance = async (address: string) => {
