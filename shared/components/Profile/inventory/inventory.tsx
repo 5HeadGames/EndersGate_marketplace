@@ -11,6 +11,7 @@ import cards from "../../../cards.json";
 import {getBalance} from "@shared/web3";
 import { useMoralis } from "react-moralis";
 import Link from "next/link";
+import { Images } from "@shared/const/Images";
 
 const navItems = [
   { title: "Trading Cards", value: "trading_cards" },
@@ -22,7 +23,7 @@ const Inventory = () => {
   const nfts = useAppSelector((state) => state.nfts);
   const { user } = useMoralis();
   const inventoryCards = nfts.balanceCards;
-  const inventoryPacks = nfts.balancePacks;
+  const [inventoryPacks, setInventoryPacks] = React.useState([]);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
   const [balance, setBalance] = React.useState("0");
   React.useEffect(() => {
@@ -30,6 +31,34 @@ const Inventory = () => {
       handleSetBalance();
     }
   }, [user]);
+
+  React.useEffect(() => {
+    const arrayPacks = [];
+    nfts.balancePacks.forEach((pack, index) => {
+      arrayPacks.push({
+        id: pack.id,
+        quantity: pack.balance,
+        image:
+          index === 0
+            ? Images.pack1
+            : index === 1
+            ? Images.pack2
+            : index === 2
+            ? Images.pack3
+            : Images.pack4,
+        name:
+          index === 0
+            ? "Common Pack"
+            : index === 1
+            ? "Rare Pack"
+            : index === 2
+            ? "Epic Pack"
+            : "Legendary Pack",
+      });
+    });
+    setInventoryPacks(arrayPacks);
+    console.log(arrayPacks);
+  }, [nfts]);
 
   const handleSetBalance = async () => {
     const balance = await getBalance(user.get("ethAddress"));
@@ -83,10 +112,15 @@ const Inventory = () => {
           "flex mb-10  justify-center",
           {
             [`${Styles.gray} flex-col items-center gap-6 h-72`]:
-              inventoryCards.length == 0,
+              (inventoryCards.length == 0 &&
+                columnSelected === "trading_cards") ||
+              (inventoryPacks.length == 0 && columnSelected === "packs"),
           },
           {
-            ["gap-2 flex-wrap gap-2"]: inventoryCards.length > 0,
+            ["gap-2 flex-wrap gap-2"]:
+              (inventoryCards.length > 0 &&
+                columnSelected === "trading_cards") ||
+              (inventoryPacks.length > 0 && columnSelected === "packs"),
           }
         )}
       >
@@ -105,24 +139,22 @@ const Inventory = () => {
             );
           })
         ) : inventoryPacks.length > 0 && columnSelected === "packs" ? (
-          inventoryCards.map((pack, index) => {
+          inventoryPacks.map((pack, index) => {
             return (
-              pack.balance > 0 && (
-                <Link href={`/NFTDetailID/${pack.id}`}>
+              parseInt(pack.quantity) > 0 && (
+                <Link href={`/PackDetailID/${pack.id}`}>
                   <div
                     className={clsx(
                       "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer"
                     )}
                   >
                     <div className="w-full flex flex-col text-xs gap-1">
-                      <div className="w-full flex justify-between">
-                        <span>
-                          Pack #{pack.id !== undefined ? pack.id : "12345"}
-                        </span>
+                      <div className="w-full flex justify-end">
+                        <span>X{pack.quantity}</span>
                       </div>
                     </div>
                     <div className="w-full h-36 flex justify-center items-center my-4">
-                      <img src={pack.icon} className={"h-36"} />
+                      <img src={pack.image} className={"h-36"} />
                     </div>
                     <div className="flex flex-col text-sm text-center">
                       <span>{pack.name}</span>

@@ -67,10 +67,11 @@ export const approveERC1155 = async ({
   provider,
   from,
   to,
+  address,
 }: {
   provider: any;
   from: string;
-      to: string;
+  to: string;
   address: string;
 }) => {
   const erc1155Contract = getContractCustom("ERC1155", address, provider);

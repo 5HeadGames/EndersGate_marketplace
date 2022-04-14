@@ -11,8 +11,10 @@ import { Icons } from "@shared/const/Icons";
 import { getAddresses } from "@shared/web3";
 import { Typography } from "../common/typography";
 import cards from "../../cards.json";
+import packs from "../../packs.json";
 import { useModal } from "@shared/hooks/modal";
 import { approveERC1155 } from "@shared/web3";
+import { Images } from "@shared/const/Images";
 
 const { marketplace } = getAddresses();
 
@@ -41,6 +43,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     const tokenId = id;
     setMessage("Allowing us to sell your packs");
     const { pack } = getAddresses();
+    console.log(pack, "pack");
     await approveERC1155({
       provider: web3,
       from: user.get("ethAddress"),
@@ -79,7 +82,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           <h2 className="font-bold text-primary text-center">Sell NFT</h2>
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
             <label className="text-primary font-medium">
-              Starting price for each NFT (ONE)
+              Starting price for each Pack (ONE)
             </label>
             <input
               type="number"
@@ -92,7 +95,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
             />
           </div>
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
-            <label className="text-primary font-medium">Amount of NFTs</label>
+            <label className="text-primary font-medium">Amount of Packs</label>
             <input
               type="number"
               className="bg-overlay text-primary text-center"
@@ -134,7 +137,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               size="small"
               onClick={sellNft}
             >
-              List NFT/s
+              List Pack/s
             </Button>
           </div>
         </div>
@@ -151,14 +154,14 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                 Back
               </div>
               <Typography type="title" className="text-primary">
-                Card #{id}
+                Pack #{id}
               </Typography>
               {/* <Typography type="title" className="text-primary">
                 Transaction #{id}
               </Typography> */}
             </div>
             <div className="flex gap-2 items-start sm:mt-0 mt-4 sm:justify-end justify-between">
-              {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && (
+              {NFTs.balancePacks[id] && NFTs.balancePacks[id].balance && (
                 <Button
                   decoration="fillPrimary"
                   className="degradated hover:text-white border-none"
@@ -179,7 +182,15 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
             <div className="flex relative justify-center md:w-1/2 xl:px-24">
               <div className="sm:sticky sm:top-32 h-min w-72">
                 <img
-                  src={cards.All[id].properties.image?.value || Icons.logo}
+                  src={
+                    id === 0
+                      ? Images.pack1
+                      : id === 1
+                      ? Images.pack2
+                      : id === 2
+                      ? Images.pack3
+                      : Images.pack4
+                  }
                   className="w-72"
                   alt=""
                 />
@@ -203,41 +214,9 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                         type="subTitle"
                         className="text-primary opacity-75"
                       >
-                        {cards.All[id].properties.name?.value}
+                        {packs[id].properties.name.value}
                       </Typography>
                     </div>
-                    {cards.All[id].properties.type?.value && (
-                      <div className="flex flex-col">
-                        <Typography
-                          type="subTitle"
-                          className="text-white font-bold"
-                        >
-                          TYPE
-                        </Typography>
-                        <Typography
-                          type="subTitle"
-                          className="text-primary opacity-75"
-                        >
-                          {cards.All[id].properties.type?.value}
-                        </Typography>
-                      </div>
-                    )}
-                    {cards.All[id].properties.rarity?.value && (
-                      <div className="flex flex-col">
-                        <Typography
-                          type="subTitle"
-                          className="text-white font-bold"
-                        >
-                          RARITY
-                        </Typography>
-                        <Typography
-                          type="subTitle"
-                          className="text-primary opacity-75"
-                        >
-                          {cards.All[id].properties.rarity?.value}
-                        </Typography>
-                      </div>
-                    )}
                   </div>
                   <div>
                     <div className="flex flex-col">
@@ -251,11 +230,11 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                         type="subTitle"
                         className="text-primary opacity-75"
                       >
-                        {cards.All[id].properties.description?.value}
+                        {packs[id].properties.description.value}
                       </Typography>
                     </div>
                   </div>
-                  {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && (
+                  {NFTs.balancePacks[id] && NFTs.balancePacks[id].balance && (
                     <div>
                       <div className="flex flex-col">
                         <Typography
@@ -268,7 +247,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                           type="subTitle"
                           className="text-primary opacity-75"
                         >
-                          {NFTs.balanceCards[id].balance}
+                          {NFTs.balancePacks[id].balance}
                         </Typography>
                       </div>
                     </div>

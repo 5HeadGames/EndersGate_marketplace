@@ -29,10 +29,12 @@ const ProfileDataAndActions = () => {
   const {register, handleSubmit} = useForm();
   const {logout, user, setUserData} = useMoralis();
   const {saveFile} = useMoralisFile();
-  const profileImage = user.get("profileImage") ? user.get("profileImage").url() : Icons.logo;
+  const profileImage = user?.get("profileImage")
+    ? user.get("profileImage").url()
+    : Icons.logo;
 
   const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
-    setDisabled((prev) => ({...prev, [field]: value}));
+    setDisabled((prev) => ({ ...prev, [field]: value }));
   };
 
   const onSubmit = async (values: any) => {
@@ -45,7 +47,9 @@ const ProfileDataAndActions = () => {
       });
     }
     await setUserData(
-      moralisFile ? {profileImage: moralisFile, name: values.name} : {name: values.name}
+      moralisFile
+        ? { profileImage: moralisFile, name: values.name }
+        : { name: values.name }
     );
     toggleForm(false);
   };
@@ -58,7 +62,7 @@ const ProfileDataAndActions = () => {
   };
 
   const links = [
-    {href: "/profile", label: "Account", icon: <IdcardOutlined />},
+    { href: "/profile", label: "Account", icon: <IdcardOutlined /> },
     {
       href: "/profile/inventory",
       label: "Inventory",
@@ -93,7 +97,9 @@ const ProfileDataAndActions = () => {
             className="flex flex-col items-center w-full"
           >
             <input
-              onChange={(e: React.ChangeEvent<any>) => setImage(e.target.files[0])}
+              onChange={(e: React.ChangeEvent<any>) =>
+                setImage(e.target.files[0])
+              }
               type="file"
               accept="image/*"
               id="profile_picture"
@@ -117,9 +123,14 @@ const ProfileDataAndActions = () => {
               register={register}
               name="name"
               placeholder="Nickname"
-              defaultValue={user.get("name")}
+              defaultValue={user?.get("name")}
             />
-            <Button decoration="fillPrimary" size="small" type="submit" className="mt-4">
+            <Button
+              decoration="fillPrimary"
+              size="small"
+              type="submit"
+              className="mt-4"
+            >
               Save
             </Button>
           </form>
@@ -132,7 +143,10 @@ const ProfileDataAndActions = () => {
         )}
       >
         <img src={profileImage} className="h-16 w-16 rounded-full" alt="" />
-        <Typography type="title" className="text-primary flex items-center mt-2">
+        <Typography
+          type="title"
+          className="text-primary flex items-center mt-2"
+        >
           {user.get("name")}
         </Typography>
         <div

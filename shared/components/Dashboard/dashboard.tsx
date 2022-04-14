@@ -21,6 +21,7 @@ const DashboardComponent = () => {
     console.log(getAddresses());
     if (nfts) {
       setRecentlyListed(nfts.saleCreated);
+      console.log(nfts.saleCreated);
       setRecentlySold(nfts.saleSuccessfull);
       setTransactionsBoard({
         totalSale: nfts.totalSales,
@@ -61,7 +62,7 @@ const DashboardComponent = () => {
   }, [listedSelected, soldSelected]);
 
   return (
-    <div className="w-full flex flex-col md:px-16 pt-36 h-full px-4">
+    <div className="w-full flex flex-col md:px-16 pt-36 min-h-screen bg-overlay px-4">
       <TransactionsBoard
         totalSale={transactionsBoard.totalSale}
         totalVolume={transactionsBoard.totalVolume}
