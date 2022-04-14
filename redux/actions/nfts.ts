@@ -4,6 +4,7 @@ import Web3 from "web3";
 import * as actionTypes from "../constants";
 import {getAddresses, getContract} from "@shared/web3";
 import cards from "../../cards.json";
+import Address from "@shared/components/Address/Address";
 
 const getCardSold = (successfulSales: Sale[]) => {
   return successfulSales.reduce(
@@ -74,30 +75,34 @@ export const onLoadSale = createAsyncThunk(
 export const onGetAssets = createAsyncThunk(
   actionTypes.GET_ASSETS,
   async function prepare(address: string) {
-    const {endersGate, pack} = getAddresses();
-    const cardsContract = getContract("ERC1155", endersGate);
-    const packsContract = getContract("ERC1155", pack);
-    const packsIds = [0, 1, 2, 3];
-    const cardsIds = Object.values(cards)
-      .reduce((acc: any[], cur) => acc.concat(cur), [])
-      .map((card) => card.properties.id.value);
+    try {
+      const {endersGate, pack} = getAddresses();
+      const cardsContract = getContract("ERC1155", endersGate);
+      const packsContract = getContract("ERC1155", pack);
+      const packsIds = [0, 1, 2, 3];
+      const cardsIds = Object.values(cards)
+        .reduce((acc: any[], cur) => acc.concat(cur), [])
+        .map((card) => card.properties.id.value);
 
-    const balancePacks = await packsContract.methods
-      .balanceOfBatch(
-        packsIds.map(() => address),
-        packsIds
-      )
-      .call();
-    const balanceCards = await cardsContract.methods
-      .balanceOfBatch(
-        cardsIds.map(() => address),
-        cardsIds
-      )
-      .call();
+      const balancePacks = await packsContract.methods
+        .balanceOfBatch(
+          packsIds.map(() => address),
+          packsIds
+        )
+        .call();
+      const balanceCards = await cardsContract.methods
+        .balanceOfBatch(
+          cardsIds.map(() => address),
+          cardsIds
+        )
+        .call();
 
-    return {
-      balanceCards: cardsIds.map((id, i) => ({id, balance: balanceCards[i]})),
-      balancePacks: packsIds.map((id, i) => ({id, balance: balancePacks[i]})),
-    };
+      return {
+        balanceCards: cardsIds.map((id, i) => ({id, balance: balanceCards[i]})),
+        balancePacks: packsIds.map((id, i) => ({id, balance: balancePacks[i]})),
+      };
+    } catch (err) {
+      console.log({err});
+    }
   }
 );
