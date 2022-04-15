@@ -75,14 +75,16 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
             </div>
           </td>
           <td className="py-4">
-            <div className="flex flex-col items-center">
-              <Typography type="caption" className="text-white text-center font-bold mt-1">
-                Type
-              </Typography>
-              <Typography type="caption" className="text-white mt-1">
-                {cards.All[sale.nftId].properties.type?.value}
-              </Typography>
-            </div>
+            {!pack && (
+              <div className="flex flex-col items-center">
+                <Typography type="caption" className="text-white text-center font-bold mt-1">
+                  Type
+                </Typography>
+                <Typography type="caption" className="text-white mt-1">
+                  {cards.All[sale.nftId].properties.type?.value}
+                </Typography>
+              </div>
+            )}
           </td>
           <td className="py-4">
             <div className="flex flex-col items-end pr-2">

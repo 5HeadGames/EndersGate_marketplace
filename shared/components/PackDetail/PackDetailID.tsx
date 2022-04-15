@@ -16,11 +16,9 @@ import { useModal } from "@shared/hooks/modal";
 import { approveERC1155 } from "@shared/web3";
 import { Images } from "@shared/const/Images";
 
-const { marketplace } = getAddresses();
 
 const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
-  const { user } = useMoralis();
-  const { web3 } = useMoralis();
+  const { user, Moralis, web3 } = useMoralis();
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -42,26 +40,25 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     }
     const tokenId = id;
     setMessage("Allowing us to sell your packs");
-    const { pack } = getAddresses();
-    console.log(pack, "pack");
+    const { pack, marketplace } = getAddresses();
+    const userAddress = user.get("ethAddress");
+    console.log("marketplace", marketplace);
     await approveERC1155({
       provider: web3,
-      from: user.get("ethAddress"),
+      from: userAddress,
       to: marketplace,
       address: pack,
     });
     setMessage("Listing your packs");
     await dispatch(
       onSellERC1155({
-        walletType: "metamask",
-        tx: {
-          address: pack,
-          from: user.get("ethAddress"),
-          startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
-          amount: sellNFTData.amount,
-          tokenId: tokenId,
-          duration: "1",
-        },
+        address: pack,
+        from: userAddress,
+        startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
+        amount: sellNFTData.amount,
+        tokenId: tokenId,
+        duration: (3600 * 24 * 30).toString(),
+        moralis: Moralis,
       })
     );
     await dispatch(onLoadSales());
@@ -183,11 +180,11 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               <div className="sm:sticky sm:top-32 h-min w-72">
                 <img
                   src={
-                    id === 0
+                    id == 0
                       ? Images.pack1
-                      : id === 1
+                      : id == 1
                       ? Images.pack2
-                      : id === 2
+                      : id == 2
                       ? Images.pack3
                       : Images.pack4
                   }
