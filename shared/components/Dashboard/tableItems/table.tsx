@@ -6,7 +6,7 @@ import ItemListed from "./items/itemListed";
 const navItems = [
   { title: "Trading Cards", value: "trading_cards" },
   { title: "Packs", value: "packs" },
-  { title: "Comics", value: "comics" },
+  // { title: "Comics", value: "comics" },
 ];
 
 interface Props {

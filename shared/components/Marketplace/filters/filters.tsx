@@ -193,11 +193,11 @@ const FiltersBoard = ({ filter, setFilter, type, setType }) => {
   return (
     <div className="xl:w-1/3 w-full flex flex-col">
       <div className="flex rounded-md border-2 border-primary mb-4 sm:flex-row flex-col">
-        {["trading_cards", "packs", "comics"].map((nftType, index) => (
+        {["trading_cards", "packs"].map((nftType, index) => (
           <div
             className={clsx(
               {
-                "bg-primary": type === nftType,
+                "bg-primary text-white": type === nftType,
               },
               "cursor-pointer px-0 py-2 flex-1",
               index !== 2 &&
@@ -210,10 +210,10 @@ const FiltersBoard = ({ filter, setFilter, type, setType }) => {
               className={clsx(
                 "text-center",
                 {
-                  "text-white": filter[nftType],
+                  "text-white": type === nftType,
                 },
                 {
-                  "text-primary": !filter[nftType],
+                  "text-primary": type !== nftType,
                 }
               )}
             >

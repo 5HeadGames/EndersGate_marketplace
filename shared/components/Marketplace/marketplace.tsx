@@ -16,12 +16,15 @@ import { Typography } from "../common/typography";
 import { getAddresses, getContract } from "@shared/web3";
 import { onLoadSales } from "@redux/actions";
 import cards from "../../cards.json";
-import { useAppDispatch } from "@redux/store";
+import packs from "../../packs.json";
+import { useAppDispatch, useAppSelector } from "@redux/store";
+import Link from "next/link";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("recently_listed");
   const [type, setType] = React.useState("trading_cards");
   const [sales, setSales] = React.useState([]);
+  const { nfts } = useAppSelector((state) => state);
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -37,25 +40,84 @@ const MarketplaceComponent = () => {
     getSales(currentOrder);
   }, [currentOrder]);
 
-  React.useEffect(() => {
-    console.log("sales", sales);
-  }, [sales]);
+  React.useEffect(() => {}, [sales]);
 
   const getSales = async (currentOrder: string) => {
-    const sales = await dispatch(onLoadSales());
-    console.log((sales as any).payload?.saleCreated);
+    const { endersGate, pack } = getAddresses();
+    const cardSalesCreated = [];
+    const packSalesCreated = [];
+    nfts.saleCreated.forEach((sale) => {
+      if (sale.nft == endersGate) {
+        cardSalesCreated.push(sale);
+      } else if (sale.nft == pack) {
+        packSalesCreated.push(sale);
+      }
+    });
 
     if (currentOrder === "recently_listed") {
-      const salesCreated: any[] = [...(sales as any).payload?.saleCreated];
-      setSales(salesCreated.reverse());
+      switch (type) {
+        case "trading_cards":
+          setSales(cardSalesCreated.reverse());
+          break;
+        case "packs":
+          setSales(packSalesCreated.reverse());
+          break;
+        default:
+          setSales(nfts.saleCreated.reverse());
+          break;
+      }
+      // const salesCreated: any[] = [...cardSalesCreated];
+      // setSales(salesCreated.reverse());
     } else if (currentOrder === "older_listed") {
-      const salesCreated: any[] = (sales as any).payload?.saleCreated;
-      setSales(salesCreated);
+      switch (type) {
+        case "trading_cards":
+          setSales(cardSalesCreated);
+          break;
+        case "packs":
+          setSales(packSalesCreated);
+          break;
+        default:
+          setSales(nfts.saleCreated);
+          break;
+      }
     } else {
-      const salesCreated: any[] = [...(sales as any).payload?.saleCreated];
-      setSales(salesCreated.reverse());
+      switch (type) {
+        case "trading_cards":
+          setSales(cardSalesCreated);
+          break;
+        case "packs":
+          setSales(packSalesCreated);
+          break;
+        default:
+          setSales(nfts.saleCreated);
+          break;
+      }
     }
   };
+
+  React.useEffect(() => {
+    const cardSalesCreated = [];
+    const packSalesCreated = [];
+    const { endersGate, pack } = getAddresses();
+    nfts.saleCreated.forEach((sale) => {
+      if (sale.nft == endersGate) {
+        cardSalesCreated.push(sale);
+      } else if (sale.nft == pack) {
+        packSalesCreated.push(sale);
+      }
+    });
+    switch (type) {
+      case "trading_cards":
+        setSales(cardSalesCreated);
+        break;
+      case "packs":
+        setSales(packSalesCreated);
+        break;
+      default:
+        setSales(nfts.saleCreated);
+        break;
+    }
+  }, [type]);
 
   const [filter, setFilter] = React.useState({
     avatar: false,
@@ -177,7 +239,7 @@ const MarketplaceComponent = () => {
             {sales?.map((a, id) => {
               // if(passFilter(a.nftId)){
               console.log(a);
-              return (
+              return type !== "packs" ? (
                 passFilter(a.nftId) && (
                   <NftCard
                     classes={{ root: "m-4 cursor-pointer" }}
@@ -188,6 +250,30 @@ const MarketplaceComponent = () => {
                     byId={false}
                   />
                 )
+              ) : (
+                <Link href={`/NFTDetailSale/${a.id}`}>
+                  <div
+                    className={clsx(
+                      "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer m-4 cursor-pointer"
+                    )}
+                  >
+                    <div className="w-full flex flex-col text-xs gap-1">
+                      <div className="w-full flex justify-between">
+                        <span>Pack{a.nftId}</span>
+                        <span>#{a.id}</span>
+                      </div>
+                    </div>
+                    <div className="w-full h-36 flex justify-center items-center my-4">
+                      <img
+                        src={packs[a.nftId]?.properties?.image?.value}
+                        className={"h-36"}
+                      />
+                    </div>
+                    <div className="flex flex-col text-sm text-center">
+                      <span>{a.name}</span>
+                    </div>
+                  </div>
+                </Link>
               );
             })}
           </div>

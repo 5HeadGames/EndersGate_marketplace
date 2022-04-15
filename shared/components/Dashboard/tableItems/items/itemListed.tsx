@@ -50,7 +50,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
               <img
                 src={
                   pack
-                    ? packs[sale.nftId].properties.image?.value
+                    ? packs[sale.nftId]?.properties?.image?.value
                     : cards.All[sale.nftId].properties.image?.value
                 }
                 className={"h-12 w-8"}

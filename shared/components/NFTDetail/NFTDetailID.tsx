@@ -38,6 +38,9 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
       return alert("You don't have enough tokens to sell");
     }
+    if (sellNFTData.duration <= 3600 * 24) {
+      return alert("You have to put a end date higher than 1 day");
+    }
     const tokenId = id;
     setMessage("Allowing us to sell your tokens");
     const { endersGate } = getAddresses();
@@ -104,14 +107,23 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
             <label className="text-primary font-medium">End Date</label>
             <input
-              type="number"
+              type="date"
               className="bg-overlay text-primary text-center"
               onChange={(e) => {
-                const date = new Date(e.target.value);
-                console.log(e.target.value, date);
-                // setSellNFTData((prev: any) => {
-                //   return { ...prev, duration: };
-                // });
+                const date = new Date(e.target.value + " 00:00");
+                console.log(
+                  e.target.value,
+                  Math.floor(date.getTime() / 1000),
+                  Math.floor(new Date().getTime() / 1000)
+                );
+                setSellNFTData((prev: any) => {
+                  return {
+                    ...prev,
+                    duration:
+                      Math.floor(date.getTime() / 1000) -
+                      Math.floor(new Date().getTime() / 1000),
+                  };
+                });
               }}
             />
           </div>
