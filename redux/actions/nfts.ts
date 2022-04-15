@@ -144,18 +144,14 @@ export const onSellERC1155 = createAsyncThunk(
 
 export const onBuyERC1155 = createAsyncThunk(
   actionTypes.BUY_NFT,
-  async function prepare({
-    walletType,
-    tx,
-  }: {
-    walletType: User["walletType"];
-    tx: {
-      from: string;
-      tokenId: number | string;
-      bid: string | number;
-      amount: string | number;
-    };
+  async function prepare(args: {
+    from: string;
+    tokenId: number | string;
+    bid: string | number;
+    amount: string | number;
+    moralis: Moralis;
   }) {
+    const {from, tokenId, amount, bid, moralis} = args;
     const {marketplace, erc1155} = getAddresses();
   }
 );
