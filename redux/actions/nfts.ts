@@ -128,7 +128,7 @@ export const onSellERC1155 = createAsyncThunk(
 
     relation.add(sale);
 
-    const {marketplace} = getAddresses();
+    const { marketplace } = getAddresses();
     const marketplaceContract = getContractCustom("ClockSale", marketplace, provider);
     await marketplaceContract.methods
       .createSale(address, tokenId, startingPrice, amount, duration)

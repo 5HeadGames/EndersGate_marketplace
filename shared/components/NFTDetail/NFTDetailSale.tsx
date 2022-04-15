@@ -142,7 +142,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 {isPack ? `Pack #${sale?.nftId}` : `Card #${sale?.nftId}`}
               </Typography>
               <Typography type="title" className="text-primary">
-                Transaction #{id}
+                Sale #{id}
               </Typography>
             </div>
             <div className="flex gap-2 items-center sm:mt-0 mt-4 sm:justify-end justify-between">
