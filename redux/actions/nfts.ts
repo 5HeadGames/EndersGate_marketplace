@@ -3,7 +3,7 @@ import Web3 from "web3";
 import Moralis from "moralis";
 
 import * as actionTypes from "../constants";
-import {getAddresses, getContract, getContractCustom, createSale} from "@shared/web3";
+import {getAddresses, getContract, getContractCustom, createEvent} from "@shared/web3";
 import cards from "../../cards.json";
 import Address from "@shared/components/Address/Address";
 
@@ -122,11 +122,13 @@ export const onSellERC1155 = createAsyncThunk(
     const {from, tokenId, startingPrice, amount, duration, address, moralis} = args;
     const provider = moralis.web3;
     const user = Moralis.User.current();
-    const relation = user.relation("sales");
-    const sale = createSale(args);
-    await sale.save();
-
-    relation.add(sale);
+    const relation = user.relation("events");
+    const event = createEvent({
+      type: "sell",
+      metadata: {from, tokenId, startingPrice, amount, duration, address},
+    });
+    await event.save();
+    relation.add(event);
 
     const {marketplace} = getAddresses();
     const marketplaceContract = getContractCustom("ClockSale", marketplace, provider);
@@ -136,7 +138,7 @@ export const onSellERC1155 = createAsyncThunk(
 
     await user.save();
 
-    return args;
+    return {from, tokenId, startingPrice, amount, duration, address};
   }
 );
 
