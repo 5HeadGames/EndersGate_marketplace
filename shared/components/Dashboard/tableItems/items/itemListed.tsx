@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useAppDispatch } from "@redux/store";
 import { onLoadSale } from "@redux/actions";
 import cards from "../../../../cards.json";
+import packs from "../../../../packs.json";
 import Web3 from "web3";
 
 interface Props {
@@ -18,10 +19,11 @@ interface Props {
   seller?: string;
   buyer?: string;
   amount?: string;
+  pack?: boolean;
 }
 
 const ItemListed: React.FunctionComponent<Props> = (props) => {
-  const { id, type, seller, buyer, amount } = props;
+  const { id, type, seller, buyer, amount, pack } = props;
 
   const [sale, setSale] = React.useState<any>();
 
@@ -46,8 +48,12 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
           <td className="py-4 pl-4">
             <div className="flex items-center gap-x-2">
               <img
-                src={cards.All[sale.nftId].properties.image?.value}
-                className="h-10 w-8"
+                src={
+                  pack
+                    ? packs[sale.nftId].properties.image?.value
+                    : cards.All[sale.nftId].properties.image?.value
+                }
+                className={"h-12 w-8"}
                 alt=""
               />
               <div className="flex flex-col items-center gap-4">

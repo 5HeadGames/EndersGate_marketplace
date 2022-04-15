@@ -12,6 +12,7 @@ import { AddressText } from "../common/specialFields/SpecialFields";
 import { getAddresses } from "@shared/web3";
 import { Typography } from "../common/typography";
 import cards from "../../cards.json";
+import packs from "../../packs.json";
 import { TimeConverter } from "../common/unixDateConverter/unixConverter";
 import { useModal } from "@shared/hooks/modal";
 
@@ -21,6 +22,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const [sale, setSale] = React.useState<any>();
   const [buyNFTData, setBuyNFTData] = React.useState(0);
   const { Modal, show, hide, isShow } = useModal();
+  const [isPack, setIsPack] = React.useState(false);
   const { isAuthenticated } = useMoralis();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -34,6 +36,13 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const getSale = async () => {
     const sale = await dispatch(onLoadSale(id));
     setSale(sale.payload);
+    const { pack } = getAddresses();
+    console.log(sale.payload);
+    if (sale.payload.nft === pack) {
+      setIsPack(true);
+    } else {
+      setIsPack(false);
+    }
   };
 
   const buyNft = async () => {
@@ -130,7 +139,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 Back
               </div>
               <Typography type="title" className="text-primary">
-                Card #{sale?.nftId}
+                {isPack ? `Pack #${sale?.nftId}` : `Card #${sale?.nftId}`}
               </Typography>
               <Typography type="title" className="text-primary">
                 Transaction #{id}
@@ -141,11 +150,11 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 <div className="text-primary font-bold flex items-center gap-2">
                   <MenuOutlined />
                   <Typography type="title">
-                    {Web3.utils.fromWei(sale.price, "ether")}
+                    {Web3.utils.fromWei(sale.price, "ether")} ONE
                   </Typography>
-                  <Typography type="subTitle" className="text-white">
+                  {/* <Typography type="subTitle" className="text-white">
                     $116.15
-                  </Typography>
+                  </Typography> */}
                 </div>
 
                 <Typography type="subTitle" className="text-white">
@@ -170,7 +179,10 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
               <div className="sm:sticky sm:top-32 h-min w-72">
                 <img
                   src={
-                    cards.All[sale.nftId].properties.image?.value || Icons.logo
+                    isPack
+                      ? packs[sale.nftId].properties.image.value
+                      : cards.All[sale.nftId].properties.image?.value ||
+                        Icons.logo
                   }
                   className="w-72"
                   alt=""
@@ -195,10 +207,12 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         type="subTitle"
                         className="text-primary opacity-75"
                       >
-                        {cards.All[sale.nftId].properties.name?.value}
+                        {isPack
+                          ? packs[sale.nftId].properties.name.value
+                          : cards.All[sale.nftId].properties.name?.value}
                       </Typography>
                     </div>
-                    {cards.All[sale.nftId].properties.type?.value && (
+                    {!isPack && cards.All[sale.nftId].properties.type?.value && (
                       <div className="flex flex-col">
                         <Typography
                           type="subTitle"
@@ -214,7 +228,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         </Typography>
                       </div>
                     )}
-                    {cards.All[sale.nftId].properties.rarity?.value && (
+                    {!isPack && cards.All[sale.nftId].properties.rarity?.value && (
                       <div className="flex flex-col">
                         <Typography
                           type="subTitle"
@@ -243,7 +257,9 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         type="subTitle"
                         className="text-primary opacity-75"
                       >
-                        {cards.All[sale.nftId].properties.description?.value}
+                        {isPack
+                          ? packs[sale.nftId].properties.description.value
+                          : cards.All[sale.nftId].properties.description?.value}
                       </Typography>
                     </div>
                   </div>
@@ -274,7 +290,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         type="subTitle"
                         className="text-white font-bold"
                       >
-                        AMOUNT OF CARDS AVAILABLE
+                        AMOUNT OF {isPack ? "PACKS" : "CARDS"} AVAILABLE
                       </Typography>
                       <Typography
                         type="subTitle"

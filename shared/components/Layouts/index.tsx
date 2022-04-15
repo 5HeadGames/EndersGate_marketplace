@@ -29,13 +29,13 @@ const styles = {
     fontFamily: "Roboto, sans-serif",
     color: "#041836",
   },
-  headerRight: {
-    display: "flex",
-    gap: "20px",
-    alignItems: "center",
-    fontSize: "15px",
-    fontWeight: "600",
-  },
+  // headerRight: {
+  //   display: "flex",
+  //   gap: "20px",
+  //   alignItems: "center",
+  //   fontSize: "15px",
+  //   fontWeight: "600",
+  // },
 };
 
 const navItems = [
@@ -47,47 +47,53 @@ const navItems = [
     items: [
       {
         title: "Enders Gate Website",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: <ShopOutlined />,
       },
       {
         title: "Enders Gate Discord",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: <ShopOutlined />,
       },
       {
         title: "Enders Gate Twitter",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: <TwitterOutlined />,
       },
       {
         title: "Harmony Block Explorer",
-        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description:
+          "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
         icon: <WalletOutlined />,
       },
       {
         title: "Harmony Wallet",
-        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description:
+          "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
         icon: <WalletOutlined />,
       },
       {
         title: "Harmony Bridge",
-        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description:
+          "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
         icon: <WalletOutlined />,
       },
     ],
   },
-  {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
-  {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
+  { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
+  { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
 ];
 
-export default function AppLayout({children}) {
+export default function AppLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
   const [isExecuted, setIsExecuted] = React.useState(false);
@@ -99,7 +105,7 @@ export default function AppLayout({children}) {
     ...state.layout,
   }));
   const router = useRouter();
-  const {authenticate, isAuthenticated, user} = useMoralis();
+  const { authenticate, isAuthenticated, user } = useMoralis();
 
   const chainChangedHandler = async () => {
     // window.location.reload();
@@ -123,7 +129,11 @@ export default function AppLayout({children}) {
     await dispatch(onGetAssets((window as any).ethereum.selectedAddress));
     if (!web3) return;
   };
-  if (typeof window !== "undefined" && (window as any).ethereum?.isConnected() && !isExecuted) {
+  if (
+    typeof window !== "undefined" &&
+    (window as any).ethereum?.isConnected() &&
+    !isExecuted
+  ) {
     (window as any).ethereum.on("accountsChanged", accountChangedHandler);
     (window as any).ethereum.on("chainChanged", chainChangedHandler);
     setIsExecuted(true);
@@ -149,12 +159,12 @@ export default function AppLayout({children}) {
     <Layout
       style={{
         height: "100vh",
-        overflow: "auto",
+        // overflow: "auto",
         ...(blur
           ? {
-            filter: "blur(8px)",
-            "-webkit-filter": "blur(8px)",
-          }
+              filter: "blur(8px)",
+              "-webkit-filter": "blur(8px)",
+            }
           : {}),
       }}
     >
@@ -208,7 +218,10 @@ export default function AppLayout({children}) {
             setSidebarOpen(true);
           }}
         >
-          <MenuIcon className="h-6 w-6 text-primary cursor-pointer" aria-hidden="true" />
+          <MenuIcon
+            className="h-6 w-6 text-primary cursor-pointer"
+            aria-hidden="true"
+          />
         </div>
       </nav>
       <SidebarMobile

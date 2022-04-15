@@ -18,11 +18,29 @@ const DashboardComponent = () => {
   const { nfts } = useAppSelector((state) => state);
 
   React.useEffect(() => {
-    console.log(getAddresses());
+    const { endersGate, pack } = getAddresses();
     if (nfts) {
-      setRecentlyListed(nfts.saleCreated);
-      console.log(nfts.saleCreated);
-      setRecentlySold(nfts.saleSuccessfull);
+      const cardSalesCreated = [];
+      const packSalesCreated = [];
+      nfts.saleCreated.forEach((sale) => {
+        if (sale.nft == endersGate) {
+          cardSalesCreated.push(sale);
+        } else if (sale.nft == pack) {
+          packSalesCreated.push(sale);
+        }
+      });
+      setRecentlyListed(cardSalesCreated);
+
+      const cardSalesSold = [];
+      const packSalesSold = [];
+      nfts.saleSuccessfull.forEach((sale) => {
+        if (sale.nft == endersGate) {
+          cardSalesSold.push(sale);
+        } else if (sale.nft == pack) {
+          packSalesSold.push(sale);
+        }
+      });
+      setRecentlySold(cardSalesSold);
       setTransactionsBoard({
         totalSale: nfts.totalSales,
         totalVolume:
@@ -39,24 +57,44 @@ const DashboardComponent = () => {
   }, [nfts]);
 
   React.useEffect(() => {
+    const cardSalesCreated = [];
+    const packSalesCreated = [];
+    const { endersGate, pack } = getAddresses();
+    nfts.saleCreated.forEach((sale) => {
+      if (sale.nft == endersGate) {
+        cardSalesCreated.push(sale);
+      } else if (sale.nft == pack) {
+        packSalesCreated.push(sale);
+      }
+    });
     switch (listedSelected) {
       case "trading_cards":
-        setRecentlyListed(nfts.saleCreated);
+        setRecentlyListed(cardSalesCreated);
         break;
-      // case "packs":
-      //   setRecentlyListed(nfts.saleCreated);
-      //   break;
+      case "packs":
+        setRecentlyListed(packSalesCreated);
+        break;
       default:
         setRecentlyListed(nfts.saleCreated);
         break;
     }
 
+    const cardSalesSold = [];
+    const packSalesSold = [];
+    nfts.saleSuccessfull.forEach((sale) => {
+      if (sale.nft == endersGate) {
+        cardSalesSold.push(sale);
+      } else if (sale.nft == pack) {
+        packSalesSold.push(sale);
+      }
+    });
+
     switch (soldSelected) {
       case "trading_cards":
-        setRecentlySold(nfts.saleSuccessfull);
+        setRecentlySold(cardSalesSold);
         break;
       default:
-        setRecentlyListed(nfts.saleCreated);
+        setRecentlySold(packSalesSold);
         break;
     }
   }, [listedSelected, soldSelected]);
@@ -74,12 +112,14 @@ const DashboardComponent = () => {
           data={recentlyListed}
           columnSelected={listedSelected}
           setColumnSelected={setListedSelected}
+          pack={listedSelected === "packs"}
         />
         <Table
           title="Recently Sold"
           data={recentlySold}
           columnSelected={soldSelected}
           setColumnSelected={setSoldSelected}
+          pack={soldSelected === "packs"}
         />
       </div>
     </div>

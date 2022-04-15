@@ -13,6 +13,7 @@ interface Props {
   title: string;
   data: (Record<string, string> & { render: React.FunctionComponent<any> })[];
   columnSelected: string;
+  pack: boolean;
   setColumnSelected: (arg1: string) => void;
 }
 
@@ -21,6 +22,7 @@ const Table: React.FunctionComponent<Props> = ({
   data,
   columnSelected,
   setColumnSelected,
+  pack,
 }) => {
   return (
     <div className="w-full flex flex-col">
@@ -63,6 +65,7 @@ const Table: React.FunctionComponent<Props> = ({
                       id={item.id}
                       type={title}
                       seller={item.seller}
+                      pack={pack}
                     ></ItemListed>
                   ) : (
                     <ItemListed
@@ -70,6 +73,7 @@ const Table: React.FunctionComponent<Props> = ({
                       type={title}
                       amount={item.amount}
                       buyer={item.buyer}
+                      pack={pack}
                     ></ItemListed>
                   )
                 )}
