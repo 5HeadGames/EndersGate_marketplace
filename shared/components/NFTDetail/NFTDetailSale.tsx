@@ -5,25 +5,25 @@ import Web3 from "web3";
 import {useMoralis} from "react-moralis";
 
 import {useAppDispatch, useAppSelector} from "redux/store";
-import { onBuyERC1155, onLoadSale } from "@redux/actions";
-import { Button } from "../common/button/button";
-import { Icons } from "@shared/const/Icons";
-import { AddressText } from "../common/specialFields/SpecialFields";
-import { getAddresses } from "@shared/web3";
-import { Typography } from "../common/typography";
+import {onBuyERC1155} from "@redux/actions";
+import {Button} from "../common/button/button";
+import {Icons} from "@shared/const/Icons";
+import {AddressText} from "../common/specialFields/SpecialFields";
+import {getAddresses, loadSale} from "@shared/web3";
+import {Typography} from "../common/typography";
 import cards from "../../cards.json";
 import packs from "../../packs.json";
-import { TimeConverter } from "../common/unixDateConverter/unixConverter";
-import { useModal } from "@shared/hooks/modal";
+import {TimeConverter} from "../common/unixDateConverter/unixConverter";
+import {useModal} from "@shared/hooks/modal";
 
-const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
-  const { user } = useMoralis();
-  // const NFTs = useAppSelector((state) => state.nfts);
-  const [sale, setSale] = React.useState<any>();
+const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
+  const {user, Moralis, isWeb3Enabled} = useMoralis();
+  const [sale, setSale] = React.useState<Awaited<ReturnType<typeof loadSale>>>();
   const [buyNFTData, setBuyNFTData] = React.useState(0);
-  const { Modal, show, hide, isShow } = useModal();
+  const {Modal, show, hide, isShow} = useModal();
   const [isPack, setIsPack] = React.useState(false);
-  const { isAuthenticated } = useMoralis();
+  const [saleData, setSaleData] = React.useState(false);
+  const {isAuthenticated} = useMoralis();
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -34,49 +34,31 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   }, [id]);
 
   const getSale = async () => {
-    const sale = await dispatch(onLoadSale(id));
-    setSale(sale.payload);
-    const { pack } = getAddresses();
-    console.log(sale.payload);
-    if (sale.payload.nft === pack) {
+    const sale = await loadSale(id);
+    const {pack} = getAddresses();
+    if (sale.nft === pack) {
       setIsPack(true);
     } else {
       setIsPack(false);
     }
+    setSale(sale);
   };
 
   const buyNft = async () => {
     if (!isAuthenticated) {
       router.push("/login");
     }
+    const {pack, endersGate} = getAddresses();
     await dispatch(
       onBuyERC1155({
-        walletType: "metamask",
-        tx: {
-          from: user.get("ethAddress"),
-          amount: buyNFTData,
-          bid: buyNFTData * sale.price,
-          tokenId: id,
-        },
+        seller: sale.seller,
+        amount: buyNFTData,
+        bid: Web3.utils.toBN(sale.price).mul(Web3.utils.toBN(buyNFTData)).toString(),
+        tokenId: id,
+        moralis: Moralis,
+        nftContract: isPack ? pack : endersGate,
       })
     );
-    //await dispatch(
-    //onUpdateFirebaseUser({
-    //userPath: "userPath",
-    //updateData: {
-    //activity: [
-    //...user.activity,
-    //{
-    //type: "buy",
-    //createdAt: new Date().toISOString(),
-    //nft: {
-    //tokenId: id,
-    //},
-    //},
-    //],
-    //},
-    //})
-    //);
   };
 
   return (
@@ -181,8 +163,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   src={
                     isPack
                       ? packs[sale.nftId].properties.image.value
-                      : cards.All[sale.nftId].properties.image?.value ||
-                        Icons.logo
+                      : cards.All[sale.nftId].properties.image?.value || Icons.logo
                   }
                   className="w-72"
                   alt=""
@@ -197,16 +178,10 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
                   <div className="flex flex-row gap-4">
                     <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
+                      <Typography type="subTitle" className="text-white font-bold">
                         NAME
                       </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
+                      <Typography type="subTitle" className="text-primary opacity-75">
                         {isPack
                           ? packs[sale.nftId].properties.name.value
                           : cards.All[sale.nftId].properties.name?.value}
@@ -214,32 +189,20 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                     </div>
                     {!isPack && cards.All[sale.nftId].properties.type?.value && (
                       <div className="flex flex-col">
-                        <Typography
-                          type="subTitle"
-                          className="text-white font-bold"
-                        >
+                        <Typography type="subTitle" className="text-white font-bold">
                           TYPE
                         </Typography>
-                        <Typography
-                          type="subTitle"
-                          className="text-primary opacity-75"
-                        >
+                        <Typography type="subTitle" className="text-primary opacity-75">
                           {cards.All[sale.nftId].properties.type?.value}
                         </Typography>
                       </div>
                     )}
                     {!isPack && cards.All[sale.nftId].properties.rarity?.value && (
                       <div className="flex flex-col">
-                        <Typography
-                          type="subTitle"
-                          className="text-white font-bold"
-                        >
+                        <Typography type="subTitle" className="text-white font-bold">
                           RARITY
                         </Typography>
-                        <Typography
-                          type="subTitle"
-                          className="text-primary opacity-75"
-                        >
+                        <Typography type="subTitle" className="text-primary opacity-75">
                           {cards.All[sale.nftId].properties.rarity?.value}
                         </Typography>
                       </div>
@@ -247,16 +210,10 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   </div>
                   <div>
                     <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
+                      <Typography type="subTitle" className="text-white font-bold">
                         DESCRIPTION
                       </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
+                      <Typography type="subTitle" className="text-primary opacity-75">
                         {isPack
                           ? packs[sale.nftId].properties.description.value
                           : cards.All[sale.nftId].properties.description?.value}
@@ -272,69 +229,39 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
                   <div className="flex flex-row gap-4">
                     <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
+                      <Typography type="subTitle" className="text-white font-bold">
                         OWNER
                       </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
+                      <Typography type="subTitle" className="text-primary opacity-75">
                         <AddressText text={sale.seller}></AddressText>
                       </Typography>
                     </div>
                     <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
+                      <Typography type="subTitle" className="text-white font-bold">
                         AMOUNT OF {isPack ? "PACKS" : "CARDS"} AVAILABLE
                       </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
+                      <Typography type="subTitle" className="text-primary opacity-75">
                         {sale.amount}
                       </Typography>
                     </div>
                   </div>
                   <div className="flex flex-row gap-4">
                     <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
+                      <Typography type="subTitle" className="text-white font-bold">
                         FINISH AT
                       </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
+                      <Typography type="subTitle" className="text-primary opacity-75">
                         <TimeConverter
-                          UNIX_timestamp={
-                            parseInt(sale.duration) + parseInt(sale.startedAt)
-                          }
+                          UNIX_timestamp={parseInt(sale.duration) + parseInt(sale.startedAt)}
                         ></TimeConverter>
                       </Typography>
                     </div>
                     <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
+                      <Typography type="subTitle" className="text-white font-bold">
                         STATUS
                       </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
-                        {sale.status == 0
-                          ? "Active"
-                          : sale.status == 1
-                          ? "Sold"
-                          : "Cancelled"}
+                      <Typography type="subTitle" className="text-primary opacity-75">
+                        {sale.status == 0 ? "Active" : sale.status == 1 ? "Sold" : "Cancelled"}
                       </Typography>
                     </div>
                   </div>

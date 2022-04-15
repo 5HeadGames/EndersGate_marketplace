@@ -17,9 +17,9 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
   using Address for address payable;
 
   enum SaleStatus {
-      Created,
-      Successful,
-      Canceled
+    Created,
+    Successful,
+    Canceled
   }
 
   struct Sale {
@@ -67,14 +67,14 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     string memory _name,
     string memory _symbol
   ) ERC721(_name, _symbol) {
-    require(_ownerCut <= 10000); //less than 100%
+    require(_ownerCut <= 10000, "ClockSale:OWNER_CUT"); //less than 100%
     ownerCut = _ownerCut;
     feeReceiver = _feeReceiver;
     genesisBlock = block.number;
   }
 
   receive() external payable {
-    require(false, "DONT_SEND");
+    require(false, "ClockSale:DONT_SEND");
   }
 
   function getSales(uint256[] memory _tokenIds) external view returns (Sale[] memory) {
@@ -87,8 +87,13 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
 
   function getCurrentPrice(uint256 _tokenId) external view returns (uint256) {
     Sale storage _auction = sales[_tokenId];
-    require(_isOnSale(_auction));
+    require(_isOnSale(_auction), "ClockSale:INVALID_SALE");
     return _auction.price;
+  }
+
+  function isOnSale(uint256 _tokenId) external view returns (bool) {
+    Sale storage _auction = sales[_tokenId];
+    return _isOnSale(_auction);
   }
 
   function createSale(
@@ -98,10 +103,13 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     uint256 _amount,
     uint256 _duration
   ) external whenNotPaused {
-    require(isAllowed[_nftAddress], "Nft not allowed");
     address _seller = _msgSender();
-    require(_owns(_nftAddress, _seller, _tokenId), "User doesn't owns nft");
+
+    require(isAllowed[_nftAddress], "ClockSale:INVALID_SALE");
+    require(_owns(_nftAddress, _seller, _tokenId), "ClockSale:NOT_OWNER");
+
     _escrow(_nftAddress, _seller, _tokenId, _amount);
+
     Sale memory _auction = Sale(
       _seller,
       _nftAddress,
@@ -123,7 +131,8 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
 
     if (_auction.amount == 0) _finalizeSale(_tokenId);
 
-    require(msg.value >= cost, "NO_ENOUGH_VALUE");
+    require(_isOnSale(_auction), "ClockSale:NOT_AVAILABLE");
+    require(msg.value >= cost, "ClockSale:NOT_ENOUGH_VALUE");
 
     uint256 ownerAmount = (cost * ownerCut) / 10000;
     uint256 sellAmount = cost - ownerAmount;
@@ -134,17 +143,10 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     emit BuySuccessful(_tokenId, buyer, cost, amount);
   }
 
-  function _finalizeSale(uint256 tokenId) internal {
-    Sale storage _auction = sales[tokenId];
-    _auction.status = SaleStatus.Successful;
-    _burn(tokenId);
-    emit SaleSuccessful(tokenId);
-  }
-
   function cancelSale(uint256 _tokenId) external {
     Sale storage _auction = sales[_tokenId];
-    require(_isOnSale(_auction));
-    require(ownerOf(_tokenId) == _msgSender());
+    require(_saleExists(_auction), "ClockSale:NOT_AVAILABLE");
+    require(ownerOf(_tokenId) == _msgSender(), "ClockSale:NOT_OWNER");
     _cancelSale(_tokenId);
   }
 
@@ -160,7 +162,18 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     _unpause();
   }
 
+  function _finalizeSale(uint256 tokenId) internal {
+    Sale storage _auction = sales[tokenId];
+    _auction.status = SaleStatus.Successful;
+    _burn(tokenId);
+    emit SaleSuccessful(tokenId);
+  }
+
   function _isOnSale(Sale storage _auction) internal view returns (bool) {
+    return (_saleExists(_auction) && _auction.startedAt + _auction.duration > block.timestamp);
+  }
+
+  function _saleExists(Sale storage _auction) internal view returns (bool) {
     return (_auction.startedAt > 0);
   }
 
@@ -179,7 +192,7 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
   }
 
   function _addSale(Sale memory _auction) internal {
-    require(_auction.duration >= 1 minutes);
+    require(_auction.duration >= 1 minutes, "ClockSale:INVALID_DURATION");
 
     uint256 auctionID = tokenIdTracker.current();
     sales[auctionID] = _auction;
@@ -234,9 +247,8 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     address to,
     uint256 tokenId
   ) internal virtual override(ERC721) {
-    require(address(0)==from || address(0)==to,"CANNOT_TRANSFER"); 
+    require(address(0) == from || address(0) == to, "ClockSale:CANNOT_TRANSFER");
   }
-
 
   function supportsInterface(bytes4 interfaceId)
     public

@@ -1,17 +1,17 @@
-import { Typography } from "@shared/components/common/typography";
+import {Typography} from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
-import { Icons } from "@shared/const/Icons";
+import {Icons} from "@shared/const/Icons";
 import {
   AddressText,
   TransactionText,
 } from "@shared/components/common/specialFields/SpecialFields";
 import Link from "next/link";
-import { useAppDispatch } from "@redux/store";
-import { onLoadSale } from "@redux/actions";
+import {useAppDispatch} from "@redux/store";
 import cards from "../../../../cards.json";
 import packs from "../../../../packs.json";
 import Web3 from "web3";
+import {loadSale} from "@shared/web3";
 
 interface Props {
   id: string;
@@ -23,7 +23,7 @@ interface Props {
 }
 
 const ItemListed: React.FunctionComponent<Props> = (props) => {
-  const { id, type, seller, buyer, amount, pack } = props;
+  const {id, type, seller, buyer, amount, pack} = props;
 
   const [sale, setSale] = React.useState<any>();
 
@@ -36,7 +36,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
   }, [id]);
 
   const getSale = async () => {
-    const sale = await dispatch(onLoadSale(id));
+    const sale = await loadSale(id);
     console.log("sales", sale.payload);
     setSale(sale.payload);
   };
@@ -70,19 +70,14 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
                 {type === "Recently Listed" ? "SELLER" : "BUYER"}
               </Typography>
               <Typography type="caption" className="text-white mt-1">
-                <AddressText
-                  text={type === "Recently Listed" ? seller : buyer}
-                ></AddressText>
+                <AddressText text={type === "Recently Listed" ? seller : buyer}></AddressText>
               </Typography>
             </div>
           </td>
           <td className="py-4">
             {!pack && (
               <div className="flex flex-col items-center">
-                <Typography
-                  type="caption"
-                  className="text-white text-center font-bold mt-1"
-                >
+                <Typography type="caption" className="text-white text-center font-bold mt-1">
                   Type
                 </Typography>
                 <Typography type="caption" className="text-white mt-1">
@@ -101,16 +96,10 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
           {type !== "Recently Listed" && (
             <td className="py-4">
               <div className="flex flex-col items-center just">
-                <Typography
-                  type="caption"
-                  className="text-white text-center font-bold mt-1"
-                >
+                <Typography type="caption" className="text-white text-center font-bold mt-1">
                   NFT Amount
                 </Typography>
-                <Typography
-                  type="caption"
-                  className="text-white font-bold mt-1"
-                >
+                <Typography type="caption" className="text-white font-bold mt-1">
                   {amount}
                 </Typography>
               </div>{" "}
@@ -118,10 +107,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
           )}
           <td className="bg-secondary  cursor-pointer py-4 text-center w-8">
             <Link href={`/NFTDetailSale/${id}`}>
-              <a
-                href={`/NFTDetailSale/${id}`}
-                className="flex justify-center shrink-0"
-              >
+              <a href={`/NFTDetailSale/${id}`} className="flex justify-center shrink-0">
                 <img src={Icons.arrowLeft} className="w-5" alt="" />
               </a>
             </Link>

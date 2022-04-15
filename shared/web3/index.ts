@@ -118,3 +118,19 @@ export const createEvent = ({
   sale.set("metadata", JSON.stringify(metadata));
   return sale;
 };
+
+export const loadSale = async function prepare(tokenId: any) {
+  const addresses = getAddresses();
+  const marketplace = getContract("ClockSale", addresses.marketplace);
+  const sale = await marketplace.methods.sales(tokenId).call();
+  return {
+    amount: sale.amount,
+    duration: sale.duration,
+    nft: sale.nft,
+    nftId: sale.nftId,
+    price: sale.price,
+    seller: sale.seller,
+    startedAt: sale.startedAt,
+    status: sale.status,
+  };
+};

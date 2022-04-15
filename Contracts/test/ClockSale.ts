@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {ethers} from "hardhat";
+import {ethers, network} from "hardhat";
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import type {BigNumber} from "@ethersproject/bignumber";
 import type {Block} from "@ethersproject/abstract-provider";
@@ -146,11 +146,9 @@ describe("[ClockSale]", function () {
     });
 
     it("Should get batch sales", async () => {
-      const allSales = (await marketplace.getSales(sales)).map((sale: any) =>
-        parseSale(sale)
-      );
+      const allSales = (await marketplace.getSales(sales)).map((sale: any) => parseSale(sale));
       allSales.forEach((sale: any, i: any) => {
-        const { id, amount, price, duration } = salesData[i];
+        const {id, amount, price, duration} = salesData[i];
         expect(sale.seller).to.be.equal(accounts[0].address);
         expect(sale.nft).to.be.equal(nft.address);
         expect(sale.nftId).to.be.equal(id);
@@ -226,6 +224,38 @@ describe("[ClockSale]", function () {
       expect(log?.args[1].toString(), "Wrong buyer").to.be.equal(buyer.address); //buyer
       expect(log?.args[2].toString(), "Wrong cost").to.be.equal(cost.toString());
       expect(log?.args[3].toString(), "Wrong nft amount").to.be.equal(String(amount));
+    });
+
+    it("Should not buy duration passed sales", async () => {
+      const timeSale = {
+        id: 2,
+        price: ethers.utils.parseEther("1"),
+        amount: 14,
+        duration: 3600 * 24 * 7,
+      };
+      await nft.setApprovalForAll(marketplace.address, true);
+      const tx = await (
+        await marketplace.createSale(
+          nft.address,
+          timeSale.id,
+          timeSale.price,
+          timeSale.amount,
+          timeSale.duration
+        )
+      ).wait();
+      const logs = getLogs(marketplace.interface, tx);
+      const saleId = logs.find(({name}: {name: string}) => name === "SaleCreated")?.args[0];
+      sales.push(saleId);
+
+      const sale = parseSale(await marketplace.sales(saleId));
+
+      await network.provider.send("evm_increaseTime", [3600 * 24 * 7 + 100]);
+      await network.provider.send("evm_mine");
+      await expect(
+        marketplace.buy(sales[2], timeSale.amount, {
+          value: timeSale.price.mul(timeSale.amount).toString(),
+        })
+      ).to.be.revertedWith("");
     });
   });
 });

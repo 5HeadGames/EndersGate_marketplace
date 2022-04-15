@@ -56,12 +56,6 @@ const AccountSettingsComponent = () => {
     oldPassword: string;
     newPassword: string;
   }) => {
-    console.log({
-      oldEmail,
-      newEmail,
-      oldPassword,
-      newPassword,
-    });
     try {
       if (!user.get("emailVerified")) {
         console.log("new email");
