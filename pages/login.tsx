@@ -129,11 +129,12 @@ interface EmailPasswordFormProps {
 const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (props) => {
   const {onSubmit, loading} = props;
   const [openRegistration, setOpenRegistration] = React.useState(false);
+  const { Modal: ModalRegister, isShow, show, hide } = useModal();
   const {
     register,
     handleSubmit,
     watch,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
 
   React.useEffect(() => {
@@ -145,7 +146,12 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="p-4 flex flex-col bg-secondary rounded-md">
           <div className="mb-4 w-full">
-            <InputEmail register={register} placeholder="email" name="email" error={errors.email} />
+            <InputEmail
+              register={register}
+              placeholder="email"
+              name="email"
+              error={errors.email}
+            />
           </div>
           <div className="mb-4">
             <InputPassword
@@ -166,14 +172,20 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
           </Button>
           <span className="text-primary text-xs">
             You dont have an account?{" "}
-            <a className="text-white" href="#" onClick={() => setOpenRegistration(true)}>
+            <a
+              className="text-white"
+              href="#"
+              onClick={() => {
+                show();
+              }}
+            >
               {" "}
               Register!{" "}
             </a>
           </span>
         </div>
       </form>
-      <Dialog open={openRegistration} onClose={() => setOpenRegistration(false)}>
+      <ModalRegister isShow={isShow}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography type="title" className="text-center text-primary">
             {" "}
@@ -207,7 +219,7 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
             </Button>
           </div>
         </form>
-      </Dialog>
+      </ModalRegister>
     </>
   );
 };

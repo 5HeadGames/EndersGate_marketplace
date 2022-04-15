@@ -55,7 +55,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
         startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
         amount: sellNFTData.amount,
         tokenId: tokenId,
-        duration: sellNFTData.duration,
+        duration: sellNFTData.duration.toString(),
         moralis: Moralis,
       })
     );
@@ -102,14 +102,16 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
             />
           </div>
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
-            <label className="text-primary font-medium">Amount of NFTs</label>
+            <label className="text-primary font-medium">End Date</label>
             <input
               type="number"
               className="bg-overlay text-primary text-center"
               onChange={(e) => {
-                setSellNFTData((prev: any) => {
-                  return { ...prev, amount: e.target.value };
-                });
+                const date = new Date(e.target.value);
+                console.log(e.target.value, date);
+                // setSellNFTData((prev: any) => {
+                //   return { ...prev, duration: };
+                // });
               }}
             />
           </div>
