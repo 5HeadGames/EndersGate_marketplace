@@ -5,11 +5,11 @@ import Web3 from "web3";
 import {useMoralis} from "react-moralis";
 
 import {useAppDispatch, useAppSelector} from "redux/store";
-import {onBuyERC1155, onLoadSale} from "@redux/actions";
+import {onBuyERC1155} from "@redux/actions";
 import {Button} from "../common/button/button";
 import {Icons} from "@shared/const/Icons";
 import {AddressText} from "../common/specialFields/SpecialFields";
-import {getAddresses} from "@shared/web3";
+import {getAddresses, loadSale} from "@shared/web3";
 import {Typography} from "../common/typography";
 import cards from "../../cards.json";
 import packs from "../../packs.json";
@@ -17,12 +17,12 @@ import {TimeConverter} from "../common/unixDateConverter/unixConverter";
 import {useModal} from "@shared/hooks/modal";
 
 const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
-  const {user, Moralis} = useMoralis();
-  // const NFTs = useAppSelector((state) => state.nfts);
-  const [sale, setSale] = React.useState<any>();
+  const {user, Moralis, isWeb3Enabled} = useMoralis();
+  const [sale, setSale] = React.useState<Awaited<ReturnType<typeof loadSale>>>();
   const [buyNFTData, setBuyNFTData] = React.useState(0);
   const {Modal, show, hide, isShow} = useModal();
   const [isPack, setIsPack] = React.useState(false);
+  const [saleData, setSaleData] = React.useState(false);
   const {isAuthenticated} = useMoralis();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -34,28 +34,29 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
   }, [id]);
 
   const getSale = async () => {
-    const sale = await dispatch(onLoadSale(id));
-    setSale(sale.payload);
+    const sale = await loadSale(id);
     const {pack} = getAddresses();
-    console.log(sale.payload);
-    if (sale.payload.nft === pack) {
+    if (sale.nft === pack) {
       setIsPack(true);
     } else {
       setIsPack(false);
     }
+    setSale(sale);
   };
 
   const buyNft = async () => {
     if (!isAuthenticated) {
       router.push("/login");
     }
+    const {pack, endersGate} = getAddresses();
     await dispatch(
       onBuyERC1155({
-        from: user.get("ethAddress"),
+        seller: sale.seller,
         amount: buyNFTData,
-        bid: buyNFTData * sale.price,
+        bid: Web3.utils.toBN(sale.price).mul(Web3.utils.toBN(buyNFTData)).toString(),
         tokenId: id,
         moralis: Moralis,
+        nftContract: isPack ? pack : endersGate,
       })
     );
   };
