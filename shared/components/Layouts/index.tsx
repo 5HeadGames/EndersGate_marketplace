@@ -142,7 +142,7 @@ export default function AppLayout({children}) {
   }, []);
 
   React.useEffect(() => {
-    if (isAuthenticated) dispatch(onGetAssets(user.get("ethAddress")));
+    if (isAuthenticated && user) dispatch(onGetAssets(user.get("ethAddress")));
     enableWeb3();
   }, [isAuthenticated]);
 

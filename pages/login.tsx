@@ -22,7 +22,7 @@ const Login = () => {
   const [openForm, setOpenForm] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const {Modal, isShow, show, hide} = useModal();
-  const {authenticate, signup, login, enableWeb3, isAuthenticated, isWeb3Enabled} = useMoralis();
+  const {authenticate, signup, login, enableWeb3, isAuthenticated, Moralis} = useMoralis();
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -53,7 +53,20 @@ const Login = () => {
     setLoading(false);
   };
 
-  const handleSubmit = async (user: Values) => {
+  const handleRegister = async (user: Values) => {
+    try {
+      const res = await signup(user.email, user.password, user.email);
+      await Moralis.Cloud.run("sendVerificationEmail", {
+        email: user.email,
+        name: user.email,
+      });
+      console.log({res});
+    } catch (err) {
+      console.log({err});
+    }
+  };
+
+  const handleLogin = async (user: Values) => {
     setLoading(true);
     try {
       await login(user.email, user.password);
@@ -90,7 +103,7 @@ const Login = () => {
           {loading ? "..." : "Login with Metamask Wallet"}
         </Button>
         {openForm ? (
-          <EmailPasswordForm onSubmit={handleSubmit} loading={loading} />
+          <EmailPasswordForm onLogin={handleLogin} onRegister={handleRegister} loading={loading} />
         ) : (
           <Button
             disabled={loading}
@@ -122,19 +135,20 @@ const Login = () => {
 };
 
 interface EmailPasswordFormProps {
-  onSubmit: (args: Values) => void;
+  onLogin: (args: Values) => void;
+  onRegister: (args: Values) => void;
   loading: boolean;
 }
 
 const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (props) => {
-  const {onSubmit, loading} = props;
+  const {onLogin, onRegister, loading} = props;
   const [openRegistration, setOpenRegistration] = React.useState(false);
-  const { Modal: ModalRegister, isShow, show, hide } = useModal();
+  const {Modal: ModalRegister, isShow, show, hide} = useModal();
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: {errors},
   } = useForm();
 
   React.useEffect(() => {
@@ -143,15 +157,10 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onLogin)}>
         <div className="p-4 flex flex-col bg-secondary rounded-md">
           <div className="mb-4 w-full">
-            <InputEmail
-              register={register}
-              placeholder="email"
-              name="email"
-              error={errors.email}
-            />
+            <InputEmail register={register} placeholder="email" name="email" error={errors.email} />
           </div>
           <div className="mb-4">
             <InputPassword
@@ -186,7 +195,7 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
         </div>
       </form>
       <ModalRegister isShow={isShow}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onRegister)}>
           <Typography type="title" className="text-center text-primary">
             {" "}
             Register{" "}
