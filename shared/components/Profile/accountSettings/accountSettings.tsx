@@ -18,7 +18,7 @@ const AccountSettingsComponent = () => {
   } = useForm();
   const [image, setImage] = React.useState<File | null>(null);
   const [loadingForm, setLoading] = React.useState(false);
-  const [openEmailPassword, setOpenEmailPassword] = React.useState(false);
+  const [successPassword, setSuccessPassword] = React.useState(false);
   const {user, setUserData, signup, Moralis} = useMoralis();
   const {saveFile} = useMoralisFile();
   const dispatch = useAppDispatch();
@@ -45,30 +45,12 @@ const AccountSettingsComponent = () => {
     }
   };
 
-  const onSubmit = async ({
-    oldEmail,
-    newEmail,
-    oldPassword,
-    newPassword,
-  }: {
-    oldEmail: string;
-    newEmail: string;
-    oldPassword: string;
-    newPassword: string;
-  }) => {
+  const onSubmit = async ({newEmail, newPassword}: {newEmail: string; newPassword: string}) => {
     try {
-      if (!user.get("emailVerified")) {
+      if (!user.get("email")) {
         console.log("new email");
         const res = await signup(newEmail, newPassword, newEmail);
         await Moralis.Cloud.run("sendVerificationEmail", {
-          email: newEmail,
-          name: newEmail,
-        });
-        console.log({res});
-      } else {
-        console.log("old email");
-        const res = await Moralis.User.requestPasswordReset(newEmail);
-        await Moralis.Cloud.run("sendResetPasswordEmail", {
           email: newEmail,
           name: newEmail,
         });
@@ -77,6 +59,17 @@ const AccountSettingsComponent = () => {
     } catch (err) {
       console.log({err});
     }
+  };
+
+  const sendPasswordReset = async () => {
+    console.log("sent");
+    const email = user.get("email");
+    await Moralis.User.requestPasswordReset(email);
+    await Moralis.Cloud.run("sendResetPasswordEmail", {
+      email,
+      name: email,
+    });
+    setSuccessPassword(true);
   };
 
   return (
@@ -101,7 +94,7 @@ const AccountSettingsComponent = () => {
               accept="image/*"
               className="hidden"
               id="profile_picture"
-              value={image}
+              value={image as any}
               onChange={handleChangePicture}
             />
             <label
@@ -140,49 +133,38 @@ const AccountSettingsComponent = () => {
             />
           </div>
         </div>
-        <div className={clsx("w-full flex flex-col items-center", !openEmailPassword && "hidden")}>
-          {user.get("email") && (
+        <div className={clsx("w-full flex flex-col items-center")}>
+          {!user.get("email") ? (
             <>
               <InputEmail
                 register={register}
-                error={errors.oldEmail}
-                isFill={!!watch("oldEmail")}
-                name="oldEmail"
-                title="Old email"
+                error={errors.newEmail}
+                isFill={!!watch("newEmail")}
+                name="newEmail"
+                title={user.get("email") ? "New email" : "Email"}
                 labelVisible
                 className="text-primary mt-2"
-                defaultValue={user.get("email")}
               />
               <InputPassword
                 register={register}
-                error={errors.oldPassword}
-                isFill={!!watch("oldPassword")}
-                name="oldPassword"
-                title="Old password"
+                error={errors.newPassword}
+                isFill={!!watch("newPassword")}
+                name="newPassword"
+                title={user.get("email") ? "New password" : "Password"}
                 labelVisible
                 className="text-primary mt-2"
               />
-              <div className="w-full bg-primary mt-5 mb-2 rounded" style={{height: "1px"}}></div>
             </>
+          ) : (
+            <Button
+              size="small"
+              className="mt-6 "
+              decoration="fillPrimary"
+              onClick={sendPasswordReset}
+            >
+              {successPassword ? "We sent a link to your email" : "Reset password"}
+            </Button>
           )}
-          <InputEmail
-            register={register}
-            error={errors.newEmail}
-            isFill={!!watch("newEmail")}
-            name="newEmail"
-            title={user.get("email") ? "New email" : "Email"}
-            labelVisible
-            className="text-primary mt-2"
-          />
-          <InputPassword
-            register={register}
-            error={errors.newPassword}
-            isFill={!!watch("newPassword")}
-            name="newPassword"
-            title={user.get("email") ? "New password" : "Password"}
-            labelVisible
-            className="text-primary mt-2"
-          />
           <Button
             type="submit"
             size="small"
@@ -193,16 +175,6 @@ const AccountSettingsComponent = () => {
             {loadingForm ? "..." : "Save"}
           </Button>
         </div>
-        {!openEmailPassword && (
-          <Button
-            size="medium"
-            decoration="line-primary"
-            type="button"
-            onClick={() => setOpenEmailPassword(!openEmailPassword)}
-          >
-            {`${user.get("email") ? "Change" : "Set"} email and password`}
-          </Button>
-        )}
       </form>
     </div>
   );

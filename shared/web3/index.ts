@@ -48,9 +48,9 @@ export const getContractCustom = (
 };
 
 export const getBalance = async (address: string) => {
+  if (!Web3.utils.isAddress(address)) return "0";
   const web3 = getWeb3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER);
   const balance = await web3.eth.getBalance(address);
-  console.log(web3.utils.fromWei(balance));
   return web3.utils.fromWei(balance).substr(0, web3.utils.fromWei(balance).indexOf(".") + 5);
 };
 
@@ -75,7 +75,6 @@ export const approveERC1155 = async ({
   address: string;
 }) => {
   const erc1155Contract = getContractCustom("ERC1155", address, provider);
-  console.log(erc1155Contract);
   return await erc1155Contract.methods.setApprovalForAll(to, true).send({
     from: from,
   });

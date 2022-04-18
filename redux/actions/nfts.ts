@@ -94,6 +94,7 @@ export const onGetAssets = createAsyncThunk(
       };
     } catch (err) {
       console.log({err});
+      throw err;
     }
   }
 );
@@ -109,31 +110,26 @@ export const onSellERC1155 = createAsyncThunk(
     address: string;
     moralis: Moralis;
   }) {
-    const { from, tokenId, startingPrice, amount, duration, address, moralis } =
-      args;
+    const {from, tokenId, startingPrice, amount, duration, address, moralis} = args;
     const provider = moralis.web3.provider;
     const user = Moralis.User.current();
     const relation = user.relation("events");
     const event = createEvent({
       type: "sell",
-      metadata: { from, tokenId, startingPrice, amount, duration, address },
+      metadata: {from, tokenId, startingPrice, amount, duration, address},
     });
-    await event.save();
-    relation.add(event);
 
-    const { marketplace } = getAddresses();
-    const marketplaceContract = getContractCustom(
-      "ClockSale",
-      marketplace,
-      provider
-    );
+    const {marketplace} = getAddresses();
+    const marketplaceContract = getContractCustom("ClockSale", marketplace, provider);
     await marketplaceContract.methods
       .createSale(address, tokenId, startingPrice, amount, duration)
-      .send({ from: from });
+      .send({from: from});
 
+    await event.save();
+    relation.add(event);
     await user.save();
 
-    return { from, tokenId, startingPrice, amount, duration, address };
+    return {from, tokenId, startingPrice, amount, duration, address};
   }
 );
 
@@ -147,30 +143,25 @@ export const onBuyERC1155 = createAsyncThunk(
     nftContract: string;
     moralis: Moralis;
   }) {
-    const { seller, tokenId, amount, bid, moralis } = args;
+    const {seller, tokenId, amount, bid, moralis} = args;
     const provider = moralis.web3.provider;
     const user = Moralis.User.current();
     const relation = user.relation("events");
     const event = createEvent({
       type: "buy",
-      metadata: { seller, tokenId, amount, bid },
+      metadata: {seller, tokenId, amount, bid},
     });
-    await event.save();
-    relation.add(event);
 
-    const { marketplace } = getAddresses();
-    const marketplaceContract = getContractCustom(
-      "ClockSale",
-      marketplace,
-      provider
-    );
-    console.log({ add: user.get("ethAddress") });
+    const {marketplace} = getAddresses();
+    const marketplaceContract = getContractCustom("ClockSale", marketplace, provider);
     await marketplaceContract.methods
       .buy(tokenId, amount)
-      .send({ from: user.get("ethAddress"), value: bid });
+      .send({from: user.get("ethAddress"), value: bid});
 
+    await event.save();
+    relation.add(event);
     await user.save();
 
-    return { seller, tokenId, amount, bid, moralis };
+    return {seller, tokenId, amount, bid, moralis};
   }
 );
