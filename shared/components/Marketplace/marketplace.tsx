@@ -21,7 +21,7 @@ import { useAppDispatch, useAppSelector } from "@redux/store";
 import Link from "next/link";
 
 const MarketplaceComponent = () => {
-  const [currentOrder, setCurrentOrder] = React.useState("recently_listed");
+  const [currentOrder, setCurrentOrder] = React.useState("older_listed");
   const [type, setType] = React.useState("trading_cards");
   const [sales, setSales] = React.useState([]);
   const { nfts } = useAppSelector((state) => state);
@@ -106,6 +106,7 @@ const MarketplaceComponent = () => {
         packSalesCreated.push(sale);
       }
     });
+    console.log(cardSalesCreated, "Cards");
     switch (type) {
       case "trading_cards":
         setSales(cardSalesCreated);
@@ -117,7 +118,7 @@ const MarketplaceComponent = () => {
         setSales(nfts.saleCreated);
         break;
     }
-  }, [type]);
+  }, [type, nfts]);
 
   const [filter, setFilter] = React.useState({
     avatar: false,

@@ -37,8 +37,8 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
 
   const getSale = async () => {
     const sale = await loadSale(id);
-    console.log("sales", sale.payload);
-    setSale(sale.payload);
+    console.log("sales", sale);
+    setSale(sale);
   };
 
   return (

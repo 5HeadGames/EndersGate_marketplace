@@ -38,35 +38,55 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
       return alert("You don't have enough tokens to sell");
     }
+    console.log(sellNFTData.amount, NFTs.balanceCards[id].balance);
     if (sellNFTData.duration <= 3600 * 24) {
       return alert("You have to put a end date higher than 1 day");
     }
-    const tokenId = id;
-    setMessage("Allowing us to sell your tokens");
-    const { endersGate } = getAddresses();
-    await approveERC1155({
-      provider: web3,
-      from: user.get("ethAddress"),
-      to: marketplace,
-      address: endersGate,
-    });
-    setMessage("Listing your tokens");
-    await dispatch(
-      onSellERC1155({
-        address: endersGate,
+    try {
+      const tokenId = id;
+      setMessage("Allowing us to sell your tokens");
+      const { endersGate } = getAddresses();
+      await approveERC1155({
+        provider: web3.provider,
         from: user.get("ethAddress"),
-        startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
-        amount: sellNFTData.amount,
-        tokenId: tokenId,
-        duration: sellNFTData.duration.toString(),
-        moralis: Moralis,
-      })
-    );
-    await dispatch(onLoadSales());
-    setMessage(
-      "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
-    );
-    hide();
+        to: marketplace,
+        address: endersGate,
+      });
+      setMessage("Listing your tokens");
+      await dispatch(
+        onSellERC1155({
+          address: endersGate,
+          from: user.get("ethAddress"),
+          startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
+          amount: sellNFTData.amount,
+          tokenId: tokenId,
+          duration: sellNFTData.duration.toString(),
+          moralis: Moralis,
+        })
+      );
+      await dispatch(onLoadSales());
+      setMessage(
+        "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
+      );
+      hide();
+      setSellNFTData({
+        startingPrice: 0,
+        amount: 0,
+        duration: 0,
+      });
+      window.location.reload();
+    } catch {
+      await dispatch(onLoadSales());
+      setMessage(
+        "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
+      );
+      hide();
+      setSellNFTData({
+        startingPrice: 0,
+        amount: 0,
+        duration: 0,
+      });
+    }
   };
 
   React.useEffect(() => {
@@ -85,6 +105,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
             <input
               type="number"
               className="bg-overlay text-primary text-center"
+              value={sellNFTData.startingPrice}
               onChange={(e) => {
                 setSellNFTData((prev: any) => {
                   return { ...prev, startingPrice: e.target.value };
@@ -97,9 +118,10 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
             <input
               type="number"
               className="bg-overlay text-primary text-center"
+              value={sellNFTData.amount}
               onChange={(e) => {
                 setSellNFTData((prev: any) => {
-                  return { ...prev, amount: e.target.value };
+                  return { ...prev, amount: parseInt(e.target.value) };
                 });
               }}
             />

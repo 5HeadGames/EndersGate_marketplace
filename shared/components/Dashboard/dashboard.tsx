@@ -100,7 +100,7 @@ const DashboardComponent = () => {
   }, [listedSelected, soldSelected]);
 
   return (
-    <div className="w-full flex flex-col md:px-16 pt-36 min-h-screen bg-overlay px-4">
+    <div className="w-full flex flex-col md:px-16 pt-36 min-h-screen bg-overlay px-4 pb-24">
       <TransactionsBoard
         totalSale={transactionsBoard.totalSale}
         totalVolume={transactionsBoard.totalVolume}

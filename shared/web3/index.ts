@@ -75,8 +75,9 @@ export const approveERC1155 = async ({
   address: string;
 }) => {
   const erc1155Contract = getContractCustom("ERC1155", address, provider);
+  console.log(erc1155Contract);
   return await erc1155Contract.methods.setApprovalForAll(to, true).send({
-    from,
+    from: from,
   });
 };
 
