@@ -8,7 +8,8 @@ import Layout from "shared/components/Layouts";
 import {store} from "redux/store";
 import {Provider} from "react-redux";
 import {MoralisProvider} from "react-moralis";
-import {ToastProvider} from "react-toast-notifications";
+
+const {ToastProvider} = require("react-toast-notifications"); //it throws ts error
 
 const MyApp = ({Component, pageProps}: AppProps) => {
   const appId = process.env.NEXT_PUBLIC_APP_ID;
