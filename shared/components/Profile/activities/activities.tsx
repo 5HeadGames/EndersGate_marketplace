@@ -14,9 +14,7 @@ const navItems = [
 
 const Activities = () => {
   const {user} = useMoralis();
-  const [activities, setActivities] = React.useState<
-    {createdAt: string; type: "sell" | "buy" | "login"; metadata: Object}[]
-  >([]);
+  const [activities, setActivities] = React.useState<Activity[]>([]);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
 
   const loadEvents = async () => {

@@ -13,12 +13,31 @@ import {getBalance} from "@shared/web3";
 
 const ProfileIndexPage = () => {
   const [balance, setBalance] = React.useState("0");
+  const [activities, setActivities] = React.useState<Activity[]>([]);
   const {user, isAuthenticated} = useMoralis();
   const router = useRouter();
 
+  const loadEvents = async () => {
+    const relation = user.relation("events");
+    const query = relation.query();
+
+    const activities = await query.find({});
+    setActivities(
+      activities.map((act) => ({
+        createdAt: act.get("createdAt"),
+        type: act.get("type"),
+        metadata: JSON.parse(act.get("metadata")),
+      }))
+    );
+  };
+
   React.useEffect(() => {
-    if (!isAuthenticated) return router.push("/login");
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
     handleSetBalance();
+    loadEvents();
   }, [user]);
 
   const handleSetBalance = async () => {
@@ -90,15 +109,15 @@ const ProfileIndexPage = () => {
             "w-full ",
             "flex flex-col",
             {
-              [`${Styles.gray} justify-center items-center gap-6 h-72`]: !user?.activity,
+              [`${Styles.gray} justify-center items-center gap-6 h-72`]: activities.length > 0,
             },
             {
-              ["py-10 gap-y-2"]: user?.activity,
+              ["py-10 gap-y-2"]: activities.length > 0,
             }
           )}
         >
-          {user?.activity ? (
-            user?.activity.map(({createdAt, type}, index) => {
+          {activities.length > 0 ? (
+            activities.map(({createdAt, type}, index) => {
               return <Activity date={createdAt} type={type} />;
             })
           ) : (

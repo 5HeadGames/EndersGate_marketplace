@@ -2,11 +2,7 @@ interface NFT {
   tokenId: number | string;
 }
 
-type Activity = {
-  createdAt: string;
-  type: "sell" | "buy" | "login";
-  nft?: NFT;
-};
+type Activity = {createdAt: string; type: "sell" | "buy" | "login"; metadata: Object};
 
 interface User {
   id: string;
