@@ -1,11 +1,10 @@
 import React from "react";
 import {useForm} from "react-hook-form";
 import {useRouter} from "next/router";
+import {useMoralis} from "react-moralis";
 
 import {useModal} from "@shared/hooks/modal";
-import {useAppDispatch, useAppSelector} from "redux/store";
-import {onLoginUser, onMessage, onUpdateUser} from "redux/actions";
-import {loginHarmonyWallet, loginMetamaskWallet, getWalletConnect} from "@shared/web3";
+import {useAppDispatch} from "redux/store";
 import {Button} from "shared/components/common/button";
 import Dialog from "shared/components/common/dialog";
 import {Typography} from "shared/components/common/typography";
@@ -16,100 +15,71 @@ type Values = {
   email?: string;
   password?: string;
   address: string;
-  walletType: "metamask" | "harmony" | "wallet_connect";
+  walletType: "metamask" | "wallet_connect";
 };
 
 const Login = () => {
   const [openForm, setOpenForm] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const {Modal, isShow, show, hide} = useModal();
-  const {address} = useAppSelector((state) => state.user);
-  const [connector, setConnector] = React.useState(getWalletConnect());
+  const {authenticate, signup, login, enableWeb3, isAuthenticated, Moralis} = useMoralis();
+
   const router = useRouter();
   const dispatch = useAppDispatch();
 
   const handleMetamaskConnect = async () => {
-    const web3 = await loginMetamaskWallet();
-    if (!web3) return show("metamask");
     setLoading(true);
-    await dispatch(
-      onLoginUser({
-        address: (window as any).ethereum.selectedAddress,
-      })
-    );
+    try {
+      await enableWeb3();
+      const user = await authenticate();
+    } catch (err) {
+      console.log({err});
+    }
     setLoading(false);
-    dispatch(
-      onUpdateUser({
-        address: (window as any).ethereum.selectedAddress,
-        walletType: "metamask",
-      })
-    );
-    dispatch(onMessage("Login successful!"));
-    setTimeout(dispatch, 2000, onMessage(""));
   };
 
-  const handleHarmonyConnect = async () => {
-    const account = await loginHarmonyWallet();
-    if (!account) return show("harmony");
+  const handleWalletConnect = async () => {
     setLoading(true);
-    await dispatch(onLoginUser({address: account.address}));
+    try {
+      await enableWeb3({
+        provider: "walletconnect",
+      });
+      await authenticate({
+        provider: "walletconnect",
+      });
+    } catch (err) {
+      console.log({err});
+    }
     setLoading(false);
-    dispatch(
-      onUpdateUser({
-        address: account.address,
-        walletType: "harmony",
-      })
-    );
-    dispatch(onMessage("Login successful!"));
-    setTimeout(dispatch, 2000, onMessage(""));
   };
 
-  const handleSubmit = async (user: Values) => {
-    setLoading(true);
-    const account = await loginHarmonyWallet();
-    await dispatch(onLoginUser({...user, address: account.address}));
-    setLoading(false);
-    dispatch(
-      onUpdateUser({
-        ...user,
-        address: account.address,
-        walletType: "harmony",
-      })
-    );
-    dispatch(onMessage("Login successful!"));
-    setTimeout(dispatch, 2000, onMessage(""));
-  };
-
-  const handleQRCode = () => {
-    if (!connector.connected) {
-      // create new session
-      connector.createSession();
+  const handleRegister = async (user: Values) => {
+    try {
+      const res = await signup(user.email, user.password, user.email);
+      await Moralis.Cloud.run("sendVerificationEmail", {
+        email: user.email,
+        name: user.email,
+      });
+      console.log({res});
+    } catch (err) {
+      console.log({err});
     }
   };
 
-  React.useEffect(() => {
-    connector.on("connect", async (error, payload) => {
-      if (error) {
-        throw error;
-      }
-
-      const {accounts, chainId} = payload.params[0];
-      console.log(accounts);
-      await dispatch(onLoginUser({address: accounts[0]}));
-      setLoading(false);
-      dispatch(
-        onUpdateUser({
-          walletType: "wallet_connect",
-        })
-      );
-      dispatch(onMessage("Login successful!"));
-      setTimeout(dispatch, 2000, onMessage(""));
-    });
-  }, []);
+  const handleLogin = async (user: Values) => {
+    setLoading(true);
+    try {
+      await login(user.email, user.password);
+      await handleMetamaskConnect();
+    } catch (err) {
+      console.log({err});
+    }
+    setLoading(false);
+  };
 
   React.useEffect(() => {
-    if (address) router.push("/dashboard");
-  }, [address]);
+    if (isAuthenticated) router.push("/dashboard");
+  }, [isAuthenticated]);
 
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center">
@@ -119,9 +89,9 @@ const Login = () => {
           decoration="fillPrimary"
           size="medium"
           className="w-full mb-2 bg-primary text-white"
-          onClick={handleHarmonyConnect}
+          onClick={handleWalletConnect}
         >
-          {loading ? "..." : "Login with Harmony Wallet"}
+          {loading ? "..." : "Login with WalletConnect"}
         </Button>
         <Button
           disabled={loading}
@@ -133,7 +103,7 @@ const Login = () => {
           {loading ? "..." : "Login with Metamask Wallet"}
         </Button>
         {openForm ? (
-          <EmailPasswordForm onSubmit={handleSubmit} loading={loading} />
+          <EmailPasswordForm onLogin={handleLogin} onRegister={handleRegister} loading={loading} />
         ) : (
           <Button
             disabled={loading}
@@ -149,20 +119,12 @@ const Login = () => {
       <Modal isShow={Boolean(isShow)}>
         <div className="flex flex-col items-center p-6">
           <Typography type="title" className="text-purple-400/75">
-            {`Install ${isShow === "metamask" ? "Metamask" : "Harmony"} Wallet`}
+            {`Install Metamask`}
           </Typography>
           <p className="text-purple-200/75">
             You must install{" "}
-            <a
-              href={
-                isShow === "metamask"
-                  ? "https://metamask.io/"
-                  : "https://chrome.google.com/webstore/detail/harmony-chrome-extension/fnnegphlobjdpkhecapkijjdkgcjhkib"
-              }
-              className="text-primary"
-              target="_blank"
-            >
-              {isShow === "metamask" ? "metamask" : "harmony one"}
+            <a href={"https://metamask.io/"} className="text-primary" target="_blank">
+              metamask
             </a>{" "}
             official wallet to connect through this method
           </p>
@@ -173,13 +135,15 @@ const Login = () => {
 };
 
 interface EmailPasswordFormProps {
-  onSubmit: (args: Values) => void;
+  onLogin: (args: Values) => void;
+  onRegister: (args: Values) => void;
   loading: boolean;
 }
 
 const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (props) => {
-  const {onSubmit, loading} = props;
+  const {onLogin, onRegister, loading} = props;
   const [openRegistration, setOpenRegistration] = React.useState(false);
+  const {Modal: ModalRegister, isShow, show, hide} = useModal();
   const {
     register,
     handleSubmit,
@@ -193,15 +157,10 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onLogin)}>
         <div className="p-4 flex flex-col bg-secondary rounded-md">
           <div className="mb-4 w-full">
-            <InputEmail
-              register={register}
-              placeholder="email"
-              name="email"
-              error={errors.email}
-            />
+            <InputEmail register={register} placeholder="email" name="email" error={errors.email} />
           </div>
           <div className="mb-4">
             <InputPassword
@@ -222,15 +181,21 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
           </Button>
           <span className="text-primary text-xs">
             You dont have an account?{" "}
-            <a className="text-white" href="#" onClick={() => setOpenRegistration(true)}>
+            <a
+              className="text-white"
+              href="#"
+              onClick={() => {
+                show();
+              }}
+            >
               {" "}
               Register!{" "}
             </a>
           </span>
         </div>
       </form>
-      <Dialog open={openRegistration} onClose={() => setOpenRegistration(false)}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <ModalRegister isShow={isShow}>
+        <form onSubmit={handleSubmit(onRegister)}>
           <Typography type="title" className="text-center text-primary">
             {" "}
             Register{" "}
@@ -263,7 +228,7 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
             </Button>
           </div>
         </form>
-      </Dialog>
+      </ModalRegister>
     </>
   );
 };

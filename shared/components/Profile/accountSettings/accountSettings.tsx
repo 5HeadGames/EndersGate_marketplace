@@ -1,16 +1,13 @@
 import {Button} from "@shared/components/common/button";
-import {Typography} from "@shared/components/common/typography";
 import {Icons} from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
-import "shared/firebase";
-import {useAppSelector, useAppDispatch} from "redux/store";
+import {useMoralis, useMoralisFile, useMoralisCloudFunction} from "react-moralis";
+import {useAppDispatch} from "redux/store";
 import {useForm} from "react-hook-form";
 import {Input} from "@shared/components/common/form/input";
 import {InputEmail} from "@shared/components/common/form/input-email";
 import {InputPassword} from "@shared/components/common/form/input-password";
-import {writeUser, uploadFile, getFileUrl} from "@shared/firebase";
-import {onUpdateUser, onMessage, onLoginUser, onUpdateUserCredentials} from "@redux/actions";
 
 const AccountSettingsComponent = () => {
   const {
@@ -19,75 +16,60 @@ const AccountSettingsComponent = () => {
     watch,
     formState: {errors},
   } = useForm();
-  const [image, setImage] = React.useState("");
+  const [image, setImage] = React.useState<File | null>(null);
   const [loadingForm, setLoading] = React.useState(false);
-  const [openEmailPassword, setOpenEmailPassword] = React.useState(false);
+  const [successPassword, setSuccessPassword] = React.useState(false);
+  const {user, setUserData, signup, Moralis} = useMoralis();
+  const {saveFile} = useMoralisFile();
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);
-  const userPath = `users/${user.address}`;
 
-  const onLoadingImageSubmit = (load: unknown) => {
-    console.log({load});
-  };
-
-  const onSuccessImageSubmit = (arg: {path: string}) => async () => {
-    const fileUrl = await getFileUrl(arg);
-    const writeData = {profile_picture: fileUrl};
-    writeUser(userPath, writeData);
-    dispatch(onUpdateUser(writeData));
-  };
-
-  const onErrorImageSubmit = (error: unknown) => {
-    console.log({error});
-  };
-
-  const handleChangePicture = (e: React.ChangeEvent<any>) => {
-    const file = e.target.files[0];
-    const path = `${userPath}/${file.name}`;
-    uploadFile({
-      file,
-      path,
-      metadata: {name: file.name, size: file.size, type: file.type},
-      onLoad: onLoadingImageSubmit,
-      onError: onErrorImageSubmit,
-      onSuccess: onSuccessImageSubmit({path}),
-    });
-    setImage("");
-  };
-
-  const handleSetField = (field: "name" | "userStatus") => (e: React.ChangeEvent<any>) => {
-    writeUser(userPath, {[field]: e.target.value as string});
-  };
-
-  const onSubmit = async ({
-    oldEmail,
-    newEmail,
-    oldPassword,
-    newPassword,
-  }: {
-    oldEmail: string;
-    newEmail: string;
-    oldPassword: string;
-    newPassword: string;
-  }) => {
-    setLoading(true);
+  const handleChangePicture = async (e: React.ChangeEvent<any>) => {
     try {
-      if (!user.email)
-        await dispatch(
-          onLoginUser({email: newEmail, password: newPassword, address: user.address})
-        );
-      else
-        await dispatch(
-          onUpdateUserCredentials({oldEmail, oldPassword, newEmail, newPassword, userPath})
-        );
+      const file = e.target.files[0];
+      const moralisFile = await saveFile(file.name, file, {
+        type: "image/png",
+      });
+      await setUserData({profileImage: moralisFile});
+      setImage(file);
+    } catch (error) {
+      console.log({error});
+    }
+  };
+
+  const handleSetField = (field: "name" | "userStatus") => async (e: React.ChangeEvent<any>) => {
+    try {
+      const value = e.target.value;
+      await setUserData({[field]: value});
+    } catch (error) {
+      console.log({error});
+    }
+  };
+
+  const onSubmit = async ({newEmail, newPassword}: {newEmail: string; newPassword: string}) => {
+    try {
+      if (!user.get("email")) {
+        console.log("new email");
+        const res = await signup(newEmail, newPassword, newEmail);
+        await Moralis.Cloud.run("sendVerificationEmail", {
+          email: newEmail,
+          name: newEmail,
+        });
+        console.log({res});
+      }
     } catch (err) {
       console.log({err});
-      setLoading(false);
-      return;
     }
-    setLoading(false);
-    dispatch(onMessage("Changes submitted!"));
-    setTimeout(dispatch, 2000, onMessage(""));
+  };
+
+  const sendPasswordReset = async () => {
+    console.log("sent");
+    const email = user.get("email");
+    await Moralis.User.requestPasswordReset(email);
+    await Moralis.Cloud.run("sendResetPasswordEmail", {
+      email,
+      name: email,
+    });
+    setSuccessPassword(true);
   };
 
   return (
@@ -99,15 +81,11 @@ const AccountSettingsComponent = () => {
         )}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Typography type="title" className="text-primary mb-4">
-          {" "}
-          PROFILE
-        </Typography>
         <div className="flex md:flex-row flex-col items-start w-full md:gap-6">
           <div className="flex md:flex-col sm:flex-row flex-col mb-4 items-center">
             <div className="xl:h-40 xl:w-40 md:h-32 md:w-32 h-40 w-40 rounded-full relative">
               <img
-                src={user.profile_picture !== "" ? user.profile_picture : Icons.logo}
+                src={user.get("profileImage") ? user.get("profileImage").url() : Icons.logo}
                 alt=""
               />
             </div>
@@ -116,7 +94,7 @@ const AccountSettingsComponent = () => {
               accept="image/*"
               className="hidden"
               id="profile_picture"
-              value={image}
+              value={image as any}
               onChange={handleChangePicture}
             />
             <label
@@ -138,7 +116,7 @@ const AccountSettingsComponent = () => {
               title="User Name"
               labelVisible
               className="text-primary mt-2"
-              defaultValue={user.name}
+              defaultValue={user.get("name")}
               onBlur={handleSetField("name")}
             />
 
@@ -150,59 +128,43 @@ const AccountSettingsComponent = () => {
               title="Status"
               labelVisible
               className="text-primary mt-2"
-              defaultValue={user.userStatus}
+              defaultValue={user.get("userStatus")}
               onBlur={handleSetField("userStatus")}
             />
           </div>
         </div>
-        <div
-          className={clsx("w-full flex flex-col items-center", !openEmailPassword && "hidden")}
-        >
-          {user.email && (
+        <div className={clsx("w-full flex flex-col items-center")}>
+          {!user.get("email") ? (
             <>
               <InputEmail
                 register={register}
-                error={errors.oldEmail}
-                isFill={!!watch("oldEmail")}
-                name="oldEmail"
-                title="Old email"
+                error={errors.newEmail}
+                isFill={!!watch("newEmail")}
+                name="newEmail"
+                title={user.get("email") ? "New email" : "Email"}
                 labelVisible
                 className="text-primary mt-2"
-                defaultValue={user.email}
               />
               <InputPassword
                 register={register}
-                error={errors.oldPassword}
-                isFill={!!watch("oldPassword")}
-                name="oldPassword"
-                title="Old password"
+                error={errors.newPassword}
+                isFill={!!watch("newPassword")}
+                name="newPassword"
+                title={user.get("email") ? "New password" : "Password"}
                 labelVisible
                 className="text-primary mt-2"
               />
-              <div
-                className="w-full bg-primary mt-5 mb-2 rounded"
-                style={{height: "1px"}}
-              ></div>
             </>
+          ) : (
+            <Button
+              size="small"
+              className="mt-6 "
+              decoration="fillPrimary"
+              onClick={sendPasswordReset}
+            >
+              {successPassword ? "We sent a link to your email" : "Reset password"}
+            </Button>
           )}
-          <InputEmail
-            register={register}
-            error={errors.newEmail}
-            isFill={!!watch("newEmail")}
-            name="newEmail"
-            title={user.email ? "New email" : "Email"}
-            labelVisible
-            className="text-primary mt-2"
-          />
-          <InputPassword
-            register={register}
-            error={errors.newPassword}
-            isFill={!!watch("newPassword")}
-            name="newPassword"
-            title={user.email ? "New password" : "Password"}
-            labelVisible
-            className="text-primary mt-2"
-          />
           <Button
             type="submit"
             size="small"
@@ -213,16 +175,6 @@ const AccountSettingsComponent = () => {
             {loadingForm ? "..." : "Save"}
           </Button>
         </div>
-        {!openEmailPassword && (
-          <Button
-            size="medium"
-            decoration="line-primary"
-            type="button"
-            onClick={() => setOpenEmailPassword(!openEmailPassword)}
-          >
-            {`${user.email ? "Change" : "Set"} email and password`}
-          </Button>
-        )}
       </form>
     </div>
   );

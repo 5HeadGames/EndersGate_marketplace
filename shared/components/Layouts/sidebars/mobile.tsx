@@ -1,21 +1,22 @@
-import React, { Fragment, useRef } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+import React, {Fragment, useRef} from "react";
+import {Dialog, Transition} from "@headlessui/react";
 import clsx from "clsx";
-import { XIcon } from "@heroicons/react/outline";
+import {XIcon} from "@heroicons/react/outline";
 import Link from "next/link";
-// import Image from 'next/image';
-import { useRouter } from "next/router";
-import { Icons } from "@shared/const/Icons";
-import { Typography } from "@shared/components/common/typography";
-import { Button } from "@shared/components/common/button/button";
+import {useMoralis} from "react-moralis";
+
+import {useRouter} from "next/router";
+import {Icons} from "@shared/const/Icons";
+import {Button} from "@shared/components/common/button/button";
 import ProfileDataAndActions from "@shared/components/Profile/profilePersonalData/profilePersonalData";
-import { useAppSelector } from "redux/store";
 import {
   AppstoreFilled,
   AreaChartOutlined,
   DownOutlined,
   RightOutlined,
   ShopOutlined,
+  TwitterOutlined,
+  WalletOutlined,
 } from "@ant-design/icons";
 
 interface LayoutDashboardProps {
@@ -34,6 +35,8 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
   initialFocus = null,
 }) => {
   const router = useRouter();
+  const { user } = useMoralis();
+  const address = user?.get("ethAddress") || "";
 
   const navItems = [
     {
@@ -43,54 +46,52 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
       icon: <AppstoreFilled />,
       items: [
         {
-          title: "Marketplace",
+          title: "Enders Gate Website",
           description:
             "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
           icon: <ShopOutlined />,
         },
         {
-          title: "Marketplace",
+          title: "Enders Gate Discord",
           description:
             "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
           icon: <ShopOutlined />,
         },
         {
-          title: "Marketplace",
+          title: "Enders Gate Twitter",
           description:
             "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
-          icon: <ShopOutlined />,
+          icon: <TwitterOutlined />,
         },
         {
-          title: "Marketplace",
+          title: "Harmony Block Explorer",
           description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
+            "Trusted chrome wallet extension, store your digital currency and NFTs",
           href: "/marketplace",
-          icon: <ShopOutlined />,
+          icon: <WalletOutlined />,
         },
         {
-          title: "Marketplace",
+          title: "Harmony Wallet",
           description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
+            "Trusted chrome wallet extension, store your digital currency and NFTs",
           href: "/marketplace",
-          icon: <ShopOutlined />,
+          icon: <WalletOutlined />,
         },
         {
-          title: "Marketplace",
+          title: "Harmony Bridge",
           description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
+            "Trusted chrome wallet extension, store your digital currency and NFTs",
           href: "/marketplace",
-          icon: <ShopOutlined />,
+          icon: <WalletOutlined />,
         },
       ],
     },
     { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
     { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
   ];
-
-  const { address } = useAppSelector((state) => state.user);
 
   const [collapse, setCollapse] = React.useState(
     new Array(navItems.length).fill(false)
@@ -259,9 +260,9 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                   })}
                   {address !== "" ? (
                     <ProfileDataAndActions
-                      name={"AN-Drew207"}
-                      email="andrescontrerasoviedo740@gmail.com"
-                      photo=""
+                    // name={"AN-Drew207"}
+                    // email="andrescontrerasoviedo740@gmail.com"
+                    // photo=""
                     />
                   ) : (
                     <div className="mb-4">

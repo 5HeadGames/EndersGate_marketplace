@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import {Layout} from "antd";
+import {useMoralis} from "react-moralis";
+
 import {Icons} from "@shared/const/Icons";
 import {useRouter} from "next/dist/client/router";
 import clsx from "clsx";
@@ -8,15 +10,17 @@ import {Button} from "../common/button/button";
 import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
 import {MenuIcon} from "@heroicons/react/outline";
 import {SidebarMobile} from "./sidebars/mobile";
-import {useAppSelector} from "redux/store";
+import {useAppSelector, useAppDispatch} from "redux/store";
+import {onGetAssets, onLoadSales} from "redux/actions";
 import {
   AppstoreFilled,
   AreaChartOutlined,
   ShopOutlined,
   TwitterOutlined,
-  TwitterSquareFilled,
   WalletOutlined,
 } from "@ant-design/icons";
+
+import {getAddresses, getContract, getWeb3, loginMetamaskWallet} from "@shared/web3";
 
 const styles = {
   content: {
@@ -25,13 +29,13 @@ const styles = {
     fontFamily: "Roboto, sans-serif",
     color: "#041836",
   },
-  headerRight: {
-    display: "flex",
-    gap: "20px",
-    alignItems: "center",
-    fontSize: "15px",
-    fontWeight: "600",
-  },
+  // headerRight: {
+  //   display: "flex",
+  //   gap: "20px",
+  //   alignItems: "center",
+  //   fontSize: "15px",
+  //   fontWeight: "600",
+  // },
 };
 
 const navItems = [
@@ -43,71 +47,115 @@ const navItems = [
     items: [
       {
         title: "Enders Gate Website",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: <ShopOutlined />,
       },
       {
         title: "Enders Gate Discord",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: <ShopOutlined />,
       },
       {
         title: "Enders Gate Twitter",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         href: "/marketplace",
         icon: <TwitterOutlined />,
       },
       {
         title: "Harmony Block Explorer",
-        description:
-          "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
         icon: <WalletOutlined />,
       },
       {
         title: "Harmony Wallet",
-        description:
-          "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
         icon: <WalletOutlined />,
       },
       {
         title: "Harmony Bridge",
-        description:
-          "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
         href: "/marketplace",
         icon: <WalletOutlined />,
       },
     ],
   },
-  { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
-  { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
+  {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
+  {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
 ];
 
-export default function AppLayout({ children }) {
-  const router = useRouter();
-  const { blur, message, address } = useAppSelector((state) => ({
-    ...state.layout,
-    ...state.user,
-  }));
+export default function AppLayout({children}) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
-  //   const [inputValue, setInputValue] = React.useState("explore");
+  const [isExecuted, setIsExecuted] = React.useState(false);
+  const [notAvailable, setNotAvailable] = React.useState({
+    message: "",
+    value: false,
+  });
+  const {blur, message} = useAppSelector((state) => ({
+    ...state.layout,
+  }));
+  const router = useRouter();
+  const {enableWeb3, isWeb3Enabled, isAuthenticated, user} = useMoralis();
+
+  const chainChangedHandler = async () => {
+    // window.location.reload();
+    const web3 = await getWeb3();
+    const networkId = await web3.eth.net.getId();
+    if (networkId != 1666700000 && networkId != 1666600000) {
+      setNotAvailable({
+        message: "Change your network to harmony testnet please",
+        value: true,
+      });
+    } else {
+      setNotAvailable({
+        message: "",
+        value: false,
+      });
+    }
+  };
+
+  const accountChangedHandler = async (newAccount: any) => {
+    const web3 = await loginMetamaskWallet();
+    await dispatch(onGetAssets((window as any).ethereum.selectedAddress));
+    if (!web3) return;
+  };
+  if (typeof window !== "undefined" && (window as any).ethereum?.isConnected() && !isExecuted) {
+    (window as any).ethereum.on("accountsChanged", accountChangedHandler);
+    (window as any).ethereum.on("chainChanged", chainChangedHandler);
+    setIsExecuted(true);
+  }
+
+  const dispatch = useAppDispatch();
+
+  const initApp = async () => {
+    const addresses = getAddresses();
+    const marketplace = getContract("ClockSale", addresses.marketplace);
+    await dispatch(onLoadSales());
+  };
+
+  React.useEffect(() => {
+    initApp();
+  }, []);
+
+  React.useEffect(() => {
+    if (isAuthenticated && user) dispatch(onGetAssets(user.get("ethAddress")));
+    enableWeb3();
+  }, [isAuthenticated]);
+
   return (
     <Layout
       style={{
         height: "100vh",
-        overflow: "auto",
+        // overflow: "auto",
         ...(blur
           ? {
-              filter: "blur(8px)",
-              "-webkit-filter": "blur(8px)",
-            }
+            filter: "blur(8px)",
+            "-webkit-filter": "blur(8px)",
+          }
           : {}),
       }}
     >
@@ -150,9 +198,9 @@ export default function AppLayout({ children }) {
           <Button
             decoration="fill"
             size="small"
-            onClick={() => router.push(address ? "/profile" : "/login")}
+            onClick={() => router.push(isAuthenticated ? "/profile" : "/login")}
           >
-            {address ? "Profile" : "Log In"}
+            {isAuthenticated ? "Profile" : "Log In"}
           </Button>
         </div>
         <div
@@ -161,10 +209,7 @@ export default function AppLayout({ children }) {
             setSidebarOpen(true);
           }}
         >
-          <MenuIcon
-            className="h-6 w-6 text-primary cursor-pointer"
-            aria-hidden="true"
-          />
+          <MenuIcon className="h-6 w-6 text-primary cursor-pointer" aria-hidden="true" />
         </div>
       </nav>
       <SidebarMobile
@@ -172,10 +217,16 @@ export default function AppLayout({ children }) {
         setSidebarOpen={setSidebarOpen}
         sidebarOpen={sidebarOpen}
       />
-      <div className="bg-overlay md:px-10 px-6" style={styles.content}>
-        {children}
-        <Message content={message} open={Boolean(message)} />
-      </div>
+      {notAvailable.value ? (
+        <div className="bg-overlay md:px-10 px-6 flex flex-col items-center justify-center w-screen h-screen text-primary text-3xl font-bold">
+          {notAvailable.message}
+        </div>
+      ) : (
+        <div className="bg-overlay md:px-10 px-6" style={styles.content}>
+          {children}
+          <Message content={message} open={Boolean(message)} />
+        </div>
+      )}
     </Layout>
   );
 }
@@ -184,7 +235,7 @@ export const Message: React.FunctionComponent<{
   content: string;
   open: boolean;
 }> = (props) => {
-  const { content, open } = props;
+  const {content, open} = props;
 
   return (
     <div
@@ -207,7 +258,7 @@ export const Logo = () => (
   </Link>
 );
 
-export const NavbarItem = ({ name, link, route, icon }) => {
+export const NavbarItem = ({name, link, route, icon}) => {
   return (
     <Link href={link}>
       <a
@@ -218,8 +269,8 @@ export const NavbarItem = ({ name, link, route, icon }) => {
       >
         <div
           className={clsx(
-            { "opacity-50 text-primary": link !== route },
-            { "text-white": link === route },
+            {"opacity-50 text-primary": link !== route},
+            {"text-white": link === route},
             "gap-2 flex items-center"
           )}
         >

@@ -1,55 +1,65 @@
-import {Button} from "@shared/components/common/button";
-import {Typography} from "@shared/components/common/typography";
-import {Icons} from "@shared/const/Icons";
-import clsx from "clsx";
 import React from "react";
-import "shared/firebase";
+import clsx from "clsx";
 import {
   CheckCircleOutlined,
   FormOutlined,
+  FundViewOutlined,
   GoldenFilled,
-  GoldFilled,
-  GoldOutlined,
   IdcardOutlined,
   LogoutOutlined,
-  SettingFilled,
   SettingOutlined,
 } from "@ant-design/icons";
-import { useAppSelector, useAppDispatch } from "redux/store";
-import { onLogout, onMessage } from "redux/actions";
-import { useModal } from "@shared/hooks/modal";
 import { useForm } from "react-hook-form";
+import { useMoralis, useMoralisFile } from "react-moralis";
+
+import { Button } from "@shared/components/common/button";
+import { Typography } from "@shared/components/common/typography";
+import { Icons } from "@shared/const/Icons";
+import { useModal } from "@shared/hooks/modal";
 import { Input } from "@shared/components/common/form/input";
-import Inventory2Icon from "@mui/icons-material/Inventory2";
 
-type ButtonsTypes = { logout: boolean };
+type ButtonsTypes = { logout: boolean; userData: boolean };
 
-const ProfileDataAndActions = ({ name, photo, email }) => {
+const ProfileDataAndActions = () => {
   const [disabled, setDisabled] = React.useState<ButtonsTypes>({
     logout: false,
+    userData: false,
   });
+  const [image, setImage] = React.useState<File | null>(null);
   const { Modal, isShow, show, hide } = useModal();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const user = useAppSelector((state) => state.user);
-  const dispatch = useAppDispatch();
+  const { register, handleSubmit } = useForm();
+  const { logout, user, setUserData } = useMoralis();
+  const { saveFile } = useMoralisFile();
+  const profileImage = user?.get("profileImage")
+    ? user.get("profileImage").url()
+    : Icons.logo;
 
-  const disableButton = (option: ButtonsTypes) => {
-    setDisabled((prev) => ({ ...prev, ...option }));
+  const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
+    setDisabled((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const onSubmit = async (values: any) => {
+    const toggleForm = handleDisabled("userData");
+    let moralisFile = null;
+    toggleForm(true);
+    if (image) {
+      moralisFile = await saveFile(image.name, image, {
+        type: "image/png",
+      });
+    }
+    await setUserData(
+      moralisFile
+        ? { profileImage: moralisFile, name: values.name }
+        : { name: values.name }
+    );
+    toggleForm(false);
   };
 
   const handleSignOut = async () => {
-    console.log("handleSignOut");
-    disableButton({ logout: true });
-    const isLoggedOut = await dispatch(onLogout(user));
-    disableButton({ logout: false });
-    if (isLoggedOut) {
-      dispatch(onMessage("Logged out successfully!"));
-      setTimeout(dispatch, 2000, onMessage(""));
-    }
+    const toggleLogout = handleDisabled("logout");
+    toggleLogout(true);
+    logout();
+    toggleLogout(false);
   };
 
   const links = [
@@ -70,6 +80,11 @@ const ProfileDataAndActions = ({ name, photo, email }) => {
       icon: <SettingOutlined />,
     },
     {
+      href: "/profile/mySales",
+      label: "My Sales",
+      icon: <FundViewOutlined />,
+    },
+    {
       label: "Logout",
       decoration: "line-primary",
       onClick: handleSignOut,
@@ -82,8 +97,15 @@ const ProfileDataAndActions = ({ name, photo, email }) => {
     <div className="flex flex-col w-full">
       <Modal isShow={isShow}>
         <div className="flex flex-col items-center p-6">
-          <form action="" className="flex flex-col items-center w-full">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            action=""
+            className="flex flex-col items-center w-full"
+          >
             <input
+              onChange={(e: React.ChangeEvent<any>) =>
+                setImage(e.target.files[0])
+              }
               type="file"
               accept="image/*"
               id="profile_picture"
@@ -91,14 +113,7 @@ const ProfileDataAndActions = ({ name, photo, email }) => {
             />
             <div className="flex md:flex-row flex-col items-center mb-4">
               <div className="h-24 w-24 rounded-full relative">
-                <img
-                  src={
-                    user.profile_picture !== ""
-                      ? user.profile_picture
-                      : Icons.logo
-                  }
-                  alt=""
-                />
+                <img src={profileImage} alt="" />
               </div>
               <label
                 htmlFor="profile_picture"
@@ -112,9 +127,9 @@ const ProfileDataAndActions = ({ name, photo, email }) => {
             </div>
             <Input
               register={register}
-              name="nickname"
+              name="name"
               placeholder="Nickname"
-              value={user.name}
+              defaultValue={user?.get("name")}
             />
             <Button
               decoration="fillPrimary"
@@ -133,16 +148,12 @@ const ProfileDataAndActions = ({ name, photo, email }) => {
           "border border-overlay-border rounded-md mb-2"
         )}
       >
-        <img
-          src={user.profile_picture || Icons.logo}
-          className="h-16 w-16 rounded-full"
-          alt=""
-        />
+        <img src={profileImage} className="h-16 w-16 rounded-full" alt="" />
         <Typography
           type="title"
           className="text-primary flex items-center mt-2"
         >
-          {user.name}
+          {user?.get("name")}
         </Typography>
         <div
           onClick={() => {
@@ -153,7 +164,7 @@ const ProfileDataAndActions = ({ name, photo, email }) => {
           <FormOutlined />
         </div>
         <Typography type="span" className="text-white md:text-xs text-caption">
-          {user.email}
+          {user?.get("email") || ""}
         </Typography>
       </div>
       <div className="flex flex-col gap-2">

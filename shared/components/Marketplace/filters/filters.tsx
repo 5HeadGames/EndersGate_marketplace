@@ -5,10 +5,10 @@ import {HeartOutlined, HeartFilled} from '@ant-design/icons'
 import {CollapseMenu} from "@shared/components/common/collapseMenu/collapseMenu";
 import {SlideButton} from "@shared/components/common/slideButton/slideButton";
 
-const FiltersBoard = ({filter, setFilter}) => {
+const FiltersBoard = ({ filter, setFilter, type, setType }) => {
   const handleChange = (title) => {
     setFilter((prev) => {
-      return {...prev, [`${title}`]: !prev[`${title}`]};
+      return { ...prev, [`${title}`]: !prev[`${title}`] };
     });
   };
 
@@ -38,68 +38,68 @@ const FiltersBoard = ({filter, setFilter}) => {
         },
       ],
     },
+    // {
+    //   title: "Class",
+    //   subItems: [
+    //     {
+    //       title: "Tanks",
+    //       onClick: () => handleChange("tanks"),
+    //       value: "tanks",
+    //     },
+    //     {
+    //       title: "Damage",
+    //       onClick: () => handleChange("damage"),
+    //       value: "damage",
+    //     },
+    //     {
+    //       title: "Mages",
+    //       onClick: () => handleChange("mages"),
+    //       value: "mages",
+    //     },
+    //     {
+    //       title: "Healers",
+    //       onClick: () => handleChange("healers"),
+    //       value: "healers",
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "Elements",
+    //   subItems: [
+    //     {
+    //       title: "Void",
+    //       onClick: () => handleChange("void"),
+    //       value: "void",
+    //     },
+    //     {
+    //       title: "Fire",
+    //       onClick: () => handleChange("fire"),
+    //       value: "fire",
+    //     },
+    //     {
+    //       title: "Water",
+    //       onClick: () => handleChange("water"),
+    //       value: "water",
+    //     },
+    //     {
+    //       title: "Mystic",
+    //       onClick: () => handleChange("mystic"),
+    //       value: "mystic",
+    //     },
+    //     {
+    //       title: "Earth",
+    //       onClick: () => handleChange("earth"),
+    //       value: "earth",
+    //     },
+    //     {
+    //       title: "Venom",
+    //       onClick: () => handleChange("venom"),
+    //       value: "venom",
+    //     },
+    //   ],
+    // },
     {
-      title: "Class",
-      subItems: [
-        {
-          title: "Tanks",
-          onClick: () => handleChange("tanks"),
-          value: "tanks",
-        },
-        {
-          title: "Damage",
-          onClick: () => handleChange("damage"),
-          value: "damage",
-        },
-        {
-          title: "Mages",
-          onClick: () => handleChange("mages"),
-          value: "mages",
-        },
-        {
-          title: "Healers",
-          onClick: () => handleChange("healers"),
-          value: "healers",
-        },
-      ],
-    },
-    {
-      title: "Elements",
-      subItems: [
-        {
-          title: "Void",
-          onClick: () => handleChange("void"),
-          value: "void",
-        },
-        {
-          title: "Fire",
-          onClick: () => handleChange("fire"),
-          value: "fire",
-        },
-        {
-          title: "Water",
-          onClick: () => handleChange("water"),
-          value: "water",
-        },
-        {
-          title: "Mystic",
-          onClick: () => handleChange("mystic"),
-          value: "mystic",
-        },
-        {
-          title: "Earth",
-          onClick: () => handleChange("earth"),
-          value: "earth",
-        },
-        {
-          title: "Venom",
-          onClick: () => handleChange("venom"),
-          value: "venom",
-        },
-      ],
-    },
-    {
-      title: "Rairty",
+      title: "Rarity",
       subItems: [
         {
           title: "1-Wood",
@@ -128,37 +128,36 @@ const FiltersBoard = ({filter, setFilter}) => {
         },
       ],
     },
-    {
-      title: "Limited Edition",
-      onClick: () => handleChange("limited_edition"),
-      slideButton: true,
-      value: "limited_edition",
-    },
-    {
-      title: "Stats",
-      subItems: [
-        {
-          title: "Attack",
-          onClick: () => handleChange("attack"),
-          value: "attack",
-        },
-        {
-          title: "Damage",
-          onClick: () => handleChange("damage_stats"),
-          value: "damage_stats",
-        },
-        {
-          title: "Mages",
-          onClick: () => handleChange("mages_stats"),
-          value: "mages_stats",
-        },
-      ],
-    },
+    // {
+    //   title: "Limited Edition",
+    //   onClick: () => handleChange("limited_edition"),
+    //   slideButton: true,
+    //   value: "limited_edition",
+    // },
+    // {
+    //   title: "Stats",
+    //   subItems: [
+    //     {
+    //       title: "Attack",
+    //       onClick: () => handleChange("attack"),
+    //       value: "attack",
+    //     },
+    //     {
+    //       title: "Damage",
+    //       onClick: () => handleChange("damage_stats"),
+    //       value: "damage_stats",
+    //     },
+    //     {
+    //       title: "Mages",
+    //       onClick: () => handleChange("mages_stats"),
+    //       value: "mages_stats",
+    //     },
+    //   ],
+    // },
   ];
 
   const Reset = () => {
     setFilter({
-      trading_cards: true,
       packs: false,
       comics: false,
       avatar: false,
@@ -194,35 +193,27 @@ const FiltersBoard = ({filter, setFilter}) => {
   return (
     <div className="xl:w-1/3 w-full flex flex-col">
       <div className="flex rounded-md border-2 border-primary mb-4 sm:flex-row flex-col">
-        {["trading_cards", "packs", "comics"].map((nftType, index) => (
+        {["trading_cards", "packs"].map((nftType, index) => (
           <div
             className={clsx(
               {
-                "bg-primary": filter[nftType],
+                "bg-primary text-white": type === nftType,
               },
               "cursor-pointer px-0 py-2 flex-1",
               index !== 2 &&
                 "sm:border-r-2 sm:border-b-0 border-b-2 border-primary"
             )}
-            onClick={() =>
-              setFilter((prev) => ({
-                ...prev,
-                trading_cards: false,
-                packs: false,
-                comics: false,
-                [nftType]: true,
-              }))
-            }
+            onClick={() => setType(nftType)}
           >
             <Typography
               type="subTitle"
               className={clsx(
                 "text-center",
                 {
-                  "text-white": filter[nftType],
+                  "text-white": type === nftType,
                 },
                 {
-                  "text-primary": !filter[nftType],
+                  "text-primary": type !== nftType,
                 }
               )}
             >
@@ -253,13 +244,14 @@ const FiltersBoard = ({filter, setFilter}) => {
         </div>
         <div className="flex flex-col gap-4 xl:w-80">
           {filterItems.map(
-            ({ title, subItems, slideButton, value, onClick }, index) => (
+            ({ title, subItems /*, slideButton, value, onClick */ }, index) => (
               <CollapseMenu key={"filter-" + index} title={title} defaultOpen>
                 <div className="flex flex-wrap gap-2 bg-secondary">
-                  {slideButton ? (
+                  {/*slideButton ? (
                     <SlideButton value={filter[value]} onClick={onClick} />
-                  ) : (
-                    subItems.map((subItem, indexItem) => {
+                  ) : (*/}
+                  {subItems.map(
+                    (subItem, indexItem) => {
                       return (
                         <div
                           onClick={subItem.onClick}
@@ -273,7 +265,8 @@ const FiltersBoard = ({filter, setFilter}) => {
                           {subItem.title}
                         </div>
                       );
-                    })
+                    }
+                    // })
                   )}
                 </div>
               </CollapseMenu>

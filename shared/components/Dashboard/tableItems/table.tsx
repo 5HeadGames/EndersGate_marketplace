@@ -1,21 +1,29 @@
 import {Typography} from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
+import ItemListed from "./items/itemListed";
 
 const navItems = [
-  {title: "Trading Cards", value: "trading_cards"},
-  {title: "Packs", value: "packs"},
-  {title: "Comics", value: "comics"},
+  { title: "Trading Cards", value: "trading_cards" },
+  { title: "Packs", value: "packs" },
+  // { title: "Comics", value: "comics" },
 ];
-
 
 interface Props {
   title: string;
-  data: (Record<string, string> & {render: React.FunctionComponent<any>})[];
+  data: (Record<string, string> & { render: React.FunctionComponent<any> })[];
+  columnSelected: string;
+  pack: boolean;
+  setColumnSelected: (arg1: string) => void;
 }
 
-const Table: React.FunctionComponent<Props> = ({title, data}) => {
-  const [columnSelected, setColumnSelected] = React.useState("trading_cards");
+const Table: React.FunctionComponent<Props> = ({
+  title,
+  data,
+  columnSelected,
+  setColumnSelected,
+  pack,
+}) => {
   return (
     <div className="w-full flex flex-col">
       <h2 className="text-white py-2">{title}</h2>
@@ -51,9 +59,24 @@ const Table: React.FunctionComponent<Props> = ({title, data}) => {
           <div className="w-full overflow-x-auto">
             <table className="w-full min-w-max ">
               <tbody>
-                {data.map((item, index) => (
-                  <item.render key={index} {...item} />
-                ))}
+                {data.map((item, index) =>
+                  title === "Recently Listed" ? (
+                    <ItemListed
+                      id={item.id}
+                      type={title}
+                      seller={item.seller}
+                      pack={pack}
+                    ></ItemListed>
+                  ) : (
+                    <ItemListed
+                      id={item.id}
+                      type={title}
+                      amount={item.amount}
+                      buyer={item.buyer}
+                      pack={pack}
+                    ></ItemListed>
+                  )
+                )}
               </tbody>
             </table>
           </div>

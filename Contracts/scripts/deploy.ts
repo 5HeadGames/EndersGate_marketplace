@@ -1,27 +1,35 @@
 import {ethers, network} from 'hardhat'
 import fs from 'fs'
-import {ClockAuction} from "../typechain/ClockAuction";
-import {ERC1155card} from "../typechain/ERC1155card";
+import {ClockSale} from "../typechain/ClockSale";
 
 const OWNER_CUT = "400";
 
+const loadJsonFile = (file: string) => {
+    try {
+        const data = fs.readFileSync(file);
+        return JSON.parse(data as any);
+    } catch (err) {
+        return {};
+    }
+};
+
 async function main() {
-  const [AuctionFactory, NftFactory, _accounts] = await Promise.all([
-    ethers.getContractFactory("ClockAuction"),
-    ethers.getContractFactory("ERC1155card"),
+  const [SalesFactory, _accounts] = await Promise.all([
+    ethers.getContractFactory("ClockSale"),
     ethers.getSigners(),
   ]);
 
-  const marketplace = await AuctionFactory.deploy(OWNER_CUT) as ClockAuction
-  const nft = await NftFactory.deploy("Darius") as ERC1155card
+  const marketplace = await SalesFactory.deploy(_accounts[0].address, OWNER_CUT, "EndersClockSale", "ECS") as ClockSale
 
+  const appRoot = require("app-root-path");
   const configFileName = `addresses.${network.name}.json`;
+  const data = loadJsonFile(`${appRoot}/` + configFileName)
   const configData = JSON.stringify({
+    ...data,
     marketplace: marketplace.address,
-    nft: nft.address,
   }, null, 2);
   fs.writeFileSync(configFileName, configData);
-  console.log(`Generated ${configFileName}: ${configData}`);
+  console.log('SUCCESS', configData)
 }
 
 main()
