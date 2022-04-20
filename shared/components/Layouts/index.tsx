@@ -143,8 +143,11 @@ export default function AppLayout({children}) {
 
   React.useEffect(() => {
     if (isAuthenticated && user) dispatch(onGetAssets(user.get("ethAddress")));
-    enableWeb3();
   }, [isAuthenticated]);
+
+  React.useEffect(() => {
+    enableWeb3();
+  }, [isWeb3Enabled]);
 
   return (
     <Layout

@@ -60,14 +60,11 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
           nftContract: isPack ? pack : endersGate,
         })
       );
-      dispatch(onLoadSales());
-      dispatch(onGetAssets(user.get("ethAddress")));
-      setBuyNFTData(0);
-      hide();
-    } catch {
-      setBuyNFTData(0);
-      hide();
-    }
+    } catch {}
+    hide();
+    dispatch(onLoadSales());
+    dispatch(onGetAssets(user.get("ethAddress")));
+    setBuyNFTData(0);
   };
 
   const notAvailable =

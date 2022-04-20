@@ -109,6 +109,28 @@ describe("[ClockSale]", function () {
       await marketplace.restartTrading();
       expect(await marketplace.paused(), "should be paused").to.be.equal(false);
     });
+
+    it("Should allow owner to change the fee receiver", async () => {
+      const newFeeReceiver = ethers.Wallet.createRandom();
+      await marketplace.setFeeReceiver(newFeeReceiver.address);
+
+      expect(await marketplace.feeReceiver()).to.be.equal(newFeeReceiver.address);
+      await expect(
+        marketplace.connect(accounts[1]).setFeeReceiver(feeReceiver.address)
+      ).to.be.revertedWith("");
+
+      await marketplace.setFeeReceiver(feeReceiver.address);
+    });
+
+    it("Should allow owner to change the fee", async () => {
+      const newOwnerCut = Number(OWNER_CUT) + 100;
+      await marketplace.setOwnerCut(newOwnerCut);
+
+      expect((await marketplace.ownerCut()).toNumber()).to.be.equal(newOwnerCut);
+      await expect(marketplace.connect(accounts[1]).setOwnerCut(OWNER_CUT)).to.be.revertedWith("");
+
+      await marketplace.setOwnerCut(OWNER_CUT);
+    });
   });
 
   describe("Sale", () => {

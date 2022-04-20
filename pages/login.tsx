@@ -55,12 +55,7 @@ const Login = () => {
 
   const handleRegister = async (user: Values) => {
     try {
-      const res = await signup(user.email, user.password, user.email);
-      await Moralis.Cloud.run("sendVerificationEmail", {
-        email: user.email,
-        name: user.email,
-      });
-      console.log({res});
+      await signup(user.email, user.password, user.email);
     } catch (err) {
       console.log({err});
     }
@@ -142,7 +137,6 @@ interface EmailPasswordFormProps {
 
 const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (props) => {
   const {onLogin, onRegister, loading} = props;
-  const [openRegistration, setOpenRegistration] = React.useState(false);
   const {Modal: ModalRegister, isShow, show, hide} = useModal();
   const {
     register,
