@@ -13,6 +13,7 @@ const DashboardComponent = () => {
     totalVolume: 0,
     cardsSold: 0,
   });
+  const [columnSelected, setColumnSelected] = React.useState("last_24h");
   const [listedSelected, setListedSelected] = React.useState("trading_cards");
   const [soldSelected, setSoldSelected] = React.useState("trading_cards");
   const { nfts } = useAppSelector((state) => state);
@@ -99,12 +100,25 @@ const DashboardComponent = () => {
     }
   }, [listedSelected, soldSelected]);
 
+  React.useEffect(() => {
+    switch (columnSelected) {
+      case "last_24h":
+        break;
+      case "last_7d":
+        break;
+      case "last_30d":
+        break;
+    }
+  }, [columnSelected]);
+
   return (
     <div className="w-full flex flex-col md:px-16 pt-36 min-h-screen bg-overlay px-4 pb-24">
       <TransactionsBoard
         totalSale={transactionsBoard.totalSale}
         totalVolume={transactionsBoard.totalVolume}
         cardsSold={transactionsBoard.cardsSold}
+        columnSelected={columnSelected}
+        setColumnSelected={setColumnSelected}
       />
       <div className="grid xl:grid-cols-2 grid-cols-1 xl:gap-8 mt-6">
         <Table

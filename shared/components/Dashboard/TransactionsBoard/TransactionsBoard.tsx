@@ -19,6 +19,8 @@ const TransactionsBoard: React.FC<any> = ({
   totalSale,
   totalVolume,
   cardsSold,
+  columnSelected,
+  setColumnSelected,
 }) => {
   const platformItems = [
     {
@@ -53,7 +55,7 @@ const TransactionsBoard: React.FC<any> = ({
       },
     },
   ];
-  const [columnSelected, setColumnSelected] = React.useState("last_24h");
+
   return (
     <div className="w-full flex flex-col">
       <div className="w-full rounded-md border-2 border-overlay-border">

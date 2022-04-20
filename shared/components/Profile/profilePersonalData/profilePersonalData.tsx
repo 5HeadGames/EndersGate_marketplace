@@ -94,92 +94,99 @@ const ProfileDataAndActions = () => {
   ];
 
   return (
-    <div className="flex flex-col w-full">
-      <Modal isShow={isShow}>
-        <div className="flex flex-col items-center p-6">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            action=""
-            className="flex flex-col items-center w-full"
-          >
-            <input
-              onChange={(e: React.ChangeEvent<any>) =>
-                setImage(e.target.files[0])
-              }
-              type="file"
-              accept="image/*"
-              id="profile_picture"
-              className="hidden"
-            />
-            <div className="flex md:flex-row flex-col items-center mb-4">
-              <div className="h-24 w-24 rounded-full relative">
-                <img src={profileImage} alt="" />
-              </div>
-              <label
-                htmlFor="profile_picture"
-                className={clsx(
-                  "bg-overlay border border-primary cursor-pointer",
-                  "text-primary px-4 py-2 text-md rounded-md md:ml-4 md:mt-0 mt-4"
-                )}
+    <>
+      {user && (
+        <div className="flex flex-col w-full">
+          <Modal isShow={isShow}>
+            <div className="flex flex-col items-center p-6">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                action=""
+                className="flex flex-col items-center w-full"
               >
-                Change Picture
-              </label>
+                <input
+                  onChange={(e: React.ChangeEvent<any>) =>
+                    setImage(e.target.files[0])
+                  }
+                  type="file"
+                  accept="image/*"
+                  id="profile_picture"
+                  className="hidden"
+                />
+                <div className="flex md:flex-row flex-col items-center mb-4">
+                  <div className="h-24 w-24 rounded-full relative">
+                    <img src={profileImage} alt="" />
+                  </div>
+                  <label
+                    htmlFor="profile_picture"
+                    className={clsx(
+                      "bg-overlay border border-primary cursor-pointer",
+                      "text-primary px-4 py-2 text-md rounded-md md:ml-4 md:mt-0 mt-4"
+                    )}
+                  >
+                    Change Picture
+                  </label>
+                </div>
+                <Input
+                  register={register}
+                  name="name"
+                  placeholder="Nickname"
+                  defaultValue={user?.get("name")}
+                />
+                <Button
+                  decoration="fillPrimary"
+                  size="small"
+                  type="submit"
+                  className="mt-4"
+                >
+                  Save
+                </Button>
+              </form>
             </div>
-            <Input
-              register={register}
-              name="name"
-              placeholder="Nickname"
-              defaultValue={user?.get("name")}
-            />
-            <Button
-              decoration="fillPrimary"
-              size="small"
-              type="submit"
-              className="mt-4"
+          </Modal>
+          <div
+            className={clsx(
+              "p-4 flex flex-col w-full justify-center items-center",
+              "border border-overlay-border rounded-md mb-2"
+            )}
+          >
+            <img src={profileImage} className="h-16 w-16 rounded-full" alt="" />
+            <Typography
+              type="title"
+              className="text-primary flex items-center mt-2"
             >
-              Save
-            </Button>
-          </form>
+              {user?.get("name")}
+            </Typography>
+            <div
+              onClick={() => {
+                show();
+              }}
+              className="cursor-pointer h-4 w-4 text-primary"
+            >
+              <FormOutlined />
+            </div>
+            <Typography
+              type="span"
+              className="text-white md:text-xs text-caption"
+            >
+              {user?.get("email") || ""}
+            </Typography>
+          </div>
+          <div className="flex flex-col gap-2">
+            {links.map((link, index) => {
+              return (
+                <Button
+                  {...link}
+                  decoration={link.decoration || ("fill" as any)}
+                  key={"profile-option-" + index}
+                  className="p-3 flex justify-start items-start w-full"
+                />
+              );
+            })}
+          </div>
         </div>
-      </Modal>
-      <div
-        className={clsx(
-          "p-4 flex flex-col w-full justify-center items-center",
-          "border border-overlay-border rounded-md mb-2"
-        )}
-      >
-        <img src={profileImage} className="h-16 w-16 rounded-full" alt="" />
-        <Typography
-          type="title"
-          className="text-primary flex items-center mt-2"
-        >
-          {user?.get("name")}
-        </Typography>
-        <div
-          onClick={() => {
-            show();
-          }}
-          className="cursor-pointer h-4 w-4 text-primary"
-        >
-          <FormOutlined />
-        </div>
-        <Typography type="span" className="text-white md:text-xs text-caption">
-          {user?.get("email") || ""}
-        </Typography>
-      </div>
-      <div className="flex flex-col gap-2">
-        {links.map((link, index) => {
-          return (
-            <Button
-              {...link}
-              decoration={link.decoration || ("fill" as any)}
-              key={"profile-option-" + index}
-              className="p-3 flex justify-start items-start w-full"
-            />
-          );
-        })}
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
