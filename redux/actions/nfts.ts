@@ -165,3 +165,29 @@ export const onBuyERC1155 = createAsyncThunk(
     return {seller, tokenId, amount, bid, moralis};
   }
 );
+
+export const onCancelSale = createAsyncThunk(
+  actionTypes.CANCEL_NFT,
+  async function prepare(args: {
+    tokenId: number | string;
+    nftContract: string;
+    moralis: Moralis;
+  }) {
+    const { tokenId, moralis } = args;
+    const provider = moralis.web3.provider;
+    const user = Moralis.User.current();
+    const { marketplace } = getAddresses();
+    const marketplaceContract = getContractCustom(
+      "ClockSale",
+      marketplace,
+      provider
+    );
+    await marketplaceContract.methods
+      .cancelSale(tokenId)
+      .send({ from: user.get("ethAddress") });
+
+    await user.save();
+
+    return { tokenId,  moralis };
+  }
+);

@@ -3,21 +3,22 @@ import clsx from "clsx";
 import {
   CheckCircleOutlined,
   FormOutlined,
+  FundViewOutlined,
   GoldenFilled,
   IdcardOutlined,
   LogoutOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import {useForm} from "react-hook-form";
-import {useMoralis, useMoralisFile} from "react-moralis";
+import { useForm } from "react-hook-form";
+import { useMoralis, useMoralisFile } from "react-moralis";
 
-import {Button} from "@shared/components/common/button";
-import {Typography} from "@shared/components/common/typography";
-import {Icons} from "@shared/const/Icons";
-import {useModal} from "@shared/hooks/modal";
-import {Input} from "@shared/components/common/form/input";
+import { Button } from "@shared/components/common/button";
+import { Typography } from "@shared/components/common/typography";
+import { Icons } from "@shared/const/Icons";
+import { useModal } from "@shared/hooks/modal";
+import { Input } from "@shared/components/common/form/input";
 
-type ButtonsTypes = {logout: boolean; userData: boolean};
+type ButtonsTypes = { logout: boolean; userData: boolean };
 
 const ProfileDataAndActions = () => {
   const [disabled, setDisabled] = React.useState<ButtonsTypes>({
@@ -25,10 +26,10 @@ const ProfileDataAndActions = () => {
     userData: false,
   });
   const [image, setImage] = React.useState<File | null>(null);
-  const {Modal, isShow, show, hide} = useModal();
-  const {register, handleSubmit} = useForm();
-  const {logout, user, setUserData} = useMoralis();
-  const {saveFile} = useMoralisFile();
+  const { Modal, isShow, show, hide } = useModal();
+  const { register, handleSubmit } = useForm();
+  const { logout, user, setUserData } = useMoralis();
+  const { saveFile } = useMoralisFile();
   const profileImage = user?.get("profileImage")
     ? user.get("profileImage").url()
     : Icons.logo;
@@ -77,6 +78,11 @@ const ProfileDataAndActions = () => {
       href: "/profile/accountSettings",
       label: "Account Settings",
       icon: <SettingOutlined />,
+    },
+    {
+      href: "/profile/mySales",
+      label: "My Sales",
+      icon: <FundViewOutlined />,
     },
     {
       label: "Logout",
@@ -147,7 +153,7 @@ const ProfileDataAndActions = () => {
           type="title"
           className="text-primary flex items-center mt-2"
         >
-          {user.get("name")}
+          {user?.get("name")}
         </Typography>
         <div
           onClick={() => {
@@ -158,7 +164,7 @@ const ProfileDataAndActions = () => {
           <FormOutlined />
         </div>
         <Typography type="span" className="text-white md:text-xs text-caption">
-          {user.get("email") || ""}
+          {user?.get("email") || ""}
         </Typography>
       </div>
       <div className="flex flex-col gap-2">

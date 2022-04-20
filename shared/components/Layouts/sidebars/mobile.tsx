@@ -15,6 +15,8 @@ import {
   DownOutlined,
   RightOutlined,
   ShopOutlined,
+  TwitterOutlined,
+  WalletOutlined,
 } from "@ant-design/icons";
 
 interface LayoutDashboardProps {
@@ -33,7 +35,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
   initialFocus = null,
 }) => {
   const router = useRouter();
-  const {user} = useMoralis();
+  const { user } = useMoralis();
   const address = user?.get("ethAddress") || "";
 
   const navItems = [
@@ -44,48 +46,56 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
       icon: <AppstoreFilled />,
       items: [
         {
-          title: "Marketplace",
-          description: "Sell your game items to anyone, anywhere, they're finally yours",
+          title: "Enders Gate Website",
+          description:
+            "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
           icon: <ShopOutlined />,
         },
         {
-          title: "Marketplace",
-          description: "Sell your game items to anyone, anywhere, they're finally yours",
+          title: "Enders Gate Discord",
+          description:
+            "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
           icon: <ShopOutlined />,
         },
         {
-          title: "Marketplace",
-          description: "Sell your game items to anyone, anywhere, they're finally yours",
+          title: "Enders Gate Twitter",
+          description:
+            "Sell your game items to anyone, anywhere, they're finally yours",
           href: "/marketplace",
-          icon: <ShopOutlined />,
+          icon: <TwitterOutlined />,
         },
         {
-          title: "Marketplace",
-          description: "Sell your game items to anyone, anywhere, they're finally yours",
+          title: "Harmony Block Explorer",
+          description:
+            "Trusted chrome wallet extension, store your digital currency and NFTs",
           href: "/marketplace",
-          icon: <ShopOutlined />,
+          icon: <WalletOutlined />,
         },
         {
-          title: "Marketplace",
-          description: "Sell your game items to anyone, anywhere, they're finally yours",
+          title: "Harmony Wallet",
+          description:
+            "Trusted chrome wallet extension, store your digital currency and NFTs",
           href: "/marketplace",
-          icon: <ShopOutlined />,
+          icon: <WalletOutlined />,
         },
         {
-          title: "Marketplace",
-          description: "Sell your game items to anyone, anywhere, they're finally yours",
+          title: "Harmony Bridge",
+          description:
+            "Trusted chrome wallet extension, store your digital currency and NFTs",
           href: "/marketplace",
-          icon: <ShopOutlined />,
+          icon: <WalletOutlined />,
         },
       ],
     },
-    {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
-    {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
+    { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
+    { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
   ];
 
-  const [collapse, setCollapse] = React.useState(new Array(navItems.length).fill(false));
+  const [collapse, setCollapse] = React.useState(
+    new Array(navItems.length).fill(false)
+  );
 
   return (
     <>
@@ -145,7 +155,11 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
               <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                 <div className="flex-shrink-0 flex items-center px-4">
                   <Link href="/">
-                    <a className={clsx("cursor-pointer flex items-center justify-center")}>
+                    <a
+                      className={clsx(
+                        "cursor-pointer flex items-center justify-center"
+                      )}
+                    >
                       <img className="w-40" src={Icons.logo} alt="" />
                     </a>
                   </Link>
@@ -188,10 +202,14 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                           </p>
 
                           <div className="flex-shrink-0 text-primary flex items-center text-xl">
-                            {!collapse[index] ? <RightOutlined /> : <DownOutlined />}
+                            {!collapse[index] ? (
+                              <RightOutlined />
+                            ) : (
+                              <DownOutlined />
+                            )}
                           </div>
                         </div>
-                        <div className={clsx({["hidden"]: !collapse[index]})}>
+                        <div className={clsx({ ["hidden"]: !collapse[index] })}>
                           {item?.items?.map((subItem) => {
                             return (
                               <Link key={subItem.title} href={subItem.href}>
@@ -199,7 +217,8 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                                   className={clsx(
                                     "flex items-center px-3 py-4  text-base my-1 relative text-primary",
                                     {
-                                      "opacity-50": subItem.href !== router.asPath,
+                                      "opacity-50":
+                                        subItem.href !== router.asPath,
                                     }
                                   )}
                                   href="#"
