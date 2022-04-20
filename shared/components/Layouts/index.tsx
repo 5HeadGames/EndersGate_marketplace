@@ -137,6 +137,12 @@ export default function AppLayout({children}) {
     await dispatch(onLoadSales());
   };
 
+  const handleEnableWeb3 = async () => {
+    if (!isWeb3Enabled) {
+      await enableWeb3();
+    }
+  };
+
   React.useEffect(() => {
     initApp();
   }, []);
@@ -146,7 +152,7 @@ export default function AppLayout({children}) {
   }, [isAuthenticated]);
 
   React.useEffect(() => {
-    enableWeb3();
+    handleEnableWeb3();
   }, [isWeb3Enabled]);
 
   return (
