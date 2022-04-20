@@ -32,10 +32,10 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
     duration: 0,
   });
 
-  const { Modal, show, hide, isShow } = useModal();
+  const {Modal, show, hide, isShow} = useModal();
 
   const sellNft = async () => {
-    if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
+    if (sellNFTData.amount > NFTs.balancePacks[id].balance) {
       return alert("You don't have enough tokens to sell");
     }
     if (sellNFTData.duration <= 3600 * 24) {
@@ -44,7 +44,7 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
     try {
       const tokenId = id;
       setMessage("Allowing us to sell your tokens");
-      const { pack, marketplace } = getAddresses();
+      const {pack, marketplace} = getAddresses();
       await approveERC1155({
         provider: web3.provider,
         from: user.get("ethAddress"),
@@ -63,30 +63,23 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
           moralis: Moralis,
         })
       );
-      dispatch(onLoadSales());
-      dispatch(onGetAssets(user.get("ethAddress")));
-      setMessage(
-        "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
-      );
-      hide();
-      setSellNFTData({
-        startingPrice: 0,
-        amount: 0,
-        duration: 0,
-      });
-      window.location.reload();
-    } catch {
-      await dispatch(onLoadSales());
-      setMessage(
-        "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
-      );
-      hide();
-      setSellNFTData({
-        startingPrice: 0,
-        amount: 0,
-        duration: 0,
-      });
+    } catch (err) {
+      console.log({err});
     }
+
+    dispatch(onLoadSales());
+    dispatch(onGetAssets(user.get("ethAddress")));
+
+    setMessage(
+      "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
+    );
+    hide();
+    setSellNFTData({
+      startingPrice: 0,
+      amount: 0,
+      duration: 0,
+    });
+    router.push("/marketplace");
   };
   React.useEffect(() => {
     console.log("nft data", sellNFTData);
@@ -98,16 +91,14 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
         <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
           <h2 className="font-bold text-primary text-center">Sell NFT</h2>
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
-            <label className="text-primary font-medium">
-              Starting price for each NFT (ONE)
-            </label>
+            <label className="text-primary font-medium">Starting price for each NFT (ONE)</label>
             <input
               type="number"
               className="bg-overlay text-primary text-center"
               value={sellNFTData.startingPrice}
               onChange={(e) => {
                 setSellNFTData((prev: any) => {
-                  return { ...prev, startingPrice: e.target.value };
+                  return {...prev, startingPrice: e.target.value};
                 });
               }}
             />
@@ -120,7 +111,7 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
               value={sellNFTData.amount}
               onChange={(e) => {
                 setSellNFTData((prev: any) => {
-                  return { ...prev, amount: parseInt(e.target.value) };
+                  return {...prev, amount: parseInt(e.target.value)};
                 });
               }}
             />
@@ -136,8 +127,7 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                   return {
                     ...prev,
                     duration:
-                      Math.floor(date.getTime() / 1000) -
-                      Math.floor(new Date().getTime() / 1000),
+                      Math.floor(date.getTime() / 1000) - Math.floor(new Date().getTime() / 1000),
                   };
                 });
               }}
@@ -146,7 +136,7 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
           <div className="py-6">
             <div className="text-primary text-sm text-center flex items-center justify-center">
               {message ===
-              "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
+                "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
                 message
               ) : (
                 <span className="flex gap-4 items-center justify-center">
@@ -205,12 +195,7 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                   size="small"
                   onClick={() => show()}
                 >
-                  <img
-                    src={Icons.harmony}
-                    className="h-6 w-6 rounded-full mr-2"
-                    alt=""
-                  />{" "}
-                  Sell now
+                  <img src={Icons.harmony} className="h-6 w-6 rounded-full mr-2" alt="" /> Sell now
                 </Button>
               )}
             </div>
@@ -223,10 +208,10 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                     id == 0
                       ? Images.pack1
                       : id == 1
-                      ? Images.pack2
-                      : id == 2
-                      ? Images.pack3
-                      : Images.pack4
+                        ? Images.pack2
+                        : id == 2
+                          ? Images.pack3
+                          : Images.pack4
                   }
                   className="w-72"
                   alt=""
@@ -241,32 +226,20 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                 <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
                   <div className="flex flex-row gap-4">
                     <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
+                      <Typography type="subTitle" className="text-white font-bold">
                         NAME
                       </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
+                      <Typography type="subTitle" className="text-primary opacity-75">
                         {packs[id].properties.name.value}
                       </Typography>
                     </div>
                   </div>
                   <div>
                     <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
+                      <Typography type="subTitle" className="text-white font-bold">
                         DESCRIPTION
                       </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
+                      <Typography type="subTitle" className="text-primary opacity-75">
                         {packs[id].properties.description.value}
                       </Typography>
                     </div>
@@ -274,16 +247,10 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                   {NFTs.balancePacks[id] && NFTs.balancePacks[id].balance && (
                     <div>
                       <div className="flex flex-col">
-                        <Typography
-                          type="subTitle"
-                          className="text-white font-bold"
-                        >
+                        <Typography type="subTitle" className="text-white font-bold">
                           YOUR BALANCE
                         </Typography>
-                        <Typography
-                          type="subTitle"
-                          className="text-primary opacity-75"
-                        >
+                        <Typography type="subTitle" className="text-primary opacity-75">
                           {NFTs.balancePacks[id].balance}
                         </Typography>
                       </div>

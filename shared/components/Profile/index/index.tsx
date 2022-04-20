@@ -23,11 +23,15 @@ const ProfileIndexPage = () => {
 
     const activities = await query.find({});
     setActivities(
-      activities.map((act) => ({
-        createdAt: act.get("createdAt"),
-        type: act.get("type"),
-        metadata: JSON.parse(act.get("metadata")),
-      }))
+      activities
+        .map((act) => ({
+          createdAt: act.get("createdAt"),
+          type: act.get("type"),
+          metadata: JSON.parse(act.get("metadata")),
+        }))
+        .sort((a, b) => {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        })
     );
   };
 
@@ -161,6 +165,7 @@ export const Activity = ({date, type}) => {
         {type === "login" && "You loged in for first time"}
         {type === "buy" && "You bought an/some NFT/s"}
         {type === "sell" && "You have listed an/some NFT/s"}
+        {type === "cancel" && "You have cancelled a sale"}
       </div>
     </div>
   );

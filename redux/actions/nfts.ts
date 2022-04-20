@@ -114,16 +114,17 @@ export const onSellERC1155 = createAsyncThunk(
     const provider = moralis.web3.provider;
     const user = Moralis.User.current();
     const relation = user.relation("events");
-    const event = createEvent({
-      type: "sell",
-      metadata: {from, tokenId, startingPrice, amount, duration, address},
-    });
 
     const {marketplace} = getAddresses();
     const marketplaceContract = getContractCustom("ClockSale", marketplace, provider);
-    await marketplaceContract.methods
+    const {transactionHash} = await marketplaceContract.methods
       .createSale(address, tokenId, startingPrice, amount, duration)
       .send({from: from});
+
+    const event = createEvent({
+      type: "sell",
+      metadata: {from, tokenId, startingPrice, amount, duration, address, transactionHash},
+    });
 
     await event.save();
     relation.add(event);
@@ -147,16 +148,17 @@ export const onBuyERC1155 = createAsyncThunk(
     const provider = moralis.web3.provider;
     const user = Moralis.User.current();
     const relation = user.relation("events");
-    const event = createEvent({
-      type: "buy",
-      metadata: {seller, tokenId, amount, bid},
-    });
 
     const {marketplace} = getAddresses();
     const marketplaceContract = getContractCustom("ClockSale", marketplace, provider);
-    await marketplaceContract.methods
+    const {transactionHash} = await marketplaceContract.methods
       .buy(tokenId, amount)
       .send({from: user.get("ethAddress"), value: bid});
+
+    const event = createEvent({
+      type: "buy",
+      metadata: {seller, tokenId, amount, bid, transactionHash},
+    });
 
     await event.save();
     relation.add(event);
@@ -173,21 +175,26 @@ export const onCancelSale = createAsyncThunk(
     nftContract: string;
     moralis: Moralis;
   }) {
-    const { tokenId, moralis } = args;
+    const {tokenId, moralis} = args;
     const provider = moralis.web3.provider;
     const user = Moralis.User.current();
-    const { marketplace } = getAddresses();
-    const marketplaceContract = getContractCustom(
-      "ClockSale",
-      marketplace,
-      provider
-    );
-    await marketplaceContract.methods
-      .cancelSale(tokenId)
-      .send({ from: user.get("ethAddress") });
+    const relation = user.relation("events");
 
+    const {marketplace} = getAddresses();
+    const marketplaceContract = getContractCustom("ClockSale", marketplace, provider);
+    const {transactionHash} = await marketplaceContract.methods
+      .cancelSale(tokenId)
+      .send({from: user.get("ethAddress")});
+
+    const event = createEvent({
+      type: "cancel",
+      metadata: {tokenId, from: user.get("ethAddress"), transactionHash},
+    });
+
+    await event.save();
+    relation.add(event);
     await user.save();
 
-    return { tokenId,  moralis };
+    return {tokenId, moralis};
   }
 );

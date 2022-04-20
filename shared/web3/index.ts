@@ -100,7 +100,7 @@ export const createEvent = ({
   type,
   metadata,
 }: {
-  type: "sell" | "buy" | "login";
+  type: "sell" | "buy" | "login" | "cancel";
   metadata:
   | Object
   | {

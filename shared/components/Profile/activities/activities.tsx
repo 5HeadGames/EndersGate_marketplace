@@ -23,11 +23,15 @@ const Activities = () => {
 
     const activities = await query.find({});
     setActivities(
-      activities.map((act) => ({
-        createdAt: act.get("createdAt"),
-        type: act.get("type"),
-        metadata: JSON.parse(act.get("metadata")),
-      }))
+      activities
+        .map((act) => ({
+          createdAt: act.get("createdAt"),
+          type: act.get("type"),
+          metadata: JSON.parse(act.get("metadata")),
+        }))
+        .sort((a, b) => {
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        })
     );
   };
 
