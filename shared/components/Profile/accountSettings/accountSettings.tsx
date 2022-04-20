@@ -63,7 +63,7 @@ const AccountSettingsComponent = () => {
 
   const sendPasswordReset = async () => {
     console.log("sent");
-    const email = user.get("email");
+    const email = user?.get("email");
     await Moralis.User.requestPasswordReset(email);
     await Moralis.Cloud.run("sendResetPasswordEmail", {
       email,
@@ -85,7 +85,11 @@ const AccountSettingsComponent = () => {
           <div className="flex md:flex-col sm:flex-row flex-col mb-4 items-center">
             <div className="xl:h-40 xl:w-40 md:h-32 md:w-32 h-40 w-40 rounded-full relative">
               <img
-                src={user.get("profileImage") ? user.get("profileImage").url() : Icons.logo}
+                src={
+                  user.get("profileImage")
+                    ? user.get("profileImage").url()
+                    : Icons.logo
+                }
                 alt=""
               />
             </div>
@@ -116,7 +120,7 @@ const AccountSettingsComponent = () => {
               title="User Name"
               labelVisible
               className="text-primary mt-2"
-              defaultValue={user.get("name")}
+              defaultValue={user?.get("name")}
               onBlur={handleSetField("name")}
             />
 
@@ -128,7 +132,7 @@ const AccountSettingsComponent = () => {
               title="Status"
               labelVisible
               className="text-primary mt-2"
-              defaultValue={user.get("userStatus")}
+              defaultValue={user?.get("userStatus")}
               onBlur={handleSetField("userStatus")}
             />
           </div>
@@ -141,7 +145,7 @@ const AccountSettingsComponent = () => {
                 error={errors.newEmail}
                 isFill={!!watch("newEmail")}
                 name="newEmail"
-                title={user.get("email") ? "New email" : "Email"}
+                title={user?.get("email") ? "New email" : "Email"}
                 labelVisible
                 className="text-primary mt-2"
               />
@@ -150,7 +154,7 @@ const AccountSettingsComponent = () => {
                 error={errors.newPassword}
                 isFill={!!watch("newPassword")}
                 name="newPassword"
-                title={user.get("email") ? "New password" : "Password"}
+                title={user?.get("email") ? "New password" : "Password"}
                 labelVisible
                 className="text-primary mt-2"
               />
@@ -162,7 +166,9 @@ const AccountSettingsComponent = () => {
               decoration="fillPrimary"
               onClick={sendPasswordReset}
             >
-              {successPassword ? "We sent a link to your email" : "Reset password"}
+              {successPassword
+                ? "We sent a link to your email"
+                : "Reset password"}
             </Button>
           )}
           <Button
