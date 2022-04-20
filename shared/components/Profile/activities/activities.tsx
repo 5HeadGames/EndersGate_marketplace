@@ -52,7 +52,8 @@ const Activities = () => {
           "w-full ",
           "flex flex-col",
           {
-            [`${Styles.gray} justify-center items-center gap-6 h-72`]: activities.length <= 0,
+            [`${Styles.gray} justify-center items-center gap-6 h-72`]:
+              activities.length === 0,
           },
           {
             ["gap-y-2"]: activities.length > 0,
@@ -60,13 +61,16 @@ const Activities = () => {
         )}
       >
         {activities.length > 0 ? (
-          activities.map(({createdAt, type, metadata}, index) => {
+          activities.map(({ createdAt, type, metadata }, index) => {
             return <Activity date={createdAt} type={type} />;
           })
         ) : (
           <>
             <img src={Icons.logo} className="h-40 w-40" alt="" />
-            <Typography type="subTitle" className={clsx(Styles.title, "text-primary")}>
+            <Typography
+              type="subTitle"
+              className={clsx(Styles.title, "text-primary")}
+            >
               You don't have any activity yet
             </Typography>
           </>

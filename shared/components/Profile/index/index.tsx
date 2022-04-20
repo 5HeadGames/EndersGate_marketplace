@@ -58,14 +58,18 @@ const ProfileIndexPage = () => {
           "flex flex-col justify-between border border-overlay-border p-4 rounded-t-md h-52 relative overflow-hidden"
         )}
       >
-        <img src={Icons.harmony} className="absolute top-[-80px] right-[-80px]" alt="" />
+        <img
+          src={Icons.harmony}
+          className="absolute top-[-80px] right-[-80px]"
+          alt=""
+        />
         <div className="flex flex-row">
           <div className="flex flex-col">
             {" "}
             <Typography type="title" className="text-primary ">
               Balance
             </Typography>
-            <h1 className="text-white" style={{fontSize: "32px"}}>
+            <h1 className="text-white" style={{ fontSize: "32px" }}>
               {balance} ONE
             </h1>
           </div>
@@ -79,7 +83,7 @@ const ProfileIndexPage = () => {
           <div
             onClick={() => {
               navigator.clipboard.writeText(user?.get("ethAddress"));
-              addToast("Copied to clipboard", {appearance: "info"});
+              addToast("Copied to clipboard", { appearance: "info" });
             }}
             className="cursor-pointer"
           >
@@ -88,7 +92,9 @@ const ProfileIndexPage = () => {
           <a
             target="_blank"
             rel="noreferrer"
-            href={`https://explorer.harmony.one/address/${user?.get("ethAddress")}`}
+            href={`https://explorer.harmony.one/address/${user?.get(
+              "ethAddress"
+            )}`}
           >
             <SelectOutlined />
           </a>
@@ -113,7 +119,8 @@ const ProfileIndexPage = () => {
             "w-full ",
             "flex flex-col",
             {
-              [`${Styles.gray} justify-center items-center gap-6 h-72`]: activities.length > 0,
+              [`${Styles.gray} justify-center items-center gap-6 h-72`]:
+                activities.length === 0,
             },
             {
               ["py-10 gap-y-2"]: activities.length > 0,
@@ -121,13 +128,16 @@ const ProfileIndexPage = () => {
           )}
         >
           {activities.length > 0 ? (
-            activities.map(({createdAt, type}, index) => {
+            activities.map(({ createdAt, type }, index) => {
               return <Activity date={createdAt} type={type} />;
             })
           ) : (
             <>
               <img src={Icons.logo} className="h-40 w-40" alt="" />
-              <Typography type="subTitle" className={clsx(Styles.title, "text-primary")}>
+              <Typography
+                type="subTitle"
+                className={clsx(Styles.title, "text-primary")}
+              >
                 You don't have any activity yet
               </Typography>
             </>
