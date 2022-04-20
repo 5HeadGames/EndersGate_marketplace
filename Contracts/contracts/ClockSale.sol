@@ -60,6 +60,7 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     uint256 _nftAmount
   );
   event SaleCancelled(uint256 indexed _auctionId);
+  event ChangedFeeReceiver(address newReceiver);
 
   constructor(
     address _feeReceiver,
@@ -94,6 +95,15 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
   function isOnSale(uint256 _tokenId) external view returns (bool) {
     Sale storage _auction = sales[_tokenId];
     return _isOnSale(_auction);
+  }
+
+  function setFeeReceiver(address _feeReceiver) external onlyOwner {
+    feeReceiver = _feeReceiver;
+    emit ChangedFeeReceiver(feeReceiver);
+  }
+
+  function setOwnerCut(uint256 _ownerCut) external onlyOwner {
+    ownerCut = _ownerCut;
   }
 
   function createSale(

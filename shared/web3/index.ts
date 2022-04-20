@@ -19,7 +19,7 @@ export const getWalletConnect = () => {
   });
 };
 
-export const getWeb3 = (provider?: string) => {
+export const getWeb3 = (provider?: any) => {
   return new Web3(provider ? provider : (window as any).ethereum);
 };
 

@@ -137,14 +137,23 @@ export default function AppLayout({children}) {
     await dispatch(onLoadSales());
   };
 
+  const handleEnableWeb3 = async () => {
+    if (!isWeb3Enabled) {
+      await enableWeb3();
+    }
+  };
+
   React.useEffect(() => {
     initApp();
   }, []);
 
   React.useEffect(() => {
     if (isAuthenticated && user) dispatch(onGetAssets(user.get("ethAddress")));
-    enableWeb3();
   }, [isAuthenticated]);
+
+  React.useEffect(() => {
+    handleEnableWeb3();
+  }, [isWeb3Enabled]);
 
   return (
     <Layout

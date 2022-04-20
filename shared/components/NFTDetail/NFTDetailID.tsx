@@ -17,7 +17,7 @@ import {approveERC1155} from "@shared/web3";
 const {marketplace} = getAddresses();
 
 const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
-  const {web3, user, Moralis, isWeb3Enabled} = useMoralis();
+  const {web3, user, Moralis, isWeb3Enabled, enableWeb3} = useMoralis();
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -63,30 +63,20 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
           moralis: Moralis,
         })
       );
-      dispatch(onLoadSales());
-      dispatch(onGetAssets(user.get("ethAddress")));
-      setMessage(
-        "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
-      );
-      hide();
-      setSellNFTData({
-        startingPrice: 0,
-        amount: 0,
-        duration: 0,
-      });
-      window.location.reload();
-    } catch {
-      await dispatch(onLoadSales());
-      setMessage(
-        "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
-      );
-      hide();
-      setSellNFTData({
-        startingPrice: 0,
-        amount: 0,
-        duration: 0,
-      });
+    } catch (err) {
+      console.log({err});
     }
+    dispatch(onLoadSales());
+    dispatch(onGetAssets(user.get("ethAddress")));
+    setMessage(
+      "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
+    );
+    hide();
+    setSellNFTData({
+      startingPrice: 0,
+      amount: 0,
+      duration: 0,
+    });
   };
 
   return (
