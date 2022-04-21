@@ -27,7 +27,6 @@ const MyApp = ({Component, pageProps}: AppProps & {Component: any}) => {
             </Layout>
           </ToastProvider>
         </MoralisProvider>
-        ,
       </Provider>
     </>
   );

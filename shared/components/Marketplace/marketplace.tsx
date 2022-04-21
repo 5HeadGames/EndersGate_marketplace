@@ -122,7 +122,7 @@ const MarketplaceComponent = () => {
 
   const [filter, setFilter] = React.useState({
     avatar: false,
-    champions: false,
+    guardian: false,
     action_cards: false,
     reaction_cards: false,
     // tanks: false,
@@ -144,17 +144,49 @@ const MarketplaceComponent = () => {
     // attack: false,
     // damage_stats: false,
     // mages_stats: false,
+    common: false,
+    rare: false,
+    ultra_rare: false,
+    uncommon: false,
   });
 
   const passFilter = (id: any) => {
     let passed = false;
-    if (filter.champions && id >= 54) {
+    if (filter.guardian && id >= 54) {
       passed = true;
     }
     // if (filter.avatar) {
 
     // }
-    if (filter.reaction_cards && id <= 21) {
+    if (
+      filter.common &&
+      id <= 53 &&
+      cards.All[id]?.properties?.rarity?.value.toLowerCase() === "common"
+    ) {
+      passed = true;
+    }
+    if (
+      filter.uncommon &&
+      id <= 53 &&
+      cards.All[id]?.properties?.rarity?.value.toLowerCase() === "uncommon"
+    ) {
+      passed = true;
+    }
+    if (
+      filter.rare &&
+      id <= 53 &&
+      cards.All[id]?.properties?.rarity?.value.toLowerCase() === "rare"
+    ) {
+      passed = true;
+    }
+    if (
+      filter.ultra_rare &&
+      id <= 53 &&
+      cards.All[id]?.properties?.rarity?.value.toLowerCase() === "ultra rare"
+    ) {
+      passed = true;
+    }
+    if (filter.reaction_cards && id <= 53) {
       passed = true;
     }
     if (filter.action_cards && id >= 22 && id <= 53) {
@@ -197,7 +229,7 @@ const MarketplaceComponent = () => {
         type={type}
         setType={setType}
       />
-      <div className="xl:w-2/3 xl:mt-0 mt-6 flex flex-col">
+      <div className="xl:w-2/3 xl:mt-0 mt-6 flex flex-col pb-10">
         <div>
           <div className="w-full flex justify-between items-center sm:flex-row flex-col">
             <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">

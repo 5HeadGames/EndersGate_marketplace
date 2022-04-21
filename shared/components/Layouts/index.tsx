@@ -47,44 +47,40 @@ const navItems = [
     items: [
       {
         title: "Enders Gate Website",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
-        href: "/marketplace",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
+        externalLink: "https://www.endersgate.one/",
         icon: <ShopOutlined />,
       },
       {
         title: "Enders Gate Discord",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
-        href: "/marketplace",
+        description: "Join to our Discord Server!",
+        href: "https://discord.com/invite/nHNkWdE99h",
         icon: <ShopOutlined />,
       },
       {
         title: "Enders Gate Twitter",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
-        href: "/marketplace",
+        description: "Follow us in Twitter!",
+        externalLink: "https://twitter.com/EndersGate",
         icon: <TwitterOutlined />,
       },
       {
         title: "Harmony Block Explorer",
-        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
-        href: "/marketplace",
-        icon: <WalletOutlined />,
-      },
-      {
-        title: "Harmony Wallet",
-        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
-        href: "/marketplace",
+        description: "Explore all the transactions in the harmony blockchain",
+        externalLink: "https://explorer.harmony.one/",
         icon: <WalletOutlined />,
       },
       {
         title: "Harmony Bridge",
-        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
-        href: "/marketplace",
+        description:
+          "Trusted chrome wallet extension, store your digital currency and NFTs",
+        externalLink: "https://bridge.harmony.one/busd",
         icon: <WalletOutlined />,
       },
     ],
   },
-  {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
-  {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
+  { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
+  { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
 ];
 
 export default function AppLayout({children}) {

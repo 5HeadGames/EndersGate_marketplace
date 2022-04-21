@@ -76,46 +76,60 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
       <Modal isShow={isShow} withoutX>
         <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
           <h2 className="font-bold text-primary text-center">Buy NFT</h2>
-          <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
-            <label className="text-primary font-medium">Amount of NFTs</label>
-            <input
-              type="number"
-              className="bg-overlay text-primary text-center w-24"
-              onChange={(e) => {
-                setBuyNFTData(parseInt(e.target.value));
-              }}
-            />
-          </div>
-          <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
-            <label className="text-primary font-medium">Total Price:</label>
-            {sale && (
-              <span className="text-white">
-                {buyNFTData * parseFloat(Web3.utils.fromWei(sale.price, "ether"))}
-              </span>
-            )}
-          </div>
-          <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
-            <Button
-              // className="px-4 py-2 border border-primary text-primary"
-              decoration="line-primary"
-              className="hover:text-white border-primary"
-              size="small"
-              onClick={() => {
-                setBuyNFTData(0);
-                hide();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              // className="px-4 py-2 border border-primary text-primary"
-              decoration="fillPrimary"
-              className="degradated hover:text-white border-none"
-              size="small"
-              onClick={buyNft}
-            >
-              Buy NFT/s
-            </Button>
+          <div className="flex sm:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
+            <div className="h-64">
+              <img
+                src={cards.All[id]?.properties?.image?.value}
+                className="h-64"
+                alt=""
+              />
+            </div>
+            <div className="flex flex-col gap-4  justify-between">
+              <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
+                <label className="text-primary font-medium">
+                  Amount of NFTs
+                </label>
+                <input
+                  type="number"
+                  className="bg-overlay text-primary text-center w-24"
+                  onChange={(e) => {
+                    setBuyNFTData(parseInt(e.target.value));
+                  }}
+                />
+              </div>
+              <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
+                <label className="text-primary font-medium">Total Price:</label>
+                {sale && (
+                  <span className="text-white">
+                    {buyNFTData *
+                      parseFloat(Web3.utils.fromWei(sale.price, "ether"))}
+                  </span>
+                )}
+              </div>
+              <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
+                <Button
+                  // className="px-4 py-2 border border-primary text-primary"
+                  decoration="line-primary"
+                  className="hover:text-white border-primary"
+                  size="small"
+                  onClick={() => {
+                    setBuyNFTData(0);
+                    hide();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  // className="px-4 py-2 border border-primary text-primary"
+                  decoration="fillPrimary"
+                  className="degradated hover:text-white border-none"
+                  size="small"
+                  onClick={buyNft}
+                >
+                  Buy NFT/s
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </Modal>
@@ -164,7 +178,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
                       show();
                     }}
                   >
-                    <img src={Icons.harmony} className="h-6 w-6" alt="" /> Buy now
+                    <img src={Icons.harmony} className="h-6 w-6" alt="" /> Buy
+                    now
                   </Button>
                 </>
               )}
@@ -177,7 +192,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
                   src={
                     isPack
                       ? packs[sale.nftId].properties.image.value
-                      : cards.All[sale.nftId].properties.image?.value || Icons.logo
+                      : cards.All[sale.nftId].properties.image?.value ||
+                        Icons.logo
                   }
                   className="w-72"
                   alt=""
@@ -192,10 +208,16 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
                 <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
                   <div className="flex flex-row gap-4">
                     <div className="flex flex-col">
-                      <Typography type="subTitle" className="text-white font-bold">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
                         NAME
                       </Typography>
-                      <Typography type="subTitle" className="text-primary opacity-75">
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
                         {isPack
                           ? packs[sale.nftId].properties.name.value
                           : cards.All[sale.nftId].properties.name?.value}
@@ -203,20 +225,32 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
                     </div>
                     {!isPack && cards.All[sale.nftId].properties.type?.value && (
                       <div className="flex flex-col">
-                        <Typography type="subTitle" className="text-white font-bold">
+                        <Typography
+                          type="subTitle"
+                          className="text-white font-bold"
+                        >
                           TYPE
                         </Typography>
-                        <Typography type="subTitle" className="text-primary opacity-75">
+                        <Typography
+                          type="subTitle"
+                          className="text-primary opacity-75"
+                        >
                           {cards.All[sale.nftId].properties.type?.value}
                         </Typography>
                       </div>
                     )}
                     {!isPack && cards.All[sale.nftId].properties.rarity?.value && (
                       <div className="flex flex-col">
-                        <Typography type="subTitle" className="text-white font-bold">
+                        <Typography
+                          type="subTitle"
+                          className="text-white font-bold"
+                        >
                           RARITY
                         </Typography>
-                        <Typography type="subTitle" className="text-primary opacity-75">
+                        <Typography
+                          type="subTitle"
+                          className="text-primary opacity-75"
+                        >
                           {cards.All[sale.nftId].properties.rarity?.value}
                         </Typography>
                       </div>
@@ -224,10 +258,16 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
                   </div>
                   <div>
                     <div className="flex flex-col">
-                      <Typography type="subTitle" className="text-white font-bold">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
                         DESCRIPTION
                       </Typography>
-                      <Typography type="subTitle" className="text-primary opacity-75">
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
                         {isPack
                           ? packs[sale.nftId].properties.description.value
                           : cards.All[sale.nftId].properties.description?.value}
@@ -243,39 +283,69 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
                 <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
                   <div className="flex flex-row gap-4">
                     <div className="flex flex-col">
-                      <Typography type="subTitle" className="text-white font-bold">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
                         OWNER
                       </Typography>
-                      <Typography type="subTitle" className="text-primary opacity-75">
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
                         <AddressText text={sale.seller}></AddressText>
                       </Typography>
                     </div>
                     <div className="flex flex-col">
-                      <Typography type="subTitle" className="text-white font-bold">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
                         AMOUNT OF {isPack ? "PACKS" : "CARDS"} AVAILABLE
                       </Typography>
-                      <Typography type="subTitle" className="text-primary opacity-75">
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
                         {sale.amount}
                       </Typography>
                     </div>
                   </div>
                   <div className="flex flex-row gap-4">
                     <div className="flex flex-col">
-                      <Typography type="subTitle" className="text-white font-bold">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
                         FINISH AT
                       </Typography>
-                      <Typography type="subTitle" className="text-primary opacity-75">
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
                         <TimeConverter
-                          UNIX_timestamp={parseInt(sale.duration) + parseInt(sale.startedAt)}
+                          UNIX_timestamp={
+                            parseInt(sale.duration) + parseInt(sale.startedAt)
+                          }
                         ></TimeConverter>
                       </Typography>
                     </div>
                     <div className="flex flex-col">
-                      <Typography type="subTitle" className="text-white font-bold">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
                         STATUS
                       </Typography>
-                      <Typography type="subTitle" className="text-primary opacity-75">
-                        {sale.status == 0 ? "Active" : sale.status == 1 ? "Sold" : "Cancelled"}
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
+                        {sale.status == 0
+                          ? "Active"
+                          : sale.status == 1
+                          ? "Sold"
+                          : "Cancelled"}
                       </Typography>
                     </div>
                   </div>
