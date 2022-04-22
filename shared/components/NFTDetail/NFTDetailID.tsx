@@ -93,7 +93,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
           <div className="flex md:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
             <div className="h-64 w-40">
               <img
-                src={cards.All[id].properties.image?.value}
+                src={cards.All[id]?.properties.image?.value}
                 className="h-64 w-40"
                 alt=""
               />
@@ -230,7 +230,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
             <div className="flex relative justify-center md:w-1/2 xl:px-24">
               <div className="sm:sticky sm:top-32 h-min w-72">
                 <img
-                  src={cards.All[id].properties.image?.value || Icons.logo}
+                  src={cards.All[id]?.properties?.image?.value || Icons.logo}
                   className="w-72"
                   alt=""
                 />
@@ -254,10 +254,10 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                         type="subTitle"
                         className="text-primary opacity-75"
                       >
-                        {cards.All[id].properties.name?.value}
+                        {cards.All[id]?.properties?.name?.value}
                       </Typography>
                     </div>
-                    {cards.All[id].properties.type?.value && (
+                    {cards.All[id]?.properties.type?.value && (
                       <div className="flex flex-col">
                         <Typography
                           type="subTitle"
@@ -269,11 +269,11 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                           type="subTitle"
                           className="text-primary opacity-75"
                         >
-                          {cards.All[id].properties.type?.value}
+                          {cards.All[id]?.properties.type?.value}
                         </Typography>
                       </div>
                     )}
-                    {cards.All[id].properties.rarity?.value && (
+                    {cards.All[id]?.properties.rarity?.value && (
                       <div className="flex flex-col">
                         <Typography
                           type="subTitle"
@@ -285,7 +285,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                           type="subTitle"
                           className="text-primary opacity-75"
                         >
-                          {cards.All[id].properties.rarity?.value}
+                          {cards.All[id]?.properties.rarity?.value}
                         </Typography>
                       </div>
                     )}
@@ -302,7 +302,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                         type="subTitle"
                         className="text-primary opacity-75"
                       >
-                        {cards.All[id].properties.description?.value}
+                        {cards.All[id]?.properties.description?.value}
                       </Typography>
                     </div>
                   </div>
