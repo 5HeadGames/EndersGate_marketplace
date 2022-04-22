@@ -99,7 +99,7 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
           <div className="flex md:flex-row flex-col md:gap-16 gap-4 w-full items-center">
             <div className="h-64 w-40">
               <img
-                src={packs[id].properties.image?.value}
+                src={packs[id]?.properties?.image?.value}
                 className="h-64 w-40"
                 alt=""
               />
