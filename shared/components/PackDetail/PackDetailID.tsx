@@ -94,107 +94,111 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
   return (
     <>
       <Modal isShow={isShow} withoutX>
-        <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
-          <h2 className="font-bold text-primary text-center">Sell NFT</h2>
-          <div className="flex md:flex-row flex-col md:gap-16 gap-4 w-full items-center">
-            <div className="h-64 w-40">
-              <img
-                src={packs[id]?.properties?.image?.value}
-                className="h-64 w-40"
-                alt=""
-              />
-            </div>
-            <div
-              className="flex flex-col gap-4 justify-between md:w-64"
-              style={{ maxWidth: "100vw" }}
-            >
-              <div className="flex flex-col gap-4 w-full justify-center items-center">
-                <label className="text-primary font-medium">
-                  Starting price for each NFT (ONE)
-                </label>
-                <input
-                  type="number"
-                  className="bg-overlay text-primary text-center"
-                  value={sellNFTData.startingPrice}
-                  min={0}
-                  onChange={(e) => {
-                    setSellNFTData((prev: any) => {
-                      return { ...prev, startingPrice: e.target.value };
-                    });
-                  }}
+        {id ? (
+          <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
+            <h2 className="font-bold text-primary text-center">Sell NFT</h2>
+            <div className="flex md:flex-row flex-col md:gap-16 gap-4 w-full items-center">
+              <div className="h-64 w-40">
+                <img
+                  src={packs[id]?.properties?.image?.value}
+                  className="h-64 w-40"
+                  alt=""
                 />
               </div>
-              <div className="flex flex-col gap-4 w-full justify-center items-center">
-                <label className="text-primary font-medium">
-                  Amount of NFTs
-                </label>
-                <input
-                  type="number"
-                  className="bg-overlay text-primary text-center"
-                  value={sellNFTData.amount}
-                  min={1}
-                  onChange={(e) => {
-                    setSellNFTData((prev: any) => {
-                      return { ...prev, amount: parseInt(e.target.value) };
-                    });
-                  }}
-                />
-              </div>
-              <div className="flex flex-col gap-4 w-full justify-center items-center">
-                <label className="text-primary font-medium">End Date</label>
-                <input
-                  type="date"
-                  className="bg-overlay text-primary text-center"
-                  onChange={(e) => {
-                    const date = new Date(e.target.value + " 00:00");
-                    setSellNFTData((prev: any) => {
-                      return {
-                        ...prev,
-                        duration:
-                          Math.floor(date.getTime() / 1000) -
-                          Math.floor(new Date().getTime() / 1000),
-                      };
-                    });
-                  }}
-                />
-              </div>
-              <div className="py-6">
-                <div className="text-primary text-sm text-center flex items-center justify-center">
-                  {message ===
-                  "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
-                    message
-                  ) : (
-                    <span className="flex gap-4 items-center justify-center">
-                      {message} <LoadingOutlined />
-                    </span>
-                  )}
+              <div
+                className="flex flex-col gap-4 justify-between md:w-64"
+                style={{ maxWidth: "100vw" }}
+              >
+                <div className="flex flex-col gap-4 w-full justify-center items-center">
+                  <label className="text-primary font-medium">
+                    Starting price for each NFT (ONE)
+                  </label>
+                  <input
+                    type="number"
+                    className="bg-overlay text-primary text-center"
+                    value={sellNFTData.startingPrice}
+                    min={0}
+                    onChange={(e) => {
+                      setSellNFTData((prev: any) => {
+                        return { ...prev, startingPrice: e.target.value };
+                      });
+                    }}
+                  />
                 </div>
-              </div>
-              <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
-                <Button
-                  // className="px-4 py-2 border border-primary text-primary"
-                  decoration="line-primary"
-                  className="hover:text-white border-primary"
-                  size="small"
-                  onClick={() => {
-                    hide();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  // className="px-4 py-2 border border-primary text-primary"
-                  decoration="fillPrimary"
-                  className="degradated hover:text-white border-none"
-                  size="small"
-                  onClick={sellNft}
-                >
-                  List NFT/s
-                </Button>
+                <div className="flex flex-col gap-4 w-full justify-center items-center">
+                  <label className="text-primary font-medium">
+                    Amount of NFTs
+                  </label>
+                  <input
+                    type="number"
+                    className="bg-overlay text-primary text-center"
+                    value={sellNFTData.amount}
+                    min={1}
+                    onChange={(e) => {
+                      setSellNFTData((prev: any) => {
+                        return { ...prev, amount: parseInt(e.target.value) };
+                      });
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col gap-4 w-full justify-center items-center">
+                  <label className="text-primary font-medium">End Date</label>
+                  <input
+                    type="date"
+                    className="bg-overlay text-primary text-center"
+                    onChange={(e) => {
+                      const date = new Date(e.target.value + " 00:00");
+                      setSellNFTData((prev: any) => {
+                        return {
+                          ...prev,
+                          duration:
+                            Math.floor(date.getTime() / 1000) -
+                            Math.floor(new Date().getTime() / 1000),
+                        };
+                      });
+                    }}
+                  />
+                </div>
+                <div className="py-6">
+                  <div className="text-primary text-sm text-center flex items-center justify-center">
+                    {message ===
+                    "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
+                      message
+                    ) : (
+                      <span className="flex gap-4 items-center justify-center">
+                        {message} <LoadingOutlined />
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
+                  <Button
+                    // className="px-4 py-2 border border-primary text-primary"
+                    decoration="line-primary"
+                    className="hover:text-white border-primary"
+                    size="small"
+                    onClick={() => {
+                      hide();
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    // className="px-4 py-2 border border-primary text-primary"
+                    decoration="fillPrimary"
+                    className="degradated hover:text-white border-none"
+                    size="small"
+                    onClick={sellNft}
+                  >
+                    List NFT/s
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
       </Modal>
       {id ? (
         <div className="min-h-screen w-full flex flex-col xl:px-20 md:px-10 sm:px-6 pt-32 pb-20">
