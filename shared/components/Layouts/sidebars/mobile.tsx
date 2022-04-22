@@ -13,6 +13,7 @@ import {
   AppstoreFilled,
   AreaChartOutlined,
   DownOutlined,
+  GoldenFilled,
   RightOutlined,
   ShopOutlined,
   TwitterOutlined,
@@ -81,6 +82,11 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
     },
     { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
     { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
+    {
+      link: "/profile/inventory",
+      name: "Inventory",
+      icon: <GoldenFilled />,
+    },
   ];
   const [collapse, setCollapse] = React.useState(
     new Array(navItems.length).fill(false)

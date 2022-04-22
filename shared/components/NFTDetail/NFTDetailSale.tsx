@@ -27,6 +27,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  const [message, setMessage] = React.useState("");
+
   React.useEffect(() => {
     if (id) {
       getSale();
@@ -35,7 +37,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
 
   const getSale = async () => {
     const sale = await loadSale(id);
-    const {pack} = getAddresses();
+    const { pack } = getAddresses();
     if (sale.nft === pack) {
       setIsPack(true);
     } else {
@@ -49,18 +51,23 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
       router.push("/login");
     }
     try {
-      const {pack, endersGate} = getAddresses();
+      setMessage("Buying tokens");
+      const { pack, endersGate } = getAddresses();
       await dispatch(
         onBuyERC1155({
           seller: sale.seller,
           amount: buyNFTData,
-          bid: Web3.utils.toBN(sale.price).mul(Web3.utils.toBN(buyNFTData)).toString(),
+          bid: Web3.utils
+            .toBN(sale.price)
+            .mul(Web3.utils.toBN(buyNFTData))
+            .toString(),
           tokenId: id,
           moralis: Moralis,
           nftContract: isPack ? pack : endersGate,
         })
       );
     } catch {}
+    setMessage("");
     hide();
     dispatch(onLoadSales());
     dispatch(onGetAssets(user.get("ethAddress")));
@@ -69,69 +76,90 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
 
   const notAvailable =
     sale?.status != 0 ||
-    Math.floor(new Date().getTime() / 1000) >= parseInt(sale?.duration) + parseInt(sale?.startedAt);
+    Math.floor(new Date().getTime() / 1000) >=
+      parseInt(sale?.duration) + parseInt(sale?.startedAt);
 
   return (
     <>
       <Modal isShow={isShow} withoutX>
-        <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
-          <h2 className="font-bold text-primary text-center">Buy NFT</h2>
-          <div className="flex sm:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
-            <div className="h-64">
-              <img
-                src={cards.All[id]?.properties?.image?.value}
-                className="h-64"
-                alt=""
-              />
-            </div>
-            <div className="flex flex-col gap-4  justify-between">
-              <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
-                <label className="text-primary font-medium">
-                  Amount of NFTs
-                </label>
-                <input
-                  type="number"
-                  className="bg-overlay text-primary text-center w-24"
-                  onChange={(e) => {
-                    setBuyNFTData(parseInt(e.target.value));
-                  }}
+        {id !== undefined && sale !== undefined ? (
+          <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
+            <h2 className="font-bold text-primary text-center">Buy NFT</h2>
+            <div className="flex sm:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
+              <div className="h-64">
+                <img
+                  src={
+                    isPack
+                      ? packs[sale?.nftId].properties.image.value
+                      : cards?.All[sale?.nftId].properties.image?.value ||
+                        Icons.logo
+                  }
+                  className="h-64"
+                  alt=""
                 />
               </div>
-              <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
-                <label className="text-primary font-medium">Total Price:</label>
-                {sale && (
-                  <span className="text-white">
-                    {buyNFTData *
-                      parseFloat(Web3.utils.fromWei(sale.price, "ether"))}
-                  </span>
-                )}
-              </div>
-              <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
-                <Button
-                  // className="px-4 py-2 border border-primary text-primary"
-                  decoration="line-primary"
-                  className="hover:text-white border-primary"
-                  size="small"
-                  onClick={() => {
-                    setBuyNFTData(0);
-                    hide();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  // className="px-4 py-2 border border-primary text-primary"
-                  decoration="fillPrimary"
-                  className="degradated hover:text-white border-none"
-                  size="small"
-                  onClick={buyNft}
-                >
-                  Buy NFT/s
-                </Button>
+              <div className="flex flex-col gap-4  justify-between">
+                <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
+                  <label className="text-primary font-medium">
+                    Amount of NFTs
+                  </label>
+                  <input
+                    type="number"
+                    className="bg-overlay text-primary text-center w-24"
+                    onChange={(e) => {
+                      setBuyNFTData(parseInt(e.target.value));
+                    }}
+                  />
+                </div>
+                <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
+                  <label className="text-primary font-medium">
+                    Total Price:
+                  </label>
+                  {sale && (
+                    <span className="text-white">
+                      {buyNFTData *
+                        parseFloat(Web3.utils.fromWei(sale.price, "ether"))}
+                    </span>
+                  )}
+                </div>
+                <div className="py-6">
+                  <div className="text-primary text-sm text-center flex items-center justify-center">
+                    {message === "Buying tokens" && (
+                      <span className="flex gap-4 items-center justify-center">
+                        {message} <LoadingOutlined />
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
+                  <Button
+                    // className="px-4 py-2 border border-primary text-primary"
+                    decoration="line-primary"
+                    className="hover:text-white border-primary"
+                    size="small"
+                    onClick={() => {
+                      setBuyNFTData(0);
+                      hide();
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    // className="px-4 py-2 border border-primary text-primary"
+                    decoration="fillPrimary"
+                    className="degradated hover:text-white border-none"
+                    size="small"
+                    onClick={buyNft}
+                  >
+                    Buy NFT/s
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
       </Modal>
       {id !== undefined && sale !== undefined ? (
         <div className="min-h-screen w-full flex flex-col xl:px-20 md:px-10 sm:px-6 pt-32 pb-20">

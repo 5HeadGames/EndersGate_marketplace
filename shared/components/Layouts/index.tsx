@@ -15,12 +15,18 @@ import {onGetAssets, onLoadSales} from "redux/actions";
 import {
   AppstoreFilled,
   AreaChartOutlined,
+  GoldenFilled,
   ShopOutlined,
   TwitterOutlined,
   WalletOutlined,
 } from "@ant-design/icons";
 
-import {getAddresses, getContract, getWeb3, loginMetamaskWallet} from "@shared/web3";
+import {
+  getAddresses,
+  getContract,
+  getWeb3,
+  loginMetamaskWallet,
+} from "@shared/web3";
 
 const styles = {
   content: {
@@ -81,6 +87,11 @@ const navItems = [
   },
   { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
   { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
+  {
+    link: "/profile/inventory",
+    name: "Inventory",
+    icon: <GoldenFilled />,
+  },
 ];
 
 export default function AppLayout({children}) {

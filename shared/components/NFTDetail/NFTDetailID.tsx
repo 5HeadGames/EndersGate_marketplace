@@ -38,6 +38,12 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
       return alert("You don't have enough tokens to sell");
     }
+    if (sellNFTData.amount < 1) {
+      return alert("You have to put more than 1 NFT to sell");
+    }
+    if (sellNFTData.startingPrice <= 0) {
+      return alert("You have to put a valid sell price");
+    }
     if (sellNFTData.duration <= 3600 * 24) {
       return alert("You have to put a end date higher than 1 day");
     }
@@ -84,82 +90,103 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
       <Modal isShow={isShow} withoutX>
         <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
           <h2 className="font-bold text-primary text-center">Sell NFT</h2>
-          <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
-            <label className="text-primary font-medium">Starting price for each NFT (ONE)</label>
-            <input
-              type="number"
-              className="bg-overlay text-primary text-center"
-              value={sellNFTData.startingPrice}
-              onChange={(e) => {
-                setSellNFTData((prev: any) => {
-                  return {...prev, startingPrice: e.target.value};
-                });
-              }}
-            />
-          </div>
-          <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
-            <label className="text-primary font-medium">Amount of NFTs</label>
-            <input
-              type="number"
-              className="bg-overlay text-primary text-center"
-              value={sellNFTData.amount}
-              onChange={(e) => {
-                setSellNFTData((prev: any) => {
-                  return {...prev, amount: parseInt(e.target.value)};
-                });
-              }}
-            />
-          </div>
-          <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
-            <label className="text-primary font-medium">End Date</label>
-            <input
-              type="date"
-              className="bg-overlay text-primary text-center"
-              onChange={(e) => {
-                const date = new Date(e.target.value + " 00:00");
-                setSellNFTData((prev: any) => {
-                  return {
-                    ...prev,
-                    duration:
-                      Math.floor(date.getTime() / 1000) - Math.floor(new Date().getTime() / 1000),
-                  };
-                });
-              }}
-            />
-          </div>
-          <div className="py-6">
-            <div className="text-primary text-sm text-center flex items-center justify-center">
-              {message ===
-                "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
-                message
-              ) : (
-                <span className="flex gap-4 items-center justify-center">
-                  {message} <LoadingOutlined />
-                </span>
-              )}
+          <div className="flex md:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
+            <div className="h-64 w-40">
+              <img
+                src={cards.All[id].properties.image?.value}
+                className="h-64 w-40"
+                alt=""
+              />
             </div>
-          </div>
-          <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
-            <Button
-              // className="px-4 py-2 border border-primary text-primary"
-              decoration="line-primary"
-              className="hover:text-white border-primary"
-              size="small"
-              onClick={() => {
-                hide();
-              }}
+            <div
+              className="flex flex-col gap-4 w-full justify-center items-center md:w-64"
+              style={{ maxWidth: "100vw" }}
             >
-              Cancel
-            </Button>
-            <Button
-              // className="px-4 py-2 border border-primary text-primary"
-              decoration="fillPrimary"
-              className="degradated hover:text-white border-none"
-              size="small"
-              onClick={sellNft}
-            >
-              List NFT/s
-            </Button>
+              <div className="flex flex-col gap-4 w-full justify-center items-center">
+                <label className="text-primary font-medium">
+                  Starting price for each NFT (ONE)
+                </label>
+                <input
+                  type="number"
+                  className="bg-overlay text-primary text-center"
+                  value={sellNFTData.startingPrice}
+                  min={0}
+                  onChange={(e) => {
+                    setSellNFTData((prev: any) => {
+                      return { ...prev, startingPrice: e.target.value };
+                    });
+                  }}
+                />
+              </div>
+              <div className="flex flex-col gap-4 w-full justify-center items-center">
+                <label className="text-primary font-medium">
+                  Amount of NFTs
+                </label>
+                <input
+                  type="number"
+                  className="bg-overlay text-primary text-center"
+                  value={sellNFTData.amount}
+                  min={1}
+                  onChange={(e) => {
+                    setSellNFTData((prev: any) => {
+                      return { ...prev, amount: parseInt(e.target.value) };
+                    });
+                  }}
+                />
+              </div>
+              <div className="flex flex-col gap-4 w-full justify-center items-center">
+                <label className="text-primary font-medium">End Date</label>
+                <input
+                  type="date"
+                  className="bg-overlay text-primary text-center"
+                  onChange={(e) => {
+                    const date = new Date(e.target.value + " 00:00");
+                    setSellNFTData((prev: any) => {
+                      return {
+                        ...prev,
+                        duration:
+                          Math.floor(date.getTime() / 1000) -
+                          Math.floor(new Date().getTime() / 1000),
+                      };
+                    });
+                  }}
+                />
+              </div>
+              <div className="py-6">
+                <div className="text-primary text-sm text-center flex items-center justify-center">
+                  {message ===
+                  "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
+                    message
+                  ) : (
+                    <span className="flex gap-4 items-center justify-center">
+                      {message} <LoadingOutlined />
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
+                <Button
+                  // className="px-4 py-2 border border-primary text-primary"
+                  decoration="line-primary"
+                  className="hover:text-white border-primary"
+                  size="small"
+                  onClick={() => {
+                    hide();
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  // className="px-4 py-2 border border-primary text-primary"
+                  decoration="fillPrimary"
+                  className="degradated hover:text-white border-none"
+                  size="small"
+                  onClick={sellNft}
+                >
+                  List NFT/s
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </Modal>
@@ -189,7 +216,12 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                   size="small"
                   onClick={() => show()}
                 >
-                  <img src={Icons.harmony} className="h-6 w-6 rounded-full mr-2" alt="" /> Sell now
+                  <img
+                    src={Icons.harmony}
+                    className="h-6 w-6 rounded-full mr-2"
+                    alt=""
+                  />{" "}
+                  Sell now
                 </Button>
               )}
             </div>
@@ -212,29 +244,47 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                 <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
                   <div className="flex flex-row gap-4">
                     <div className="flex flex-col">
-                      <Typography type="subTitle" className="text-white font-bold">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
                         NAME
                       </Typography>
-                      <Typography type="subTitle" className="text-primary opacity-75">
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
                         {cards.All[id].properties.name?.value}
                       </Typography>
                     </div>
                     {cards.All[id].properties.type?.value && (
                       <div className="flex flex-col">
-                        <Typography type="subTitle" className="text-white font-bold">
+                        <Typography
+                          type="subTitle"
+                          className="text-white font-bold"
+                        >
                           TYPE
                         </Typography>
-                        <Typography type="subTitle" className="text-primary opacity-75">
+                        <Typography
+                          type="subTitle"
+                          className="text-primary opacity-75"
+                        >
                           {cards.All[id].properties.type?.value}
                         </Typography>
                       </div>
                     )}
                     {cards.All[id].properties.rarity?.value && (
                       <div className="flex flex-col">
-                        <Typography type="subTitle" className="text-white font-bold">
+                        <Typography
+                          type="subTitle"
+                          className="text-white font-bold"
+                        >
                           RARITY
                         </Typography>
-                        <Typography type="subTitle" className="text-primary opacity-75">
+                        <Typography
+                          type="subTitle"
+                          className="text-primary opacity-75"
+                        >
                           {cards.All[id].properties.rarity?.value}
                         </Typography>
                       </div>
@@ -242,10 +292,16 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                   </div>
                   <div>
                     <div className="flex flex-col">
-                      <Typography type="subTitle" className="text-white font-bold">
+                      <Typography
+                        type="subTitle"
+                        className="text-white font-bold"
+                      >
                         DESCRIPTION
                       </Typography>
-                      <Typography type="subTitle" className="text-primary opacity-75">
+                      <Typography
+                        type="subTitle"
+                        className="text-primary opacity-75"
+                      >
                         {cards.All[id].properties.description?.value}
                       </Typography>
                     </div>
@@ -253,10 +309,16 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                   {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && (
                     <div>
                       <div className="flex flex-col">
-                        <Typography type="subTitle" className="text-white font-bold">
+                        <Typography
+                          type="subTitle"
+                          className="text-white font-bold"
+                        >
                           YOUR BALANCE
                         </Typography>
-                        <Typography type="subTitle" className="text-primary opacity-75">
+                        <Typography
+                          type="subTitle"
+                          className="text-primary opacity-75"
+                        >
                           {NFTs.balanceCards[id].balance}
                         </Typography>
                       </div>
