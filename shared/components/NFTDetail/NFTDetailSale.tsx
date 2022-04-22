@@ -8,22 +8,22 @@ import {useAppDispatch} from "redux/store";
 import {onBuyERC1155, onLoadSales, onGetAssets} from "@redux/actions";
 import {Button} from "../common/button/button";
 import {Icons} from "@shared/const/Icons";
-import {AddressText} from "../common/specialFields/SpecialFields";
-import {getAddresses, loadSale} from "@shared/web3";
-import {Typography} from "../common/typography";
+import { AddressText, Type } from "../common/specialFields/SpecialFields";
+import { getAddresses, loadSale } from "@shared/web3";
+import { Typography } from "../common/typography";
 import cards from "../../cards.json";
 import packs from "../../packs.json";
-import {TimeConverter} from "../common/unixDateConverter/unixConverter";
-import {useModal} from "@shared/hooks/modal";
+import { TimeConverter } from "../common/unixDateConverter/unixConverter";
+import { useModal } from "@shared/hooks/modal";
 
-const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
-  const {user, Moralis, isWeb3Enabled} = useMoralis();
+const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
+  const { user, Moralis, isWeb3Enabled } = useMoralis();
   const [sale, setSale] = React.useState<any>();
   const [buyNFTData, setBuyNFTData] = React.useState(0);
-  const {Modal, show, hide, isShow} = useModal();
+  const { Modal, show, hide, isShow } = useModal();
   const [isPack, setIsPack] = React.useState(false);
   const [saleData, setSaleData] = React.useState(false);
-  const {isAuthenticated} = useMoralis();
+  const { isAuthenticated } = useMoralis();
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -251,22 +251,24 @@ const NFTDetailSaleComponent: React.FC<any> = ({id}) => {
                           : cards.All[sale.nftId].properties.name?.value}
                       </Typography>
                     </div>
-                    {!isPack && cards.All[sale.nftId].properties.type?.value && (
-                      <div className="flex flex-col">
-                        <Typography
-                          type="subTitle"
-                          className="text-white font-bold"
-                        >
-                          TYPE
-                        </Typography>
-                        <Typography
-                          type="subTitle"
-                          className="text-primary opacity-75"
-                        >
-                          {cards.All[sale.nftId].properties.type?.value}
-                        </Typography>
-                      </div>
-                    )}
+                    {!isPack &&
+                      (cards.All[sale.nftId].properties.type?.value ||
+                        cards.All[sale.nftId].properties.attack?.value) && (
+                        <div className="flex flex-col">
+                          <Typography
+                            type="subTitle"
+                            className="text-white font-bold"
+                          >
+                            TYPE
+                          </Typography>
+                          <Typography
+                            type="subTitle"
+                            className="text-primary opacity-75"
+                          >
+                            <Type id={sale.nftId}></Type>
+                          </Typography>
+                        </div>
+                      )}
                     {!isPack && cards.All[sale.nftId].properties.rarity?.value && (
                       <div className="flex flex-col">
                         <Typography
