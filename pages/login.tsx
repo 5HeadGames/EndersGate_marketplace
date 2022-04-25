@@ -33,7 +33,8 @@ const Login = () => {
       await enableWeb3();
       const user = await authenticate();
     } catch (err) {
-      console.log({err});
+      console.log({ err });
+      setLoading(false);
     }
     setLoading(false);
   };
@@ -48,7 +49,8 @@ const Login = () => {
         provider: "walletconnect",
       });
     } catch (err) {
-      console.log({err});
+      console.log({ err });
+      setLoading(false);
     }
     setLoading(false);
   };
@@ -57,7 +59,7 @@ const Login = () => {
     try {
       await signup(user.email, user.password, user.email);
     } catch (err) {
-      console.log({err});
+      console.log({ err });
     }
   };
 
@@ -67,7 +69,8 @@ const Login = () => {
       await login(user.email, user.password);
       await handleMetamaskConnect();
     } catch (err) {
-      console.log({err});
+      console.log({ err });
+      setLoading(false);
     }
     setLoading(false);
   };

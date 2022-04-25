@@ -9,6 +9,7 @@ const ProfileSettings = () => {
   const router = useRouter();
 
   React.useEffect(() => {
+    console.log(isAuthenticated);
     if (!isAuthenticated) {
       router.push("/login");
     }

@@ -159,9 +159,16 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                     "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
                       message
                     ) : (
-                      <span className="flex gap-4 items-center justify-center">
-                        {message} <LoadingOutlined />
-                      </span>
+                      <>
+                        <span className="flex gap-4 items-center justify-center">
+                          {message} <LoadingOutlined />
+                        </span>
+                        <span className="flex gap-4 mt-6 items-center justify-center">
+                          {message === "Listing your tokens"
+                            ? "Transaction 2/2"
+                            : "Transaction 1/2"}
+                        </span>
+                      </>
                     )}
                   </div>
                 </div>

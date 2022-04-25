@@ -14,13 +14,13 @@ const AccountSettingsComponent = () => {
     register,
     handleSubmit,
     watch,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
-  const [image, setImage] = React.useState<File | null>(null);
+  // const [image, setImage] = React.useState<File | null>(null);
   const [loadingForm, setLoading] = React.useState(false);
   const [successPassword, setSuccessPassword] = React.useState(false);
-  const {user, setUserData, signup, Moralis} = useMoralis();
-  const {saveFile} = useMoralisFile();
+  const { user, setUserData, signup, Moralis } = useMoralis();
+  const { saveFile } = useMoralisFile();
   const dispatch = useAppDispatch();
 
   const handleChangePicture = async (e: React.ChangeEvent<any>) => {
@@ -29,23 +29,31 @@ const AccountSettingsComponent = () => {
       const moralisFile = await saveFile(file.name, file, {
         type: "image/png",
       });
-      await setUserData({profileImage: moralisFile});
-      setImage(file);
+      await setUserData({ profileImage: moralisFile });
+      console.log(file);
+      // setImage(file);
     } catch (error) {
-      console.log({error});
+      console.log({ error });
     }
   };
 
-  const handleSetField = (field: "name" | "userStatus") => async (e: React.ChangeEvent<any>) => {
-    try {
-      const value = e.target.value;
-      await setUserData({[field]: value});
-    } catch (error) {
-      console.log({error});
-    }
-  };
+  const handleSetField =
+    (field: "name" | "userStatus") => async (e: React.ChangeEvent<any>) => {
+      try {
+        const value = e.target.value;
+        await setUserData({ [field]: value });
+      } catch (error) {
+        console.log({ error });
+      }
+    };
 
-  const onSubmit = async ({newEmail, newPassword}: {newEmail: string; newPassword: string}) => {
+  const onSubmit = async ({
+    newEmail,
+    newPassword,
+  }: {
+    newEmail: string;
+    newPassword: string;
+  }) => {
     try {
       if (!user.get("email")) {
         console.log("new email");
@@ -54,10 +62,10 @@ const AccountSettingsComponent = () => {
           email: newEmail,
           name: newEmail,
         });
-        console.log({res});
+        console.log({ res });
       }
     } catch (err) {
-      console.log({err});
+      console.log({ err });
     }
   };
 
@@ -100,7 +108,7 @@ const AccountSettingsComponent = () => {
                   accept="image/*"
                   className="hidden"
                   id="profile_picture"
-                  value={image as any}
+                  // value={image as any}
                   onChange={handleChangePicture}
                 />
                 <label
