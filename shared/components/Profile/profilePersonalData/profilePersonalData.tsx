@@ -96,7 +96,7 @@ const ProfileDataAndActions = () => {
   return (
     <>
       {user && (
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full py-4">
           <Modal isShow={isShow}>
             <div className="flex flex-col items-center p-6">
               <form

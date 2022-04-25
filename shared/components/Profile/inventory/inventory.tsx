@@ -27,7 +27,7 @@ const Inventory = () => {
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
   const [balance, setBalance] = React.useState("0");
   React.useEffect(() => {
-    if (user.get("ethAddress")) {
+    if (user?.get("ethAddress")) {
       handleSetBalance();
     }
   }, [user]);
