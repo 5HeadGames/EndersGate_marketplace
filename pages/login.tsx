@@ -10,6 +10,7 @@ import Dialog from "shared/components/common/dialog";
 import {Typography} from "shared/components/common/typography";
 import {InputPassword} from "shared/components/common/form/input-password";
 import {InputEmail} from "shared/components/common/form/input-email";
+import clsx from "clsx";
 
 type Values = {
   email?: string;
@@ -21,8 +22,9 @@ type Values = {
 const Login = () => {
   const [openForm, setOpenForm] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const {Modal, isShow, show, hide} = useModal();
-  const {authenticate, signup, login, enableWeb3, isAuthenticated, Moralis} = useMoralis();
+  const { Modal, isShow, show, hide } = useModal();
+  const { authenticate, signup, login, enableWeb3, isAuthenticated, Moralis } =
+    useMoralis();
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -31,8 +33,7 @@ const Login = () => {
     setLoading(true);
     try {
       await enableWeb3();
-      console.log("A");
-      await(window as any).ethereum.request({
+      await (window as any).ethereum.request({
         method: "wallet_switchEthereumChain",
         params: [{ chainId: "0x6357D2E0" }],
       });
@@ -106,7 +107,11 @@ const Login = () => {
           {loading ? "..." : "Login with Metamask Wallet"}
         </Button>
         {openForm ? (
-          <EmailPasswordForm onLogin={handleLogin} onRegister={handleRegister} loading={loading} />
+          <EmailPasswordForm
+            onLogin={handleLogin}
+            onRegister={handleRegister}
+            loading={loading}
+          />
         ) : (
           <Button
             disabled={loading}
@@ -126,7 +131,11 @@ const Login = () => {
           </Typography>
           <p className="text-purple-200/75">
             You must install{" "}
-            <a href={"https://metamask.io/"} className="text-primary" target="_blank">
+            <a
+              href={"https://metamask.io/"}
+              className="text-primary"
+              target="_blank"
+            >
               metamask
             </a>{" "}
             official wallet to connect through this method
@@ -143,15 +152,39 @@ interface EmailPasswordFormProps {
   loading: boolean;
 }
 
-const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (props) => {
-  const {onLogin, onRegister, loading} = props;
-  const {Modal: ModalRegister, isShow, show, hide} = useModal();
+const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
+  props
+) => {
+  const { onLogin, onRegister, loading } = props;
+  const { Modal: ModalRegister, isShow, show, hide } = useModal();
   const {
     register,
     handleSubmit,
     watch,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
+
+  const [mayus, setMayus] = React.useState(false);
+  const [number, setNumber] = React.useState(false);
+  const [specialChar, setSpecialChar] = React.useState(false);
+  const [lengthZero, setLenghtZero] = React.useState(true);
+
+  const passwordStrength = () => {
+    let passwordFilter = 0;
+    if (mayus) {
+      passwordFilter++;
+    }
+    if (number) {
+      passwordFilter++;
+    }
+    if (specialChar) {
+      passwordFilter++;
+    }
+    if (lengthZero) {
+      return -1;
+    }
+    return passwordFilter;
+  };
 
   React.useEffect(() => {
     console.log(errors);
@@ -162,7 +195,12 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
       <form onSubmit={handleSubmit(onLogin)}>
         <div className="p-4 flex flex-col bg-secondary rounded-md">
           <div className="mb-4 w-full">
-            <InputEmail register={register} placeholder="email" name="email" error={errors.email} />
+            <InputEmail
+              register={register}
+              placeholder="email"
+              name="email"
+              error={errors.email}
+            />
           </div>
           <div className="mb-4">
             <InputPassword
@@ -217,7 +255,92 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (prop
                 placeholder=" password"
                 name="password"
                 error={errors.password}
+                onChangeCustom={(e: any) => {
+                  const regexMayus = /[A-Z]/g;
+                  if (regexMayus.test(e.target.value)) {
+                    setMayus(true);
+                  } else {
+                    setMayus(false);
+                  }
+                  const regexNumber = /\d/g;
+                  if (regexNumber.test(e.target.value)) {
+                    setNumber(true);
+                  } else {
+                    setNumber(false);
+                  }
+                  const regexSpecialChar = /[#$/&*.]/g;
+                  if (regexSpecialChar.test(e.target.value)) {
+                    setSpecialChar(true);
+                  } else {
+                    setSpecialChar(false);
+                  }
+                  if (e.target.value.length === 0) {
+                    setLenghtZero(true);
+                  } else {
+                    setLenghtZero(false);
+                  }
+                }}
               />
+            </div>
+            <div className="mb-4">
+              <div className="grid grid-cols-4 gap-1">
+                <div
+                  className={clsx(
+                    { "bg-gray-700": passwordStrength() === -1 },
+                    { "bg-red-500": passwordStrength() === 0 },
+                    { "bg-orange-500": passwordStrength() === 1 },
+                    { "bg-yellow-500": passwordStrength() === 2 },
+                    { "bg-green-500": passwordStrength() === 3 },
+                    "w-full h-2 rounded-md"
+                  )}
+                ></div>
+                <div
+                  className={clsx(
+                    { "bg-gray-700": passwordStrength() <= 0 },
+                    { "bg-orange-500": passwordStrength() === 1 },
+                    { "bg-yellow-500": passwordStrength() === 2 },
+                    { "bg-green-500": passwordStrength() === 3 },
+                    { "bg-green-500": passwordStrength() === 3 },
+                    "w-full h-2 rounded-md"
+                  )}
+                ></div>
+                <div
+                  className={clsx(
+                    { "bg-gray-700": passwordStrength() <= 1 },
+                    { "bg-yellow-500": passwordStrength() === 2 },
+                    { "bg-green-500": passwordStrength() === 3 },
+                    "w-full h-2 rounded-md"
+                  )}
+                ></div>
+                <div
+                  className={clsx(
+                    { "bg-gray-700": passwordStrength() <= 2 },
+                    { "bg-green-500": passwordStrength() === 3 },
+                    "w-full h-2 rounded-md"
+                  )}
+                ></div>
+              </div>
+              <Typography
+                className={clsx(
+                  { "text-gray-700": passwordStrength() === -1 },
+                  { "text-red-500": passwordStrength() === 0 },
+                  { "text-orange-500": passwordStrength() === 1 },
+                  { "text-yellow-500": passwordStrength() === 2 },
+                  { "text-green-500": passwordStrength() === 3 },
+                  "mt-2"
+                )}
+                type="subTitle"
+              >
+                {passwordStrength() === -1
+                  ? "None"
+                  : passwordStrength() === 0
+                  ? "Weak"
+                  : passwordStrength() === 1
+                  ? "Normal"
+                  : passwordStrength() === 2
+                  ? "Good"
+                  : "Perfect"}
+              </Typography>
             </div>
             <Button
               decoration="fill"
