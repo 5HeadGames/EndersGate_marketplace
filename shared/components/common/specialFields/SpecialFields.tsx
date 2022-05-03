@@ -1,5 +1,7 @@
 import React from "react";
-import cards from "../../../cards.json";
+import { convertArrayCards } from "../convertCards";
+
+const cards = convertArrayCards();
 
 export const AddressText = ({ text }) => {
   return (
@@ -22,9 +24,9 @@ export const TransactionText = ({ text }) => {
 export const Type = ({ id }) => {
   return (
     <>
-      {cards.All[id].properties?.attack?.value
+      {cards[id].properties?.attack?.value
         ? "Guardian"
-        : cards.All[id].properties.type?.value}
+        : cards[id].properties.type?.value}
     </>
   );
 };

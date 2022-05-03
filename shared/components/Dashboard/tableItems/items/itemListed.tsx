@@ -9,10 +9,11 @@ import {
 } from "@shared/components/common/specialFields/SpecialFields";
 import Link from "next/link";
 import { useAppDispatch } from "@redux/store";
-import cards from "../../../../cards.json";
+
 import packs from "../../../../packs.json";
 import Web3 from "web3";
 import { loadSale } from "@shared/web3";
+import { convertArrayCards } from "../../../common/convertCards";
 
 interface Props {
   id: string;
@@ -22,6 +23,8 @@ interface Props {
   amount?: string;
   pack?: boolean;
 }
+
+const cards = convertArrayCards();
 
 const ItemListed: React.FunctionComponent<Props> = (props) => {
   const { id, type, seller, buyer, amount, pack } = props;
@@ -52,7 +55,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
                 src={
                   pack
                     ? packs[sale.nftId]?.properties?.image?.value
-                    : cards.All[sale.nftId].properties.image?.value
+                    : cards[sale.nftId]?.properties?.image?.value
                 }
                 className={"h-12 w-8"}
                 alt=""

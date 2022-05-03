@@ -11,10 +11,10 @@ import {Icons} from "@shared/const/Icons";
 import { AddressText, Type } from "../common/specialFields/SpecialFields";
 import { getAddresses, loadSale } from "@shared/web3";
 import { Typography } from "../common/typography";
-import cards from "../../cards.json";
 import packs from "../../packs.json";
 import { TimeConverter } from "../common/unixDateConverter/unixConverter";
 import { useModal } from "@shared/hooks/modal";
+import { convertArrayCards } from "../common/convertCards";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const { user, Moralis, isWeb3Enabled } = useMoralis();
@@ -26,6 +26,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const { isAuthenticated } = useMoralis();
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const cards: any[] = convertArrayCards();
 
   const [message, setMessage] = React.useState("");
 
@@ -91,7 +93,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   src={
                     isPack
                       ? packs[sale?.nftId].properties.image.value
-                      : cards?.All[sale?.nftId].properties.image?.value ||
+                      : cards[sale?.nftId]?.properties?.image?.value ||
                         Icons.logo
                   }
                   className="h-64"
@@ -220,8 +222,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   src={
                     isPack
                       ? packs[sale.nftId].properties.image.value
-                      : cards.All[sale.nftId].properties.image?.value ||
-                        Icons.logo
+                      : cards[sale.nftId].properties.image?.value || Icons.logo
                   }
                   className="w-72"
                   alt=""
@@ -248,12 +249,12 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       >
                         {isPack
                           ? packs[sale.nftId].properties.name.value
-                          : cards.All[sale.nftId].properties.name?.value}
+                          : cards[sale.nftId].properties.name?.value}
                       </Typography>
                     </div>
                     {!isPack &&
-                      (cards.All[sale.nftId].properties.type?.value ||
-                        cards.All[sale.nftId].properties.attack?.value) && (
+                      (cards[sale.nftId].properties.type?.value ||
+                        cards[sale.nftId].properties.attack?.value) && (
                         <div className="flex flex-col">
                           <Typography
                             type="subTitle"
@@ -269,7 +270,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                           </Typography>
                         </div>
                       )}
-                    {!isPack && cards.All[sale.nftId].properties.rarity?.value && (
+                    {!isPack && cards[sale.nftId].properties.rarity?.value && (
                       <div className="flex flex-col">
                         <Typography
                           type="subTitle"
@@ -281,7 +282,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                           type="subTitle"
                           className="text-primary opacity-75"
                         >
-                          {cards.All[sale.nftId].properties.rarity?.value}
+                          {cards[sale.nftId].properties.rarity?.value}
                         </Typography>
                       </div>
                     )}
@@ -300,7 +301,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       >
                         {isPack
                           ? packs[sale.nftId].properties.description.value
-                          : cards.All[sale.nftId].properties.description?.value}
+                          : cards[sale.nftId].properties.description?.value}
                       </Typography>
                     </div>
                   </div>

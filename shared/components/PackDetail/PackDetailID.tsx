@@ -9,18 +9,20 @@ import {onSellERC1155, onLoadSales, onGetAssets} from "@redux/actions";
 import {Button} from "../common/button/button";
 import {Icons} from "@shared/const/Icons";
 import {getAddresses} from "@shared/web3";
-import {Typography} from "../common/typography";
-import cards from "../../cards.json";
+import { Typography } from "../common/typography";
 import packs from "../../packs.json";
-import {useModal} from "@shared/hooks/modal";
-import {approveERC1155} from "@shared/web3";
-import {Images} from "@shared/const/Images";
+import { useModal } from "@shared/hooks/modal";
+import { approveERC1155 } from "@shared/web3";
+import { Images } from "@shared/const/Images";
+import { convertArrayCards } from "../common/convertCards";
 
-const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
-  const {user, Moralis, web3} = useMoralis();
+const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
+  const { user, Moralis, web3 } = useMoralis();
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const cards = convertArrayCards();
 
   const [message, setMessage] = React.useState(
     "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
@@ -32,7 +34,7 @@ const PackDetailIDComponent: React.FC<any> = ({id, inventory}) => {
     duration: 0,
   });
 
-  const {Modal, show, hide, isShow} = useModal();
+  const { Modal, show, hide, isShow } = useModal();
 
   const sellNft = async () => {
     if (sellNFTData.amount > NFTs.balancePacks[id].balance) {

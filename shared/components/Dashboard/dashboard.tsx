@@ -12,6 +12,7 @@ const DashboardComponent = () => {
     totalSale: 0,
     totalVolume: 0,
     cardsSold: 0,
+    packsSold: 0,
   });
   const [columnSelected, setColumnSelected] = React.useState("last_24h");
   const [listedSelected, setListedSelected] = React.useState("trading_cards");
@@ -42,6 +43,7 @@ const DashboardComponent = () => {
         }
       });
       setRecentlySold(cardSalesSold);
+      console.log(nfts.saleSuccessfull);
       setTransactionsBoard({
         totalSale: nfts.totalSales,
         totalVolume:
@@ -52,7 +54,23 @@ const DashboardComponent = () => {
                   return acc + cur;
                 })
             : 0,
-        cardsSold: nfts.cardsSold,
+        cardsSold:
+          nfts.saleSuccessfull.length > 0
+            ? nfts.saleSuccessfull
+                ?.map((sale) => (sale.nft === endersGate ? 1 : 0))
+                ?.reduce((acc: any, cur: any) => {
+                  return acc + cur;
+                })
+            : 0,
+
+        packsSold:
+          nfts.saleSuccessfull.length > 0
+            ? nfts.saleSuccessfull
+                ?.map((sale) => (sale.nft === pack ? 1 : 0))
+                ?.reduce((acc: any, cur: any) => {
+                  return acc + cur;
+                })
+            : 0,
       });
     }
   }, [nfts]);
@@ -117,6 +135,7 @@ const DashboardComponent = () => {
         totalSale={transactionsBoard.totalSale}
         totalVolume={transactionsBoard.totalVolume}
         cardsSold={transactionsBoard.cardsSold}
+        packsSold={transactionsBoard.packsSold}
         columnSelected={columnSelected}
         setColumnSelected={setColumnSelected}
       />

@@ -19,6 +19,7 @@ const TransactionsBoard: React.FC<any> = ({
   totalSale,
   totalVolume,
   cardsSold,
+  packsSold,
   columnSelected,
   setColumnSelected,
 }) => {
@@ -47,6 +48,16 @@ const TransactionsBoard: React.FC<any> = ({
     {
       title: "CARDS SOLD",
       value: cardsSold,
+      icon: Icons.logo,
+      css: {
+        /* Chrome 10-25, Safari 5.1-6 */
+        background:
+          "linear-gradient(to right, #6441a5, #2b1045)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
+      },
+    },
+    {
+      title: "PACKS SOLD",
+      value: packsSold,
       icon: Icons.logo,
       css: {
         /* Chrome 10-25, Safari 5.1-6 */

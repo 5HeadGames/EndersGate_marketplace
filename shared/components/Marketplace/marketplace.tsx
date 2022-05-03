@@ -15,7 +15,7 @@ import clsx from "clsx";
 import { Typography } from "../common/typography";
 import { getAddresses, getContract } from "@shared/web3";
 import { onLoadSales } from "@redux/actions";
-import cards from "../../cards.json";
+import { convertArrayCards } from "../common/convertCards";
 import packs from "../../packs.json";
 import { useAppDispatch, useAppSelector } from "@redux/store";
 import Link from "next/link";
@@ -39,6 +39,8 @@ const MarketplaceComponent = () => {
   React.useEffect(() => {
     getSales(currentOrder);
   }, [currentOrder]);
+
+  const cards = convertArrayCards();
 
   React.useEffect(() => {}, [sales]);
 
@@ -160,51 +162,53 @@ const MarketplaceComponent = () => {
     // }
     if (
       filter.common &&
-      id <= 53 &&
-      cards.All[id]?.properties?.rarity?.value.toLowerCase() === "common"
+      cards[id]?.properties?.rarity?.value.toLowerCase() === "common"
     ) {
       passed = true;
     }
     if (
       filter.uncommon &&
-      id <= 53 &&
-      cards.All[id]?.properties?.rarity?.value.toLowerCase() === "uncommon"
+      cards[id]?.properties?.rarity?.value.toLowerCase() === "uncommon"
     ) {
       passed = true;
     }
     if (
       filter.rare &&
-      id <= 53 &&
-      cards.All[id]?.properties?.rarity?.value.toLowerCase() === "rare"
+      cards[id]?.properties?.rarity?.value.toLowerCase() === "rare"
     ) {
       passed = true;
     }
     if (
       filter.ultra_rare &&
-      id <= 53 &&
-      cards.All[id]?.properties?.rarity?.value.toLowerCase() === "ultra rare"
+      cards[id]?.properties?.rarity?.value.toLowerCase() === "ultra rare"
     ) {
       passed = true;
     }
-    if (filter.reaction_cards && id <= 53) {
+    if (
+      filter.reaction_cards &&
+      cards[id]?.typeCard.toLowerCase() === "reaction"
+    ) {
       passed = true;
     }
-    if (filter.action_cards && id >= 22 && id <= 53) {
+    if (filter.action_cards && cards[id]?.typeCard.toLowerCase() === "action") {
       passed = true;
     }
-    if (filter.wood && id >= 54 && id <= 70) {
+    if (filter.wood && cards[id]?.typeCard.toLowerCase() === "wood") {
       passed = true;
     }
-    if (filter.stone && id >= 71 && id <= 87) {
+    if (filter.stone && cards[id]?.typeCard.toLowerCase() === "stone") {
       passed = true;
     }
-    if (filter.iron && id >= 88 && id <= 101) {
+    if (filter.iron && cards[id]?.typeCard.toLowerCase() === "iron") {
       passed = true;
     }
-    if (filter.gold && id >= 102 && id <= 117) {
+    if (filter.gold && cards[id]?.typeCard.toLowerCase() === "gold") {
       passed = true;
     }
-    if (filter.legendary && id >= 118) {
+    if (filter.legendary && cards[id]?.typeCard.toLowerCase() === "legendary") {
+      passed = true;
+    }
+    if (filter.avatar && cards[id]?.typeCard.toLowerCase() === "avatar") {
       passed = true;
     }
 
@@ -278,8 +282,8 @@ const MarketplaceComponent = () => {
                     classes={{ root: "m-4 cursor-pointer" }}
                     id={a.nftId}
                     transactionId={a.id}
-                    icon={cards.All[a.nftId].properties.image.value}
-                    name={cards.All[a.nftId].properties.name.value}
+                    icon={cards[a.nftId].properties.image.value}
+                    name={cards[a.nftId].properties.name.value}
                     byId={false}
                   />
                 )

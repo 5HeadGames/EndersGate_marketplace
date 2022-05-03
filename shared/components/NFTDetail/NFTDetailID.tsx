@@ -9,18 +9,20 @@ import {onSellERC1155, onLoadSales, onGetAssets} from "@redux/actions";
 import {Button} from "../common/button/button";
 import {Icons} from "@shared/const/Icons";
 import {getAddresses} from "@shared/web3";
-import {Typography} from "../common/typography";
-import cards from "../../cards.json";
-import {useModal} from "@shared/hooks/modal";
-import {approveERC1155} from "@shared/web3";
+import { Typography } from "../common/typography";
+import { useModal } from "@shared/hooks/modal";
+import { approveERC1155 } from "@shared/web3";
+import { convertArrayCards } from "../common/convertCards";
 
-const {marketplace} = getAddresses();
+const { marketplace } = getAddresses();
 
-const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
-  const {web3, user, Moralis, isWeb3Enabled, enableWeb3} = useMoralis();
+const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
+  const { web3, user, Moralis, isWeb3Enabled, enableWeb3 } = useMoralis();
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const cards = convertArrayCards();
 
   const [message, setMessage] = React.useState(
     "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
@@ -32,7 +34,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
     duration: 0,
   });
 
-  const {Modal, show, hide, isShow} = useModal();
+  const { Modal, show, hide, isShow } = useModal();
 
   const sellNft = async () => {
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
@@ -50,7 +52,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
     try {
       const tokenId = id;
       setMessage("Allowing us to sell your tokens");
-      const {endersGate} = getAddresses();
+      const { endersGate } = getAddresses();
       await approveERC1155({
         provider: web3.provider,
         from: user.get("ethAddress"),
@@ -70,7 +72,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
         })
       );
     } catch (err) {
-      console.log({err});
+      console.log({ err });
     }
     dispatch(onLoadSales());
     dispatch(onGetAssets(user.get("ethAddress")));
@@ -94,7 +96,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
             <div className="flex md:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
               <div className="h-64 w-40">
                 <img
-                  src={cards.All[id]?.properties.image?.value}
+                  src={cards[id]?.properties.image?.value}
                   className="h-64 w-40"
                   alt=""
                 />
@@ -241,7 +243,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
             <div className="flex relative justify-center md:w-1/2 xl:px-24">
               <div className="sm:sticky sm:top-32 h-min w-72">
                 <img
-                  src={cards.All[id]?.properties?.image?.value || Icons.logo}
+                  src={cards[id]?.properties?.image?.value || Icons.logo}
                   className="w-72"
                   alt=""
                 />
@@ -265,10 +267,10 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                         type="subTitle"
                         className="text-primary opacity-75"
                       >
-                        {cards.All[id]?.properties?.name?.value}
+                        {cards[id]?.properties?.name?.value}
                       </Typography>
                     </div>
-                    {cards.All[id]?.properties.type?.value && (
+                    {cards[id]?.properties.type?.value && (
                       <div className="flex flex-col">
                         <Typography
                           type="subTitle"
@@ -280,11 +282,11 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                           type="subTitle"
                           className="text-primary opacity-75"
                         >
-                          {cards.All[id]?.properties.type?.value}
+                          {cards[id]?.properties.type?.value}
                         </Typography>
                       </div>
                     )}
-                    {cards.All[id]?.properties.rarity?.value && (
+                    {cards[id]?.properties.rarity?.value && (
                       <div className="flex flex-col">
                         <Typography
                           type="subTitle"
@@ -296,7 +298,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                           type="subTitle"
                           className="text-primary opacity-75"
                         >
-                          {cards.All[id]?.properties.rarity?.value}
+                          {cards[id]?.properties.rarity?.value}
                         </Typography>
                       </div>
                     )}
@@ -313,7 +315,7 @@ const NFTDetailIDComponent: React.FC<any> = ({id, inventory}) => {
                         type="subTitle"
                         className="text-primary opacity-75"
                       >
-                        {cards.All[id]?.properties.description?.value}
+                        {cards[id]?.properties.description?.value}
                       </Typography>
                     </div>
                   </div>

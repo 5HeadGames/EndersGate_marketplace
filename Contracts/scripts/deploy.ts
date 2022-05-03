@@ -14,7 +14,7 @@ const loadJsonFile = (file: string) => {
 };
 
 async function main() {
-  const [SalesFactory, _accounts] = await Promise.all([
+  const [SalesFactory, _accounts] = await Promise([
     ethers.getContractFactory("ClockSale"),
     ethers.getSigners(),
   ]);

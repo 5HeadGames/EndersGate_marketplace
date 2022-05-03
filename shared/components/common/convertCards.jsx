@@ -1,28 +1,25 @@
-import cards from "../../cards2.json";
+import cards from "../../../cards.json";
 
 export const convertArrayCards = () => {
-  console.log(cards);
-
   let countLength = 0;
-
   Object.keys(cards).forEach((key, index) => {
-    console.log(key);
     cards[key]?.forEach((card, index) => {
       countLength++;
     });
   });
   const newArray = [];
   Object.keys(cards).forEach((key, index) => {
-    console.log(key);
     cards[key]?.forEach((card, index) => {
-      if (card.properties?.id?.value) {
-        newArray[parseInt(card.properties.id.value)] = card;
+      if (card.properties?.id?.value !== undefined) {
+        // console.log(key, "if");
+        newArray[parseInt(card.properties.id.value)] = {
+          ...card,
+          typeCard: key,
+        };
       } else {
-        newArray.push(card);
+        newArray.push({ ...card, typeCard: key });
       }
     });
   });
-
-  console.log(newArray);
   return newArray;
 };

@@ -8,20 +8,22 @@ import Link from "next/link";
 
 import {useAppDispatch, useAppSelector} from "redux/store";
 import Styles from "./styles.module.scss";
-import cards from "../../../cards.json";
 import packs from "../../../packs.json";
-import {getAddresses} from "@shared/web3";
-import {useMoralis} from "react-moralis";
-import {useModal} from "@shared/hooks/modal";
-import {onCancelSale, onLoadSales, onGetAssets} from "@redux/actions";
+import { getAddresses } from "@shared/web3";
+import { useMoralis } from "react-moralis";
+import { useModal } from "@shared/hooks/modal";
+import { onCancelSale, onLoadSales, onGetAssets } from "@redux/actions";
+import { convertArrayCards } from "@shared/components/common/convertCards";
 
 const Sales = () => {
   const nfts = useAppSelector((state) => state.nfts);
-  const {user, Moralis} = useMoralis();
+  const { user, Moralis } = useMoralis();
 
-  const [cancelId, setCancelId] = React.useState({id: -1, pack: false});
-  const {Modal, show, hide, isShow} = useModal();
+  const [cancelId, setCancelId] = React.useState({ id: -1, pack: false });
+  const { Modal, show, hide, isShow } = useModal();
   const dispatch = useAppDispatch();
+
+  const cards = convertArrayCards();
 
   const [sales, setSales] = React.useState([]);
   const addresses = getAddresses();
@@ -43,7 +45,11 @@ const Sales = () => {
     const arrayPacks = [];
     console.log(nfts.saleCreated);
     nfts.saleCreated.forEach((sale, index) => {
-      console.log(sale.seller === user.get("ethAddress"), sale.seller, user.get("ethAddress"));
+      console.log(
+        sale.seller === user.get("ethAddress"),
+        sale.seller,
+        user.get("ethAddress")
+      );
       if (sale.seller.toLowerCase() === user.get("ethAddress").toLowerCase()) {
         if (sale.status !== 3) {
           arrayPacks.push(sale);
@@ -65,7 +71,10 @@ const Sales = () => {
       <hr className="w-full my-4" />
       <Modal isShow={isShow} withoutX>
         <div className="flex flex-col gap-4 bg-overlay p-4 w-64">
-          <Typography type="subTitle" className="text-white text-center font-bold">
+          <Typography
+            type="subTitle"
+            className="text-white text-center font-bold"
+          >
             Do you want to delete this sale?
           </Typography>
           <div className="flex justify-center items-center gap-4">
@@ -95,7 +104,8 @@ const Sales = () => {
         className={clsx(
           "flex mb-10  justify-center",
           {
-            [`${Styles.gray} flex-col items-center gap-6 h-72`]: sales.length == 0,
+            [`${Styles.gray} flex-col items-center gap-6 h-72`]:
+              sales.length == 0,
           },
           {
             ["gap-2 flex-wrap gap-2"]: sales.length != 0,
@@ -117,14 +127,18 @@ const Sales = () => {
                               <img
                                 src={
                                   pack
-                                    ? packs[sale.nftId]?.properties?.image?.value
-                                    : cards.All[sale.nftId]?.properties.image?.value
+                                    ? packs[sale.nftId]?.properties?.image
+                                        ?.value
+                                    : cards[sale.nftId]?.properties.image?.value
                                 }
                                 className={"h-12 w-8"}
                                 alt=""
                               />
                               <div className="flex flex-col items-center gap-4">
-                                <Typography type="span" className="text-gray-200">
+                                <Typography
+                                  type="span"
+                                  className="text-gray-200"
+                                >
                                   Sale #{sale.id}
                                 </Typography>
                               </div>
@@ -138,8 +152,11 @@ const Sales = () => {
                               >
                                 Type
                               </Typography>
-                              <Typography type="caption" className="text-white mt-1">
-                                {cards.All[sale.nftId]?.properties.type?.value}
+                              <Typography
+                                type="caption"
+                                className="text-white mt-1"
+                              >
+                                {cards[sale.nftId]?.properties.type?.value}
                               </Typography>
                             </div>
                           </td>
@@ -159,7 +176,10 @@ const Sales = () => {
                               >
                                 NFT Amount
                               </Typography>
-                              <Typography type="caption" className="text-white font-bold mt-1">
+                              <Typography
+                                type="caption"
+                                className="text-white font-bold mt-1"
+                              >
                                 {sale.amount}
                               </Typography>
                             </div>
@@ -188,7 +208,11 @@ const Sales = () => {
                                 href={`/NFTDetailSale/${sale.id}`}
                                 className="flex justify-center shrink-0"
                               >
-                                <img src={Icons.arrowLeft} className="w-5" alt="" />
+                                <img
+                                  src={Icons.arrowLeft}
+                                  className="w-5"
+                                  alt=""
+                                />
                               </a>
                             </Link>
                           </td>
@@ -203,7 +227,10 @@ const Sales = () => {
         ) : (
           <>
             <img src={Icons.logo} className="h-40 w-40" alt="" />
-            <Typography type="subTitle" className={clsx(Styles.title, "text-primary")}>
+            <Typography
+              type="subTitle"
+              className={clsx(Styles.title, "text-primary")}
+            >
               You don't have any item yet
             </Typography>
           </>
