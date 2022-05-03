@@ -18520,7 +18520,7 @@
       "properties": {
         "id": {
           "name": "id",
-          "value": 215
+          "value": 230
         },
         "name": {
           "name": "name",
@@ -20005,6 +20005,10 @@
       "image": "QmQ8PAwZtKztvsFnAdp79KyvHkhUYzSkZQwgsHVdMy3Zbp",
       "symbol": "GATE",
       "properties": {
+        "id": {
+          "name": "id",
+          "value": 215
+        },
         "name": {
           "name": "name",
           "value": "Dracul"

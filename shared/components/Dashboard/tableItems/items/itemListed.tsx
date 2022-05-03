@@ -75,7 +75,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
               </Typography>
               <Typography type="caption" className="text-white mt-1">
                 <AddressText
-                  text={type === "Recently Listed" ? seller : buyer}
+                  text={type === "Recently Listed" ? seller : seller}
                 ></AddressText>
               </Typography>
             </div>

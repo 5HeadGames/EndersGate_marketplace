@@ -162,14 +162,21 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                   />
                 </div>
                 <div className="py-6">
-                  <div className="text-primary text-sm text-center flex items-center justify-center">
+                  <div className="text-primary text-sm text-center flex flex-col items-center justify-center">
                     {message ===
                     "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
                       message
                     ) : (
-                      <span className="flex gap-4 items-center justify-center">
-                        {message} <LoadingOutlined />
-                      </span>
+                      <>
+                        <span className="flex gap-4 items-center justify-center">
+                          {message} <LoadingOutlined />
+                        </span>
+                        <span className="flex gap-4 mt-6 items-center justify-center">
+                          {message === "Listing your tokens"
+                            ? "Transaction 2/2"
+                            : "Transaction 1/2"}
+                        </span>
+                      </>
                     )}
                   </div>
                 </div>

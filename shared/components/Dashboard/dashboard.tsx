@@ -3,7 +3,8 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "@redux/store";
 import Table from "./tableItems/table";
 import TransactionsBoard from "./TransactionsBoard/TransactionsBoard";
-import { getAddresses } from "@shared/web3";
+import { getAddresses, getContract } from "@shared/web3";
+import cardsJson from "../../../cards.json";
 
 const DashboardComponent = () => {
   const [recentlyListed, setRecentlyListed] = React.useState([]);
@@ -18,6 +19,8 @@ const DashboardComponent = () => {
   const [listedSelected, setListedSelected] = React.useState("trading_cards");
   const [soldSelected, setSoldSelected] = React.useState("trading_cards");
   const { nfts } = useAppSelector((state) => state);
+
+ 
 
   React.useEffect(() => {
     const { endersGate, pack } = getAddresses();

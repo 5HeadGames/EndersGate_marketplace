@@ -22,19 +22,15 @@ const ItemSold = ({ transaction }) => {
         </div>
       </td>
       <td className="py-4">
-        <BuyerSeller
-          nickname={buyer.nickname}
-          address={buyer.address}
-          typeOfPerson="BUYER"
-        />
+        <BuyerSeller nickname={""} address={seller} typeOfPerson="SELLER" />
       </td>
-      <td className="py-4">
+      {/* <td className="py-4">
         <BuyerSeller
           nickname={seller.nickname}
           address={seller.address}
           typeOfPerson="SELLER"
         />
-      </td>
+      </td> */}
       <td className="py-4">
         <div className="flex flex-col items-end pr-2">
           <Typography className="text-white" type="label">
