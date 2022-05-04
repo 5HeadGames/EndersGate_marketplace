@@ -28,7 +28,7 @@ const parseSale = (
   };
 };
 
-describe("[ClockSale]", function () {
+describe("[ClockSaleOwnable]", function () {
   let accounts: SignerWithAddress[],
     marketplace: ClockSale,
     nft: EndersPack,
@@ -47,7 +47,7 @@ describe("[ClockSale]", function () {
 
   before(async () => {
     const [Sale, NftFactory, MockERC20, _accounts] = await Promise.all([
-      ethers.getContractFactory("ClockSale"),
+      ethers.getContractFactory("ClockSaleOwnable"),
       ethers.getContractFactory("EndersPack"),
       ethers.getContractFactory("MockERC20"),
       ethers.getSigners(),
@@ -147,11 +147,16 @@ describe("[ClockSale]", function () {
   });
 
   describe("Sale", () => {
-    it("Should create an auction", async () => {
+    it("Only owner should create an auction", async () => {
       for await (let currentSale of salesData) {
         const {id, price, amount, duration} = currentSale;
 
         await nft.setApprovalForAll(marketplace.address, true);
+
+        await expect(
+          marketplace.connect(accounts[1]).createSale(nft.address, id, price, amount, duration)
+        ).to.be.revertedWith("Ownable: caller is not the owner");
+
         const tx = await (
           await marketplace.createSale(nft.address, id, price, amount, duration)
         ).wait();
