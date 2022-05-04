@@ -147,6 +147,23 @@ describe("[ClockSale]", function () {
   });
 
   describe("Sale", () => {
+    const salesData = [
+      {
+        id: 0,
+        price: ethers.utils.parseEther("3.5"),
+        amount: 10,
+        duration: 3600 * 24,
+      },
+      {
+        id: 2,
+        price: ethers.utils.parseEther("1"),
+        amount: 14,
+        duration: 3600 * 24 * 7,
+      },
+    ];
+    let sales: number[] = [],
+      block: Block;
+
     it("Should create an auction", async () => {
       for await (let currentSale of salesData) {
         const {id, price, amount, duration} = currentSale;
@@ -223,7 +240,7 @@ describe("[ClockSale]", function () {
       const amount = 2;
       const cost = salesData[1].price.mul(amount);
       const buyer = accounts[1];
-      const [buyerBalance, sellerBalance, feeReceiverBalance] = await Promise.all([
+      const [buyerBalance, sellerBalance, feeReceiverBalance] = await Promise([
         await ethers.provider.getBalance(buyer.address),
         await ethers.provider.getBalance(accounts[0].address),
         await ethers.provider.getBalance(feeReceiver.address),
@@ -234,7 +251,7 @@ describe("[ClockSale]", function () {
       const log = getLogs(marketplace.interface, receipt).find(
         ({name}) => name === "BuySuccessful"
       );
-      const [postBuyerBalance, postSellerBalance, postFeeReceiverBalance] = await Promise.all([
+      const [postBuyerBalance, postSellerBalance, postFeeReceiverBalance] = await Promise([
         await ethers.provider.getBalance(buyer.address),
         await ethers.provider.getBalance(accounts[0].address),
         await ethers.provider.getBalance(feeReceiver.address),

@@ -1,9 +1,32 @@
 import React from "react";
+import { convertArrayCards } from "../convertCards";
 
-export const AddressText = ({text}) => {
-  return <>{"(" + (text?.substring(0, 5) || "") + "..." + (text?.substring(36) || "") + ")"}</>;
+const cards = convertArrayCards();
+
+export const AddressText = ({ text }) => {
+  return (
+    <>
+      {"(" +
+        (text?.substring(0, 5) || "") +
+        "..." +
+        (text?.substring(36) || "") +
+        ")"}
+    </>
+  );
 };
 
-export const TransactionText = ({text}) => {
-  return <>{(text?.substring(0, 7) || "") + "..." + text?.substring(40) || ""}</>;
+export const TransactionText = ({ text }) => {
+  return (
+    <>{(text?.substring(0, 7) || "") + "..." + text?.substring(40) || ""}</>
+  );
+};
+
+export const Type = ({ id }) => {
+  return (
+    <>
+      {cards[id].properties?.attack?.value
+        ? "Guardian"
+        : cards[id].properties.type?.value}
+    </>
+  );
 };

@@ -7,6 +7,7 @@ import {SlideButton} from "@shared/components/common/slideButton/slideButton";
 
 const FiltersBoard = ({ filter, setFilter, type, setType }) => {
   const handleChange = (title) => {
+    console.log(title);
     setFilter((prev) => {
       return { ...prev, [`${title}`]: !prev[`${title}`] };
     });
@@ -22,9 +23,9 @@ const FiltersBoard = ({ filter, setFilter, type, setType }) => {
           value: "avatar",
         },
         {
-          title: "Champions",
-          onClick: () => handleChange("champions"),
-          value: "champions",
+          title: "Guardian",
+          onClick: () => handleChange("guardian"),
+          value: "guardian",
         },
         {
           title: "Action Cards",
@@ -102,29 +103,49 @@ const FiltersBoard = ({ filter, setFilter, type, setType }) => {
       title: "Rarity",
       subItems: [
         {
-          title: "1-Wood",
+          title: "Wood",
           onClick: () => handleChange("wood"),
           value: "wood",
         },
         {
-          title: "2-Stone",
+          title: "Stone",
           onClick: () => handleChange("stone"),
           value: "stone",
         },
         {
-          title: "3-Iron",
+          title: "Iron",
           onClick: () => handleChange("iron"),
           value: "iron",
         },
         {
-          title: "4-Epic",
+          title: "Epic",
           onClick: () => handleChange("epic"),
           value: "epic",
         },
         {
-          title: "5-Legendary",
+          title: "Legendary",
           onClick: () => handleChange("legendary"),
           value: "legendary",
+        },
+        {
+          title: "Common",
+          onClick: () => handleChange("common"),
+          value: "common",
+        },
+        {
+          title: "Uncommon",
+          onClick: () => handleChange("uncommon"),
+          value: "uncommon",
+        },
+        {
+          title: "Rare",
+          onClick: () => handleChange("rare"),
+          value: "rare",
+        },
+        {
+          title: "Ultra Rare",
+          onClick: () => handleChange("ultra_rare"),
+          value: "ultra_rare",
         },
       ],
     },
@@ -179,6 +200,10 @@ const FiltersBoard = ({ filter, setFilter, type, setType }) => {
       iron: false,
       epic: false,
       legendary: false,
+      common: false,
+      rare: false,
+      ultra_rare: false,
+      uncommon: false,
       limited_edition: false,
       attack: false,
       damage_stats: false,

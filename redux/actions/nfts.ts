@@ -73,7 +73,14 @@ export const onGetAssets = createAsyncThunk(
       const packsIds = [0, 1, 2, 3];
       const cardsIds = Object.values(cards)
         .reduce((acc: any[], cur) => acc.concat(cur), [])
-        .map((card) => card.properties.id.value);
+        .map(
+          (card, i) =>
+            // card.properties?.id?.value !== undefined
+            //   ? card.properties.id.value
+            i
+        );
+
+      console.log(cardsIds, "cardsIds");
 
       const balancePacks = await packsContract.methods
         .balanceOfBatch(
@@ -87,6 +94,8 @@ export const onGetAssets = createAsyncThunk(
           cardsIds
         )
         .call();
+
+      console.log(balanceCards, balancePacks, "balances");
 
       return {
         balanceCards: cardsIds.map((id, i) => ({id, balance: balanceCards[i]})),

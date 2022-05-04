@@ -51,30 +51,28 @@ export const DropdownMenu: React.FC<
                 return (
                   <Menu.Item key={index}>
                     {() => (
-                      <Link href={item.href}>
-                        <a
-                          href={item.href}
-                          onClick={item?.onClick}
-                          className={clsx(
-                            "flex cursor-pointer items-start gap-x-2 px-4 py-4 f-14 text-normal text-dark-1 bg-overlay rounded-md"
-                          )}
-                        >
-                          <div className="p-2 degradated rounded-md md:flex hidden text-white text-2xl">
-                            {item.icon}
-                          </div>
-                          <div className="flex flex-col ">
-                            <Typography
-                              type="subTitle"
-                              className="text-primary font-bold"
-                            >
-                              {item.title}
-                            </Typography>
-                            <p className="font-bold text-sm text-white w-64 md:flex hidden">
-                              {item.description}
-                            </p>
-                          </div>
-                        </a>
-                      </Link>
+                      <a
+                        href={item.externalLink}
+                        onClick={item?.onClick}
+                        className={clsx(
+                          "flex cursor-pointer items-start gap-x-2 px-4 py-4 f-14 text-normal text-dark-1 bg-overlay rounded-md"
+                        )}
+                      >
+                        <div className="p-2 degradated rounded-md md:flex hidden text-white text-2xl">
+                          {item.icon}
+                        </div>
+                        <div className="flex flex-col ">
+                          <Typography
+                            type="subTitle"
+                            className="text-primary font-bold"
+                          >
+                            {item.title}
+                          </Typography>
+                          <p className="font-bold text-sm text-white w-64 md:flex hidden">
+                            {item.description}
+                          </p>
+                        </div>
+                      </a>
                     )}
                   </Menu.Item>
                 );

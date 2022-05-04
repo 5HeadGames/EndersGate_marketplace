@@ -19,6 +19,9 @@ const TransactionsBoard: React.FC<any> = ({
   totalSale,
   totalVolume,
   cardsSold,
+  packsSold,
+  columnSelected,
+  setColumnSelected,
 }) => {
   const platformItems = [
     {
@@ -52,8 +55,18 @@ const TransactionsBoard: React.FC<any> = ({
           "linear-gradient(to right, #6441a5, #2b1045)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
       },
     },
+    {
+      title: "PACKS SOLD",
+      value: packsSold,
+      icon: Icons.logo,
+      css: {
+        /* Chrome 10-25, Safari 5.1-6 */
+        background:
+          "linear-gradient(to right, #6441a5, #2b1045)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
+      },
+    },
   ];
-  const [columnSelected, setColumnSelected] = React.useState("last_24h");
+
   return (
     <div className="w-full flex flex-col">
       <div className="w-full rounded-md border-2 border-overlay-border">

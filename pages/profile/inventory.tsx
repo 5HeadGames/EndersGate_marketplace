@@ -9,6 +9,7 @@ const ProfileInventory = () => {
   const router = useRouter();
 
   React.useEffect(() => {
+    console.log(isAuthenticated, "auth");
     if (!isAuthenticated) {
       router.push("/login");
     }
