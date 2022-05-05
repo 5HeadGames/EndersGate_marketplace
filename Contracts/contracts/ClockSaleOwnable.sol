@@ -143,13 +143,13 @@ contract ClockSaleOwnable is ERC721, Ownable, Pausable, ERC1155Holder, Reentranc
     if (_auction.amount == 0) _finalizeSale(_tokenId);
 
     require(_isOnSale(_auction), "ClockSale:NOT_AVAILABLE");
-    require(msg.value >= cost, "ClockSale:NOT_ENOUGH_VALUE");
+    require(msg.value == cost, "ClockSale:NOT_EXACT_VALUE");
 
     uint256 ownerAmount = (cost * ownerCut) / 10000;
     uint256 sellAmount = cost - ownerAmount;
+
     payable(_auction.seller).sendValue(sellAmount);
     payable(feeReceiver).sendValue(ownerAmount);
-    payable(buyer).sendValue(msg.value - sellAmount - ownerAmount);
 
     _transfer(_tokenId, amount, buyer);
     emit BuySuccessful(_tokenId, buyer, cost, amount);

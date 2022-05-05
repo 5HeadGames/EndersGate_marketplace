@@ -5,6 +5,6 @@
   "pack": "0x1d6985ff624475719e29133D72ea6Bf7614F957A",
   "packIpfs": "https://ipfs.moralis.io:2053/ipfs/QmSug6ooWW4iWQkCCeo9aQhTYfqWD9BMDLMh33thYFbp5h",
   "library": "0x7e36df953FC6f3b41A6bdf70D731d25428023345",
-  "marketplace": "0x05736b3af985ac39a8b32C731C38262492D05eC3",
-  "marketplaceOwnable": "0x59B72648b4A72E1aec858015FB5d520caa6B4119"
+  "marketplace": "0xa84bdEe314199A0b9169684B815456EF99032614",
+  "marketplaceOwnable": "0x777292402a3a8cA33F5a16a4395c4c7604509E2b"
 }
