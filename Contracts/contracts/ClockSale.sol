@@ -8,11 +8,12 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 import "./interfaces/IERC1155Custom.sol";
 
 /// @title Clock auction for non-fungible tokens.
-contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
+contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder, ReentrancyGuard {
   using Counters for Counters.Counter;
   using Address for address payable;
 
@@ -133,7 +134,7 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     _addSale(_auction);
   }
 
-  function buy(uint256 _tokenId, uint256 amount) external payable whenNotPaused {
+  function buy(uint256 _tokenId, uint256 amount) external payable nonReentrant whenNotPaused {
     Sale storage _auction = sales[_tokenId];
     uint256 cost = _auction.price * amount;
     address buyer = _msgSender();
@@ -142,13 +143,13 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder {
     if (_auction.amount == 0) _finalizeSale(_tokenId);
 
     require(_isOnSale(_auction), "ClockSale:NOT_AVAILABLE");
-    require(msg.value >= cost, "ClockSale:NOT_ENOUGH_VALUE");
+    require(msg.value == cost, "ClockSale:NOT_EXACT_VALUE");
 
     uint256 ownerAmount = (cost * ownerCut) / 10000;
     uint256 sellAmount = cost - ownerAmount;
+
     payable(_auction.seller).sendValue(sellAmount);
     payable(feeReceiver).sendValue(ownerAmount);
-    payable(buyer).sendValue(msg.value - sellAmount - ownerAmount);
 
     _transfer(_tokenId, amount, buyer);
     emit BuySuccessful(_tokenId, buyer, cost, amount);
