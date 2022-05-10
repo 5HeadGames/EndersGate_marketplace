@@ -16,7 +16,7 @@ import { convertArrayCards } from "@shared/components/common/convertCards";
 const navItems = [
   { title: "Trading Cards", value: "trading_cards" },
   { title: "Packs", value: "packs" },
-  { title: "Comics", value: "comics" },
+  // { title: "Comics", value: "comics" },
 ];
 
 const Inventory = () => {
