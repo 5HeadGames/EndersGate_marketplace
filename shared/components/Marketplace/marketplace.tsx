@@ -296,7 +296,7 @@ const MarketplaceComponent = () => {
                   >
                     <div className="w-full flex flex-col text-xs gap-1">
                       <div className="w-full flex justify-between">
-                        <span>Pack{a.nftId}</span>
+                        <span>Pack #{a.nftId}</span>
                         <span>#{a.id}</span>
                       </div>
                     </div>
