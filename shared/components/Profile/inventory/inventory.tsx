@@ -16,7 +16,6 @@ import { convertArrayCards } from "@shared/components/common/convertCards";
 const navItems = [
   { title: "Trading Cards", value: "trading_cards" },
   { title: "Packs", value: "packs" },
-  // { title: "Comics", value: "comics" },
 ];
 
 const Inventory = () => {
@@ -60,7 +59,6 @@ const Inventory = () => {
       });
     });
     setInventoryPacks(arrayPacks);
-    console.log(arrayPacks);
   }, [nfts]);
 
   const handleSetBalance = async () => {
