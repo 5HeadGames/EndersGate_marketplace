@@ -15,6 +15,8 @@ import { useModal } from "@shared/hooks/modal";
 import { approveERC1155 } from "@shared/web3";
 import { Images } from "@shared/const/Images";
 import { convertArrayCards } from "../common/convertCards";
+import Styles from "../NFTDetail/styles.module.scss";
+import clsx from "clsx";
 
 const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { user, Moralis, web3 } = useMoralis();
@@ -100,10 +102,10 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
             <h2 className="font-bold text-primary text-center">Sell NFT</h2>
             <div className="flex md:flex-row flex-col md:gap-16 gap-4 w-full items-center">
-              <div className="h-64 w-40">
+              <div className="h-auto w-auto">
                 <img
                   src={packs[id]?.properties?.image?.value}
-                  className="h-64 w-40"
+                  className={clsx(Styles.animatedImage)}
                   alt=""
                 />
               </div>
@@ -247,7 +249,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           </div>
           <div className="w-full flex md:flex-row flex-col mt-10">
             <div className="flex relative justify-center md:w-1/2 xl:px-24">
-              <div className="sm:sticky sm:top-32 h-min w-72">
+              <div className="sm:sticky sm:top-32 h-min w-auto">
                 <img
                   src={
                     id == 0
@@ -258,7 +260,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       ? Images.pack3
                       : Images.pack4
                   }
-                  className="w-72"
+                  className={clsx(Styles.animatedImageMain)}
                   alt=""
                 />
               </div>
