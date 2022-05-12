@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+import {useRouter} from "next/router";
 import {
   CheckCircleOutlined,
   FormOutlined,
@@ -9,16 +10,16 @@ import {
   LogoutOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import { useForm } from "react-hook-form";
-import { useMoralis, useMoralisFile } from "react-moralis";
+import {useForm} from "react-hook-form";
+import {useMoralis, useMoralisFile} from "react-moralis";
 
-import { Button } from "@shared/components/common/button";
-import { Typography } from "@shared/components/common/typography";
-import { Icons } from "@shared/const/Icons";
-import { useModal } from "@shared/hooks/modal";
-import { Input } from "@shared/components/common/form/input";
+import {Button} from "@shared/components/common/button";
+import {Typography} from "@shared/components/common/typography";
+import {Icons} from "@shared/const/Icons";
+import {useModal} from "@shared/hooks/modal";
+import {Input} from "@shared/components/common/form/input";
 
-type ButtonsTypes = { logout: boolean; userData: boolean };
+type ButtonsTypes = {logout: boolean; userData: boolean};
 
 const ProfileDataAndActions = () => {
   const [disabled, setDisabled] = React.useState<ButtonsTypes>({
@@ -26,16 +27,15 @@ const ProfileDataAndActions = () => {
     userData: false,
   });
   const [image, setImage] = React.useState<File | null>(null);
-  const { Modal, isShow, show, hide } = useModal();
-  const { register, handleSubmit } = useForm();
-  const { logout, user, setUserData } = useMoralis();
-  const { saveFile } = useMoralisFile();
-  const profileImage = user?.get("profileImage")
-    ? user.get("profileImage").url()
-    : Icons.logo;
+  const {Modal, isShow, show, hide} = useModal();
+  const {register, handleSubmit} = useForm();
+  const {logout, user, setUserData} = useMoralis();
+  const {saveFile} = useMoralisFile();
+  const router = useRouter();
+  const profileImage = user?.get("profileImage") ? user.get("profileImage").url() : Icons.logo;
 
   const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
-    setDisabled((prev) => ({ ...prev, [field]: value }));
+    setDisabled((prev) => ({...prev, [field]: value}));
   };
 
   const onSubmit = async (values: any) => {
@@ -48,11 +48,11 @@ const ProfileDataAndActions = () => {
       });
     }
     await setUserData(
-      moralisFile
-        ? { profileImage: moralisFile, name: values.name }
-        : { name: values.name }
+      moralisFile ? {profileImage: moralisFile, name: values.name} : {name: values.name}
     );
     toggleForm(false);
+    hide();
+    router.push("/profile/inventory");
   };
 
   const handleSignOut = async () => {
@@ -63,7 +63,7 @@ const ProfileDataAndActions = () => {
   };
 
   const links = [
-    { href: "/profile", label: "Account", icon: <IdcardOutlined /> },
+    {href: "/profile", label: "Account", icon: <IdcardOutlined />},
     {
       href: "/profile/inventory",
       label: "Inventory",
@@ -105,9 +105,7 @@ const ProfileDataAndActions = () => {
                 className="flex flex-col items-center w-full"
               >
                 <input
-                  onChange={(e: React.ChangeEvent<any>) =>
-                    setImage(e.target.files[0])
-                  }
+                  onChange={(e: React.ChangeEvent<any>) => setImage(e.target.files[0])}
                   type="file"
                   accept="image/*"
                   id="profile_picture"
@@ -133,12 +131,7 @@ const ProfileDataAndActions = () => {
                   placeholder="Nickname"
                   defaultValue={user?.get("name")}
                 />
-                <Button
-                  decoration="fillPrimary"
-                  size="small"
-                  type="submit"
-                  className="mt-4"
-                >
+                <Button decoration="fillPrimary" size="small" type="submit" className="mt-4">
                   Save
                 </Button>
               </form>
@@ -151,10 +144,7 @@ const ProfileDataAndActions = () => {
             )}
           >
             <img src={profileImage} className="h-16 w-16 rounded-full" alt="" />
-            <Typography
-              type="title"
-              className="text-primary flex items-center mt-2"
-            >
+            <Typography type="title" className="text-primary flex items-center mt-2">
               {user?.get("name")}
             </Typography>
             <div
@@ -165,10 +155,7 @@ const ProfileDataAndActions = () => {
             >
               <FormOutlined />
             </div>
-            <Typography
-              type="span"
-              className="text-white md:text-xs text-caption"
-            >
+            <Typography type="span" className="text-white md:text-xs text-caption">
               {user?.get("email") || ""}
             </Typography>
           </div>

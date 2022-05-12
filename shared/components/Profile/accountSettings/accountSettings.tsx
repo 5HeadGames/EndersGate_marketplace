@@ -14,13 +14,13 @@ const AccountSettingsComponent = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: {errors},
   } = useForm();
   // const [image, setImage] = React.useState<File | null>(null);
   const [loadingForm, setLoading] = React.useState(false);
   const [successPassword, setSuccessPassword] = React.useState(false);
-  const { user, setUserData, signup, Moralis } = useMoralis();
-  const { saveFile } = useMoralisFile();
+  const {user, setUserData, signup, Moralis} = useMoralis();
+  const {saveFile} = useMoralisFile();
   const dispatch = useAppDispatch();
 
   const handleChangePicture = async (e: React.ChangeEvent<any>) => {
@@ -29,43 +29,33 @@ const AccountSettingsComponent = () => {
       const moralisFile = await saveFile(file.name, file, {
         type: "image/png",
       });
-      await setUserData({ profileImage: moralisFile });
+      await setUserData({profileImage: moralisFile});
       console.log(file);
       // setImage(file);
     } catch (error) {
-      console.log({ error });
+      console.log({error});
     }
   };
 
-  const handleSetField =
-    (field: "name" | "userStatus") => async (e: React.ChangeEvent<any>) => {
-      try {
-        const value = e.target.value;
-        await setUserData({ [field]: value });
-      } catch (error) {
-        console.log({ error });
-      }
-    };
+  const handleSetField = (field: "name" | "userStatus") => async (e: React.ChangeEvent<any>) => {
+    try {
+      const value = e.target.value;
+      await setUserData({[field]: value});
+    } catch (error) {
+      console.log({error});
+    }
+  };
 
-  const onSubmit = async ({
-    newEmail,
-    newPassword,
-  }: {
-    newEmail: string;
-    newPassword: string;
-  }) => {
+  const onSubmit = async ({newEmail, newPassword}: {newEmail: string; newPassword: string}) => {
     try {
       if (!user.get("email")) {
-        console.log("new email");
-        const res = await signup(newEmail, newPassword, newEmail);
         await Moralis.Cloud.run("sendVerificationEmail", {
           email: newEmail,
           name: newEmail,
         });
-        console.log({ res });
       }
     } catch (err) {
-      console.log({ err });
+      console.log({err});
     }
   };
 
@@ -95,11 +85,7 @@ const AccountSettingsComponent = () => {
               <div className="flex md:flex-col sm:flex-row flex-col mb-4 items-center">
                 <div className="xl:h-40 xl:w-40 md:h-32 md:w-32 h-40 w-40 rounded-full relative">
                   <img
-                    src={
-                      user.get("profileImage")
-                        ? user.get("profileImage").url()
-                        : Icons.logo
-                    }
+                    src={user.get("profileImage") ? user.get("profileImage").url() : Icons.logo}
                     alt=""
                   />
                 </div>
@@ -176,9 +162,7 @@ const AccountSettingsComponent = () => {
                   decoration="fillPrimary"
                   onClick={sendPasswordReset}
                 >
-                  {successPassword
-                    ? "We sent a link to your email"
-                    : "Reset password"}
+                  {successPassword ? "We sent a link to your email" : "Reset password"}
                 </Button>
               )}
               <Button

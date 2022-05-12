@@ -21,12 +21,7 @@ import {
   WalletOutlined,
 } from "@ant-design/icons";
 
-import {
-  getAddresses,
-  getContract,
-  getWeb3,
-  loginMetamaskWallet,
-} from "@shared/web3";
+import {getAddresses, getContract, getWeb3, loginMetamaskWallet} from "@shared/web3";
 
 const styles = {
   content: {
@@ -53,8 +48,7 @@ const navItems = [
     items: [
       {
         title: "Enders Gate Website",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
+        description: "Sell your game items to anyone, anywhere, they're finally yours",
         externalLink: "https://enders-gate-website-git-presentationenv-an-drew207.vercel.app/",
         icon: <ShopOutlined />,
       },
@@ -78,15 +72,14 @@ const navItems = [
       },
       {
         title: "Harmony Bridge",
-        description:
-          "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
         externalLink: "https://bridge.harmony.one/busd",
         icon: <WalletOutlined />,
       },
     ],
   },
-  { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
-  { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
+  {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
+  {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
   {
     link: "/profile/inventory",
     name: "Inventory",
@@ -107,6 +100,7 @@ export default function AppLayout({children}) {
   }));
   const router = useRouter();
   const {enableWeb3, isWeb3Enabled, isAuthenticated, user} = useMoralis();
+  console.log({isAuthenticated});
 
   const chainChangedHandler = async () => {
     // window.location.reload();
