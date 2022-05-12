@@ -5,6 +5,7 @@ import Table from "./tableItems/table";
 import TransactionsBoard from "./TransactionsBoard/TransactionsBoard";
 import { getAddresses, getContract } from "@shared/web3";
 import cardsJson from "../../../cards.json";
+import { TimeConverter } from "../common/unixDateConverter/unixConverter";
 
 const DashboardComponent = () => {
   const [recentlyListed, setRecentlyListed] = React.useState([]);
@@ -62,12 +63,44 @@ const DashboardComponent = () => {
           setRecentlySold(packSalesSold);
           break;
       }
+      console.log(nfts);
+      let timePeriod;
+      switch (columnSelected) {
+        case "last_24h":
+          timePeriod = 3600 * 24 * 1000;
+          break;
+        case "last_7d":
+          timePeriod = 3600 * 24 * 7 * 1000;
+          break;
+        case "last_30d":
+          timePeriod = 3600 * 24 * 30 * 1000;
+          break;
+      }
       setTransactionsBoard({
-        totalSale: nfts.totalSales,
+        totalSale:
+          nfts.saleCreated.length > 0
+            ? nfts.saleCreated
+                ?.map((sale): any => {
+                  return new Date().valueOf() -
+                    new Date(nfts.saleCreated[0].startedAt * 1000).valueOf() <
+                    timePeriod
+                    ? 1
+                    : 0;
+                })
+                ?.reduce((acc, cur) => {
+                  return acc + cur;
+                })
+            : 0,
         totalVolume:
           nfts.saleCreated.length > 0
             ? nfts.saleCreated
-                ?.map((sale) => parseFloat(sale.price))
+                ?.map((sale) => {
+                  return new Date().valueOf() -
+                    new Date(nfts.saleCreated[0].startedAt * 1000).valueOf() <
+                    timePeriod
+                    ? parseFloat(sale.price)
+                    : 0;
+                })
                 ?.reduce((acc, cur) => {
                   return acc + cur;
                 })
@@ -75,7 +108,15 @@ const DashboardComponent = () => {
         cardsSold:
           nfts.saleSuccessfull.length > 0
             ? nfts.saleSuccessfull
-                ?.map((sale) => (sale.nft === endersGate ? 1 : 0))
+                ?.map((sale) => {
+                  return new Date().valueOf() -
+                    new Date(nfts.saleCreated[0].startedAt * 1000).valueOf() <
+                    timePeriod
+                    ? sale.nft === endersGate
+                      ? 1
+                      : 0
+                    : 0;
+                })
                 ?.reduce((acc: any, cur: any) => {
                   return acc + cur;
                 })
@@ -84,28 +125,30 @@ const DashboardComponent = () => {
         packsSold:
           nfts.saleSuccessfull.length > 0
             ? nfts.saleSuccessfull
-                ?.map((sale) => (sale.nft === pack ? 1 : 0))
+                ?.map((sale) => {
+                  return new Date().valueOf() -
+                    new Date(nfts.saleCreated[0].startedAt * 1000).valueOf() <
+                    timePeriod
+                    ? sale.nft === pack
+                      ? 1
+                      : 0
+                    : 0;
+                })
                 ?.reduce((acc: any, cur: any) => {
                   return acc + cur;
                 })
             : 0,
       });
     }
-  }, [nfts, listedSelected, soldSelected]);
+  }, [nfts, listedSelected, soldSelected, columnSelected]);
 
   // React.useEffect(() => {
   // }, []);
 
-  React.useEffect(() => {
-    switch (columnSelected) {
-      case "last_24h":
-        break;
-      case "last_7d":
-        break;
-      case "last_30d":
-        break;
-    }
-  }, [columnSelected]);
+  // React.useEffect(() => {
+  //   const { endersGate, pack } = getAddresses();
+
+  // }, [columnSelected]);
 
   return (
     <div className="w-full flex flex-col md:px-16 pt-36 min-h-screen bg-overlay px-4 pb-24">

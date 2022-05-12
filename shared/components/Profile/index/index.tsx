@@ -63,8 +63,8 @@ const ProfileIndexPage = () => {
           className="absolute top-[-80px] right-[-80px]"
           alt=""
         />
-        <div className="flex flex-row">
-          <div className="flex flex-col">
+        <div className="flex flex-row relative">
+          <div className="flex flex-col ">
             {" "}
             <Typography type="title" className="text-primary ">
               Balance

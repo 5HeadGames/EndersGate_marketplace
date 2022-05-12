@@ -53,6 +53,8 @@ const ProfileDataAndActions = () => {
         : { name: values.name }
     );
     toggleForm(false);
+    console.log("Xd");
+    hide();
   };
 
   const handleSignOut = async () => {
@@ -114,8 +116,13 @@ const ProfileDataAndActions = () => {
                   className="hidden"
                 />
                 <div className="flex md:flex-row flex-col items-center mb-4">
-                  <div className="h-24 w-24 rounded-full relative">
-                    <img src={profileImage} alt="" />
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="h-24 w-24 rounded-full relative overflow-hidden">
+                      <img src={profileImage} alt="" />
+                    </div>
+                    <Typography type="caption" className="text-primary">
+                      Recommended Size: 250x250
+                    </Typography>
                   </div>
                   <label
                     htmlFor="profile_picture"
@@ -153,7 +160,7 @@ const ProfileDataAndActions = () => {
             <img src={profileImage} className="h-16 w-16 rounded-full" alt="" />
             <Typography
               type="title"
-              className="text-primary flex items-center mt-2"
+              className="text-primary text-center flex items-center mt-2"
             >
               {user?.get("name")}
             </Typography>
