@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+import { useRouter } from "next/router";
 import {
   CheckCircleOutlined,
   FormOutlined,
@@ -30,6 +31,7 @@ const ProfileDataAndActions = () => {
   const { register, handleSubmit } = useForm();
   const { logout, user, setUserData } = useMoralis();
   const { saveFile } = useMoralisFile();
+  const router = useRouter();
   const profileImage = user?.get("profileImage")
     ? user.get("profileImage").url()
     : Icons.logo;
@@ -53,8 +55,8 @@ const ProfileDataAndActions = () => {
         : { name: values.name }
     );
     toggleForm(false);
-    console.log("Xd");
     hide();
+    router.push("/profile/inventory");
   };
 
   const handleSignOut = async () => {
