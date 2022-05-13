@@ -2,7 +2,11 @@ import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
 import { Icons } from "@shared/const/Icons";
-import { PieChartFilled } from "@ant-design/icons";
+import {
+  LineChartOutlined,
+  MobileOutlined,
+  PieChartFilled,
+} from "@ant-design/icons";
 import Web3 from "web3";
 import { getAddresses, getContractWebSocket } from "@shared/web3";
 import contracts from "@shared/contracts";
@@ -12,8 +16,6 @@ const navItems = [
   { title: "7 days", value: "last_7d" },
   { title: "30 days", value: "last_30d" },
 ];
-
-
 
 const TransactionsBoard: React.FC<any> = ({
   totalSale,
@@ -38,7 +40,7 @@ const TransactionsBoard: React.FC<any> = ({
       title: "TOTAL VOLUME",
       value: Web3.utils.fromWei(totalVolume.toString()) + " ONE",
       // value2: "$1,57M",
-      icon: Icons.harmony,
+      iconHtml: <LineChartOutlined />,
       css: {
         /* Chrome 10-25, Safari 5.1-6 */
         background:
@@ -48,7 +50,7 @@ const TransactionsBoard: React.FC<any> = ({
     {
       title: "CARDS SOLD",
       value: cardsSold,
-      icon: Icons.logo,
+      iconHtml: <MobileOutlined />,
       css: {
         /* Chrome 10-25, Safari 5.1-6 */
         background:
@@ -97,7 +99,7 @@ const TransactionsBoard: React.FC<any> = ({
             );
           })}
         </div>
-        <div className="flex sm:flex-row flex-col py-10 px-8 sm:gap-x-16 gap-y-4 md:justify-start justify-center">
+        <div className="sm:flex sm:flex-row grid grid-cols-4 py-10 sm:px-8 px-4 sm:gap-x-16 gap-x-2 md:justify-start justify-center">
           {platformItems.map((item, index) => {
             return (
               <PlatformMovements

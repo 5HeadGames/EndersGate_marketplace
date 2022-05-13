@@ -17,8 +17,8 @@ const DashboardComponent = () => {
     packsSold: 0,
   });
   const [columnSelected, setColumnSelected] = React.useState("last_24h");
-  const [listedSelected, setListedSelected] = React.useState("packs");
-  const [soldSelected, setSoldSelected] = React.useState("packs");
+  const [listedSelected, setListedSelected] = React.useState("trading_cards");
+  const [soldSelected, setSoldSelected] = React.useState("trading_cards");
   const { nfts } = useAppSelector((state) => state);
 
   React.useEffect(() => {
@@ -33,12 +33,28 @@ const DashboardComponent = () => {
           packSalesCreated.push(sale);
         }
       });
+
       switch (listedSelected) {
         case "trading_cards":
-          setRecentlyListed(cardSalesCreated);
+          if (cardSalesCreated.length > 10) {
+            const cardSalesCreatedReverse = cardSalesCreated
+              .slice(cardSalesCreated.length - 10, cardSalesCreated.length)
+              .reverse();
+            setRecentlyListed(cardSalesCreatedReverse);
+          } else {
+            setRecentlyListed(cardSalesCreated.reverse());
+          }
           break;
         case "packs":
-          setRecentlyListed(packSalesCreated);
+          if (packSalesCreated.length > 10) {
+            setRecentlyListed(
+              packSalesCreated
+                .slice(packSalesCreated.length - 10, packSalesCreated.length)
+                .reverse()
+            );
+          } else {
+            setRecentlyListed(packSalesCreated.reverse());
+          }
           break;
         default:
           setRecentlyListed(nfts.saleCreated);
@@ -57,10 +73,28 @@ const DashboardComponent = () => {
 
       switch (soldSelected) {
         case "trading_cards":
-          setRecentlySold(cardSalesSold);
+          if (cardSalesSold.length > 10) {
+            setRecentlySold(
+              cardSalesSold
+
+                .slice(cardSalesSold.length - 10, cardSalesSold.length)
+                .reverse()
+            );
+          } else {
+            setRecentlySold(cardSalesSold.reverse());
+          }
           break;
         default:
-          setRecentlySold(packSalesSold);
+          if (packSalesSold.length > 10) {
+            setRecentlySold(
+              packSalesSold
+
+                .slice(packSalesSold.length - 10, packSalesSold.length)
+                .reverse()
+            );
+          } else {
+            setRecentlySold(packSalesSold.reverse());
+          }
           break;
       }
       console.log(nfts);
