@@ -114,9 +114,9 @@ const DashboardComponent = () => {
         totalSale:
           nfts.saleCreated.length > 0
             ? nfts.saleCreated
-                ?.map((sale): any => {
+                ?.map((sale, i): any => {
                   return new Date().valueOf() -
-                    new Date(nfts.saleCreated[0].startedAt * 1000).valueOf() <
+                    new Date(nfts.saleCreated[i].startedAt * 1000).valueOf() <
                     timePeriod
                     ? 1
                     : 0;
@@ -128,9 +128,9 @@ const DashboardComponent = () => {
         totalVolume:
           nfts.saleCreated.length > 0
             ? nfts.saleCreated
-                ?.map((sale) => {
+                ?.map((sale, i) => {
                   return new Date().valueOf() -
-                    new Date(nfts.saleCreated[0].startedAt * 1000).valueOf() <
+                    new Date(nfts.saleCreated[i].startedAt * 1000).valueOf() <
                     timePeriod
                     ? parseFloat(sale.price)
                     : 0;
@@ -142,9 +142,9 @@ const DashboardComponent = () => {
         cardsSold:
           nfts.saleSuccessfull.length > 0
             ? nfts.saleSuccessfull
-                ?.map((sale) => {
+                ?.map((sale, i) => {
                   return new Date().valueOf() -
-                    new Date(nfts.saleCreated[0].startedAt * 1000).valueOf() <
+                    new Date(nfts.saleCreated[i].startedAt * 1000).valueOf() <
                     timePeriod
                     ? sale.nft === endersGate
                       ? 1
@@ -159,9 +159,9 @@ const DashboardComponent = () => {
         packsSold:
           nfts.saleSuccessfull.length > 0
             ? nfts.saleSuccessfull
-                ?.map((sale) => {
+                ?.map((sale, i) => {
                   return new Date().valueOf() -
-                    new Date(nfts.saleCreated[0].startedAt * 1000).valueOf() <
+                    new Date(nfts.saleCreated[i].startedAt * 1000).valueOf() <
                     timePeriod
                     ? sale.nft === pack
                       ? 1
