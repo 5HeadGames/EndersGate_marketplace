@@ -50,7 +50,7 @@ const TransactionsBoard: React.FC<any> = ({
     {
       title: "CARDS SOLD",
       value: cardsSold,
-      iconHtml: <MobileOutlined />,
+      icon: Icons.logo,
       css: {
         /* Chrome 10-25, Safari 5.1-6 */
         background:
