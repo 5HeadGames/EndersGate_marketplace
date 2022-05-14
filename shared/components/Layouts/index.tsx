@@ -99,8 +99,9 @@ export default function AppLayout({children}) {
     ...state.layout,
   }));
   const router = useRouter();
-  const {enableWeb3, isWeb3Enabled, isAuthenticated, user} = useMoralis();
-  console.log({isAuthenticated});
+  const { enableWeb3, isWeb3Enabled, isAuthenticated, authenticate, user } =
+    useMoralis();
+  console.log({ isAuthenticated });
 
   const chainChangedHandler = async () => {
     // window.location.reload();
@@ -122,7 +123,10 @@ export default function AppLayout({children}) {
   const accountChangedHandler = async (newAccount: any) => {
     const web3 = await loginMetamaskWallet();
     await dispatch(onGetAssets((window as any).ethereum.selectedAddress));
-    if (!web3) return;
+    // if (user !== null) {
+    await enableWeb3();
+    const user = await authenticate();
+    // }
   };
   if (typeof window !== "undefined" && (window as any).ethereum?.isConnected() && !isExecuted) {
     (window as any).ethereum.on("accountsChanged", accountChangedHandler);

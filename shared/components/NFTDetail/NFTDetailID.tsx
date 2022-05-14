@@ -13,6 +13,8 @@ import { Typography } from "../common/typography";
 import { useModal } from "@shared/hooks/modal";
 import { approveERC1155 } from "@shared/web3";
 import { convertArrayCards } from "../common/convertCards";
+import clsx from "clsx";
+import Styles from "./styles.module.scss";
 
 const { marketplace } = getAddresses();
 
@@ -94,10 +96,10 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
             <h2 className="font-bold text-primary text-center">Sell NFT</h2>
             <div className="flex md:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
-              <div className="h-64 w-40">
+              <div className={clsx("h-auto w-auto")}>
                 <img
                   src={cards[id]?.properties.image?.value}
-                  className="h-64 w-40"
+                  className={clsx(Styles.animatedImage)}
                   alt=""
                 />
               </div>
@@ -241,10 +243,10 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           </div>
           <div className="w-full flex md:flex-row flex-col mt-10">
             <div className="flex relative justify-center md:w-1/2 xl:px-24">
-              <div className="sm:sticky sm:top-32 h-min w-72">
+              <div className="sm:sticky sm:top-32 h-min w-auto">
                 <img
                   src={cards[id]?.properties?.image?.value || Icons.logo}
-                  className="w-72"
+                  className={clsx(Styles.animatedImageMain)}
                   alt=""
                 />
               </div>

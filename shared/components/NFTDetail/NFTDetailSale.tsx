@@ -15,6 +15,8 @@ import packs from "../../packs.json";
 import { TimeConverter } from "../common/unixDateConverter/unixConverter";
 import { useModal } from "@shared/hooks/modal";
 import { convertArrayCards } from "../common/convertCards";
+import clsx from "clsx";
+import Styles from "./styles.module.scss";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const { user, Moralis, isWeb3Enabled } = useMoralis();
@@ -70,6 +72,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
       );
     } catch {}
     setMessage("");
+    await getSale();
     hide();
     dispatch(onLoadSales());
     dispatch(onGetAssets(user.get("ethAddress")));
@@ -88,7 +91,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
           <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
             <h2 className="font-bold text-primary text-center">Buy NFT</h2>
             <div className="flex sm:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
-              <div className="h-64">
+              <div className="h-auto">
                 <img
                   src={
                     isPack
@@ -96,7 +99,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       : cards[sale?.nftId]?.properties?.image?.value ||
                         Icons.logo
                   }
-                  className="h-64"
+                  className={clsx(Styles.animatedImage)}
                   alt=""
                 />
               </div>
@@ -217,14 +220,14 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
           </div>
           <div className="w-full flex md:flex-row flex-col mt-10">
             <div className="flex relative justify-center md:w-1/2 xl:px-24">
-              <div className="sm:sticky sm:top-32 h-min w-72">
+              <div className="sm:sticky sm:top-32 h-min w-auto">
                 <img
                   src={
                     isPack
                       ? packs[sale.nftId].properties.image.value
                       : cards[sale.nftId].properties.image?.value || Icons.logo
                   }
-                  className="w-72"
+                  className={clsx(Styles.animatedImageMain)}
                   alt=""
                 />
               </div>

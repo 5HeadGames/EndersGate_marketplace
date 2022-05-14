@@ -21,4 +21,6 @@ export enum Icons {
   settings = "/icons/settings.png",
   inventory = "/icons/inventory.png",
   edit = "/icons/edit.png",
+  cards = "/icons/cards.png",
+  packs = "/icons/packs.png",
 }
