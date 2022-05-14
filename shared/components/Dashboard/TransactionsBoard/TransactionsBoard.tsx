@@ -50,7 +50,7 @@ const TransactionsBoard: React.FC<any> = ({
     {
       title: "CARDS SOLD",
       value: cardsSold,
-      icon: Icons.logo,
+      icon: Icons.cards,
       css: {
         /* Chrome 10-25, Safari 5.1-6 */
         background:
@@ -60,7 +60,7 @@ const TransactionsBoard: React.FC<any> = ({
     {
       title: "PACKS SOLD",
       value: packsSold,
-      icon: Icons.logo,
+      icon: Icons.packs,
       css: {
         /* Chrome 10-25, Safari 5.1-6 */
         background:

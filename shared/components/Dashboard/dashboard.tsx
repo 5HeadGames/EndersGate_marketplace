@@ -76,7 +76,6 @@ const DashboardComponent = () => {
           if (cardSalesSold.length > 10) {
             setRecentlySold(
               cardSalesSold
-
                 .slice(cardSalesSold.length - 10, cardSalesSold.length)
                 .reverse()
             );

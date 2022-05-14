@@ -72,6 +72,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
       );
     } catch {}
     setMessage("");
+    await getSale();
     hide();
     dispatch(onLoadSales());
     dispatch(onGetAssets(user.get("ethAddress")));

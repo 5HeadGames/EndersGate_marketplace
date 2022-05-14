@@ -30,8 +30,11 @@ const ProfileIndexPage = () => {
           metadata: JSON.parse(act.get("metadata")),
         }))
         .sort((a, b) => {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
         })
+        .slice(0, activities.length > 5 ? 5 : activities.length)
     );
   };
 
