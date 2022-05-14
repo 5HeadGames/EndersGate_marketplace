@@ -17,6 +17,7 @@ async function main() {
   const appRoot = require("app-root-path");
   const configFileName = `addresses.${network.name}.json`;
   const data = loadJsonFile(`${appRoot}/` + configFileName);
+  console.log(data);
 
   const [SalesFactory, SalesOwnableFactory, _accounts] = await Promise.all([
     ethers.getContractFactory("ClockSale"),
