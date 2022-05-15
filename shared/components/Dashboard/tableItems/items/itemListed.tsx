@@ -34,7 +34,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    if (id) {
+    if (id !== undefined) {
       getSale();
     }
   }, [id]);
