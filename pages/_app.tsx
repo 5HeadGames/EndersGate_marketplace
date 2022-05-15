@@ -17,7 +17,7 @@ const MyApp = ({Component, pageProps}: AppProps & {Component: any}) => {
   return (
     <>
       <Head>
-        <title>Ender's Gate</title>
+        <title>Ender's Gate Marketplace</title>
       </Head>
       <Provider store={store}>
         <MoralisProvider appId={appId} serverUrl={serverUrl}>

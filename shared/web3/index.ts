@@ -58,7 +58,7 @@ export const getAddresses = () => {
   const testAddresses = require("../../Contracts/addresses.harmony_test.json");
   const addresses = require("../../Contracts/addresses.harmony.json");
 
-  return process.env.NEXT_PUBLIC_HARMONY_PROVIDER === "https://api.harmony.one"
+  return process.env.NEXT_PUBLIC_CHAIN_ID === "1666600000"
     ? addresses
     : testAddresses;
 };

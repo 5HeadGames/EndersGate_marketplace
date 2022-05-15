@@ -43,6 +43,7 @@ const DashboardComponent = () => {
             setRecentlyListed(cardSalesCreatedReverse);
           } else {
             setRecentlyListed(cardSalesCreated.reverse());
+            console.log(cardSalesCreated);
           }
           break;
         case "packs":
@@ -60,6 +61,9 @@ const DashboardComponent = () => {
           setRecentlyListed(nfts.saleCreated);
           break;
       }
+
+      
+
 
       const cardSalesSold = [];
       const packSalesSold = [];
@@ -87,7 +91,6 @@ const DashboardComponent = () => {
           if (packSalesSold.length > 10) {
             setRecentlySold(
               packSalesSold
-
                 .slice(packSalesSold.length - 10, packSalesSold.length)
                 .reverse()
             );
@@ -96,7 +99,7 @@ const DashboardComponent = () => {
           }
           break;
       }
-      console.log(nfts);
+      console.log(cardSalesSold, cardSalesCreated);
       let timePeriod;
       switch (columnSelected) {
         case "last_24h":
@@ -115,7 +118,7 @@ const DashboardComponent = () => {
             ? nfts.saleCreated
                 ?.map((sale, i): any => {
                   return new Date().valueOf() -
-                    new Date(nfts.saleCreated[i].startedAt * 1000).valueOf() <
+                    new Date(nfts.saleCreated[i]?.startedAt * 1000).valueOf() <
                     timePeriod
                     ? 1
                     : 0;
@@ -143,7 +146,9 @@ const DashboardComponent = () => {
             ? nfts.saleSuccessfull
                 ?.map((sale, i) => {
                   return new Date().valueOf() -
-                    new Date(nfts.saleCreated[i].startedAt * 1000).valueOf() <
+                    new Date(
+                      nfts.saleSuccessfull[i].startedAt * 1000
+                    ).valueOf() <
                     timePeriod
                     ? sale.nft === endersGate
                       ? 1
@@ -160,7 +165,9 @@ const DashboardComponent = () => {
             ? nfts.saleSuccessfull
                 ?.map((sale, i) => {
                   return new Date().valueOf() -
-                    new Date(nfts.saleCreated[i].startedAt * 1000).valueOf() <
+                    new Date(
+                      nfts.saleSuccessfull[i].startedAt * 1000
+                    ).valueOf() <
                     timePeriod
                     ? sale.nft === pack
                       ? 1
