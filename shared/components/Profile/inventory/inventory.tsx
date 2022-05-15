@@ -7,16 +7,15 @@ import {useAppSelector} from "redux/store";
 import {AppstoreOutlined, UnorderedListOutlined} from "@ant-design/icons";
 import Styles from "./styles.module.scss";
 import NFTCard from "@shared/components/Marketplace/itemCard";
-import cards from "../../../cards.json";
-import {getBalance} from "@shared/web3";
+import { getBalance } from "@shared/web3";
 import { useMoralis } from "react-moralis";
 import Link from "next/link";
 import { Images } from "@shared/const/Images";
+import { convertArrayCards } from "@shared/components/common/convertCards";
 
 const navItems = [
   { title: "Trading Cards", value: "trading_cards" },
   { title: "Packs", value: "packs" },
-  { title: "Comics", value: "comics" },
 ];
 
 const Inventory = () => {
@@ -26,8 +25,11 @@ const Inventory = () => {
   const [inventoryPacks, setInventoryPacks] = React.useState([]);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
   const [balance, setBalance] = React.useState("0");
+
+  const cards = convertArrayCards();
+
   React.useEffect(() => {
-    if (user.get("ethAddress")) {
+    if (user?.get("ethAddress")) {
       handleSetBalance();
     }
   }, [user]);
@@ -57,7 +59,6 @@ const Inventory = () => {
       });
     });
     setInventoryPacks(arrayPacks);
-    console.log(arrayPacks);
   }, [nfts]);
 
   const handleSetBalance = async () => {
@@ -130,8 +131,8 @@ const Inventory = () => {
               card.balance > 0 && (
                 <NFTCard
                   id={card.id}
-                  icon={cards.All[card.id].properties.image.value}
-                  name={cards.All[card.id].properties.name.value}
+                  icon={cards[card.id].properties.image.value}
+                  name={cards[card.id].properties.name.value}
                   balance={card.balance}
                   byId
                 />

@@ -13,6 +13,7 @@ import {
   AppstoreFilled,
   AreaChartOutlined,
   DownOutlined,
+  GoldenFilled,
   RightOutlined,
   ShopOutlined,
   TwitterOutlined,
@@ -49,50 +50,45 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
           title: "Enders Gate Website",
           description:
             "Sell your game items to anyone, anywhere, they're finally yours",
-          href: "/marketplace",
+          externalLink:
+            "https://enders-gate-website-git-presentationenv-an-drew207.vercel.app/",
           icon: <ShopOutlined />,
         },
         {
           title: "Enders Gate Discord",
-          description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
-          href: "/marketplace",
+          description: "Join to our Discord Server!",
+          href: "https://discord.com/invite/nHNkWdE99h",
           icon: <ShopOutlined />,
         },
         {
           title: "Enders Gate Twitter",
-          description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
-          href: "/marketplace",
+          description: "Follow us in Twitter!",
+          externalLink: "https://twitter.com/EndersGate",
           icon: <TwitterOutlined />,
         },
         {
           title: "Harmony Block Explorer",
-          description:
-            "Trusted chrome wallet extension, store your digital currency and NFTs",
-          href: "/marketplace",
-          icon: <WalletOutlined />,
-        },
-        {
-          title: "Harmony Wallet",
-          description:
-            "Trusted chrome wallet extension, store your digital currency and NFTs",
-          href: "/marketplace",
+          description: "Explore all the transactions in the harmony blockchain",
+          externalLink: "https://explorer.harmony.one/",
           icon: <WalletOutlined />,
         },
         {
           title: "Harmony Bridge",
           description:
             "Trusted chrome wallet extension, store your digital currency and NFTs",
-          href: "/marketplace",
+          externalLink: "https://bridge.harmony.one/busd",
           icon: <WalletOutlined />,
         },
       ],
     },
     { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
     { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
+    {
+      link: "/profile/inventory",
+      name: "Inventory",
+      icon: <GoldenFilled />,
+    },
   ];
-
   const [collapse, setCollapse] = React.useState(
     new Array(navItems.length).fill(false)
   );
@@ -212,25 +208,25 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                         <div className={clsx({ ["hidden"]: !collapse[index] })}>
                           {item?.items?.map((subItem) => {
                             return (
-                              <Link key={subItem.title} href={subItem.href}>
-                                <a
-                                  className={clsx(
-                                    "flex items-center px-3 py-4  text-base my-1 relative text-primary",
-                                    {
-                                      "opacity-50":
-                                        subItem.href !== router.asPath,
-                                    }
-                                  )}
-                                  href="#"
-                                  onClick={() => setSidebarOpen(false)}
-                                >
-                                  <div className="mr-4 flex-shrink-0 flex items-start text-primary text-2xl">
-                                    {subItem.icon}
-                                  </div>
+                              // <Link key={subItem.title} href={subItem.href}>
+                              <a
+                                className={clsx(
+                                  "flex items-center px-3 py-4  text-base my-1 relative text-primary",
+                                  {
+                                    "opacity-50":
+                                      subItem.href !== router.asPath,
+                                  }
+                                )}
+                                href={subItem.href}
+                                onClick={() => setSidebarOpen(false)}
+                              >
+                                <div className="mr-4 flex-shrink-0 flex items-start text-primary text-2xl">
+                                  {subItem.icon}
+                                </div>
 
-                                  {subItem.title}
-                                </a>
-                              </Link>
+                                {subItem.title}
+                              </a>
+                              // </Link>
                             );
                           })}
                         </div>

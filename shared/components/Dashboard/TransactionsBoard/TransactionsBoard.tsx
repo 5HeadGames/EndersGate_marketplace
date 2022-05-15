@@ -2,7 +2,11 @@ import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
 import { Icons } from "@shared/const/Icons";
-import { PieChartFilled } from "@ant-design/icons";
+import {
+  LineChartOutlined,
+  MobileOutlined,
+  PieChartFilled,
+} from "@ant-design/icons";
 import Web3 from "web3";
 import { getAddresses, getContractWebSocket } from "@shared/web3";
 import contracts from "@shared/contracts";
@@ -13,12 +17,13 @@ const navItems = [
   { title: "30 days", value: "last_30d" },
 ];
 
-
-
 const TransactionsBoard: React.FC<any> = ({
   totalSale,
   totalVolume,
   cardsSold,
+  packsSold,
+  columnSelected,
+  setColumnSelected,
 }) => {
   const platformItems = [
     {
@@ -35,7 +40,7 @@ const TransactionsBoard: React.FC<any> = ({
       title: "TOTAL VOLUME",
       value: Web3.utils.fromWei(totalVolume.toString()) + " ONE",
       // value2: "$1,57M",
-      icon: Icons.harmony,
+      iconHtml: <LineChartOutlined />,
       css: {
         /* Chrome 10-25, Safari 5.1-6 */
         background:
@@ -45,7 +50,17 @@ const TransactionsBoard: React.FC<any> = ({
     {
       title: "CARDS SOLD",
       value: cardsSold,
-      icon: Icons.logo,
+      icon: Icons.cards,
+      css: {
+        /* Chrome 10-25, Safari 5.1-6 */
+        background:
+          "linear-gradient(to right, #6441a5, #2b1045)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */,
+      },
+    },
+    {
+      title: "PACKS SOLD",
+      value: packsSold,
+      icon: Icons.packs,
       css: {
         /* Chrome 10-25, Safari 5.1-6 */
         background:
@@ -53,7 +68,7 @@ const TransactionsBoard: React.FC<any> = ({
       },
     },
   ];
-  const [columnSelected, setColumnSelected] = React.useState("last_24h");
+
   return (
     <div className="w-full flex flex-col">
       <div className="w-full rounded-md border-2 border-overlay-border">
@@ -84,7 +99,7 @@ const TransactionsBoard: React.FC<any> = ({
             );
           })}
         </div>
-        <div className="flex sm:flex-row flex-col py-10 px-8 sm:gap-x-16 gap-y-4 md:justify-start justify-center">
+        <div className="sm:flex sm:flex-row grid grid-cols-4 py-10 sm:px-8 px-4 sm:gap-x-16 gap-x-2 md:justify-start justify-center">
           {platformItems.map((item, index) => {
             return (
               <PlatformMovements

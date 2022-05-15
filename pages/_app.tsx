@@ -12,9 +12,8 @@ import {MoralisProvider} from "react-moralis";
 const {ToastProvider} = require("react-toast-notifications"); //it throws ts error
 
 const MyApp = ({Component, pageProps}: AppProps & {Component: any}) => {
-  const appId = process.env.NEXT_PUBLIC_APP_ID;
-  const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
-
+  const appId = "qAmSPQcK8lZHIAKRlNF6XlJhMtb83CSabtxOKQc7";
+  const serverUrl = "https://lutnjdss5zjx.moralishost.com:2053/server";
   return (
     <>
       <Head>
@@ -28,7 +27,6 @@ const MyApp = ({Component, pageProps}: AppProps & {Component: any}) => {
             </Layout>
           </ToastProvider>
         </MoralisProvider>
-        ,
       </Provider>
     </>
   );

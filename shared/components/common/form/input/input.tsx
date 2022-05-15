@@ -143,16 +143,6 @@ export const Input: React.FC<
             </div>
           )}
         </div>
-        {error && error.message && (
-          <span className="flex items-center mt-3 text-alert-error font-montserrat h-max">
-            <div className="mr-1 w-4 h-4">
-              <Icon src={Icons.exclamation} className="text-alert-error" />
-            </div>
-            <Typography type="caption" className="f-12">
-              {error.message}
-            </Typography>
-          </span>
-        )}
       </div>
     </div>
   );

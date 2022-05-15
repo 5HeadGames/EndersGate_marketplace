@@ -1,0 +1,28 @@
+.animatedImage{
+	transition: 0.5s;
+	width: 10rem;
+	height: 16rem;
+	border-radius: 10px;
+}
+
+.animatedImage:hover{
+	transition: 0.5s;
+	width: 11rem;
+	height: 17rem;
+	box-shadow: 2px 3px 25px 17px rgba(255,255,255,0.1);
+	background-color: rgba(255,255,255,0.1);
+}
+
+.animatedImageMain{
+	transition: 0.5s;
+	width: 18rem;
+	border-radius: 10px;
+}
+
+.animatedImageMain:hover{
+	transition: 0.5s;
+	width: 19rem;
+	box-shadow: 2px 3px 25px 17px rgba(255,255,255,0.1);
+	background-color: rgba(255,255,255,0.1);
+}
+

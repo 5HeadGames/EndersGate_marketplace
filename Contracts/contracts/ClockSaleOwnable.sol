@@ -13,7 +13,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./interfaces/IERC1155Custom.sol";
 
 /// @title Clock auction for non-fungible tokens.
-contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder, ReentrancyGuard {
+contract ClockSaleOwnable is ERC721, Ownable, Pausable, ERC1155Holder, ReentrancyGuard {
   using Counters for Counters.Counter;
   using Address for address payable;
 
@@ -113,7 +113,7 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder, ReentrancyGuard 
     uint256 _price,
     uint256 _amount,
     uint256 _duration
-  ) external whenNotPaused {
+  ) external onlyOwner {
     address _seller = _msgSender();
 
     require(isAllowed[_nftAddress], "ClockSale:INVALID_SALE");

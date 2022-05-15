@@ -2,6 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import {Icons} from "@shared/const/Icons";
 import Link from "next/link";
+import Styles from "./styles.module.scss";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -27,6 +28,7 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
           <div
             className={clsx(
               "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer",
+              Styles.cardHover,
               classes?.root
             )}
           >
@@ -56,6 +58,7 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
           <div
             className={clsx(
               "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer",
+              Styles.cardHover,
               classes?.root
             )}
           >

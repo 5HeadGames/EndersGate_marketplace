@@ -15,6 +15,7 @@ import {onGetAssets, onLoadSales} from "redux/actions";
 import {
   AppstoreFilled,
   AreaChartOutlined,
+  GoldenFilled,
   ShopOutlined,
   TwitterOutlined,
   WalletOutlined,
@@ -48,43 +49,42 @@ const navItems = [
       {
         title: "Enders Gate Website",
         description: "Sell your game items to anyone, anywhere, they're finally yours",
-        href: "/marketplace",
+        externalLink: "https://enders-gate-website-git-presentationenv-an-drew207.vercel.app/",
         icon: <ShopOutlined />,
       },
       {
         title: "Enders Gate Discord",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
-        href: "/marketplace",
+        description: "Join to our Discord Server!",
+        href: "https://discord.com/invite/nHNkWdE99h",
         icon: <ShopOutlined />,
       },
       {
         title: "Enders Gate Twitter",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
-        href: "/marketplace",
+        description: "Follow us in Twitter!",
+        externalLink: "https://twitter.com/EndersGate",
         icon: <TwitterOutlined />,
       },
       {
         title: "Harmony Block Explorer",
-        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
-        href: "/marketplace",
-        icon: <WalletOutlined />,
-      },
-      {
-        title: "Harmony Wallet",
-        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
-        href: "/marketplace",
+        description: "Explore all the transactions in the harmony blockchain",
+        externalLink: "https://explorer.harmony.one/",
         icon: <WalletOutlined />,
       },
       {
         title: "Harmony Bridge",
         description: "Trusted chrome wallet extension, store your digital currency and NFTs",
-        href: "/marketplace",
+        externalLink: "https://bridge.harmony.one/busd",
         icon: <WalletOutlined />,
       },
     ],
   },
   {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
   {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
+  {
+    link: "/profile/inventory",
+    name: "Inventory",
+    icon: <GoldenFilled />,
+  },
 ];
 
 export default function AppLayout({children}) {
@@ -99,7 +99,9 @@ export default function AppLayout({children}) {
     ...state.layout,
   }));
   const router = useRouter();
-  const {enableWeb3, isWeb3Enabled, isAuthenticated, user} = useMoralis();
+  const { enableWeb3, isWeb3Enabled, isAuthenticated, authenticate, user } =
+    useMoralis();
+  console.log({ isAuthenticated });
 
   const chainChangedHandler = async () => {
     // window.location.reload();
@@ -121,7 +123,10 @@ export default function AppLayout({children}) {
   const accountChangedHandler = async (newAccount: any) => {
     const web3 = await loginMetamaskWallet();
     await dispatch(onGetAssets((window as any).ethereum.selectedAddress));
-    if (!web3) return;
+    // if (user !== null) {
+    await enableWeb3();
+    const user = await authenticate();
+    // }
   };
   if (typeof window !== "undefined" && (window as any).ethereum?.isConnected() && !isExecuted) {
     (window as any).ethereum.on("accountsChanged", accountChangedHandler);
