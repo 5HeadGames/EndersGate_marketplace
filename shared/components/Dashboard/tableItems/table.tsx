@@ -24,10 +24,6 @@ const Table: React.FunctionComponent<Props> = ({
   setColumnSelected,
   pack,
 }) => {
-  React.useEffect(() => {
-    console.log(data, "data");
-  }, [data]);
-
   return (
     <div className="w-full flex flex-col">
       <h2 className="text-white py-2">{title}</h2>

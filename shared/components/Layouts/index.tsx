@@ -101,7 +101,6 @@ export default function AppLayout({children}) {
   const router = useRouter();
   const { enableWeb3, isWeb3Enabled, isAuthenticated, authenticate, user } =
     useMoralis();
-  console.log({ isAuthenticated });
 
   const chainChangedHandler = async () => {
     // window.location.reload();
@@ -128,7 +127,11 @@ export default function AppLayout({children}) {
     const user = await authenticate();
     // }
   };
-  if (typeof window !== "undefined" && (window as any).ethereum?.isConnected() && !isExecuted) {
+  if (
+    typeof window !== "undefined" &&
+    (window as any).ethereum?.isConnected() &&
+    !isExecuted
+  ) {
     (window as any).ethereum.on("accountsChanged", accountChangedHandler);
     (window as any).ethereum.on("chainChanged", chainChangedHandler);
     setIsExecuted(true);
@@ -167,9 +170,9 @@ export default function AppLayout({children}) {
         // overflow: "auto",
         ...(blur
           ? {
-            filter: "blur(8px)",
-            "-webkit-filter": "blur(8px)",
-          }
+              filter: "blur(8px)",
+              "-webkit-filter": "blur(8px)",
+            }
           : {}),
       }}
     >
@@ -185,7 +188,7 @@ export default function AppLayout({children}) {
           <div className="md:flex hidden items-center">
             {navItems.map((item, index) => {
               return item.menu ? (
-                <>
+                <React.Fragment key={index}>
                   <DropdownMenu
                     icon={item.icon}
                     title={item.name}
@@ -193,7 +196,7 @@ export default function AppLayout({children}) {
                     key={index}
                   />
                   <div className="h-full border border-transparent"></div>
-                </>
+                </React.Fragment>
               ) : (
                 <>
                   <NavbarItem
@@ -223,7 +226,10 @@ export default function AppLayout({children}) {
             setSidebarOpen(true);
           }}
         >
-          <MenuIcon className="h-6 w-6 text-primary cursor-pointer" aria-hidden="true" />
+          <MenuIcon
+            className="h-6 w-6 text-primary cursor-pointer"
+            aria-hidden="true"
+          />
         </div>
       </nav>
       <SidebarMobile
