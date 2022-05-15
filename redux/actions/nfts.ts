@@ -67,7 +67,8 @@ export const onGetAssets = createAsyncThunk(
   actionTypes.GET_ASSETS,
   async function prepare(address: string) {
     try {
-      const {endersGate, pack} = getAddresses();
+      const { endersGate, pack } = getAddresses();
+      console.log(endersGate, pack);
       const cardsContract = getContract("ERC1155", endersGate);
       const packsContract = getContract("ERC1155", pack);
       const packsIds = [0, 1, 2, 3];
@@ -79,9 +80,6 @@ export const onGetAssets = createAsyncThunk(
             //   ? card.properties.id.value
             i
         );
-
-      console.log(cardsIds, "cardsIds");
-
       const balancePacks = await packsContract.methods
         .balanceOfBatch(
           packsIds.map(() => address),
@@ -96,6 +94,7 @@ export const onGetAssets = createAsyncThunk(
         .call();
 
       console.log(balanceCards, balancePacks, "balances");
+      console.log(endersGate, pack, "addresses");
 
       return {
         balanceCards: cardsIds.map((id, i) => ({id, balance: balanceCards[i]})),

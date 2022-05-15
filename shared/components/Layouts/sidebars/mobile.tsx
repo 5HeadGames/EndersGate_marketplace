@@ -206,10 +206,11 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                           </div>
                         </div>
                         <div className={clsx({ ["hidden"]: !collapse[index] })}>
-                          {item?.items?.map((subItem) => {
+                          {item?.items?.map((subItem, index) => {
                             return (
                               // <Link key={subItem.title} href={subItem.href}>
                               <a
+                                key={index}
                                 className={clsx(
                                   "flex items-center px-3 py-4  text-base my-1 relative text-primary",
                                   {
