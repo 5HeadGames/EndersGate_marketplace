@@ -17,6 +17,7 @@ import { useModal } from "@shared/hooks/modal";
 import { convertArrayCards } from "../common/convertCards";
 import clsx from "clsx";
 import Styles from "./styles.module.scss";
+import Tilt from "react-parallax-tilt";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const { user, Moralis, isWeb3Enabled } = useMoralis();
@@ -91,18 +92,32 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
           <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
             <h2 className="font-bold text-primary text-center">Buy NFT</h2>
             <div className="flex sm:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
-              <div className="h-auto">
-                <img
-                  src={
-                    isPack
-                      ? packs[sale?.nftId].properties.image.value
-                      : cards[sale?.nftId]?.properties?.image?.value ||
-                        Icons.logo
-                  }
-                  className={clsx(Styles.animatedImage)}
-                  alt=""
-                />
-              </div>
+              <Tilt>
+                <div className="h-auto">
+                  <img
+                    src={
+                      isPack
+                        ? packs[sale?.nftId].properties.image.value
+                        : cards[sale?.nftId]?.properties?.image?.value ||
+                          Icons.logo
+                    }
+                    className={clsx(
+                      Styles.animatedImage,
+                      {
+                        "rounded-full": !isPack
+                          ? cards[sale.nftId].typeCard == "avatar"
+                          : false,
+                      },
+                      {
+                        "rounded-md": !isPack
+                          ? cards[sale.nftId].typeCard != "avatar"
+                          : false,
+                      }
+                    )}
+                    alt=""
+                  />
+                </div>
+              </Tilt>
               <div className="flex flex-col gap-4  justify-between">
                 <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
                   <label className="text-primary font-medium">
@@ -115,6 +130,11 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       setBuyNFTData(parseInt(e.target.value));
                     }}
                   />
+                  {buyNFTData > sale?.amount && (
+                    <Typography type="caption" className="text-red-600">
+                      The quantity of tokens can't exceed available to buy
+                    </Typography>
+                  )}
                 </div>
                 <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
                   <label className="text-primary font-medium">
@@ -154,7 +174,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                     decoration="fillPrimary"
                     className="degradated hover:text-white border-none"
                     size="small"
-                    onClick={buyNft}
+                    onClick={buyNFTData > sale?.amount ? undefined : buyNft}
+                    disabled={buyNFTData > sale?.amount}
                   >
                     Buy NFT/s
                   </Button>
@@ -220,17 +241,32 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
           </div>
           <div className="w-full flex md:flex-row flex-col mt-10">
             <div className="flex relative justify-center md:w-1/2 xl:px-24">
-              <div className="sm:sticky sm:top-32 h-min w-auto">
-                <img
-                  src={
-                    isPack
-                      ? packs[sale.nftId].properties.image.value
-                      : cards[sale.nftId].properties.image?.value || Icons.logo
-                  }
-                  className={clsx(Styles.animatedImageMain)}
-                  alt=""
-                />
-              </div>
+              <Tilt>
+                <div className="sm:sticky sm:top-32 h-min w-auto">
+                  <img
+                    src={
+                      isPack
+                        ? packs[sale.nftId].properties.image.value
+                        : cards[sale.nftId].properties.image?.value ||
+                          Icons.logo
+                    }
+                    className={clsx(
+                      Styles.animatedImageMain,
+                      {
+                        "rounded-full": !isPack
+                          ? cards[sale.nftId].typeCard == "avatar"
+                          : false,
+                      },
+                      {
+                        "rounded-md": !isPack
+                          ? cards[sale.nftId].typeCard != "avatar"
+                          : false,
+                      }
+                    )}
+                    alt=""
+                  />
+                </div>
+              </Tilt>
             </div>
             <div className="flex flex-col md:w-1/2">
               <div className="flex flex-col">

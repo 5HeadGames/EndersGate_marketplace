@@ -17,6 +17,7 @@ import { Images } from "@shared/const/Images";
 import { convertArrayCards } from "../common/convertCards";
 import Styles from "../NFTDetail/styles.module.scss";
 import clsx from "clsx";
+import Tilt from "react-parallax-tilt";
 
 const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { user, Moralis, web3 } = useMoralis();
@@ -102,13 +103,15 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
             <h2 className="font-bold text-primary text-center">Sell NFT</h2>
             <div className="flex md:flex-row flex-col md:gap-16 gap-4 w-full items-center">
-              <div className="h-auto w-auto">
-                <img
-                  src={packs[id]?.properties?.image?.value}
-                  className={clsx(Styles.animatedImage)}
-                  alt=""
-                />
-              </div>
+              <Tilt>
+                <div className="h-auto w-auto">
+                  <img
+                    src={packs[id]?.properties?.image?.value}
+                    className={clsx(Styles.animatedImage)}
+                    alt=""
+                  />
+                </div>
+              </Tilt>
               <div
                 className="flex flex-col gap-4 justify-between md:w-64"
                 style={{ maxWidth: "100vw" }}
@@ -249,21 +252,24 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           </div>
           <div className="w-full flex md:flex-row flex-col mt-10">
             <div className="flex relative justify-center md:w-1/2 xl:px-24">
-              <div className="sm:sticky sm:top-32 h-min w-auto">
-                <img
-                  src={
-                    id == 0
-                      ? Images.pack1
-                      : id == 1
-                      ? Images.pack2
-                      : id == 2
-                      ? Images.pack3
-                      : Images.pack4
-                  }
-                  className={clsx(Styles.animatedImageMain)}
-                  alt=""
-                />
-              </div>
+              <Tilt>
+                {" "}
+                <div className="sm:sticky sm:top-32 h-min w-auto">
+                  <img
+                    src={
+                      id == 0
+                        ? Images.pack1
+                        : id == 1
+                        ? Images.pack2
+                        : id == 2
+                        ? Images.pack3
+                        : Images.pack4
+                    }
+                    className={clsx(Styles.animatedImageMain)}
+                    alt=""
+                  />
+                </div>
+              </Tilt>
             </div>
             <div className="flex flex-col md:w-1/2">
               <div className="flex flex-col">

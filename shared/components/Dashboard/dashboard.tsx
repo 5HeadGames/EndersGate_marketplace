@@ -128,11 +128,13 @@ const DashboardComponent = () => {
                 })
             : 0,
         totalVolume:
-          nfts.saleCreated.length > 0
-            ? nfts.saleCreated
+          nfts.saleSuccessfull.length > 0
+            ? nfts.saleSuccessfull
                 ?.map((sale, i) => {
                   return new Date().valueOf() -
-                    new Date(nfts.saleCreated[i].startedAt * 1000).valueOf() <
+                    new Date(
+                      nfts.saleSuccessfull[i].startedAt * 1000
+                    ).valueOf() <
                     timePeriod
                     ? parseFloat(sale.price)
                     : 0;

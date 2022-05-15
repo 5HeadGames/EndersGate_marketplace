@@ -15,6 +15,7 @@ import { approveERC1155 } from "@shared/web3";
 import { convertArrayCards } from "../common/convertCards";
 import clsx from "clsx";
 import Styles from "./styles.module.scss";
+import Tilt from "react-parallax-tilt";
 
 const { marketplace } = getAddresses();
 
@@ -96,13 +97,20 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
             <h2 className="font-bold text-primary text-center">Sell NFT</h2>
             <div className="flex md:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
-              <div className={clsx("h-auto w-auto")}>
-                <img
-                  src={cards[id]?.properties.image?.value}
-                  className={clsx(Styles.animatedImage)}
-                  alt=""
-                />
-              </div>
+              <Tilt>
+                <div className={clsx("h-auto w-auto")}>
+                  <img
+                    src={cards[id]?.properties.image?.value}
+                    className={clsx(Styles.animatedImage,{
+                      "rounded-full": cards[id].typeCard == "avatar",
+                    },
+                    {
+                      "rounded-md": cards[id].typeCard != "avatar",
+                    })}
+                    alt=""
+                  />
+                </div>
+              </Tilt>
               <div
                 className="flex flex-col gap-4 w-full justify-center items-center md:w-64"
                 style={{ maxWidth: "100vw" }}
@@ -138,6 +146,11 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       });
                     }}
                   />
+                  {sellNFTData.amount > NFTs?.balanceCards[id]?.balance && (
+                    <Typography type="caption" className="text-red-600">
+                      The amount can't be higher than your balance
+                    </Typography>
+                  )}
                 </div>
                 <div className="flex flex-col gap-4 w-full justify-center items-center">
                   <label className="text-primary font-medium">End Date</label>
@@ -224,7 +237,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               </Typography> */}
             </div>
             <div className="flex gap-2 items-start sm:mt-0 mt-4 sm:justify-end justify-between">
-              {NFTs.balanceCards[id] && NFTs.balanceCards[id].balance && (
+              {NFTs?.balanceCards[id] && NFTs?.balanceCards[id]?.balance && (
                 <Button
                   decoration="fillPrimary"
                   className="degradated hover:text-white border-none"
@@ -243,13 +256,23 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           </div>
           <div className="w-full flex md:flex-row flex-col mt-10">
             <div className="flex relative justify-center md:w-1/2 xl:px-24">
-              <div className="sm:sticky sm:top-32 h-min w-auto">
-                <img
-                  src={cards[id]?.properties?.image?.value || Icons.logo}
-                  className={clsx(Styles.animatedImageMain)}
-                  alt=""
-                />
-              </div>
+              <Tilt>
+                <div className="sm:sticky sm:top-32 h-min w-auto">
+                  <img
+                    src={cards[id]?.properties?.image?.value || Icons.logo}
+                    className={clsx(
+                      Styles.animatedImageMain,
+                      {
+                        "rounded-full": cards[id].typeCard == "avatar",
+                      },
+                      {
+                        "rounded-md": cards[id].typeCard != "avatar",
+                      }
+                    )}
+                    alt=""
+                  />
+                </div>
+              </Tilt>
             </div>
             <div className="flex flex-col md:w-1/2">
               <div className="flex flex-col">
