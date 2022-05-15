@@ -72,7 +72,7 @@ const Table: React.FunctionComponent<Props> = ({
                       id={item.id}
                       type={title}
                       amount={item.amount}
-                      buyer={item.buyer}
+                      seller={item.seller}
                       pack={pack}
                     ></ItemListed>
                   )
