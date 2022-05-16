@@ -66,6 +66,15 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
               </div>
             </div>
           </td>
+          <td className="py-4">
+            <div className="flex flex-col items-center">
+              <Typography type="caption" className="text-white font-bold mt-1">
+                {pack
+                  ? packs[sale.nftId]?.properties?.name?.value.toUpperCase()
+                  : cards[sale.nftId]?.properties?.name?.value.toUpperCase()}
+              </Typography>
+            </div>
+          </td>
 
           <td className="py-4">
             <div className="flex flex-col items-center">
