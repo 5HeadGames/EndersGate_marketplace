@@ -82,13 +82,41 @@ const MarketplaceComponent = () => {
           setSales(nfts.saleCreated);
           break;
       }
-    } else {
+    } else if (currentOrder === "lowest_price") {
       switch (type) {
         case "trading_cards":
-          setSales(cardSalesCreated);
+          setSales(
+            cardSalesCreated.sort(
+              (a, b) => parseFloat(a.price) - parseFloat(b.price)
+            )
+          );
           break;
         case "packs":
-          setSales(packSalesCreated);
+          setSales(
+            packSalesCreated.sort(
+              (a, b) => parseFloat(a.price) - parseFloat(b.price)
+            )
+          );
+          break;
+        default:
+          setSales(nfts.saleCreated);
+          break;
+      }
+    } else if (currentOrder === "highest_price") {
+      switch (type) {
+        case "trading_cards":
+          setSales(
+            cardSalesCreated.sort(
+              (a, b) => parseFloat(b.price) - parseFloat(a.price)
+            )
+          );
+          break;
+        case "packs":
+          setSales(
+            packSalesCreated.sort(
+              (a, b) => parseFloat(b.price) - parseFloat(a.price)
+            )
+          );
           break;
         default:
           setSales(nfts.saleCreated);
@@ -243,14 +271,14 @@ const MarketplaceComponent = () => {
               <DropdownActions
                 title={orderMapper[currentOrder]}
                 actions={[
-                  // {
-                  //   label: "Lowest Price",
-                  //   onClick: () => setCurrentOrder("lowest_price"),
-                  // },
-                  // {
-                  //   label: "Highest Price",
-                  //   onClick: () => setCurrentOrder("highest_price"),
-                  // },
+                  {
+                    label: "Lowest Price",
+                    onClick: () => setCurrentOrder("lowest_price"),
+                  },
+                  {
+                    label: "Highest Price",
+                    onClick: () => setCurrentOrder("highest_price"),
+                  },
                   {
                     label: "Recently Listed",
                     onClick: () => setCurrentOrder("recently_listed"),
