@@ -48,8 +48,9 @@ const navItems = [
     items: [
       {
         title: "Enders Gate Website",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
-        externalLink: "https://enders-gate-website-git-presentationenv-an-drew207.vercel.app/",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
+        externalLink: "https://endersgate.one",
         icon: <ShopOutlined />,
       },
       {
@@ -72,14 +73,15 @@ const navItems = [
       },
       {
         title: "Harmony Bridge",
-        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description:
+          "Trusted chrome wallet extension, store your digital currency and NFTs",
         externalLink: "https://bridge.harmony.one/busd",
         icon: <WalletOutlined />,
       },
     ],
   },
-  {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
-  {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
+  { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
+  { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
   {
     link: "/profile/inventory",
     name: "Inventory",
@@ -285,12 +287,14 @@ export const NavbarItem = ({name, link, route, icon}) => {
         className={clsx("md:px-6 px-4 py-6 relative", {
           [`bg-primary text-white`]: link === route,
         })}
+        target="_blank"
+        rel="noreferrer"
         href={link}
       >
         <div
           className={clsx(
-            {"opacity-50 text-primary": link !== route},
-            {"text-white": link === route},
+            { "opacity-50 text-primary": link !== route },
+            { "text-white": link === route },
             "gap-2 flex items-center"
           )}
         >
