@@ -287,12 +287,14 @@ export const NavbarItem = ({name, link, route, icon}) => {
         className={clsx("md:px-6 px-4 py-6 relative", {
           [`bg-primary text-white`]: link === route,
         })}
+        target="_blank"
+        rel="noreferrer"
         href={link}
       >
         <div
           className={clsx(
-            {"opacity-50 text-primary": link !== route},
-            {"text-white": link === route},
+            { "opacity-50 text-primary": link !== route },
+            { "text-white": link === route },
             "gap-2 flex items-center"
           )}
         >

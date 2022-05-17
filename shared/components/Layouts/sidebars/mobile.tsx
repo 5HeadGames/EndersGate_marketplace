@@ -217,6 +217,8 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                                       subItem.href !== router.asPath,
                                   }
                                 )}
+                                target="_blank"
+                                rel="noreferrer"
                                 href={subItem.href}
                                 onClick={() => setSidebarOpen(false)}
                               >
