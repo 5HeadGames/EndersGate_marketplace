@@ -50,8 +50,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
           title: "Enders Gate Website",
           description:
             "Sell your game items to anyone, anywhere, they're finally yours",
-          externalLink:
-            "https://enders-gate-website-git-presentationenv-an-drew207.vercel.app/",
+          externalLink: "https://endersgate.one",
           icon: <ShopOutlined />,
         },
         {
