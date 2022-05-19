@@ -313,6 +313,7 @@ const MarketplaceComponent = () => {
                     icon={cards[a.nftId].properties.image.value}
                     name={cards[a.nftId].properties.name.value}
                     byId={false}
+                    price={a.price}
                   />
                 )
               ) : (
