@@ -33,9 +33,14 @@ const Login = () => {
     setLoading(true);
     try {
       await enableWeb3();
-      await (window as any).ethereum.request({
+      await(window as any).ethereum.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0x6357D2E0" }],
+        params: [
+          {
+            chainId:
+              "0x" + parseInt(process.env.NEXT_PUBLIC_CHAIN_ID).toString(16),
+          },
+        ],
       });
       const user = await authenticate();
     } catch (err) {

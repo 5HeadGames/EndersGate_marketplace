@@ -48,8 +48,9 @@ const navItems = [
     items: [
       {
         title: "Enders Gate Website",
-        description: "Sell your game items to anyone, anywhere, they're finally yours",
-        externalLink: "https://enders-gate-website-git-presentationenv-an-drew207.vercel.app/",
+        description:
+          "Sell your game items to anyone, anywhere, they're finally yours",
+        externalLink: "https://endersgate.one",
         icon: <ShopOutlined />,
       },
       {
@@ -72,14 +73,15 @@ const navItems = [
       },
       {
         title: "Harmony Bridge",
-        description: "Trusted chrome wallet extension, store your digital currency and NFTs",
+        description:
+          "Trusted chrome wallet extension, store your digital currency and NFTs",
         externalLink: "https://bridge.harmony.one/busd",
         icon: <WalletOutlined />,
       },
     ],
   },
-  {name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined />},
-  {name: "Marketplace", link: "/marketplace", icon: <ShopOutlined />},
+  { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
+  { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
   {
     link: "/profile/inventory",
     name: "Inventory",
@@ -101,7 +103,6 @@ export default function AppLayout({children}) {
   const router = useRouter();
   const { enableWeb3, isWeb3Enabled, isAuthenticated, authenticate, user } =
     useMoralis();
-  console.log({ isAuthenticated });
 
   const chainChangedHandler = async () => {
     // window.location.reload();
@@ -128,7 +129,11 @@ export default function AppLayout({children}) {
     const user = await authenticate();
     // }
   };
-  if (typeof window !== "undefined" && (window as any).ethereum?.isConnected() && !isExecuted) {
+  if (
+    typeof window !== "undefined" &&
+    (window as any).ethereum?.isConnected() &&
+    !isExecuted
+  ) {
     (window as any).ethereum.on("accountsChanged", accountChangedHandler);
     (window as any).ethereum.on("chainChanged", chainChangedHandler);
     setIsExecuted(true);
@@ -167,9 +172,9 @@ export default function AppLayout({children}) {
         // overflow: "auto",
         ...(blur
           ? {
-            filter: "blur(8px)",
-            "-webkit-filter": "blur(8px)",
-          }
+              filter: "blur(8px)",
+              "-webkit-filter": "blur(8px)",
+            }
           : {}),
       }}
     >
@@ -185,7 +190,7 @@ export default function AppLayout({children}) {
           <div className="md:flex hidden items-center">
             {navItems.map((item, index) => {
               return item.menu ? (
-                <>
+                <React.Fragment key={index}>
                   <DropdownMenu
                     icon={item.icon}
                     title={item.name}
@@ -193,7 +198,7 @@ export default function AppLayout({children}) {
                     key={index}
                   />
                   <div className="h-full border border-transparent"></div>
-                </>
+                </React.Fragment>
               ) : (
                 <>
                   <NavbarItem
@@ -223,7 +228,10 @@ export default function AppLayout({children}) {
             setSidebarOpen(true);
           }}
         >
-          <MenuIcon className="h-6 w-6 text-primary cursor-pointer" aria-hidden="true" />
+          <MenuIcon
+            className="h-6 w-6 text-primary cursor-pointer"
+            aria-hidden="true"
+          />
         </div>
       </nav>
       <SidebarMobile
@@ -283,8 +291,8 @@ export const NavbarItem = ({name, link, route, icon}) => {
       >
         <div
           className={clsx(
-            {"opacity-50 text-primary": link !== route},
-            {"text-white": link === route},
+            { "opacity-50 text-primary": link !== route },
+            { "text-white": link === route },
             "gap-2 flex items-center"
           )}
         >

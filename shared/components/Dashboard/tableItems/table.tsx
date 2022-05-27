@@ -24,10 +24,6 @@ const Table: React.FunctionComponent<Props> = ({
   setColumnSelected,
   pack,
 }) => {
-  React.useEffect(() => {
-    console.log(data, "data");
-  }, [data]);
-
   return (
     <div className="w-full flex flex-col">
       <h2 className="text-white py-2">{title}</h2>
@@ -76,7 +72,7 @@ const Table: React.FunctionComponent<Props> = ({
                       id={item.id}
                       type={title}
                       amount={item.amount}
-                      buyer={item.buyer}
+                      seller={item.seller}
                       pack={pack}
                     ></ItemListed>
                   )

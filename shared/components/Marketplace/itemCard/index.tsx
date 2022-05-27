@@ -3,6 +3,7 @@ import clsx from "clsx";
 import {Icons} from "@shared/const/Icons";
 import Link from "next/link";
 import Styles from "./styles.module.scss";
+import Web3 from "web3";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -15,6 +16,7 @@ interface Props
   transactionId?: any;
   name?: any;
   balance?: any;
+  price?: any;
   byId: boolean;
 }
 
@@ -81,6 +83,11 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
             <div className="flex flex-col text-sm text-center">
               <span>{props.name || "Enders Gate"}</span>
             </div>
+            {props.price && (
+              <div className="flex flex-col text-sm font-bold text-primary text-center">
+                <span>{Web3.utils.fromWei(props.price, "ether")} ONE</span>
+              </div>
+            )}
           </div>
         </Link>
       )}

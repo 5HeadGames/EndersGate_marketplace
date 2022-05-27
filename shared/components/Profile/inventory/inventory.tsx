@@ -65,10 +65,6 @@ const Inventory = () => {
     const balance = await getBalance(user.get("ethAddress"));
     setBalance(balance);
   };
-
-  React.useEffect(() => {
-    console.log(nfts);
-  }, []);
   return (
     <div className="flex flex-col w-full">
       <div className="flex items-center rounded-md border border-overlay-border p-4 w-56 gap-4">
@@ -81,6 +77,7 @@ const Inventory = () => {
         {navItems.map((item, index) => {
           return (
             <div
+              key={"navBarItem-" + index}
               className={clsx(
                 {
                   "bg-primary-disabled text-white":
@@ -98,6 +95,7 @@ const Inventory = () => {
           );
         })}
       </div>
+      ;
       {/* <div className="flex justify-end">
         <div className=" border-2 border rounded-md border-primary flex justify-center items-center overflow-hidden text-primary h-10">
           <div className="flex flex-1 justify-center items-center text-prymary h-10 border-r-2 border-primary p-2  cursor-pointer hover:bg-primary hover:text-secondary">
@@ -130,6 +128,7 @@ const Inventory = () => {
             return (
               card.balance > 0 && (
                 <NFTCard
+                  key={card.id}
                   id={card.id}
                   icon={cards[card.id].properties.image.value}
                   name={cards[card.id].properties.name.value}
@@ -143,7 +142,7 @@ const Inventory = () => {
           inventoryPacks.map((pack, index) => {
             return (
               parseInt(pack.quantity) > 0 && (
-                <Link href={`/PackDetailID/${pack.id}`}>
+                <Link href={`/PackDetailID/${pack.id}`} key={index}>
                   <div
                     className={clsx(
                       "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer"
@@ -177,6 +176,7 @@ const Inventory = () => {
           </>
         )}
       </div>
+      ;
     </div>
   );
 };

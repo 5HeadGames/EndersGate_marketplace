@@ -27,14 +27,14 @@ interface Props {
 const cards = convertArrayCards();
 
 const ItemListed: React.FunctionComponent<Props> = (props) => {
-  const { id, type, seller, buyer, amount, pack } = props;
+  const { id, type, seller, amount, pack } = props;
 
   const [sale, setSale] = React.useState<any>();
 
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    if (id) {
+    if (id !== undefined) {
       getSale();
     }
   }, [id]);
@@ -66,16 +66,23 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
               </div>
             </div>
           </td>
+          <td className="py-4">
+            <div className="flex flex-col items-center">
+              <Typography type="caption" className="text-white font-bold mt-1">
+                {pack
+                  ? packs[sale.nftId]?.properties?.name?.value.toUpperCase()
+                  : cards[sale.nftId]?.properties?.name?.value.toUpperCase()}
+              </Typography>
+            </div>
+          </td>
 
           <td className="py-4">
             <div className="flex flex-col items-center">
               <Typography type="caption" className="text-white font-bold mt-1">
-                {type === "Recently Listed" ? "SELLER" : "BUYER"}
+                {"SELLER"}
               </Typography>
               <Typography type="caption" className="text-white mt-1">
-                <AddressText
-                  text={type === "Recently Listed" ? seller : seller}
-                ></AddressText>
+                <AddressText text={seller}></AddressText>
               </Typography>
             </div>
           </td>
@@ -101,7 +108,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
               </Typography>
             </div>
           </td>
-          {type !== "Recently Listed" && (
+          {/* {type !== "Recently Listed" && (
             <td className="py-4">
               <div className="flex flex-col items-center just">
                 <Typography
@@ -118,7 +125,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
                 </Typography>
               </div>{" "}
             </td>
-          )}
+          )} */}
           <td className="bg-secondary  cursor-pointer py-4 text-center w-8">
             <Link href={`/NFTDetailSale/${id}`}>
               <a
