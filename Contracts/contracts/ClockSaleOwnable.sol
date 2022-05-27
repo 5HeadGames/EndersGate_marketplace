@@ -134,6 +134,8 @@ contract ClockSaleOwnable is ERC721, Ownable, Pausable, ERC1155Holder, Reentranc
     _addSale(_auction);
   }
 
+  function updateSalePrice(uint256 tokenId, uint256 amount) external onlyOwner {}
+
   function buy(uint256 _tokenId, uint256 amount) external payable nonReentrant whenNotPaused {
     Sale storage _auction = sales[_tokenId];
     uint256 cost = _auction.price * amount;

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.11;
 
+import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -62,6 +63,12 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder, ReentrancyGuard 
   );
   event SaleCancelled(uint256 indexed _auctionId);
   event ChangedFeeReceiver(address newReceiver);
+
+  modifier debug() {
+    console.log(msg.sender);
+    console.log(address(owner()));
+    _;
+  }
 
   constructor(
     address _feeReceiver,
@@ -162,7 +169,7 @@ contract ClockSale is ERC721, Ownable, Pausable, ERC1155Holder, ReentrancyGuard 
     _cancelSale(_tokenId);
   }
 
-  function setNftAllowed(address nftAddress, bool allow) external onlyOwner {
+  function setNftAllowed(address nftAddress, bool allow) external debug onlyOwner {
     isAllowed[nftAddress] = allow;
   }
 
