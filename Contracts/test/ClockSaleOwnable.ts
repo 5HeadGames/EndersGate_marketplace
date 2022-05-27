@@ -38,8 +38,9 @@ describe("[ClockSaleOwnable]", function () {
 
   const salesData = [
     {id: 0, price: ethers.utils.parseEther("3.5"), amount: 10, duration: 3600 * 24},
-    {id: 2, price: ethers.utils.parseEther("1"), amount: 14, duration: 3600 * 24 * 7},
-    {id: 3, price: ethers.utils.parseEther("1"), amount: 14, duration: 3600 * 24 * 364},
+    {id: 1, price: ethers.utils.parseEther("1"), amount: 14, duration: 3600 * 24 * 7},
+    {id: 2, price: ethers.utils.parseEther("1"), amount: 14, duration: 3600 * 24 * 364},
+    {id: 3, price: ethers.utils.parseEther("1"), amount: 2, duration: 3600 * 24 * 364},
   ];
   let sales: number[] = [],
     block: Block;
@@ -290,34 +291,39 @@ describe("[ClockSaleOwnable]", function () {
         })
       ).to.be.revertedWith("");
     });
+
+    it("Should update sale price", async () => {
+      const saleId = 3;
+      const originalSale = parseSale(await marketplace.sales(saleId));
+      const newPrice = ethers.utils.parseEther("3");
+      expect(originalSale.price).to.be.equal(salesData[3].price);
+
+      await marketplace.updateSalePrice(saleId, newPrice);
+      const newSale = parseSale(await marketplace.sales(saleId));
+
+      expect(newPrice.toString() !== originalSale.price.toString()).to.equal(true);
+      expect(newSale.price.toString()).to.equal(newPrice.toString());
+    });
   });
 
   describe("Audit results", () => {
     it("Should not leave eth leftovers", async () => {
       const buyer = accounts[3];
-      const amount = 2;
-      const extra = ethers.utils.parseEther("10");
-      const cost = salesData[1].price.mul(amount);
+      const amount = 5;
+      const cost = salesData[2].price.mul(amount);
+      const extra = cost.add(ethers.utils.parseEther("1"));
       const originalBalance = await ethers.provider.getBalance(buyer.address);
 
-      const gas = await marketplace
-        .connect(buyer)
-        .estimateGas.buy(sales[2], amount, {value: cost.add(extra)});
-      const receipt = await (
-        await marketplace.connect(buyer).buy(sales[2], amount, {value: cost.add(extra)})
-      ).wait();
+      await expect(
+        marketplace.connect(buyer).buy(sales[2], amount, {value: extra.toString()})
+      ).to.be.revertedWith("ClockSale:NOT_EXACT_VALUE");
 
-      const currentBalance = await ethers.provider.getBalance(buyer.address);
+      await expect(marketplace.connect(buyer).buy(sales[2], amount, {value: cost.toString()}))
+        .to.emit(marketplace, "BuySuccessful")
+        .withArgs(sales[2], buyer.address, cost, amount);
       const contractBalance = await ethers.provider.getBalance(marketplace.address);
 
-      expect(contractBalance).to.be.equal(0);
-      expect(originalBalance.sub(cost).sub(currentBalance)).to.be.within(
-        gas.mul(await ethers.provider.getGasPrice()).toNumber(),
-        gas
-          .mul(await ethers.provider.getGasPrice())
-          .mul(2)
-          .toNumber()
-      ); //gas fees
+      expect(contractBalance, "Contract balance bigger than 0").to.be.equal(0);
     });
 
     it("Should be able to emergency withdraw tokens/eth in any case", async () => {

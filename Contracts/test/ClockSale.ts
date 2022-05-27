@@ -28,7 +28,7 @@ const parseSale = (
   };
 };
 
-describe.only("[ClockSale]", function () {
+describe("[ClockSale]", function () {
   let accounts: SignerWithAddress[],
     marketplace: ClockSale,
     nft: EndersPack,
