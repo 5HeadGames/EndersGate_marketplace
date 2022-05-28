@@ -140,6 +140,12 @@ contract ClockSaleOwnable is ERC721, Ownable, Pausable, ERC1155Holder, Reentranc
     _auction.price = newPrice;
   }
 
+  function updateSaleReceiver(uint256 saleId, address receiver) external onlyOwner {
+    Sale storage _auction = sales[saleId];
+    require(_saleExists(_auction), "ClockSale:NOT_AVAILABLE");
+    _auction.seller = receiver;
+  }
+
   function buy(uint256 _tokenId, uint256 amount) external payable nonReentrant whenNotPaused {
     Sale storage _auction = sales[_tokenId];
     uint256 cost = _auction.price * amount;

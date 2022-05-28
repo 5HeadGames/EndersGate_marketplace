@@ -3,7 +3,7 @@ import {ethers, network} from "hardhat";
 import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import type {BigNumber} from "@ethersproject/bignumber";
 import type {Block} from "@ethersproject/abstract-provider";
-import type {ClockSale, EndersPack, MockERC20} from "../typechain";
+import type {ClockSale, ClockSaleOwnable, EndersPack, MockERC20} from "../typechain";
 
 import {getLogs} from "../utils";
 
@@ -30,7 +30,7 @@ const parseSale = (
 
 describe("[ClockSaleOwnable]", function () {
   let accounts: SignerWithAddress[],
-    marketplace: ClockSale,
+    marketplace: ClockSaleOwnable,
     nft: EndersPack,
     genesisBlock: number,
     token: MockERC20;
@@ -57,10 +57,10 @@ describe("[ClockSaleOwnable]", function () {
     accounts = _accounts;
 
     [marketplace, nft, token] = (await Promise.all([
-      Sale.deploy(feeReceiver.address, OWNER_CUT, "ClockSale", "CAT"),
+      Sale.deploy(feeReceiver.address, OWNER_CUT, "ClockSaleOwnable", "CAT"),
       NftFactory.deploy("", "", "", ""),
       MockERC20.deploy(),
-    ])) as [ClockSale, EndersPack, MockERC20];
+    ])) as [ClockSaleOwnable, EndersPack, MockERC20];
 
     genesisBlock = await ethers.provider.getBlockNumber();
 
@@ -303,6 +303,18 @@ describe("[ClockSaleOwnable]", function () {
 
       expect(newPrice.toString() !== originalSale.price.toString()).to.equal(true);
       expect(newSale.price.toString()).to.equal(newPrice.toString());
+    });
+
+    it("Should update sale receiver", async () => {
+      const saleId = 3;
+      const originalSale = parseSale(await marketplace.sales(saleId));
+      const newReceiver = ethers.Wallet.createRandom();
+      expect(originalSale.seller).to.be.equal(accounts[0].address);
+
+      await marketplace.updateSaleReceiver(saleId, newReceiver.address);
+      const newSale = parseSale(await marketplace.sales(saleId));
+
+      expect(newSale.seller).to.equal(newReceiver.address);
     });
   });
 
