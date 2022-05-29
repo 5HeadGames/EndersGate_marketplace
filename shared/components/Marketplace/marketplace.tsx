@@ -19,6 +19,8 @@ import { convertArrayCards } from "../common/convertCards";
 import packs from "../../packs.json";
 import { useAppDispatch, useAppSelector } from "@redux/store";
 import Link from "next/link";
+import Web3 from "web3";
+import Styles from "./itemCard/styles.module.scss";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("older_listed");
@@ -313,13 +315,15 @@ const MarketplaceComponent = () => {
                     icon={cards[a.nftId].properties.image.value}
                     name={cards[a.nftId].properties.name.value}
                     byId={false}
+                    price={a.price}
                   />
                 )
               ) : (
                 <Link href={`/NFTDetailSale/${a.id}`}>
                   <div
                     className={clsx(
-                      "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer m-4 cursor-pointer"
+                      "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer m-4 cursor-pointer",
+                      Styles.cardHover
                     )}
                   >
                     <div className="w-full flex flex-col text-xs gap-1">
@@ -336,6 +340,9 @@ const MarketplaceComponent = () => {
                     </div>
                     <div className="flex flex-col text-sm text-center">
                       <span>{a.name}</span>
+                    </div>
+                    <div className="flex flex-col text-sm font-bold text-primary text-center">
+                      <span>{Web3.utils.fromWei(a.price, "ether")} ONE</span>
                     </div>
                   </div>
                 </Link>
