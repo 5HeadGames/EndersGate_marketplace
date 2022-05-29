@@ -6,5 +6,5 @@
   "packIpfs": "https://ipfs.moralis.io:2053/ipfs/QmQA1DNdx4dwjQEJueSUfHAcYzyuaUs8rQhrjLqgLgYnyj",
   "library": "0xEf626C48cBB613F985F32c00d1A521a1Ff765F76",
   "marketplace": "0xAe414077fDAEf7ce46ED2Fd47FA30eCa0527a0B5",
-  "marketplaceOwnable": "0xa8Eb651174688ac31ce1DB5bAf221b0E9C5AA448"
+  "shop": "0x463b5Fe6DD5633E6feCb286FdbAB9D3A9A75B038"
 }
