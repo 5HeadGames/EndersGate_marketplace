@@ -25,7 +25,7 @@ export const Type = ({ id }) => {
 
   return (
     <>
-      {cards[id].properties?.attack?.value
+      {cards[id]?.properties?.attack?.value
         ? "Guardian"
         : cards[id].typeCard[0].toUpperCase() +
           cards[id].typeCard.substring(1, cards[id].typeCard.length)}

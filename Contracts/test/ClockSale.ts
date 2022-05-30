@@ -28,7 +28,7 @@ const parseSale = (
   };
 };
 
-describe.only("[ClockSale]", function () {
+describe("[ClockSale]", function () {
   let accounts: SignerWithAddress[],
     marketplace: ClockSale,
     nft: EndersPack,
@@ -75,6 +75,8 @@ describe.only("[ClockSale]", function () {
     it("should initialize owner", async () => {
       const owner = await marketplace.owner();
       expect(owner).to.equal(accounts[0].address);
+      await marketplace.transferOwnership(accounts[5].address);
+      expect(await marketplace.owner()).to.equal(accounts[5].address);
     });
 
     it("should initialize fee receiver share properly", async () => {
@@ -93,7 +95,7 @@ describe.only("[ClockSale]", function () {
     });
 
     it("Owner should whitelist nfts", async () => {
-      await marketplace.setNftAllowed(nft.address, true);
+      await marketplace.connect(accounts[5]).setNftAllowed(nft.address, true);
 
       expect(await marketplace.isAllowed(nft.address), "Not allowed properly").to.be.equal(true);
       await expect(
@@ -103,46 +105,54 @@ describe.only("[ClockSale]", function () {
     });
 
     it("Owner should stop marketplace", async () => {
-      expect(await marketplace.paused(), "Stopped at beggining").to.be.equal(false);
-      await expect(marketplace.restartTrading(), "restart when not stopped").to.be.revertedWith("");
+      expect(await marketplace.connect(accounts[5]).paused(), "Stopped at beggining").to.be.equal(
+        false
+      );
+      await expect(
+        marketplace.connect(accounts[5]).restartTrading(),
+        "restart when not stopped"
+      ).to.be.revertedWith("");
       await expect(
         marketplace.connect(accounts[1]).stopTrading(),
         "not owner should stop trading"
       ).to.be.revertedWith("");
 
-      await marketplace.stopTrading();
+      await marketplace.connect(accounts[5]).stopTrading();
 
-      expect(await marketplace.paused(), "should be paused").to.be.equal(true);
-      await expect(marketplace.stopTrading(), "trading already stopped").to.be.revertedWith("");
+      expect(await marketplace.connect(accounts[5]).paused(), "should be paused").to.be.equal(true);
+      await expect(
+        marketplace.connect(accounts[5]).stopTrading(),
+        "trading already stopped"
+      ).to.be.revertedWith("");
       await expect(
         marketplace.connect(accounts[1]).restartTrading(),
         "only owner should restart"
       ).to.be.revertedWith("");
 
-      await marketplace.restartTrading();
+      await marketplace.connect(accounts[5]).restartTrading();
       expect(await marketplace.paused(), "should be paused").to.be.equal(false);
     });
 
     it("Should allow owner to change the fee receiver", async () => {
       const newFeeReceiver = ethers.Wallet.createRandom();
-      await marketplace.setFeeReceiver(newFeeReceiver.address);
+      await marketplace.connect(accounts[5]).setFeeReceiver(newFeeReceiver.address);
 
       expect(await marketplace.feeReceiver()).to.be.equal(newFeeReceiver.address);
       await expect(
         marketplace.connect(accounts[1]).setFeeReceiver(feeReceiver.address)
       ).to.be.revertedWith("");
 
-      await marketplace.setFeeReceiver(feeReceiver.address);
+      await marketplace.connect(accounts[5]).setFeeReceiver(feeReceiver.address);
     });
 
     it("Should allow owner to change the fee", async () => {
       const newOwnerCut = Number(OWNER_CUT) + 100;
-      await marketplace.setOwnerCut(newOwnerCut);
+      await marketplace.connect(accounts[5]).setOwnerCut(newOwnerCut);
 
       expect((await marketplace.ownerCut()).toNumber()).to.be.equal(newOwnerCut);
       await expect(marketplace.connect(accounts[1]).setOwnerCut(OWNER_CUT)).to.be.revertedWith("");
 
-      await marketplace.setOwnerCut(OWNER_CUT);
+      await marketplace.connect(accounts[5]).setOwnerCut(OWNER_CUT);
     });
   });
 
@@ -312,7 +322,11 @@ describe.only("[ClockSale]", function () {
       await token.mint(accounts[0].address, lostAmount);
       await token.transfer(marketplace.address, lostAmount);
 
-      await expect(marketplace.emergencyWithdraw(lostAmount, token.address, accounts[1].address))
+      await expect(
+        marketplace
+          .connect(accounts[5])
+          .emergencyWithdraw(lostAmount, token.address, accounts[1].address)
+      )
         .to.emit(token, "Transfer")
         .withArgs(marketplace.address, accounts[1].address, lostAmount);
       expect(await token.balanceOf(accounts[1].address)).to.be.equal(lostAmount);
