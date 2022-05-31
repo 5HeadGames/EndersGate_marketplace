@@ -6,6 +6,7 @@ import TransactionsBoard from "./TransactionsBoard/TransactionsBoard";
 import { getAddresses, getContract } from "@shared/web3";
 import cardsJson from "../../../cards.json";
 import { TimeConverter } from "../common/unixDateConverter/unixConverter";
+import Web3 from "web3";
 
 const DashboardComponent = () => {
   const [recentlyListed, setRecentlyListed] = React.useState([]);
@@ -61,9 +62,6 @@ const DashboardComponent = () => {
           setRecentlyListed(nfts.saleCreated);
           break;
       }
-
-      
-
 
       const cardSalesSold = [];
       const packSalesSold = [];
@@ -131,12 +129,13 @@ const DashboardComponent = () => {
           nfts.saleSuccessfull.length > 0
             ? nfts.saleSuccessfull
                 ?.map((sale, i) => {
+                  console.log(sale.price, "price");
                   return new Date().valueOf() -
                     new Date(
                       nfts.saleSuccessfull[i].startedAt * 1000
                     ).valueOf() <
                     timePeriod
-                    ? parseFloat(sale.price)
+                    ? parseFloat(Web3.utils.fromWei(sale.price))
                     : 0;
                 })
                 ?.reduce((acc, cur) => {
