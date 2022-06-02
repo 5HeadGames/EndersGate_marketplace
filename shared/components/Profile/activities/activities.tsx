@@ -36,8 +36,14 @@ const Activities = () => {
   };
 
   React.useEffect(() => {
-    loadEvents();
-  }, []);
+    if (user) {
+      loadEvents();
+    }
+  }, [user]);
+
+  React.useEffect(() => {
+    console.log("act", activities);
+  }, [activities]);
 
   return (
     <>
@@ -62,7 +68,9 @@ const Activities = () => {
       >
         {activities.length > 0 ? (
           activities.map(({ createdAt, type, metadata }, index) => {
-            return <Activity date={createdAt} type={type} />;
+            return (
+              <Activity date={createdAt} type={type} metadata={metadata} />
+            );
           })
         ) : (
           <>

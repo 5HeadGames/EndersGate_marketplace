@@ -25,7 +25,6 @@ const TransactionsBoard: React.FC<any> = ({
   columnSelected,
   setColumnSelected,
 }) => {
-  console.log(totalVolume);
   const platformItems = [
     {
       title: "TOTAL SALE",
