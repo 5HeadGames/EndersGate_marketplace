@@ -97,7 +97,6 @@ const DashboardComponent = () => {
           }
           break;
       }
-      console.log(cardSalesSold, cardSalesCreated);
       let timePeriod;
       switch (columnSelected) {
         case "last_24h":
@@ -129,7 +128,6 @@ const DashboardComponent = () => {
           nfts.saleSuccessfull.length > 0
             ? nfts.saleSuccessfull
                 ?.map((sale, i) => {
-                  console.log(sale.price, "price");
                   return new Date().valueOf() -
                     new Date(
                       nfts.saleSuccessfull[i].startedAt * 1000
