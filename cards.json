@@ -19205,7 +19205,7 @@
       ]
     },
     {
-      "name": "Xozog",
+      "name": "Xolzog",
       "type": "ERC1155",
       "description": "[Undead | Mage] \"Erase\" Once per turn, execute 1 Enemy Guardian  under 20% Health.",
       "image": "QmdnbmFi6jqKTn5dZVLWibL3Rspz2F5gMVNHpUK195JRLQ",
@@ -19263,7 +19263,7 @@
         },
         {
           "trait_type": "name",
-          "value": "Xozog"
+          "value": "Xolzog"
         },
         {
           "trait_type": "element",
