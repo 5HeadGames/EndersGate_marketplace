@@ -27,6 +27,7 @@ const MarketplaceComponent = () => {
   const [type, setType] = React.useState("trading_cards");
   const [sales, setSales] = React.useState([]);
   const { nfts } = useAppSelector((state) => state);
+  const [page, setPage] = React.useState(0);
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -260,6 +261,7 @@ const MarketplaceComponent = () => {
       <FiltersBoard
         filter={filter}
         setFilter={setFilter}
+        setPage={setPage}
         type={type}
         setType={setType}
       />
@@ -303,11 +305,12 @@ const MarketplaceComponent = () => {
             </div>
           </div>
           <div className="flex flex-wrap w-full justify-center items-center relative">
-            {sales?.map((a, id) => {
-              // if(passFilter(a.nftId)){
-              console.log(a);
-              return type !== "packs" ? (
-                passFilter(a.nftId) && (
+            {sales
+              ?.filter((sale, i) => passFilter(sale.nftId))
+              .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
+              .map((a, id) => {
+                console.log(a);
+                return type !== "packs" ? (
                   <NftCard
                     classes={{ root: "m-4 cursor-pointer" }}
                     id={a.nftId}
@@ -317,37 +320,75 @@ const MarketplaceComponent = () => {
                     byId={false}
                     price={a.price}
                   />
-                )
-              ) : (
-                <Link href={`/NFTDetailSale/${a.id}`}>
-                  <div
-                    className={clsx(
-                      "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer m-4 cursor-pointer",
-                      Styles.cardHover
-                    )}
-                  >
-                    <div className="w-full flex flex-col text-xs gap-1">
-                      <div className="w-full flex justify-between">
-                        <span>Pack #{a.nftId}</span>
-                        <span>#{a.id}</span>
+                ) : (
+                  <Link href={`/NFTDetailSale/${a.id}`}>
+                    <div
+                      className={clsx(
+                        "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer m-4 cursor-pointer",
+                        Styles.cardHover
+                      )}
+                    >
+                      <div className="w-full flex flex-col text-xs gap-1">
+                        <div className="w-full flex justify-between">
+                          <span>Pack #{a.nftId}</span>
+                          <span>#{a.id}</span>
+                        </div>
+                      </div>
+                      <div className="w-full h-36 flex justify-center items-center my-4">
+                        <img
+                          src={packs[a.nftId]?.properties?.image?.value}
+                          className={"h-36"}
+                        />
+                      </div>
+                      <div className="flex flex-col text-sm text-center">
+                        <span>{a.name}</span>
+                      </div>
+                      <div className="flex flex-col text-sm font-bold text-primary text-center">
+                        <span>{Web3.utils.fromWei(a.price, "ether")} ONE</span>
                       </div>
                     </div>
-                    <div className="w-full h-36 flex justify-center items-center my-4">
-                      <img
-                        src={packs[a.nftId]?.properties?.image?.value}
-                        className={"h-36"}
-                      />
-                    </div>
-                    <div className="flex flex-col text-sm text-center">
-                      <span>{a.name}</span>
-                    </div>
-                    <div className="flex flex-col text-sm font-bold text-primary text-center">
-                      <span>{Web3.utils.fromWei(a.price, "ether")} ONE</span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+                  </Link>
+                );
+              })}
+            {sales?.length > 0 && (
+              <div className="flex w-full items-center justify-center gap-2">
+                <div
+                  className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                  onClick={() => {
+                    if (page > 0) {
+                      setPage((prev) => {
+                        return prev - 1;
+                      });
+                    }
+                  }}
+                >
+                  {"<"}
+                </div>
+                <div className="p-4 rounded-md bg-overlay border border-primary text-primary">
+                  {page + 1}
+                </div>
+                <div
+                  className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                  onClick={() => {
+                    if (
+                      page <
+                      Math.floor(
+                        (sales.filter((sale, i) => passFilter(sale.nftId))
+                          .length -
+                          1) /
+                          12
+                      )
+                    ) {
+                      setPage((prev) => {
+                        return prev + 1;
+                      });
+                    }
+                  }}
+                >
+                  {">"}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

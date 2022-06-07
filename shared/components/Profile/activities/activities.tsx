@@ -15,6 +15,7 @@ const navItems = [
 const Activities = () => {
   const {user} = useMoralis();
   const [activities, setActivities] = React.useState<Activity[]>([]);
+  const [page, setPage] = React.useState(0);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
 
   const loadEvents = async () => {
@@ -30,7 +31,9 @@ const Activities = () => {
           metadata: JSON.parse(act.get("metadata")),
         }))
         .sort((a, b) => {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
         })
     );
   };
@@ -56,7 +59,7 @@ const Activities = () => {
       <div
         className={clsx(
           "w-full ",
-          "flex flex-col",
+          "flex flex-col mb-4",
           {
             [`${Styles.gray} justify-center items-center gap-6 h-72`]:
               activities.length === 0,
@@ -67,11 +70,44 @@ const Activities = () => {
         )}
       >
         {activities.length > 0 ? (
-          activities.map(({ createdAt, type, metadata }, index) => {
-            return (
-              <Activity date={createdAt} type={type} metadata={metadata} />
-            );
-          })
+          <>
+            {activities
+              .filter((activity, i) => i < (page + 1) * 10 && i >= page * 10)
+              .map(({ createdAt, type, metadata }, index) => {
+                return (
+                  <Activity date={createdAt} type={type} metadata={metadata} />
+                );
+              })}
+            <div className="flex w-full items-center justify-center gap-2">
+              <div
+                className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                onClick={() => {
+                  if (page > 0) {
+                    setPage((prev) => {
+                      return prev - 1;
+                    });
+                  }
+                }}
+              >
+                {"<"}
+              </div>
+              <div className="p-4 rounded-md bg-overlay border border-primary text-primary">
+                {page + 1}
+              </div>
+              <div
+                className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                onClick={() => {
+                  if (page < Math.floor((activities.length - 1) / 10)) {
+                    setPage((prev) => {
+                      return prev + 1;
+                    });
+                  }
+                }}
+              >
+                {">"}
+              </div>
+            </div>
+          </>
         ) : (
           <>
             <img src={Icons.logo} className="h-40 w-40" alt="" />
