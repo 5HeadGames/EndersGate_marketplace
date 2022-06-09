@@ -3,14 +3,15 @@ import {
   AppstoreOutlined,
   CaretDownOutlined,
   CaretUpOutlined,
+  SearchOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 import NftCard from "shared/components/Marketplace/itemCard";
 import FiltersBoard from "./filters/filters";
-import {DropdownActions} from "../common/dropdownActions/dropdownActions";
-import {Dropdown} from "../common/dropdown/dropdown";
+import { DropdownActions } from "../common/dropdownActions/dropdownActions";
+import { Dropdown } from "../common/dropdown/dropdown";
 import clsx from "clsx";
 import { Typography } from "../common/typography";
 import { getAddresses, getContract } from "@shared/web3";
@@ -28,6 +29,7 @@ const MarketplaceComponent = () => {
   const [sales, setSales] = React.useState([]);
   const { nfts } = useAppSelector((state) => state);
   const [page, setPage] = React.useState(0);
+  const [search, setSearch] = React.useState("");
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -243,6 +245,14 @@ const MarketplaceComponent = () => {
       passed = true;
     }
 
+    if (
+      cards[id]?.properties.name.value
+        .toLowerCase()
+        .includes(search.toLowerCase())
+    ) {
+      passed = true;
+    }
+
     let thereIsFilters = false;
     console.log(Object.values(filter));
     Object.values(filter).forEach((element) => {
@@ -250,7 +260,7 @@ const MarketplaceComponent = () => {
         thereIsFilters = true;
       }
     });
-    if (!thereIsFilters) {
+    if (!thereIsFilters && search === "") {
       return true;
     }
     return passed;
@@ -266,6 +276,19 @@ const MarketplaceComponent = () => {
         setType={setType}
       />
       <div className="xl:w-2/3 xl:mt-0 mt-6 flex flex-col pb-10">
+        <div className="border flex items-center text-md justify-center border-primary rounded-xl px-4 py-2 md:w-64 w-40 ml-10">
+          <div className="text-white text-xl flex items-center justify-center">
+            <SearchOutlined />
+          </div>
+          <input
+            type="text"
+            className="ml-2 text-white bg-transparent w-full"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+          />
+        </div>
         <div>
           <div className="w-full flex justify-between items-center sm:flex-row flex-col">
             <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">
