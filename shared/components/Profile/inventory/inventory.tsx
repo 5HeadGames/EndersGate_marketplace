@@ -4,7 +4,11 @@ import {Icons} from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
 import {useAppSelector} from "redux/store";
-import {AppstoreOutlined, UnorderedListOutlined} from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  SearchOutlined,
+  UnorderedListOutlined,
+} from "@ant-design/icons";
 import Styles from "./styles.module.scss";
 import NFTCard from "@shared/components/Marketplace/itemCard";
 import { getBalance } from "@shared/web3";
@@ -25,6 +29,7 @@ const Inventory = () => {
   const [inventoryPacks, setInventoryPacks] = React.useState([]);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
   const [balance, setBalance] = React.useState("0");
+  const [search, setSearch] = React.useState("");
 
   const cards = convertArrayCards();
 
@@ -95,17 +100,21 @@ const Inventory = () => {
           );
         })}
       </div>
-      ;
-      {/* <div className="flex justify-end">
-        <div className=" border-2 border rounded-md border-primary flex justify-center items-center overflow-hidden text-primary h-10">
-          <div className="flex flex-1 justify-center items-center text-prymary h-10 border-r-2 border-primary p-2  cursor-pointer hover:bg-primary hover:text-secondary">
-            <AppstoreOutlined />
+      <div className="flex">
+        <div className="border flex items-center text-md justify-center border-primary rounded-xl px-4 py-2 md:w-64 w-40 ml-10">
+          <div className="text-white text-xl flex items-center justify-center">
+            <SearchOutlined />
           </div>
-          <div className="flex flex-1 justify-center items-center text-primary h-10 p-2 cursor-pointer  hover:bg-primary hover:text-secondary">
-            <UnorderedListOutlined />
-          </div>
+          <input
+            type="text"
+            className="ml-2 text-white bg-transparent w-full"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+          />
         </div>
-      </div> */}
+      </div>
       <div
         className={clsx(
           "flex mb-10  justify-center",
@@ -124,20 +133,26 @@ const Inventory = () => {
         )}
       >
         {inventoryCards.length > 0 && columnSelected === "trading_cards" ? (
-          inventoryCards.map((card) => {
-            return (
-              card.balance > 0 && (
-                <NFTCard
-                  key={card.id}
-                  id={card.id}
-                  icon={cards[card.id].properties.image.value}
-                  name={cards[card.id].properties.name.value}
-                  balance={card.balance}
-                  byId
-                />
-              )
-            );
-          })
+          inventoryCards
+            .filter((card) =>
+              cards[card.id].properties.name.value
+                .toLowerCase()
+                .includes(search.toLowerCase())
+            )
+            .map((card) => {
+              return (
+                card.balance > 0 && (
+                  <NFTCard
+                    key={card.id}
+                    id={card.id}
+                    icon={cards[card.id].properties.image.value}
+                    name={cards[card.id].properties.name.value}
+                    balance={card.balance}
+                    byId
+                  />
+                )
+              );
+            })
         ) : inventoryPacks.length > 0 && columnSelected === "packs" ? (
           inventoryPacks.map((pack, index) => {
             return (
