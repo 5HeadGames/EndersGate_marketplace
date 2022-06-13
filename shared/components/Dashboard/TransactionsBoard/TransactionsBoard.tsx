@@ -38,7 +38,7 @@ const TransactionsBoard: React.FC<any> = ({
     },
     {
       title: "TOTAL VOLUME",
-      value: Web3.utils.fromWei(totalVolume.toString()) + " ONE",
+      value: totalVolume.toString() + " ONE",
       // value2: "$1,57M",
       iconHtml: <LineChartOutlined />,
       css: {

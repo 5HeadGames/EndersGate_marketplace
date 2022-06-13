@@ -6,6 +6,7 @@ import TransactionsBoard from "./TransactionsBoard/TransactionsBoard";
 import { getAddresses, getContract } from "@shared/web3";
 import cardsJson from "../../../cards.json";
 import { TimeConverter } from "../common/unixDateConverter/unixConverter";
+import Web3 from "web3";
 
 const DashboardComponent = () => {
   const [recentlyListed, setRecentlyListed] = React.useState([]);
@@ -62,9 +63,6 @@ const DashboardComponent = () => {
           break;
       }
 
-      
-
-
       const cardSalesSold = [];
       const packSalesSold = [];
       nfts.saleSuccessfull.forEach((sale) => {
@@ -99,7 +97,6 @@ const DashboardComponent = () => {
           }
           break;
       }
-      console.log(cardSalesSold, cardSalesCreated);
       let timePeriod;
       switch (columnSelected) {
         case "last_24h":
@@ -136,7 +133,7 @@ const DashboardComponent = () => {
                       nfts.saleSuccessfull[i].startedAt * 1000
                     ).valueOf() <
                     timePeriod
-                    ? parseFloat(sale.price)
+                    ? parseFloat(Web3.utils.fromWei(sale.price))
                     : 0;
                 })
                 ?.reduce((acc, cur) => {

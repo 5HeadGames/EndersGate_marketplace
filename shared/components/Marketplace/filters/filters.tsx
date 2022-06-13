@@ -5,9 +5,10 @@ import {HeartOutlined, HeartFilled} from '@ant-design/icons'
 import {CollapseMenu} from "@shared/components/common/collapseMenu/collapseMenu";
 import {SlideButton} from "@shared/components/common/slideButton/slideButton";
 
-const FiltersBoard = ({ filter, setFilter, type, setType }) => {
+const FiltersBoard = ({ filter, setFilter, type, setType, setPage }) => {
   const handleChange = (title) => {
     console.log(title);
+    setPage(0);
     setFilter((prev) => {
       return { ...prev, [`${title}`]: !prev[`${title}`] };
     });

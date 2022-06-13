@@ -411,11 +411,15 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         type="subTitle"
                         className="text-primary opacity-75"
                       >
-                        {sale.status == 0
+                        {sale.status == 0 &&
+                        Math.floor(new Date().getTime() / 1000) <=
+                          parseInt(sale?.duration) + parseInt(sale?.startedAt)
                           ? "Active"
                           : sale.status == 1
                           ? "Sold"
-                          : "Cancelled"}
+                          : sale.status == 2
+                          ? "Cancelled"
+                          : "Outdated"}
                       </Typography>
                     </div>
                   </div>

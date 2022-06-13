@@ -10,11 +10,13 @@ import {useToasts} from "react-toast-notifications";
 import Styles from "./styles.module.scss";
 import Link from "next/link";
 import {getBalance} from "@shared/web3";
+import { convertArrayCards } from "@shared/components/common/convertCards";
+import Web3 from "web3";
 
 const ProfileIndexPage = () => {
   const [balance, setBalance] = React.useState("0");
   const [activities, setActivities] = React.useState<Activity[]>([]);
-  const {user, isAuthenticated} = useMoralis();
+  const { user, isAuthenticated } = useMoralis();
   const router = useRouter();
 
   const loadEvents = async () => {
@@ -52,7 +54,7 @@ const ProfileIndexPage = () => {
     setBalance(balance);
   };
 
-  const {addToast} = useToasts();
+  const { addToast } = useToasts();
 
   return (
     <>
@@ -120,7 +122,7 @@ const ProfileIndexPage = () => {
         <div
           className={clsx(
             "w-full ",
-            "flex flex-col",
+            "flex flex-col mb-10",
             {
               [`${Styles.gray} justify-center items-center gap-6 h-72`]:
                 activities.length === 0,
@@ -131,8 +133,10 @@ const ProfileIndexPage = () => {
           )}
         >
           {activities.length > 0 ? (
-            activities.map(({ createdAt, type }, index) => {
-              return <Activity date={createdAt} type={type} />;
+            activities.map(({ createdAt, type, metadata }, index) => {
+              return (
+                <Activity date={createdAt} type={type} metadata={metadata} />
+              );
             })
           ) : (
             <>
@@ -151,9 +155,15 @@ const ProfileIndexPage = () => {
   );
 };
 
-export const Activity = ({date, type}) => {
+export const Activity = ({ date, type, metadata }) => {
+  const cards = convertArrayCards();
   return (
-    <div className="flex sm:gap-4 gap-2 text-primary items-primary sm:px-10">
+    <a
+      href={`https://explorer.harmony.one/tx/${metadata.transactionHash}`}
+      target="_blank"
+      rel="noreferrer"
+      className="flex cursor-pointer sm:gap-4 gap-2 text-primary items-primary sm:px-10"
+    >
       <div className="flex flex-col items-center justify-center text-sm">
         <div>
           {new Date(date).getUTCHours()}:
@@ -162,7 +172,8 @@ export const Activity = ({date, type}) => {
             : new Date(date).getUTCMinutes()}
         </div>
         <div>
-          {new Date(date).getMonth() + 1}-{new Date(date).getDate()}-{new Date(date).getFullYear()}
+          {new Date(date).getMonth() + 1}-{new Date(date).getDate()}-
+          {new Date(date).getFullYear()}
         </div>
       </div>
       <div className="bg-overlay-border p-4 rounded-full flex items-center">
@@ -171,16 +182,24 @@ export const Activity = ({date, type}) => {
             <LoginOutlined />
           </div>
         )}
-        {type !== "login" && <img className="h-6 w-6" src={Icons.logo} alt="" />}
+        {type !== "login" && (
+          <img className="h-6 w-6" src={Icons.logo} alt="" />
+        )}
       </div>
 
       <div className="flex items-center justify-center">
         {type === "login" && "You loged in for first time"}
-        {type === "buy" && "You bought an/some NFT/s"}
-        {type === "sell" && "You have listed an/some NFT/s"}
+        {type === "buy" &&
+          `You have bought ${metadata?.amount} ${
+            cards[metadata?.tokenId].properties.name.value
+          } at ${Web3.utils.fromWei(metadata?.bid)} ONE`}
+        {type === "sell" &&
+          `You have listed ${metadata?.amount} ${
+            cards[metadata?.tokenId].properties.name.value
+          } at ${Web3.utils.fromWei(metadata?.startingPrice)} ONE`}
         {type === "cancel" && "You have cancelled a sale"}
       </div>
-    </div>
+    </a>
   );
 };
 
