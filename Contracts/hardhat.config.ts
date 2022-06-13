@@ -1,14 +1,14 @@
 import {task} from "hardhat/config";
 
 import {config as dotenvConfig} from "dotenv";
-import { resolve } from "path";
+import {resolve} from "path";
 
-import { NetworkUserConfig } from "hardhat/types";
+import {NetworkUserConfig} from "hardhat/types";
 
 import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-waffle";
-dotenvConfig({ path: resolve(__dirname, "./.env") });
+dotenvConfig({path: resolve(__dirname, "./.env")});
 
 //import "hardhat-gas-reporter";
 //import "@nomiclabs/hardhat-etherscan";
@@ -66,6 +66,12 @@ const config: any = {
     compilers: [
       {
         version: "0.8.11",
+      },
+      {
+        version: "0.5.16",
+      },
+      {
+        version: "0.6.6",
       },
     ],
   },
