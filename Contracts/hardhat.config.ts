@@ -1,14 +1,16 @@
-import {task} from "hardhat/config";
+import { task } from "hardhat/config";
 
-import {config as dotenvConfig} from "dotenv";
-import {resolve} from "path";
+import { config as dotenvConfig } from "dotenv";
+import { resolve } from "path";
 
-import {NetworkUserConfig} from "hardhat/types";
+import { NetworkUserConfig } from "hardhat/types";
 
 import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-waffle";
-dotenvConfig({path: resolve(__dirname, "./.env")});
+import "hardhat-gas-reporter";
+import "hardhat-contract-sizer";
+dotenvConfig({ path: resolve(__dirname, "./.env") });
 
 //import "hardhat-gas-reporter";
 //import "@nomiclabs/hardhat-etherscan";
@@ -44,14 +46,18 @@ task("accounts", "Prints the list of accounts", async (args, hre) => {
 const config: any = {
   defaultNetwork: "hardhat",
   networks: {
-    ganache: {
-      url: "https://localhost:8545",
-      fork: "https://speedy-nodes-nyc.moralis.io/bdd2a4b14a469f0e3a230d4d/avalanche/mainnet@8501674",
-    } as any,
+    // ganache: {
+    //   url: "https://localhost:8545",
+    //   // fork: "https://speedy-nodes-nyc.moralis.io/bdd2a4b14a469f0e3a230d4d/avalanche/mainnet@8501674",
+    //   gas: 2100000,
+    //   gasPrice: 8000000000
+    // } as any,
     hardhat: {
-      accounts: {
-        mnemonic: MNEMONIC,
-      },
+      // accounts: {
+      //   mnemonic: MNEMONIC,
+      // },
+      gas: 2100000,
+      gasPrice: 8000000000,
     },
     // harmony: {
     //   url: `https://api.harmony.one`,
@@ -66,12 +72,30 @@ const config: any = {
     compilers: [
       {
         version: "0.8.11",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000,
+          },
+        },
       },
       {
         version: "0.5.16",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000,
+          },
+        },
       },
       {
         version: "0.6.6",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000,
+          },
+        },
       },
     ],
   },
