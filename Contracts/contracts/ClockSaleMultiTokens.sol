@@ -210,6 +210,10 @@ contract ClockSaleMultiTokens is
                 IERC20(tokenToPay).balanceOf(_msgSender()) > cost,
                 "CLOCK_AUCTION: INSUFICIENT BALANCE"
             );
+            require(
+                IERC20(_token).allowance(_msgSender(), address(this)) > price,
+                "CLOCK_AUCTION: INSUFICIENT ALLOWANCE"
+            );
             require(_isOnSale(_auction), "ClockSale:NOT_AVAILABLE");
 
             uint256 ownerAmount = (cost * ownerCut) / 10000;
