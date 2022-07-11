@@ -700,6 +700,58 @@ describe("[ClockSaleMultiToken]", function () {
     });
   });
   describe("Audit results", () => {
+    it("Should emit Sales results", async () => {
+      for await (let currentSale of salesData) {
+        const { id, prices, tokens, amount, duration } = currentSale;
+        await nft.setApprovalForAll(marketplace.address, true);
+        await expect(
+          marketplace.createSale(
+            nft.address,
+            id,
+            prices,
+            tokens,
+            amount,
+            duration,
+          ),
+        ).to.emit(marketplace, "SaleCreated");
+      }
+      const lastId = await marketplace.tokenIdTracker();
+      const salesToCheck = new Array(lastId.toNumber())
+        .fill(false)
+        .map((a, i) => i);
+      const buyer = accounts[3];
+      const amount = 5;
+      const cost = salesData[2].prices[0].mul(amount);
+      const extra = cost.add(ethers.utils.parseEther("1"));
+      console.log(extra, "extra");
+      const originalBalance = await ethers.provider.getBalance(buyer.address);
+      await expect(
+        marketplace
+          .connect(buyer)
+          .buy(salesToCheck[2], amount, nativeToken.address, {
+            value: extra.toString(),
+          }),
+      ).to.be.revertedWith("ClockSale:NOT_EXACT_VALUE");
+      await expect(
+        marketplace
+          .connect(buyer)
+          .buy(salesToCheck[2], amount, nativeToken.address, {
+            value: cost.toString(),
+          }),
+      )
+        .to.emit(marketplace, "BuySuccessful")
+        .withArgs(
+          salesToCheck[2],
+          buyer.address,
+          cost,
+          nativeToken.address,
+          amount,
+        );
+      const contractBalance = await ethers.provider.getBalance(
+        marketplace.address,
+      );
+      expect(contractBalance, "Contract balance bigger than 0").to.be.equal(0);
+    });
     it("Should not leave eth leftovers", async () => {
       for await (let currentSale of salesData) {
         const { id, prices, tokens, amount, duration } = currentSale;

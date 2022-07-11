@@ -60,10 +60,13 @@ contract ClockSaleMultiTokens is
 
     event SaleCreated(
         uint256 indexed _auctionId,
+        address _nft,
+        uint256 _nftId,
         uint256 _amount,
         uint256[] _prices,
         address[] _tokens,
         uint256 _duration,
+        uint256 _startedAt,
         address _seller
     );
     event SaleSuccessful(uint256 indexed _auctionId);
@@ -76,10 +79,6 @@ contract ClockSaleMultiTokens is
     );
     event SaleCancelled(uint256 indexed _auctionId);
     event ChangedFeeReceiver(address newReceiver);
-
-    modifier debug() {
-        _;
-    }
 
     constructor(
         address _feeReceiver,
@@ -239,11 +238,7 @@ contract ClockSaleMultiTokens is
         _cancelSale(_tokenId);
     }
 
-    function setNftAllowed(address nftAddress, bool allow)
-        external
-        debug
-        onlyOwner
-    {
+    function setNftAllowed(address nftAddress, bool allow) external onlyOwner {
         isAllowed[nftAddress] = allow;
     }
 
@@ -313,10 +308,13 @@ contract ClockSaleMultiTokens is
 
         emit SaleCreated(
             auctionID,
+            _auction.nft,
+            _auction.nftId,
             _auction.amount,
             _auction.prices,
             _auction.tokens,
             _auction.duration,
+            _auction.startedAt,
             _auction.seller
         );
     }
