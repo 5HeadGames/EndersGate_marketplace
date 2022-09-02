@@ -2,7 +2,6 @@
 
 # dependencies
 /node_modules
-/Contracts/node_modules
 /data
 /.pnp
 .pnp.js
@@ -38,3 +37,5 @@ typechain
 /Contracts/artifacts
 /Contracts/cache
 /Contracts/typechain
+/Contracts/node_modules
+/Contracts/sctypes
