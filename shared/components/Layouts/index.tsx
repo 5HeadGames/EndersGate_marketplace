@@ -113,7 +113,7 @@ export default function AppLayout({ children }) {
     // window.location.reload();
     const web3 = await getWeb3();
     const networkId = await web3.eth.net.getId();
-    if (networkId.toString() != process.env.NEXT_PUBLIC_CHAIN_ID) {
+    if (networkId != 1666600000 && networkId != 1666600000) {
       setNotAvailable({
         message: "Change your network to harmony mainnet please",
         value: true,
