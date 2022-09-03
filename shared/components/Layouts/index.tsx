@@ -154,8 +154,7 @@ export default function AppLayout({ children }) {
 
   const handleEnableWeb3 = async () => {
     if (!isWeb3Enabled) {
-      // console.log("test");
-      // await enableWeb3();
+      await enableWeb3();
     }
   };
 

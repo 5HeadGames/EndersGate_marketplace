@@ -134,6 +134,8 @@ export const onSellERC1155 = createAsyncThunk(
   }) {
     const { from, tokenId, startingPrice, amount, duration, address, moralis } =
       args;
+    console.log("aaaaaaaaaaa", moralis);
+
     const provider = moralis.web3.provider;
     const user = Moralis.User.current();
     const relation = user.relation("events");
