@@ -64,7 +64,6 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       const isApprovedForAll = await endersgateInstance.methods
         .isApprovedForAll(user.get("ethAddress"), marketplace)
         .call();
-      console.log(isApprovedForAll, "APPROVED");
       if (isApprovedForAll == false) {
         setMessage("Allowing us to sell your tokens");
         await approveERC1155({

@@ -45,51 +45,11 @@ const styles = {
 };
 
 const navItems = [
-  {
-    name: "Menu",
-    link: "/menu",
-    menu: true,
-    icon: <AppstoreFilled />,
-    items: [
-      {
-        title: "Enders Gate Website",
-        description:
-          "Sell your game items to anyone, anywhere, they're finally yours",
-        externalLink: "https://endersgate.one",
-        icon: <ShopOutlined />,
-      },
-      {
-        title: "Enders Gate Discord",
-        description: "Join to our Discord Server!",
-        href: "https://discord.com/invite/nHNkWdE99h",
-        icon: <ShopOutlined />,
-      },
-      {
-        title: "Enders Gate Twitter",
-        description: "Follow us in Twitter!",
-        externalLink: "https://twitter.com/EndersGate",
-        icon: <TwitterOutlined />,
-      },
-      {
-        title: "Harmony Block Explorer",
-        description: "Explore all the transactions in the harmony blockchain",
-        externalLink: "https://explorer.harmony.one/",
-        icon: <WalletOutlined />,
-      },
-      {
-        title: "Harmony Bridge",
-        description:
-          "Trusted chrome wallet extension, store your digital currency and NFTs",
-        externalLink: "https://bridge.harmony.one/busd",
-        icon: <WalletOutlined />,
-      },
-    ],
-  },
-  { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
-  { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
+  { name: "DASHBOARD", link: "/dashboard", icon: <AreaChartOutlined /> },
+  { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
   {
     link: "/profile/inventory",
-    name: "Inventory",
+    name: "INVENTORY",
     icon: <GoldenFilled />,
   },
 ];
@@ -187,45 +147,28 @@ export default function AppLayout({ children }) {
         className={clsx(
           "fixed top-0 z-10",
           "bg-overlay",
-          "w-screen md:px-16 px-8 flex flex-row items-center justify-between shadow-md",
+          "w-[100%] px-8 py-2 flex flex-row items-center justify-between shadow-md",
         )}
       >
-        <div className="flex items-center">
-          <Logo />
-          <div className="md:flex hidden items-center">
-            {navItems.map((item, index) => {
-              return item.menu ? (
-                <React.Fragment key={index}>
-                  <DropdownMenu
-                    icon={item.icon}
-                    title={item.name}
-                    navElementsLinks={item.items}
-                    key={index}
-                  />
-                  <div className="h-full border border-transparent"></div>
-                </React.Fragment>
-              ) : (
-                <>
-                  <NavbarItem
-                    key={index}
-                    name={item.name}
-                    icon={item.icon}
-                    link={item.link}
-                    route={router.asPath}
-                  />
-                </>
-              );
-            })}
-          </div>
-        </div>
-        <div className="md:flex hidden">
-          <Button
-            decoration="fill"
-            size="small"
-            onClick={() => router.push(isAuthenticated ? "/profile" : "/login")}
-          >
-            {isAuthenticated ? "Profile" : "Log In"}
-          </Button>
+        <Logo />
+        <div className="md:flex hidden gap-4 items-center">
+          {navItems.map((item, index) => {
+            return (
+              <>
+                <NavbarItem
+                  key={index}
+                  name={item.name}
+                  link={item.link}
+                  route={router.asPath}
+                />
+              </>
+            );
+          })}
+          <NavbarItem
+            name={isAuthenticated ? "MY ACCOUNT" : "Log In"}
+            link={isAuthenticated ? "/profile" : "/login"}
+            route={router.asPath}
+          />
         </div>
         <div
           className="md:hidden flex"
@@ -249,7 +192,12 @@ export default function AppLayout({ children }) {
           {notAvailable.message}
         </div>
       ) : (
-        <div className="bg-overlay md:px-10 px-6" style={styles.content}>
+        <div
+          className={clsx("bg-overlay", {
+            ["md:px-10 px-6"]: router.asPath !== "/marketplace",
+          })}
+          style={styles.content}
+        >
           {children}
           <Message content={message} open={Boolean(message)} />
         </div>
@@ -279,30 +227,24 @@ export const Message: React.FunctionComponent<{
 
 export const Logo = () => (
   <Link href="/dashboard">
-    <div className="mr-4 md:py-0 py-2 cursor-pointer">
-      <img className="h-12 w-12" src={Icons.logo} alt="logo" />
+    <div className="mr-4 md:py-0 py-2 flex gap-2 items-center cursor-pointer">
+      <img className="h-6" src={Icons.logo5HG} alt="logo" />
+      <img className="h-6 xl:block hidden" src={Icons.logoenders} alt="logo" />
     </div>
   </Link>
 );
 
-export const NavbarItem = ({ name, link, route, icon }) => {
+export const NavbarItem = ({ name, link, route }) => {
   return (
     <Link href={link}>
-      <a
-        className={clsx("md:px-6 px-4 py-6 relative", {
-          [`bg-primary text-white`]: link === route,
-        })}
-        href={link}
-      >
+      <a className={clsx("py-2 relative")} href={link}>
         <div
           className={clsx(
-            { "opacity-50 text-primary": link !== route },
-            { "text-white": link === route },
-            "gap-2 flex items-center",
+            { "opacity-50": link !== route },
+            "gap-2 flex items-center text-white",
           )}
         >
-          <div className="flex items-center text-2xl">{icon}</div>
-          <h3 className={clsx("text-base")}>{name}</h3>
+          <h3 className={clsx("text-md font-[450]")}>{name}</h3>
         </div>
       </a>
     </Link>

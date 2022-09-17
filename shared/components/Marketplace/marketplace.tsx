@@ -2,6 +2,7 @@ import React from "react";
 import {
   AppstoreOutlined,
   CaretDownOutlined,
+  CaretLeftOutlined,
   CaretUpOutlined,
   SearchOutlined,
   UnorderedListOutlined,
@@ -22,6 +23,8 @@ import { useAppDispatch, useAppSelector } from "@redux/store";
 import Link from "next/link";
 import Web3 from "web3";
 import Styles from "./itemCard/styles.module.scss";
+import { Icons } from "@shared/const/Icons";
+import { AddressText } from "../common/specialFields/SpecialFields";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("older_listed");
@@ -30,15 +33,13 @@ const MarketplaceComponent = () => {
   const { nfts } = useAppSelector((state) => state);
   const [page, setPage] = React.useState(0);
   const [search, setSearch] = React.useState("");
-
-  const router = useRouter();
-  const dispatch = useAppDispatch();
+  const [openFilters, setOpenFilters] = React.useState(true);
 
   const orderMapper = {
-    lowest_price: "Lowest Price",
-    highest_price: "Highest Price",
-    recently_listed: "Recently Listed",
-    older_listed: "Older Listed",
+    lowest_price: "Price: Low to High",
+    highest_price: "Price: High to Low",
+    recently_listed: "Recent to Older",
+    older_listed: "Older to Recent",
   };
 
   React.useEffect(() => {
@@ -190,9 +191,7 @@ const MarketplaceComponent = () => {
     if (filter.guardian && id >= 54) {
       passed = true;
     }
-    // if (filter.avatar) {
 
-    // }
     if (
       filter.common &&
       cards[id]?.properties?.rarity?.value.toLowerCase() === "common"
@@ -267,181 +266,246 @@ const MarketplaceComponent = () => {
   };
 
   return (
-    <div className="w-full flex xl:flex-row flex-col md:px-8 px-4 pt-36 pb-10 min-h-screen">
-      <FiltersBoard
-        filter={filter}
-        setFilter={setFilter}
-        setPage={setPage}
-        type={type}
-        setType={setType}
-      />
-      <div className="xl:w-2/3 xl:mt-0 mt-6 flex flex-col pb-10">
-        <div className="border flex items-center text-md justify-center border-primary rounded-xl px-4 py-2 md:w-64 w-40 ml-10">
-          <div className="text-white text-xl flex items-center justify-center">
-            <SearchOutlined />
-          </div>
+    <div className="flex flex-col min-h-screen pt-36 pb-10 gap-8 w-full">
+      <div className="w-full flex justify-between items-center sm:flex-row flex-col gap-10 lg:px-20 px-4">
+        <div
+          className="flex justify-center items-center cursor-pointer rounded-md border border-overlay-border text-primary-disabled bg-overlay-2 p-3"
+          onClick={() => setOpenFilters((prev) => !prev)}
+        >
+          {openFilters ? <CaretLeftOutlined /> : <CaretDownOutlined />}
+          <Typography type="subTitle" className="ml-2 text-lg">
+            Filters
+          </Typography>
+        </div>
+        <div className="border flex items-center text-lg justify-center border-overlay-border bg-overlay-2 rounded-xl w-full">
           <input
             type="text"
-            className="ml-2 text-white bg-transparent w-full"
+            className="text-white w-full py-3 px-4 rounded-xl bg-overlay border-r border-overlay-border"
+            placeholder="Search"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
             }}
           />
-        </div>
-        <div>
-          <div className="w-full flex justify-between items-center sm:flex-row flex-col">
-            <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">
-              {
-                sales
-                  ?.filter((sale, i) => passFilter(sale.nftId))
-                  .filter((sale) => {
-                    return (
-                      Math.floor(new Date().getTime() / 1000) <=
-                      parseInt(sale?.duration) + parseInt(sale?.startedAt)
-                    );
-                  }).length
-              }{" "}
-              Sales
-            </h3>
-            <div className="flex">
-              <DropdownActions
-                title={orderMapper[currentOrder]}
-                actions={[
-                  {
-                    label: "Lowest Price",
-                    onClick: () => setCurrentOrder("lowest_price"),
-                  },
-                  {
-                    label: "Highest Price",
-                    onClick: () => setCurrentOrder("highest_price"),
-                  },
-                  {
-                    label: "Recently Listed",
-                    onClick: () => setCurrentOrder("recently_listed"),
-                  },
-                  {
-                    label: "Older Listed",
-                    onClick: () => setCurrentOrder("older_listed"),
-                  },
-                ]}
-              />
-
-              {/* <div className=" border-2 border rounded-md overflow-hidden border-primary flex justify-center items-center text-primary h-10 ml-4">
-                <div className="flex flex-1 justify-center items-center text-primary h-10 border-r-2 border-primary p-2 cursor-pointer hover:bg-primary hover:text-secondary">
-                  <AppstoreOutlined />
-                </div>
-                <div className="flex flex-1 justify-center items-center text-primary h-10 p-2 cursor-pointer hover:bg-primary hover:text-secondary">
-                  <UnorderedListOutlined />
-                </div>
-              </div>*/}
-            </div>
+          <div className="text-white text-xl flex items-center justify-center px-2">
+            <SearchOutlined />
           </div>
-          <div className="flex flex-wrap w-full justify-center items-center relative">
-            {sales
-              ?.filter((sale, i) => passFilter(sale.nftId))
-              .filter((sale) => {
-                return (
-                  Math.floor(new Date().getTime() / 1000) <=
-                  parseInt(sale?.duration) + parseInt(sale?.startedAt)
-                );
-              })
-              .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
-              .map((a, id) => {
-                console.log(a, "sale");
-                return type !== "packs" ? (
-                  <NftCard
-                    classes={{ root: "m-4 cursor-pointer" }}
-                    id={a.nftId}
-                    transactionId={a.id}
-                    icon={cards[a.nftId].properties.image.value}
-                    name={cards[a.nftId].properties.name.value}
-                    byId={false}
-                    price={a.price}
-                  />
-                ) : (
-                  <Link href={`/NFTDetailSale/${a.id}`}>
-                    <div
-                      className={clsx(
-                        "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer m-4 cursor-pointer",
-                        Styles.cardHover,
-                      )}
-                    >
-                      <div className="w-full flex flex-col text-xs gap-1">
-                        <div className="w-full flex justify-between">
-                          <span>Pack #{a.nftId}</span>
-                          <span>#{a.id}</span>
-                        </div>
-                      </div>
-                      <div className="w-full h-36 flex justify-center items-center my-4">
+        </div>
+        <div className="flex">
+          <DropdownActions
+            title={orderMapper[currentOrder]}
+            actions={[
+              {
+                label: "Price: Low to High",
+                onClick: () => setCurrentOrder("lowest_price"),
+              },
+              {
+                label: "Price: High to Low",
+                onClick: () => setCurrentOrder("highest_price"),
+              },
+              {
+                label: "Recent to Older",
+                onClick: () => setCurrentOrder("recently_listed"),
+              },
+              {
+                label: "Older to Recent",
+                onClick: () => setCurrentOrder("older_listed"),
+              },
+            ]}
+          />
+        </div>
+      </div>
+      <div className="w-full h-[1px] bg-overlay-border"></div>
+      <div className="w-full flex xl:flex-row flex-col lg:px-20 px-4">
+        <div
+          className={clsx(
+            { ["flex xl:w-auto w-full"]: openFilters },
+            { ["hidden"]: !openFilters },
+          )}
+        >
+          <FiltersBoard
+            filter={filter}
+            setFilter={setFilter}
+            setPage={setPage}
+            type={type}
+            setType={setType}
+          />
+        </div>
+        <div className="w-full xl:mt-0 mt-6 flex flex-col pb-10">
+          <div>
+            <div className="flex flex-wrap w-full justify-center items-center relative">
+              {sales
+                ?.filter((sale, i) => passFilter(sale.nftId))
+                .filter((sale) => {
+                  return (
+                    Math.floor(new Date().getTime() / 1000) <=
+                    parseInt(sale?.duration) + parseInt(sale?.startedAt)
+                  );
+                })
+                .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
+                .map((a, id) => {
+                  console.log(a, "sale");
+                  return type !== "packs" ? (
+                    <NftCard
+                      classes={{ root: "m-4 cursor-pointer" }}
+                      id={a.nftId}
+                      transactionId={a.id}
+                      seller={a.seller}
+                      icon={cards[a.nftId].properties.image.value}
+                      name={cards[a.nftId].properties.name.value}
+                      byId={false}
+                      price={a.price}
+                    />
+                  ) : (
+                    <Link href={`/NFTDetailSale/${a.id}`}>
+                      <div
+                        className={clsx(
+                          "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 m-4 cursor-pointer",
+                          Styles.cardHover,
+                        )}
+                      >
                         <img
                           src={packs[a.nftId]?.properties?.image?.value}
-                          className={"h-36"}
+                          className="absolute top-[-40%] bottom-0 left-[-5%] right-0 margin-auto opacity-50 min-w-[110%]"
+                          alt=""
                         />
+                        <div className="flex flex-col relative">
+                          <div className="w-full flex flex-col text-xs gap-1">
+                            <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
+                              <span>
+                                Pack #
+                                {a.nftId !== undefined ? a.nftId : "12345"}
+                              </span>
+                              {<span>#{a.id}</span>}
+                            </div>
+                          </div>
+                          <div className="w-full h-72 flex justify-center items-center my-6">
+                            <img
+                              src={
+                                packs[a.nftId]?.properties?.image?.value ||
+                                Icons.logo
+                              }
+                              className={
+                                packs[a.nftId]?.properties?.image?.value
+                                  ? "h-64"
+                                  : "h-24"
+                              }
+                            />
+                          </div>
+                          <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
+                            <div className="flex text-lg font-bold text-left py-2 ">
+                              <div className="w-40 relative">
+                                <img
+                                  src="icons/card_logo.svg"
+                                  className="w-40 absolute top-[-60px]"
+                                  alt=""
+                                />
+                              </div>
+                              <div className="w-full flex flex-col">
+                                <span className="uppercase text-white text-lg">
+                                  {packs[a.nftId]?.properties?.name?.value ||
+                                    "Enders Gate"}
+                                </span>
+                                <span
+                                  className="text-[12px] text-gray-500 font-medium"
+                                  style={{ lineHeight: "10px" }}
+                                >
+                                  Owner:{" "}
+                                  {<AddressText text={a.seller} /> || "Owner"}
+                                </span>
+                              </div>
+                              <img
+                                src={Icons.logo}
+                                className="w-10 h-10"
+                                alt=""
+                              />
+                            </div>
+                            {a.price && (
+                              <div
+                                className="flex justify-between text-md text-white "
+                                style={{ lineHeight: "18px" }}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <img
+                                    src="/icons/HARMONY.svg"
+                                    className="h-8 w-8"
+                                    alt=""
+                                  />
+                                  <div className="flex flex-col text-md font-medium">
+                                    <p>Price:</p>
+                                    <span>
+                                      {Web3.utils.fromWei(a.price, "ether")} ONE
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="flex flex-col text-md font-medium">
+                                  <p>Highest Bid:</p>
+                                  <span>
+                                    {Web3.utils.fromWei(a.price, "ether")} ONE
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex flex-col text-sm text-center">
-                        <span>{a.name}</span>
-                      </div>
-                      <div className="flex flex-col text-sm font-bold text-primary text-center">
-                        <span>{Web3.utils.fromWei(a.price, "ether")} ONE</span>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            {sales
-              ?.filter((sale, i) => passFilter(sale.nftId))
-              .filter((sale) => {
-                return (
-                  Math.floor(new Date().getTime() / 1000) <=
-                  parseInt(sale?.duration) + parseInt(sale?.startedAt)
-                );
-              }).length > 0 && (
-              <div className="flex w-full items-center justify-center gap-2">
-                <div
-                  className="rounded-md bg-secondary text-white p-3 cursor-pointer"
-                  onClick={() => {
-                    if (page > 0) {
-                      setPage((prev) => {
-                        return prev - 1;
-                      });
-                    }
-                  }}
-                >
-                  {"<"}
+                    </Link>
+                  );
+                })}
+              {sales
+                ?.filter((sale, i) => passFilter(sale.nftId))
+                .filter((sale) => {
+                  return (
+                    Math.floor(new Date().getTime() / 1000) <=
+                    parseInt(sale?.duration) + parseInt(sale?.startedAt)
+                  );
+                }).length > 12 && (
+                <div className="flex w-full items-center justify-center gap-2">
+                  <div
+                    className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                    onClick={() => {
+                      if (page > 0) {
+                        setPage((prev) => {
+                          return prev - 1;
+                        });
+                      }
+                    }}
+                  >
+                    {"<"}
+                  </div>
+                  <div className="p-4 rounded-md bg-overlay border border-primary text-primary">
+                    {page + 1}
+                  </div>
+                  <div
+                    className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                    onClick={() => {
+                      if (
+                        page <
+                        Math.floor(
+                          (sales
+                            .filter((sale, i) => passFilter(sale.nftId))
+                            .filter((sale) => {
+                              return (
+                                Math.floor(new Date().getTime() / 1000) <=
+                                parseInt(sale?.duration) +
+                                  parseInt(sale?.startedAt)
+                              );
+                            }).length -
+                            1) /
+                            12,
+                        )
+                      ) {
+                        setPage((prev) => {
+                          return prev + 1;
+                        });
+                      }
+                    }}
+                  >
+                    {">"}
+                  </div>
                 </div>
-                <div className="p-4 rounded-md bg-overlay border border-primary text-primary">
-                  {page + 1}
-                </div>
-                <div
-                  className="rounded-md bg-secondary text-white p-3 cursor-pointer"
-                  onClick={() => {
-                    if (
-                      page <
-                      Math.floor(
-                        (sales
-                          .filter((sale, i) => passFilter(sale.nftId))
-                          .filter((sale) => {
-                            return (
-                              Math.floor(new Date().getTime() / 1000) <=
-                              parseInt(sale?.duration) +
-                                parseInt(sale?.startedAt)
-                            );
-                          }).length -
-                          1) /
-                          12,
-                      )
-                    ) {
-                      setPage((prev) => {
-                        return prev + 1;
-                      });
-                    }
-                  }}
-                >
-                  {">"}
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -12,9 +12,10 @@ import { getAddresses, getContractWebSocket } from "@shared/web3";
 import contracts from "@shared/contracts";
 
 const navItems = [
-  { title: "Last 24h", value: "last_24h" },
   { title: "7 days", value: "last_7d" },
   { title: "30 days", value: "last_30d" },
+  { title: "90 days", value: "last_90d" },
+  { title: "All Time", value: "forever" },
 ];
 
 const TransactionsBoard: React.FC<any> = ({
@@ -27,7 +28,7 @@ const TransactionsBoard: React.FC<any> = ({
 }) => {
   const platformItems = [
     {
-      title: "TOTAL SALE",
+      title: "Items",
       value: totalSale,
       iconHtml: <PieChartFilled />,
       css: {
@@ -37,7 +38,7 @@ const TransactionsBoard: React.FC<any> = ({
       },
     },
     {
-      title: "TOTAL VOLUME",
+      title: "Volume",
       value: totalVolume.toString() + " ONE",
       // value2: "$1,57M",
       iconHtml: <LineChartOutlined />,
@@ -48,7 +49,7 @@ const TransactionsBoard: React.FC<any> = ({
       },
     },
     {
-      title: "CARDS SOLD",
+      title: "Cards Sold",
       value: cardsSold,
       icon: Icons.cards,
       css: {
@@ -58,7 +59,7 @@ const TransactionsBoard: React.FC<any> = ({
       },
     },
     {
-      title: "PACKS SOLD",
+      title: "Packs Sold",
       value: packsSold,
       icon: Icons.packs,
       css: {
@@ -90,7 +91,7 @@ const TransactionsBoard: React.FC<any> = ({
                     {
                       "text-primary": columnSelected !== item.value,
                     },
-                    "px-6 py-4"
+                    "px-6 py-4",
                   )}
                 >
                   {item.title}
@@ -128,22 +129,13 @@ export const PlatformMovements = ({
   iconHtml,
 }) => {
   return (
-    <div className="flex xl:flex-row flex-col items-center">
-      <div
-        className="flex items-center justify-center p-4 rounded-full h-max w-max text-3xl text-white"
-        style={css}
-      >
-        {iconHtml && iconHtml}
-        {icon && <img src={icon} className="h-8 w-8" alt="" />}
-      </div>
-      <div className="xl:pl-4 xl:block flex flex-col items-center xl:mt-0 mt-4">
-        <Typography className="text-primary text-center" type="label">
-          {label}
-        </Typography>
-        <Typography type="subTitle" className="text-white text-center">
-          {value} {value2}
-        </Typography>
-      </div>
+    <div className="xl:pl-4 xl:block flex flex-col items-center justify-center xl:mt-0 mt-4">
+      <p className="text-[12px] text-center" style={{ color: "#47E439" }}>
+        {label}
+      </p>
+      <p className="text-white text-center font-bold text-xl">
+        {value} {value2}
+      </p>
     </div>
   );
 };

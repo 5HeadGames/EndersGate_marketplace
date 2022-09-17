@@ -1,7 +1,7 @@
 import React from "react";
 import NFTTokenIds from "../shared/components/NFTTokenIds";
 import "antd/dist/antd.css";
-import {GetServerSideProps} from "next";
+import { GetServerSideProps } from "next";
 
 const App = () => {
   const [inputValue, setInputValue] = React.useState("explore");

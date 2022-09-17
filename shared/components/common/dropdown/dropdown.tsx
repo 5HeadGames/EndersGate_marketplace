@@ -6,7 +6,7 @@ import { Typography } from "../typography";
 import { Icons } from "@shared/const/Icons";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 
-export const Dropdown: React.FC<any> = ({ title, children }) => {
+export const Dropdown: React.FC<any> = ({ classTitle, title, children }) => {
   return (
     <div>
       <Menu as="div" className="relative inline-block text-left">
@@ -16,11 +16,16 @@ export const Dropdown: React.FC<any> = ({ title, children }) => {
             <>
               <div>
                 <Menu.Button className="inline-flex justify-center w-full font-medium bg-transparent focus:outline-none">
-                  <div className="flex justify-center items-center cursor-pointer rounded-md border-2 border-primary text-primary p-2">
-                    {open ? <CaretUpOutlined /> : <CaretDownOutlined />}
-                    <Typography type="subTitle" className="ml-2">
+                  <div
+                    className={clsx(
+                      "flex justify-center items-center cursor-pointer rounded-md",
+                      classTitle,
+                    )}
+                  >
+                    <Typography type="subTitle" className="mr-1">
                       {title}
                     </Typography>
+                    {open ? <CaretUpOutlined /> : <CaretDownOutlined />}
                   </div>
                 </Menu.Button>
               </div>
@@ -34,7 +39,7 @@ export const Dropdown: React.FC<any> = ({ title, children }) => {
                 leaveTo="transform opacity-0 scale-95"
               >
                 <Menu.Items className="absolute top-0 right-3 z-20 md:mt-7 origin-top-right bg-overlay divide-y shadow-lg rounded-[6px] focus:outline-none">
-                  <div className="py-2">{children}</div>
+                  <div>{children}</div>
                 </Menu.Items>
               </Transition>
             </>

@@ -1,9 +1,9 @@
-import {Typography} from "@shared/components/common/typography";
+import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
-import {HeartOutlined, HeartFilled} from '@ant-design/icons'
-import {CollapseMenu} from "@shared/components/common/collapseMenu/collapseMenu";
-import {SlideButton} from "@shared/components/common/slideButton/slideButton";
+import { HeartOutlined, HeartFilled } from "@ant-design/icons";
+import { CollapseMenu } from "@shared/components/common/collapseMenu/collapseMenu";
+import { SlideButton } from "@shared/components/common/slideButton/slideButton";
 
 const FiltersBoard = ({ filter, setFilter, type, setType, setPage }) => {
   const handleChange = (title) => {
@@ -217,86 +217,90 @@ const FiltersBoard = ({ filter, setFilter, type, setType, setPage }) => {
   }, [filter]);
 
   return (
-    <div className="xl:w-1/3 w-full flex flex-col">
-      <div className="flex rounded-md border-2 border-primary mb-4 sm:flex-row flex-col">
-        {["trading_cards", "packs"].map((nftType, index) => (
-          <div
-            className={clsx(
-              {
-                "bg-primary text-white": type === nftType,
-              },
-              "cursor-pointer px-0 py-2 flex-1",
-              index !== 2 &&
-                "sm:border-r-2 sm:border-b-0 border-b-2 border-primary"
-            )}
-            onClick={() => setType(nftType)}
-          >
-            <Typography
-              type="subTitle"
-              className={clsx(
-                "text-center",
-                {
-                  "text-white": type === nftType,
-                },
-                {
-                  "text-primary": type !== nftType,
-                }
-              )}
-            >
-              {nftType === "trading_cards"
-                ? "Trading cards"
-                : nftType === "packs"
-                ? "Packs"
-                : "Comics"}
-            </Typography>
+    <div className="xl:w-80 w-full flex flex-col shrink-0">
+      <div className="flex rounded-md bg-overlay-2 border border-overlay-border xl:pt-1 xl:px-6 p-4 xl:pb-16 w-full">
+        <div className="flex xl:items-center gap-2 xl:flex-col gap-x-4 flex-row flex-wrap w-full">
+          <div className="flex flex-col gap-2 w-full">
+            <h2 className="text-lg font-bold text-white">NFT Type</h2>
+            {["trading_cards", "packs"].map((nftType, index) => (
+              <div
+                onClick={() => setType(nftType)}
+                className={clsx(
+                  "flex items-center justify-between  w-full  cursor-pointer",
+                  "rounded-md",
+                  "text-white text-lg",
+                )}
+              >
+                <p
+                  className={clsx(
+                    {
+                      ["text-gray-300"]: nftType !== type,
+                    },
+                    {
+                      ["text-white"]: type === nftType,
+                    },
+                  )}
+                >
+                  {nftType === "trading_cards"
+                    ? "Trading cards"
+                    : nftType === "packs"
+                    ? "Packs"
+                    : "Comics"}
+                </p>
+                <div
+                  className={clsx(
+                    { ["bg-primary"]: type === nftType },
+                    { ["bg-gray-400"]: type !== nftType },
+                    "rounded-full w-6 h-6 border border-gray-800",
+                  )}
+                ></div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="flex flex-col rounded-md bg-secondary p-6 pb-16">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center">
-            <Typography className="text-white font-bold" type="subTitle">
-              Filter
-            </Typography>
-            <Typography
-              className="text-primary ml-2 cursor-pointer"
-              onClick={() => Reset()}
-              type="caption"
-            >
-              Reset
-            </Typography>
-          </div>
-          <HeartOutlined className="text-primary cursor-pointer" />
-        </div>
-        <div className="flex flex-col gap-4 xl:w-80">
           {filterItems.map(
             ({ title, subItems /*, slideButton, value, onClick */ }, index) => (
-              <CollapseMenu key={"filter-" + index} title={title} defaultOpen>
-                <div className="flex flex-wrap gap-2 bg-secondary">
-                  {/*slideButton ? (
-                    <SlideButton value={filter[value]} onClick={onClick} />
-                  ) : (*/}
-                  {subItems.map(
-                    (subItem, indexItem) => {
-                      return (
-                        <div
-                          onClick={subItem.onClick}
+              <div className="flex flex-col items-center gap-2 w-full">
+                <h2 className="text-lg font-bold text-white xl:mt-3 w-full">
+                  {title}
+                </h2>
+
+                {subItems.map(
+                  (subItem, indexItem) => {
+                    return (
+                      <div
+                        onClick={subItem.onClick}
+                        className={clsx(
+                          "flex items-center justify-between w-full  cursor-pointer",
+                          "rounded-md",
+                          "text-white text-lg",
+                        )}
+                      >
+                        <p
                           className={clsx(
-                            "flex items-center justify-center px-4 py-2 bg-overlay  cursor-pointer",
-                            "rounded-md",
-                            "text-white",
-                            { "bg-primary": filter[`${subItem.value}`] }
+                            {
+                              ["text-gray-300"]: !filter[`${subItem.value}`],
+                            },
+                            {
+                              ["text-white"]: filter[`${subItem.value}`],
+                            },
                           )}
                         >
                           {subItem.title}
-                        </div>
-                      );
-                    }
-                    // })
-                  )}
-                </div>
-              </CollapseMenu>
-            )
+                        </p>
+                        <div
+                          className={clsx(
+                            { ["bg-primary"]: filter[`${subItem.value}`] },
+                            { ["bg-gray-400"]: !filter[`${subItem.value}`] },
+                            "rounded-full w-6 h-6 border border-gray-800",
+                          )}
+                        ></div>
+                      </div>
+                    );
+                  },
+                  // })
+                )}
+              </div>
+            ),
           )}
         </div>
       </div>
