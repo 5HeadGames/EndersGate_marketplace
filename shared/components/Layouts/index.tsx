@@ -1,17 +1,17 @@
 import React from "react";
 import Link from "next/link";
-import {Layout} from "antd";
-import {useMoralis} from "react-moralis";
+import { Layout } from "antd";
+import { useMoralis } from "react-moralis";
 
-import {Icons} from "@shared/const/Icons";
-import {useRouter} from "next/dist/client/router";
+import { Icons } from "@shared/const/Icons";
+import { useRouter } from "next/dist/client/router";
 import clsx from "clsx";
-import {Button} from "../common/button/button";
-import {DropdownMenu} from "../common/dropdownMenu/dropdownMenu";
-import {MenuIcon} from "@heroicons/react/outline";
-import {SidebarMobile} from "./sidebars/mobile";
-import {useAppSelector, useAppDispatch} from "redux/store";
-import {onGetAssets, onLoadSales} from "redux/actions";
+import { Button } from "../common/button/button";
+import { DropdownMenu } from "../common/dropdownMenu/dropdownMenu";
+import { MenuIcon } from "@heroicons/react/outline";
+import { SidebarMobile } from "./sidebars/mobile";
+import { useAppSelector, useAppDispatch } from "redux/store";
+import { onGetAssets, onLoadSales } from "redux/actions";
 import {
   AppstoreFilled,
   AreaChartOutlined,
@@ -21,7 +21,12 @@ import {
   WalletOutlined,
 } from "@ant-design/icons";
 
-import {getAddresses, getContract, getWeb3, loginMetamaskWallet} from "@shared/web3";
+import {
+  getAddresses,
+  getContract,
+  getWeb3,
+  loginMetamaskWallet,
+} from "@shared/web3";
 
 const styles = {
   content: {
@@ -89,7 +94,7 @@ const navItems = [
   },
 ];
 
-export default function AppLayout({children}) {
+export default function AppLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
   const [isExecuted, setIsExecuted] = React.useState(false);
@@ -97,7 +102,7 @@ export default function AppLayout({children}) {
     message: "",
     value: false,
   });
-  const {blur, message} = useAppSelector((state) => ({
+  const { blur, message } = useAppSelector((state) => ({
     ...state.layout,
   }));
   const router = useRouter();
@@ -108,9 +113,9 @@ export default function AppLayout({children}) {
     // window.location.reload();
     const web3 = await getWeb3();
     const networkId = await web3.eth.net.getId();
-    if (networkId != 1666700000 && networkId != 1666600000) {
+    if (networkId != 1666600000 && networkId != 1666600000) {
       setNotAvailable({
-        message: "Change your network to harmony testnet please",
+        message: "Change your network to harmony mainnet please",
         value: true,
       });
     } else {
@@ -182,7 +187,7 @@ export default function AppLayout({children}) {
         className={clsx(
           "fixed top-0 z-10",
           "bg-overlay",
-          "w-screen md:px-16 px-8 flex flex-row items-center justify-between shadow-md"
+          "w-screen md:px-16 px-8 flex flex-row items-center justify-between shadow-md",
         )}
       >
         <div className="flex items-center">
@@ -257,14 +262,14 @@ export const Message: React.FunctionComponent<{
   content: string;
   open: boolean;
 }> = (props) => {
-  const {content, open} = props;
+  const { content, open } = props;
 
   return (
     <div
       className={clsx(
         `absolute bottom-3.5 left-3.5 bg-purple-300 px-10 py-4 rounded-md`,
         "ease-out duration-300",
-        open ? "scale-100" : "scale-0"
+        open ? "scale-100" : "scale-0",
       )}
     >
       {content}
@@ -280,7 +285,7 @@ export const Logo = () => (
   </Link>
 );
 
-export const NavbarItem = ({name, link, route, icon}) => {
+export const NavbarItem = ({ name, link, route, icon }) => {
   return (
     <Link href={link}>
       <a
@@ -293,7 +298,7 @@ export const NavbarItem = ({name, link, route, icon}) => {
           className={clsx(
             { "opacity-50 text-primary": link !== route },
             { "text-white": link === route },
-            "gap-2 flex items-center"
+            "gap-2 flex items-center",
           )}
         >
           <div className="flex items-center text-2xl">{icon}</div>

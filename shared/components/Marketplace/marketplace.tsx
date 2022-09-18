@@ -92,15 +92,15 @@ const MarketplaceComponent = () => {
         case "trading_cards":
           setSales(
             cardSalesCreated.sort(
-              (a, b) => parseFloat(a.price) - parseFloat(b.price)
-            )
+              (a, b) => parseFloat(a.price) - parseFloat(b.price),
+            ),
           );
           break;
         case "packs":
           setSales(
             packSalesCreated.sort(
-              (a, b) => parseFloat(a.price) - parseFloat(b.price)
-            )
+              (a, b) => parseFloat(a.price) - parseFloat(b.price),
+            ),
           );
           break;
         default:
@@ -112,15 +112,15 @@ const MarketplaceComponent = () => {
         case "trading_cards":
           setSales(
             cardSalesCreated.sort(
-              (a, b) => parseFloat(b.price) - parseFloat(a.price)
-            )
+              (a, b) => parseFloat(b.price) - parseFloat(a.price),
+            ),
           );
           break;
         case "packs":
           setSales(
             packSalesCreated.sort(
-              (a, b) => parseFloat(b.price) - parseFloat(a.price)
-            )
+              (a, b) => parseFloat(b.price) - parseFloat(a.price),
+            ),
           );
           break;
         default:
@@ -292,7 +292,17 @@ const MarketplaceComponent = () => {
         <div>
           <div className="w-full flex justify-between items-center sm:flex-row flex-col">
             <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">
-              {sales?.length} Sales
+              {
+                sales
+                  ?.filter((sale, i) => passFilter(sale.nftId))
+                  .filter((sale) => {
+                    return (
+                      Math.floor(new Date().getTime() / 1000) <=
+                      parseInt(sale?.duration) + parseInt(sale?.startedAt)
+                    );
+                  }).length
+              }{" "}
+              Sales
             </h3>
             <div className="flex">
               <DropdownActions
@@ -330,9 +340,15 @@ const MarketplaceComponent = () => {
           <div className="flex flex-wrap w-full justify-center items-center relative">
             {sales
               ?.filter((sale, i) => passFilter(sale.nftId))
+              .filter((sale) => {
+                return (
+                  Math.floor(new Date().getTime() / 1000) <=
+                  parseInt(sale?.duration) + parseInt(sale?.startedAt)
+                );
+              })
               .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
               .map((a, id) => {
-                console.log(a);
+                console.log(a, "sale");
                 return type !== "packs" ? (
                   <NftCard
                     classes={{ root: "m-4 cursor-pointer" }}
@@ -348,7 +364,7 @@ const MarketplaceComponent = () => {
                     <div
                       className={clsx(
                         "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer m-4 cursor-pointer",
-                        Styles.cardHover
+                        Styles.cardHover,
                       )}
                     >
                       <div className="w-full flex flex-col text-xs gap-1">
@@ -373,7 +389,14 @@ const MarketplaceComponent = () => {
                   </Link>
                 );
               })}
-            {sales?.length > 0 && (
+            {sales
+              ?.filter((sale, i) => passFilter(sale.nftId))
+              .filter((sale) => {
+                return (
+                  Math.floor(new Date().getTime() / 1000) <=
+                  parseInt(sale?.duration) + parseInt(sale?.startedAt)
+                );
+              }).length > 0 && (
               <div className="flex w-full items-center justify-center gap-2">
                 <div
                   className="rounded-md bg-secondary text-white p-3 cursor-pointer"
@@ -396,10 +419,17 @@ const MarketplaceComponent = () => {
                     if (
                       page <
                       Math.floor(
-                        (sales.filter((sale, i) => passFilter(sale.nftId))
-                          .length -
+                        (sales
+                          .filter((sale, i) => passFilter(sale.nftId))
+                          .filter((sale) => {
+                            return (
+                              Math.floor(new Date().getTime() / 1000) <=
+                              parseInt(sale?.duration) +
+                                parseInt(sale?.startedAt)
+                            );
+                          }).length -
                           1) /
-                          12
+                          12,
                       )
                     ) {
                       setPage((prev) => {

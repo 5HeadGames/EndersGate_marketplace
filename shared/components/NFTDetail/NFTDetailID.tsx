@@ -1,14 +1,14 @@
 import React from "react";
-import {LeftOutlined, LoadingOutlined} from "@ant-design/icons";
-import {useRouter} from "next/router";
+import { LeftOutlined, LoadingOutlined } from "@ant-design/icons";
+import { useRouter } from "next/router";
 import Web3 from "web3";
-import {useMoralis} from "react-moralis";
+import { useMoralis } from "react-moralis";
 
-import {useAppDispatch, useAppSelector} from "redux/store";
-import {onSellERC1155, onLoadSales, onGetAssets} from "@redux/actions";
-import {Button} from "../common/button/button";
-import {Icons} from "@shared/const/Icons";
-import {getAddresses} from "@shared/web3";
+import { useAppDispatch, useAppSelector } from "redux/store";
+import { onSellERC1155, onLoadSales, onGetAssets } from "@redux/actions";
+import { Button } from "../common/button/button";
+import { Icons } from "@shared/const/Icons";
+import { getAddresses, getContractCustom } from "@shared/web3";
 import { Typography } from "../common/typography";
 import { useModal } from "@shared/hooks/modal";
 import { approveERC1155 } from "@shared/web3";
@@ -28,7 +28,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const cards = convertArrayCards();
 
   const [message, setMessage] = React.useState(
-    "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
+    "You will have to make two transactions(if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
   );
 
   const [sellNFTData, setSellNFTData] = React.useState({
@@ -54,15 +54,28 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     }
     try {
       const tokenId = id;
-      setMessage("Allowing us to sell your tokens");
-      const { endersGate } = getAddresses();
-      await approveERC1155({
-        provider: web3.provider,
-        from: user.get("ethAddress"),
-        to: marketplace,
-        address: endersGate,
-      });
+      const { endersGate, marketplace } = getAddresses();
+      const endersgateInstance = getContractCustom(
+        "ERC1155",
+        endersGate,
+        web3.provider,
+      );
+
+      const isApprovedForAll = await endersgateInstance.methods
+        .isApprovedForAll(user.get("ethAddress"), marketplace)
+        .call();
+      console.log(isApprovedForAll, "APPROVED");
+      if (isApprovedForAll == false) {
+        setMessage("Allowing us to sell your tokens");
+        await approveERC1155({
+          provider: web3.provider,
+          from: user.get("ethAddress"),
+          to: marketplace,
+          address: endersGate,
+        });
+      }
       setMessage("Listing your tokens");
+      console.log(":(");
       await dispatch(
         onSellERC1155({
           address: endersGate,
@@ -72,15 +85,18 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           tokenId: tokenId,
           duration: sellNFTData.duration.toString(),
           moralis: Moralis,
-        })
+        }),
       );
+      console.log(":(x2");
     } catch (err) {
       console.log({ err });
     }
+    console.log(":(");
+
     dispatch(onLoadSales());
     dispatch(onGetAssets(user.get("ethAddress")));
     setMessage(
-      "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
+      "You will have to make two transactions(if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
     );
     hide();
     setSellNFTData({
@@ -101,12 +117,15 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                 <div className={clsx("h-auto w-auto")}>
                   <img
                     src={cards[id]?.properties.image?.value}
-                    className={clsx(Styles.animatedImage,{
-                      "rounded-full": cards[id].typeCard == "avatar",
-                    },
-                    {
-                      "rounded-md": cards[id].typeCard != "avatar",
-                    })}
+                    className={clsx(
+                      Styles.animatedImage,
+                      {
+                        "rounded-full": cards[id].typeCard == "avatar",
+                      },
+                      {
+                        "rounded-md": cards[id].typeCard != "avatar",
+                      },
+                    )}
                     alt=""
                   />
                 </div>
@@ -173,7 +192,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                 <div className="py-6">
                   <div className="text-primary text-sm text-center flex flex-col items-center justify-center">
                     {message ===
-                    "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
+                    "You will have to make two transactions(if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
                       message
                     ) : (
                       <>
@@ -181,9 +200,10 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                           {message} <LoadingOutlined />
                         </span>
                         <span className="flex gap-4 mt-6 items-center justify-center">
-                          {message === "Listing your tokens"
-                            ? "Transaction 2/2"
-                            : "Transaction 1/2"}
+                          {message === "Listing your tokens" &&
+                            "Last Transaction"}
+                          {message === "Allowing us to sell your tokens" &&
+                            "Transaction 1/2"}
                         </span>
                       </>
                     )}
@@ -267,7 +287,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       },
                       {
                         "rounded-md": cards[id].typeCard != "avatar",
-                      }
+                      },
                     )}
                     alt=""
                   />
