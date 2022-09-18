@@ -1,14 +1,14 @@
 import React from "react";
-import {LeftOutlined, LoadingOutlined} from "@ant-design/icons";
-import {useRouter} from "next/router";
+import { LeftOutlined, LoadingOutlined } from "@ant-design/icons";
+import { useRouter } from "next/router";
 import Web3 from "web3";
-import {useMoralis} from "react-moralis";
+import { useMoralis } from "react-moralis";
 
-import {useAppDispatch, useAppSelector} from "redux/store";
-import {onSellERC1155, onLoadSales, onGetAssets} from "@redux/actions";
-import {Button} from "../common/button/button";
-import {Icons} from "@shared/const/Icons";
-import {getAddresses} from "@shared/web3";
+import { useAppDispatch, useAppSelector } from "redux/store";
+import { onSellERC1155, onLoadSales, onGetAssets } from "@redux/actions";
+import { Button } from "../common/button/button";
+import { Icons } from "@shared/const/Icons";
+import { getAddresses } from "@shared/web3";
 import { Typography } from "../common/typography";
 import packs from "../../packs.json";
 import { useModal } from "@shared/hooks/modal";
@@ -28,7 +28,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const cards = convertArrayCards();
 
   const [message, setMessage] = React.useState(
-    "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
+    "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens",
   );
 
   const [sellNFTData, setSellNFTData] = React.useState({
@@ -72,7 +72,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           tokenId: tokenId,
           duration: sellNFTData.duration.toString(),
           moralis: Moralis,
-        })
+        }),
       );
     } catch (err) {
       console.log({ err });
@@ -82,7 +82,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     dispatch(onGetAssets(user.get("ethAddress")));
 
     setMessage(
-      "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens"
+      "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens",
     );
     hide();
     setSellNFTData({
