@@ -12,7 +12,7 @@ export const SlideButton = ({ value, onClick }) => {
         className={clsx(
           "w-20 flex justify-center rounded-l-md py-3",
           { [`${Styles.onActive}`]: value },
-          { [Styles.onUnactive]: !value }
+          { [Styles.onUnactive]: !value },
         )}
       >
         On
@@ -21,7 +21,7 @@ export const SlideButton = ({ value, onClick }) => {
         className={clsx(
           "w-20 flex justify-center rounded-r-md py-3",
           { [Styles.offActive]: !value },
-          { [Styles.offUnactive]: value }
+          { [Styles.offUnactive]: value },
         )}
       >
         Off

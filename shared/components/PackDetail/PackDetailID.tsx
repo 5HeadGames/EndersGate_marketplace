@@ -54,14 +54,20 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     }
     try {
       const tokenId = id;
-      setMessage("Allowing us to sell your tokens");
       const { pack, marketplace } = getAddresses();
-      await approveERC1155({
-        provider: web3.provider,
-        from: user.get("ethAddress"),
-        to: marketplace,
-        address: pack,
-      });
+      const isApprovedForAll = await pack.methods.isApprovedForAll(
+        user.get("ethAddress"),
+        marketplace,
+      );
+      if (isApprovedForAll) {
+        setMessage("Allowing us to sell your tokens");
+        await approveERC1155({
+          provider: web3.provider,
+          from: user.get("ethAddress"),
+          to: marketplace,
+          address: pack,
+        });
+      }
       setMessage("Listing your tokens");
       await dispatch(
         onSellERC1155({
