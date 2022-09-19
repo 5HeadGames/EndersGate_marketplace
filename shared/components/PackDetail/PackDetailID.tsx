@@ -90,7 +90,6 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       amount: 0,
       duration: 0,
     });
-    router.push("/marketplace");
   };
   React.useEffect(() => {
     console.log("nft data", sellNFTData);
