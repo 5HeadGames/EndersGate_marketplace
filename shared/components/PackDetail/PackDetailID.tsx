@@ -62,7 +62,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         marketplace,
       );
       console.log(isApprovedForAll);
-      if (isApprovedForAll) {
+      if (!isApprovedForAll) {
         setMessage("Allowing us to sell your tokens");
         await approveERC1155({
           provider: web3.provider,
