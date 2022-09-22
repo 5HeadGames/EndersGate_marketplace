@@ -57,12 +57,12 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       const { pack, marketplace } = getAddresses();
       const packs = getContractCustom("ERC1155", pack, web3.provider);
 
-      const isApprovedForAll = await packs.methods.isApprovedForAll(
-        user.get("ethAddress"),
-        marketplace,
-      );
-      console.log(isApprovedForAll);
-      if (isApprovedForAll == false) {
+      // const isApprovedForAll = await packs.methods.isApprovedForAll(
+      //   user.get("ethAddress"),
+      //   marketplace,
+      // );
+      // console.log(isApprovedForAll);
+      // if (isApprovedForAll == false) {
         setMessage("Allowing us to sell your tokens");
         await approveERC1155({
           provider: web3.provider,
@@ -70,7 +70,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           to: marketplace,
           address: pack,
         });
-      }
+      // }
       setMessage("Listing your tokens");
       await dispatch(
         onSellERC1155({
