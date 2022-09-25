@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "redux/store";
 import { onSellERC1155, onLoadSales, onGetAssets } from "@redux/actions";
 import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
-import { getAddresses } from "@shared/web3";
+import { getAddresses, getContractCustom } from "@shared/web3";
 import { Typography } from "../common/typography";
 import packs from "../../packs.json";
 import { useModal } from "@shared/hooks/modal";
@@ -55,11 +55,14 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     try {
       const tokenId = id;
       const { pack, marketplace } = getAddresses();
-      const isApprovedForAll = await pack.methods.isApprovedForAll(
-        user.get("ethAddress"),
-        marketplace,
-      );
-      if (isApprovedForAll) {
+      const packs = getContractCustom("ERC1155", pack, web3.provider);
+
+      // const isApprovedForAll = await packs.methods.isApprovedForAll(
+      //   user.get("ethAddress"),
+      //   marketplace,
+      // );
+      // console.log(isApprovedForAll);
+      // if (isApprovedForAll == false) {
         setMessage("Allowing us to sell your tokens");
         await approveERC1155({
           provider: web3.provider,
@@ -67,7 +70,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           to: marketplace,
           address: pack,
         });
-      }
+      // }
       setMessage("Listing your tokens");
       await dispatch(
         onSellERC1155({
