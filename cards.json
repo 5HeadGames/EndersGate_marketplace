@@ -605,7 +605,7 @@
       "name": "Ignited Bear Trap",
       "type": "ERC1155",
       "description": "Flip: Activate when your opponent declares an attack; deal 15 burn damage to the attacking Guardian for 3 turns. ",
-      "image": "QmSoGoPmYQN7X1ziteeeEqg98stNL8GaerB98NLTHay7Nj",
+      "image": "QmVY4Mx2NsbNmCYL5zHQz5jgeKF5ZC69rESWwY7DVRm5VV",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -634,7 +634,7 @@
         },
         "image": {
           "name": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmSoGoPmYQN7X1ziteeeEqg98stNL8GaerB98NLTHay7Nj"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmVY4Mx2NsbNmCYL5zHQz5jgeKF5ZC69rESWwY7DVRm5VV"
         }
       },
       "attributes": [
@@ -664,7 +664,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmSoGoPmYQN7X1ziteeeEqg98stNL8GaerB98NLTHay7Nj"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmVY4Mx2NsbNmCYL5zHQz5jgeKF5ZC69rESWwY7DVRm5VV"
         }
       ]
     },
@@ -5163,7 +5163,7 @@
       "name": "Dimensional Tesseract",
       "type": "ERC1155",
       "description": "Pay 600 Gold to Activate one of the two effects: \n\n● Both players send 10 cards from the top of their decks to the grave yard. \n● Both players send all Guardians on the field to the Grave yard",
-      "image": "QmRX8d15Db4d9qWoJeUBYDpqRAyzuNoZSwWxzvs7PbH22C",
+      "image": "Qmbz88hZ8CReuv3BHVEV8escUGgRz4hfBQLW2ngx2hRFBY",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -5192,7 +5192,7 @@
         },
         "image": {
           "name": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmRX8d15Db4d9qWoJeUBYDpqRAyzuNoZSwWxzvs7PbH22C"
+          "value": "https://ipfs.moralis.io:2053/ipfs/Qmbz88hZ8CReuv3BHVEV8escUGgRz4hfBQLW2ngx2hRFBY"
         }
       },
       "attributes": [
@@ -5222,7 +5222,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmRX8d15Db4d9qWoJeUBYDpqRAyzuNoZSwWxzvs7PbH22C"
+          "value": "https://ipfs.moralis.io:2053/ipfs/Qmbz88hZ8CReuv3BHVEV8escUGgRz4hfBQLW2ngx2hRFBY"
         }
       ]
     },
@@ -5230,7 +5230,7 @@
       "name": "Hatchling Potential",
       "type": "ERC1155",
       "description": "Pay 25 Gold for 3 turns during your standby phase to successfully Activate: \nA random Guardian from your deck appears on the field in MP1",
-      "image": "QmNYf7LWH4KUCpAhyBz3KppoCksb3yzS7ksjefaDDySMwW",
+      "image": "QmZ83ndoVZJn4fiTzHSYEmoddcjzygtWCJuHGwV1vGME1z",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -5259,7 +5259,7 @@
         },
         "image": {
           "name": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmNYf7LWH4KUCpAhyBz3KppoCksb3yzS7ksjefaDDySMwW"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmZ83ndoVZJn4fiTzHSYEmoddcjzygtWCJuHGwV1vGME1z"
         }
       },
       "attributes": [
@@ -5289,7 +5289,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmNYf7LWH4KUCpAhyBz3KppoCksb3yzS7ksjefaDDySMwW"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmZ83ndoVZJn4fiTzHSYEmoddcjzygtWCJuHGwV1vGME1z"
         }
       ]
     },
@@ -6033,7 +6033,7 @@
       "name": "Blaze Bane",
       "type": "ERC1155",
       "description": "[Beast | Assassin] \"Relentless Pursuit\" Passive: Upon death, blaze bane returns to the battle field at the start of your opponents battle phase with 50% HP & gold cost to 0. This effect occurs once. ",
-      "image": "QmNqv4T73KGvDCGUoUo5LXJbmt2cMWYg4TJAQ6W5MGEdHN",
+      "image": "QmeTvA981w1DwpKrjBsTC7fyZvxGtZ4NShSXA8K7hA41vZ",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -6078,7 +6078,7 @@
         },
         "image": {
           "name": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmNqv4T73KGvDCGUoUo5LXJbmt2cMWYg4TJAQ6W5MGEdHN"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmeTvA981w1DwpKrjBsTC7fyZvxGtZ4NShSXA8K7hA41vZ"
         }
       },
       "attributes": [
@@ -6124,7 +6124,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmNqv4T73KGvDCGUoUo5LXJbmt2cMWYg4TJAQ6W5MGEdHN"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmeTvA981w1DwpKrjBsTC7fyZvxGtZ4NShSXA8K7hA41vZ"
         }
       ]
     },
@@ -8409,7 +8409,7 @@
       "name": "Undead Hound",
       "type": "ERC1155",
       "description": "[Undead | Support] Passive: When Undead Hound is sent to the grave yard as a result of battle, add 1 undead type guardian worth 100 gold or less from your deck to your hand.",
-      "image": "QmZK5t9KVF4LZoYReyQGoeKLA3PnA9vixJbB6xVhFoVnA3",
+      "image": "QmQxKyoVg94dnfZoxTowGwTj5MbdBzqimGwJxhAY8F76E7",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -8454,7 +8454,7 @@
         },
         "image": {
           "name": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmZK5t9KVF4LZoYReyQGoeKLA3PnA9vixJbB6xVhFoVnA3"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmQxKyoVg94dnfZoxTowGwTj5MbdBzqimGwJxhAY8F76E7"
         }
       },
       "attributes": [
@@ -8500,7 +8500,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmZK5t9KVF4LZoYReyQGoeKLA3PnA9vixJbB6xVhFoVnA3"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmQxKyoVg94dnfZoxTowGwTj5MbdBzqimGwJxhAY8F76E7"
         }
       ]
     },
@@ -10094,7 +10094,7 @@
       "name": "Agodol",
       "type": "ERC1155",
       "description": "[Demon | Fighter] \"Fire Born\" Passive: Reduce incoming damage from all Earth-Type Guardians by 10. ",
-      "image": "QmVAVHeeVpxUWd4q6Zk319xyQadAN8d8jbFaNBEGkQ8KK6",
+      "image": "Qmf98wN2bqSRuY5CmHVLop3uneH4JkjcjjVXY5S5Pxcs5p",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -10139,7 +10139,7 @@
         },
         "image": {
           "name": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmVAVHeeVpxUWd4q6Zk319xyQadAN8d8jbFaNBEGkQ8KK6"
+          "value": "https://ipfs.moralis.io:2053/ipfs/Qmf98wN2bqSRuY5CmHVLop3uneH4JkjcjjVXY5S5Pxcs5p"
         }
       },
       "attributes": [
@@ -10185,7 +10185,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmVAVHeeVpxUWd4q6Zk319xyQadAN8d8jbFaNBEGkQ8KK6"
+          "value": "https://ipfs.moralis.io:2053/ipfs/Qmf98wN2bqSRuY5CmHVLop3uneH4JkjcjjVXY5S5Pxcs5p"
         }
       ]
     },
@@ -10293,6 +10293,7 @@
       "type": "ERC1155",
       "description": "[Beast | Fighter] \"Good boy\" Passive: Attacks targeted towards Yoshiko have a 30% chance of missing. ",
       "image": "QmRDDELg9dWwtiFT4C8oZ1sTnKBSubDS5qdc76adEZNCy7",
+      "synergies": ["Hanako"],
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -10591,6 +10592,7 @@
       "description": "[Human | Assassin] \"Nordic\" Passive: Attacks have a 50% chance to cause 5 bleed damage for 1 turn.",
       "image": "QmUXyKJr5qytprysLc6L2GfFmGmqik5gjH8cg2349qAvFe",
       "symbol": "GATE",
+      "synergies": ["Eydis", "Kara"],
       "properties": {
         "id": {
           "name": "id",
@@ -12472,6 +12474,7 @@
       "description": "[Elemental | Mage] \"Aqua Soul\" Active: Once per turn pay 10 gold to fire a Water blast which deals 10 water Damage.",
       "image": "QmX3fxJGzwSESKXMVtMN29hwX4bdkTSctKzfYWA1Q8YLfd",
       "symbol": "GATE",
+      "synergies": ["Liquana", "Aqualon", "Glacius"],
       "properties": {
         "id": {
           "name": "id",
@@ -12570,6 +12573,7 @@
       "type": "ERC1155",
       "description": "[Elemental | Assassin] \"Aqua Soul\" Passive: Attacks from Glacius have a 10% chance of causing splash damage dealing 25% of Glacius current ATK to the adjacent Guardians. ",
       "image": "QmbytPzwxQLWVALqf9inorg1jxie8CWVABwbWnZkfjXcXW",
+      "synergies": ["Liquana", "Aqualon", "Hydros"],
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -12867,6 +12871,7 @@
       "type": "ERC1155",
       "description": "[Beast | Support] \"Eross Follower\" Activate: Pay 120 Gold during your MP1; On your 2nd Standby phase, Hire Eross to the field from your deck with 50% HP.\n",
       "image": "QmNNSAssYkMarz1a2D8GkkEvXVQ2cGkS3brYWni319SdXw",
+      "synergies": ["Eross"],
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -14454,6 +14459,7 @@
       "description": "[Human | Fighter] Active: During your battle phase, Kara can select up to 2 Guardians to attack.",
       "image": "QmPhaQy5YabhUwQzTrjCWMHVmsgVJpBg88PS5p88svv3iE",
       "symbol": "GATE",
+      "synergies": ["Eydis", "Sahan"],
       "properties": {
         "id": {
           "name": "id",
@@ -14552,6 +14558,7 @@
       "type": "ERC1155",
       "description": "[Human | Healer] Active: Heal an ally for 10 HP. Cooldown 2 turns. Passive: While Eydis is on the field, increase all \"Nordic\" Guardian ATK by 20%.",
       "image": "QmSANd48ESEXD1263c1bVXScmmh3rRrss9FtBS58fE86AE",
+      "synergies": ["Kara", "Sahan"],
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -15344,6 +15351,7 @@
       "type": "ERC1155",
       "description": "[Elemental | Tank] \"Aqua Soul\" All attacks are directed to Aqualon. Additionally, all \"Aqua Soul\" Guardians Gain +10 ATK & +10 HP.",
       "image": "QmVkDgjsNwDHrKQRkEZWRfPWMHbL8kvr8BSaqwJmxraJDS",
+      "synergies": ["Liquana", "Glacius", "Hydros"],
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -15443,6 +15451,7 @@
       "type": "ERC1155",
       "description": "[Elemental | Healer] \"Aqua Soul\"  Once every 2 turns, heal one ally Guardian for 20 HP; healed Guardian's gain +10 crit chance & damage for 1 turn.\n",
       "image": "Qme63kwZW4MVCw5BCydXwKtaxCkFEWMSoQULaaSCmzk4Wp",
+      "synergies": ["Aqualon", "Glacius", "Hydros"],
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -15741,6 +15750,7 @@
       "description": "[Vampire | Assassin] \"Vampire Bloodline\" Activate: Pay 25 Gold. Stun 1 enemy on your opponents side of the field. Cooldown: 3 turns. \nPassive: Elanor next attack heals her for 10% damage dealt. Cooldown: 3 turns.",
       "image": "QmToYEk45oHBvstBVncFjx5GTGjhyJDEj5YEmEZmkjqBBr",
       "symbol": "GATE",
+      "synergies": ["Elwin"],
       "properties": {
         "id": {
           "name": "id",
@@ -15835,10 +15845,11 @@
       ]
     },
     {
-      "name": "Hanako ",
+      "name": "Hanako",
       "type": "ERC1155",
       "description": "[Human | Support] \"Bad Companion\" Activate: During your MP1, pay 60 gold to summon \"Aku Gaki\" from your hand or deck to the field; if successful, increase Hanako's ATK by +20% for as long as \"Aku Gaki\" remains on the field.",
       "image": "QmSuPPqqCkzcPR92oj4tgdkoPKuH1pKS6bWkfey7kuFXdq",
+      "synergies": ["Abu Gaki"],
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -15934,10 +15945,11 @@
       ]
     },
     {
-      "name": "Sadako ",
+      "name": "Sadako",
       "type": "ERC1155",
       "description": "[Human | Support] \"Good Companion\" Activate: During your MP1, pay 55 gold to summon \"Yoshiko\" from your hand or deck to the field; if successful, increase Sadako's HP by +18% for as long as \"Yoshiko\" remains on the field.",
       "image": "QmccSYD3vovvZLCisCA9hYk3tUZJcgdAQMfet65gVQvF3o",
+      "synergies": ["Yoshiko"],
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -16037,6 +16049,11 @@
       "type": "ERC1155",
       "description": "[Beast | Fighter] 'Son of Eross' Active: Pay 100 Gold during your MP1 and Discard One Card from your Hand to the Graveyard; Add Eross from your deck to your hand. Passive: If Etnor is sent to the grave, Hire Eross to the field from your hand. ",
       "image": "QmQqZa99dSXKTcpxjPJ5ZKXvWM39GgMEG1HrVSvTv8bK1m",
+      "synergies": ["Eross"],
+      "artist": {
+        "name": "Arya Mahardika",
+        "link": "https://yayamatsumi.artstation.com/"
+      },
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -18118,6 +18135,7 @@
       "type": "ERC1155",
       "description": " [Vampire | Assassin] \"Vampire Bloodline\"  Activate: Elwin's next attack heals him for 10% damage dealt. Cooldown: 3 turns. ",
       "image": "QmaDZN8jmGYE5gAvbHDcdPGJAZ8iWRGuypUbYkDZC5eJ9m",
+      "synergies": ["Elenor"],
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -18614,6 +18632,7 @@
       "description": "[Human | Fighter] 'Dracul Bond' Passive: If Avatar Dracul is equipped, Dominic Gains +25 ATK. Additionally, Upon death Dominic returns to the field at the start of your next Standby Phase with 75% of his HP. This effect occurs once. ",
       "image": "QmeUS2Apfcf46Ruw6R2BSeMKrQYoANMUXvZ5cbWXgqq7UU",
       "symbol": "GATE",
+      "synergies": ["Dracul"],
       "properties": {
         "id": {
           "name": "id",
@@ -18715,6 +18734,7 @@
       "description": "[Beast | Support] Passive: +10 HP to all Ally Guardians. Activate: Execute 1 Enemy champ under 10% health. ",
       "image": "QmYGMNKPMFyKuHx6yM37g4c1EkNE3apfBLKs873pYrqdeN",
       "symbol": "GATE",
+      "synergies": ["Etnor", "Kronk"],
       "properties": {
         "id": {
           "name": "id",
@@ -18814,6 +18834,7 @@
       "description": "[Ascended | Fighter] \"Void Expert\" Passive: Lady Rene gains 5 attack for each Guardian on the field.",
       "image": "Qma84o7cxeyRxtP22TT1zRz3JLYSQFMmSnCCxx8XmWqDkL",
       "symbol": "GATE",
+      "synergies": ["Sir Nex", "Sir Albin", "Lady Selsi"],
       "properties": {
         "id": {
           "name": "id",
@@ -19111,6 +19132,7 @@
       "description": "[Ascended | Assassin] \"Void Sniper\" Once per turn during your MP1, Lady Selsi can select one Guardian on your opponents side and mark them; Gain +25 crit chance & +30 crit dmg against marked target",
       "image": "QmNU4fimKGXd2nj4vJSaQp6vxz8NBRwxDUWmaKPP8Q2z2Z",
       "symbol": "GATE",
+      "synergies": ["Sir Nex", "Sir Albin", "Lady Rene"],
       "properties": {
         "id": {
           "name": "id",
@@ -19205,7 +19227,7 @@
       ]
     },
     {
-      "name": "Xolzog",
+      "name": "Xozog",
       "type": "ERC1155",
       "description": "[Undead | Mage] \"Erase\" Once per turn, execute 1 Enemy Guardian  under 20% Health.",
       "image": "QmdnbmFi6jqKTn5dZVLWibL3Rspz2F5gMVNHpUK195JRLQ",
@@ -19217,7 +19239,7 @@
         },
         "name": {
           "name": "name",
-          "value": "Xolzog"
+          "value": "Xozog"
         },
         "element": {
           "name": "element",
@@ -19263,7 +19285,7 @@
         },
         {
           "trait_type": "name",
-          "value": "Xolzog"
+          "value": "Xozog"
         },
         {
           "trait_type": "element",
@@ -19408,6 +19430,7 @@
       "description": "[Ascended | Support] \"Evacuation\" Active: Once per turn, return 1 Ally Guardian on the field to your hand. ",
       "image": "QmdaQwPw4FBx8jMTTzzd5qQcF4rzW7tdBh6fYCC4yHk8pT",
       "symbol": "GATE",
+      "synergies": ["Sir Nex", "Lady Selsi", "Lady Rene"],
       "properties": {
         "id": {
           "name": "id",
@@ -19507,6 +19530,7 @@
       "description": "[Ascended | Support] \"Ganymite\" Passive: While Sir Nex is on the field, all \"Ascended\" Guardians Gain +20 crit chance & +30 crit dmg.",
       "image": "QmVdBXZ7XSx8VHroTT2fJqWemgKNG7i1C2PiPr7vgAAJJb",
       "symbol": "GATE",
+      "synergies": ["Sir Albin", "Lady Selsi", "Lady Rene"],
       "properties": {
         "id": {
           "name": "id",
@@ -19604,7 +19628,7 @@
       "name": "Mackadon",
       "type": "ERC1155",
       "description": "[Shark | Fighter] \"Sea Hunter\" Passive: Mackadon gains +10 ATK for each water type Guardian in your graveyard. ",
-      "image": "QmTuErZtHjPr782dshBuVU69KPtSoHMhgy4WYW82THDi5z",
+      "image": "QmP3Bwx6AXgA2e3AUai6zL576r9roykgNF38NpyuRYyQGd",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -19649,7 +19673,7 @@
         },
         "image": {
           "name": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmTuErZtHjPr782dshBuVU69KPtSoHMhgy4WYW82THDi5z"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmP3Bwx6AXgA2e3AUai6zL576r9roykgNF38NpyuRYyQGd"
         }
       },
       "attributes": [
@@ -19695,7 +19719,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmTuErZtHjPr782dshBuVU69KPtSoHMhgy4WYW82THDi5z"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmP3Bwx6AXgA2e3AUai6zL576r9roykgNF38NpyuRYyQGd"
         }
       ]
     },
@@ -20000,7 +20024,7 @@
       "name": "Rulgannon",
       "type": "ERC1155",
       "description": "[Demon | Tank] \"Task Master\" Passive: When Rulgannon is hired to the field, swap all Guardians in play who cost 200 gold or less with Guardians in both Graveyards. ",
-      "image": "QmbbUaSfZRgMR9NKNTzm6TTaBTgJqn5UwBVrGbjzBWFHGi",
+      "image": "QmctU4b1m9AA77AuSDWcnDPc6GJ4rjkeccB2v81zu7QE2S",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -20045,7 +20069,7 @@
         },
         "image": {
           "name": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmbbUaSfZRgMR9NKNTzm6TTaBTgJqn5UwBVrGbjzBWFHGi"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmctU4b1m9AA77AuSDWcnDPc6GJ4rjkeccB2v81zu7QE2S"
         }
       },
       "attributes": [
@@ -20091,7 +20115,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmbbUaSfZRgMR9NKNTzm6TTaBTgJqn5UwBVrGbjzBWFHGi"
+          "value": "https://ipfs.moralis.io:2053/ipfs/QmctU4b1m9AA77AuSDWcnDPc6GJ4rjkeccB2v81zu7QE2S"
         }
       ]
     },
@@ -20202,6 +20226,7 @@
       "description": "+20 attack for all guardians in your deck",
       "image": "QmQ8PAwZtKztvsFnAdp79KyvHkhUYzSkZQwgsHVdMy3Zbp",
       "symbol": "GATE",
+      "synergies": ["Dominic"],
       "properties": {
         "id": {
           "name": "id",
@@ -20254,6 +20279,76 @@
           "value": 215
         }
       ]
+    }
+  ],
+  "ghost": [
+    {
+      "name": "Shinobi Guardian",
+      "image": "https://cdn.discordapp.com/attachments/974017438171672616/981746361290592377/SHINOBI_GUARDIAN_1_FRONT.png",
+      "properties": {
+        "image": {
+          "name": "image",
+          "value": "https://cdn.discordapp.com/attachments/974017438171672616/981746361290592377/SHINOBI_GUARDIAN_1_FRONT.png"
+        },
+
+        "attack": {
+          "name": "attack",
+          "value": 50
+        },
+        "hp": {
+          "name": "hp",
+          "value": 50
+        },
+        "gold": {
+          "name": "gold",
+          "value": 25
+        }
+      }
+    },
+    {
+      "name": "Shinobi Guardian",
+      "image": "https://cdn.discordapp.com/attachments/974017438171672616/981746361567412244/SHINOBI_GUARDIAN_2_FRONT.png",
+      "properties": {
+        "image": {
+          "name": "image",
+          "value": "https://cdn.discordapp.com/attachments/974017438171672616/981746361567412244/SHINOBI_GUARDIAN_2_FRONT.png"
+        },
+
+        "attack": {
+          "name": "attack",
+          "value": 50
+        },
+        "hp": {
+          "name": "hp",
+          "value": 50
+        },
+        "gold": {
+          "name": "gold",
+          "value": 25
+        }
+      }
+    },
+    {
+      "name": "Shinobi Guardian",
+      "image": "https://cdn.discordapp.com/attachments/974017438171672616/981746361831677982/SHINOBI_GUARDIAN_3_FRONT.png",
+      "properties": {
+        "image": {
+          "name": "image",
+          "value": "https://cdn.discordapp.com/attachments/974017438171672616/981746361831677982/SHINOBI_GUARDIAN_3_FRONT.png"
+        },
+        "attack": {
+          "name": "attack",
+          "value": 50
+        },
+        "hp": {
+          "name": "hp",
+          "value": 50
+        },
+        "gold": {
+          "name": "gold",
+          "value": 25
+        }
+      }
     }
   ]
 }
