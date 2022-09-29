@@ -25,7 +25,7 @@ const DashboardComponent = () => {
   const { nfts } = useAppSelector((state) => state);
   const cards = convertArrayCards();
 
-  const { transactionsBoard, recentlyListed, recentlySold } = useStats({
+  const { recentlyListed, recentlySold } = useStats({
     nfts,
     listedSelected,
     soldSelected,
@@ -47,22 +47,17 @@ const DashboardComponent = () => {
 
   return (
     <div className="w-full flex flex-col md:px-16 pt-36 min-h-screen bg-overlay px-4 pb-24">
-      <TransactionsBoard
-        totalSale={transactionsBoard.totalSale}
-        totalVolume={transactionsBoard.totalVolume}
-        cardsSold={transactionsBoard.cardsSold}
-        packsSold={transactionsBoard.packsSold}
-        columnSelected={columnSelected}
-        setColumnSelected={setColumnSelected}
-      />
       <div className="flex flex-col gap-2 mt-6">
         <div className="flex items-center justify-center w-full text-xl text-primary gap-1 font-bold">
           Browse{" "}
-          <Dropdown classTitle={"text-red-600"} title={salesType}>
+          <Dropdown
+            classTitle={"text-red-primary hover:text-orange-500"}
+            title={salesType}
+          >
             <div className="flex flex-col rounded-md border border-overlay-border">
               {["Recently Listed", "Recently Sold"].map((item) => (
                 <div
-                  className="p-4 text-center font-bold hover:text-red-600 text-primary whitespace-nowrap cursor-pointer"
+                  className="p-4 text-center font-bold hover:text-orange-500 text-primary whitespace-nowrap cursor-pointer"
                   onClick={() => setSalesType(item)}
                 >
                   {item}

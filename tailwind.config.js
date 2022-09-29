@@ -20,10 +20,12 @@ module.exports = {
     colors: ({ colors }) => ({
       primary: "var(--color-primary)",
       "primary-disabled": "var(--color-primary-disabled)",
+      "red-primary": "var(--color-red-primary)",
       "primary-opacity": "var(--color-primary-opacity)",
       secondary: "var(--color-secondary)",
       overlay: "var(--color-overlay)",
       ["overlay-2"]: "var(--color-overlay-2)",
+      ["overlay-3"]: "var(--color-overlay-3)",
       "overlay-border": "var(--color-overlay-border)",
       alert: {
         success: "var(--color-alert-success)",

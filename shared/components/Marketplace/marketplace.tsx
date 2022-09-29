@@ -25,6 +25,12 @@ import Web3 from "web3";
 import Styles from "./itemCard/styles.module.scss";
 import { Icons } from "@shared/const/Icons";
 import { AddressText } from "../common/specialFields/SpecialFields";
+import TransactionsBoard from "../Dashboard/TransactionsBoard/TransactionsBoard";
+import { useStats } from "@shared/hooks/useStats";
+import { Newsletter } from "../common/footerComponents/newsletter";
+import { JoinTheCommunity } from "../common/footerComponents/joinTheCommunity";
+import { GetStarted } from "../common/footerComponents/getStarted";
+import Partners from "../common/footerComponents/partners";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("older_listed");
@@ -34,6 +40,18 @@ const MarketplaceComponent = () => {
   const [page, setPage] = React.useState(0);
   const [search, setSearch] = React.useState("");
   const [openFilters, setOpenFilters] = React.useState(true);
+
+  const [columnSelected, setColumnSelected] = React.useState("last_7d");
+  const [listedSelected, setListedSelected] = React.useState("trading_cards");
+  const [soldSelected, setSoldSelected] = React.useState("trading_cards");
+  const cards = convertArrayCards();
+
+  const { transactionsBoard } = useStats({
+    nfts,
+    listedSelected,
+    soldSelected,
+    columnSelected,
+  });
 
   const orderMapper = {
     lowest_price: "Price: Low to High",
@@ -45,8 +63,6 @@ const MarketplaceComponent = () => {
   React.useEffect(() => {
     getSales(currentOrder);
   }, [currentOrder]);
-
-  const cards = convertArrayCards();
 
   React.useEffect(() => {}, [sales]);
 
@@ -266,248 +282,267 @@ const MarketplaceComponent = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen pt-36 pb-10 gap-8 w-full">
-      <div className="w-full flex justify-between items-center sm:flex-row flex-col gap-10 lg:px-20 px-4">
-        <div
-          className="flex justify-center items-center cursor-pointer rounded-md border border-overlay-border text-primary-disabled bg-overlay-2 p-3"
-          onClick={() => setOpenFilters((prev) => !prev)}
-        >
-          {openFilters ? <CaretLeftOutlined /> : <CaretDownOutlined />}
-          <Typography type="subTitle" className="ml-2 text-lg">
-            Filters
-          </Typography>
-        </div>
-        <div className="border flex items-center text-lg justify-center border-overlay-border bg-overlay-2 rounded-xl w-full">
-          <input
-            type="text"
-            className="text-white w-full py-3 px-4 rounded-xl bg-overlay border-r border-overlay-border"
-            placeholder="Search"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-            }}
+    <div className="flex flex-col w-full">
+      <div className="flex flex-col min-h-screen pt-36 pb-10 gap-8 w-full">
+        <div className="flex w-full lg:px-20 px-4">
+          <TransactionsBoard
+            totalSale={transactionsBoard.totalSale}
+            totalVolume={transactionsBoard.totalVolume}
+            cardsSold={transactionsBoard.cardsSold}
+            packsSold={transactionsBoard.packsSold}
+            columnSelected={columnSelected}
+            setColumnSelected={setColumnSelected}
           />
-          <div className="text-white text-xl flex items-center justify-center px-2">
-            <SearchOutlined />
+        </div>
+        <div className="w-full flex justify-between items-center sm:flex-row flex-col gap-10 lg:px-20 px-4">
+          <div
+            className="flex justify-center items-center cursor-pointer rounded-md border border-overlay-border text-primary-disabled bg-overlay-2 p-3"
+            onClick={() => setOpenFilters((prev) => !prev)}
+          >
+            {openFilters ? <CaretLeftOutlined /> : <CaretDownOutlined />}
+            <Typography type="subTitle" className="ml-2 text-lg">
+              Filters
+            </Typography>
+          </div>
+          <div className="border flex items-center text-lg justify-center border-overlay-border bg-overlay-2 rounded-xl w-full">
+            <input
+              type="text"
+              className="text-white w-full py-3 px-4 rounded-xl bg-overlay border-r border-overlay-border"
+              placeholder="Search"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+            />
+            <div className="text-white text-xl flex items-center justify-center px-2">
+              <SearchOutlined />
+            </div>
+          </div>
+          <div className="flex">
+            <DropdownActions
+              title={orderMapper[currentOrder]}
+              actions={[
+                {
+                  label: "Price: Low to High",
+                  onClick: () => setCurrentOrder("lowest_price"),
+                },
+                {
+                  label: "Price: High to Low",
+                  onClick: () => setCurrentOrder("highest_price"),
+                },
+                {
+                  label: "Recent to Older",
+                  onClick: () => setCurrentOrder("recently_listed"),
+                },
+                {
+                  label: "Older to Recent",
+                  onClick: () => setCurrentOrder("older_listed"),
+                },
+              ]}
+            />
           </div>
         </div>
-        <div className="flex">
-          <DropdownActions
-            title={orderMapper[currentOrder]}
-            actions={[
-              {
-                label: "Price: Low to High",
-                onClick: () => setCurrentOrder("lowest_price"),
-              },
-              {
-                label: "Price: High to Low",
-                onClick: () => setCurrentOrder("highest_price"),
-              },
-              {
-                label: "Recent to Older",
-                onClick: () => setCurrentOrder("recently_listed"),
-              },
-              {
-                label: "Older to Recent",
-                onClick: () => setCurrentOrder("older_listed"),
-              },
-            ]}
-          />
-        </div>
-      </div>
-      <div className="w-full h-[1px] bg-overlay-border"></div>
-      <div className="w-full flex xl:flex-row flex-col lg:px-20 px-4">
-        <div
-          className={clsx(
-            { ["flex xl:w-auto w-full"]: openFilters },
-            { ["hidden"]: !openFilters },
-          )}
-        >
-          <FiltersBoard
-            filter={filter}
-            setFilter={setFilter}
-            setPage={setPage}
-            type={type}
-            setType={setType}
-          />
-        </div>
-        <div className="w-full xl:mt-0 mt-6 flex flex-col pb-10">
-          <div>
-            <div className="flex flex-wrap w-full justify-center items-center relative">
-              {sales
-                ?.filter((sale, i) => passFilter(sale.nftId))
-                .filter((sale) => {
-                  return (
-                    Math.floor(new Date().getTime() / 1000) <=
-                    parseInt(sale?.duration) + parseInt(sale?.startedAt)
-                  );
-                })
-                .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
-                .map((a, id) => {
-                  console.log(a, "sale");
-                  return type !== "packs" ? (
-                    <NftCard
-                      classes={{ root: "m-4 cursor-pointer" }}
-                      id={a.nftId}
-                      transactionId={a.id}
-                      seller={a.seller}
-                      icon={cards[a.nftId].properties.image.value}
-                      name={cards[a.nftId].properties.name.value}
-                      byId={false}
-                      price={a.price}
-                    />
-                  ) : (
-                    <Link href={`/NFTDetailSale/${a.id}`}>
-                      <div
-                        className={clsx(
-                          "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 m-4 cursor-pointer",
-                          Styles.cardHover,
-                        )}
-                      >
-                        <img
-                          src={packs[a.nftId]?.properties?.image?.value}
-                          className="absolute top-[-40%] bottom-0 left-[-5%] right-0 margin-auto opacity-50 min-w-[110%]"
-                          alt=""
-                        />
-                        <div className="flex flex-col relative">
-                          <div className="w-full flex flex-col text-xs gap-1">
-                            <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
-                              <span>
-                                Pack #
-                                {a.nftId !== undefined ? a.nftId : "12345"}
-                              </span>
-                              {<span>#{a.id}</span>}
+        <div className="w-full h-[1px] bg-overlay-border"></div>
+        <div className="w-full flex xl:flex-row flex-col lg:px-20 px-4">
+          <div
+            className={clsx(
+              { ["flex xl:w-auto w-full"]: openFilters },
+              { ["hidden"]: !openFilters },
+            )}
+          >
+            <FiltersBoard
+              filter={filter}
+              setFilter={setFilter}
+              setPage={setPage}
+              type={type}
+              setType={setType}
+            />
+          </div>
+          <div className="w-full xl:mt-0 mt-6 flex flex-col pb-10">
+            <div>
+              <div className="flex flex-wrap w-full justify-center items-center relative">
+                {sales
+                  ?.filter((sale, i) => passFilter(sale.nftId))
+                  .filter((sale) => {
+                    return (
+                      Math.floor(new Date().getTime() / 1000) <=
+                      parseInt(sale?.duration) + parseInt(sale?.startedAt)
+                    );
+                  })
+                  .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
+                  .map((a, id) => {
+                    console.log(a, "sale");
+                    return type !== "packs" ? (
+                      <NftCard
+                        classes={{ root: "m-4 cursor-pointer" }}
+                        id={a.nftId}
+                        transactionId={a.id}
+                        seller={a.seller}
+                        icon={cards[a.nftId].properties.image.value}
+                        name={cards[a.nftId].properties.name.value}
+                        byId={false}
+                        price={a.price}
+                      />
+                    ) : (
+                      <Link href={`/NFTDetailSale/${a.id}`}>
+                        <div
+                          className={clsx(
+                            "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 m-4 cursor-pointer",
+                            Styles.cardHover,
+                          )}
+                        >
+                          <img
+                            src={packs[a.nftId]?.properties?.image?.value}
+                            className="absolute top-[-40%] bottom-0 left-[-5%] right-0 margin-auto opacity-50 min-w-[110%]"
+                            alt=""
+                          />
+                          <div className="flex flex-col relative">
+                            <div className="w-full flex flex-col text-xs gap-1">
+                              <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
+                                <span>
+                                  Pack #
+                                  {a.nftId !== undefined ? a.nftId : "12345"}
+                                </span>
+                                {<span>#{a.id}</span>}
+                              </div>
                             </div>
-                          </div>
-                          <div className="w-full h-72 flex justify-center items-center my-6">
-                            <img
-                              src={
-                                packs[a.nftId]?.properties?.image?.value ||
-                                Icons.logo
-                              }
-                              className={
-                                packs[a.nftId]?.properties?.image?.value
-                                  ? "h-64"
-                                  : "h-24"
-                              }
-                            />
-                          </div>
-                          <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
-                            <div className="flex text-lg font-bold text-left py-2 ">
-                              <div className="w-40 relative">
+                            <div className="w-full h-72 flex justify-center items-center my-6">
+                              <img
+                                src={
+                                  packs[a.nftId]?.properties?.image?.value ||
+                                  Icons.logo
+                                }
+                                className={
+                                  packs[a.nftId]?.properties?.image?.value
+                                    ? "h-64"
+                                    : "h-24"
+                                }
+                              />
+                            </div>
+                            <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
+                              <div className="flex text-lg font-bold text-left py-2 ">
+                                <div className="w-40 relative">
+                                  <img
+                                    src="icons/card_logo.svg"
+                                    className="w-40 absolute top-[-60px]"
+                                    alt=""
+                                  />
+                                </div>
+                                <div className="w-full flex flex-col">
+                                  <span className="uppercase text-white text-lg">
+                                    {packs[a.nftId]?.properties?.name?.value ||
+                                      "Enders Gate"}
+                                  </span>
+                                  <span
+                                    className="text-[12px] text-gray-500 font-medium"
+                                    style={{ lineHeight: "10px" }}
+                                  >
+                                    Owner:{" "}
+                                    {<AddressText text={a.seller} /> || "Owner"}
+                                  </span>
+                                </div>
                                 <img
-                                  src="icons/card_logo.svg"
-                                  className="w-40 absolute top-[-60px]"
+                                  src={Icons.logo}
+                                  className="w-10 h-10"
                                   alt=""
                                 />
                               </div>
-                              <div className="w-full flex flex-col">
-                                <span className="uppercase text-white text-lg">
-                                  {packs[a.nftId]?.properties?.name?.value ||
-                                    "Enders Gate"}
-                                </span>
-                                <span
-                                  className="text-[12px] text-gray-500 font-medium"
-                                  style={{ lineHeight: "10px" }}
+                              {a.price && (
+                                <div
+                                  className="flex justify-between text-md text-white "
+                                  style={{ lineHeight: "18px" }}
                                 >
-                                  Owner:{" "}
-                                  {<AddressText text={a.seller} /> || "Owner"}
-                                </span>
-                              </div>
-                              <img
-                                src={Icons.logo}
-                                className="w-10 h-10"
-                                alt=""
-                              />
-                            </div>
-                            {a.price && (
-                              <div
-                                className="flex justify-between text-md text-white "
-                                style={{ lineHeight: "18px" }}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <img
-                                    src="/icons/HARMONY.svg"
-                                    className="h-8 w-8"
-                                    alt=""
-                                  />
+                                  <div className="flex items-center gap-2">
+                                    <img
+                                      src="/icons/HARMONY.svg"
+                                      className="h-8 w-8"
+                                      alt=""
+                                    />
+                                    <div className="flex flex-col text-md font-medium">
+                                      <p>Price:</p>
+                                      <span>
+                                        {Web3.utils.fromWei(a.price, "ether")}{" "}
+                                        ONE
+                                      </span>
+                                    </div>
+                                  </div>
                                   <div className="flex flex-col text-md font-medium">
-                                    <p>Price:</p>
+                                    <p>Highest Bid:</p>
                                     <span>
                                       {Web3.utils.fromWei(a.price, "ether")} ONE
                                     </span>
                                   </div>
                                 </div>
-                                <div className="flex flex-col text-md font-medium">
-                                  <p>Highest Bid:</p>
-                                  <span>
-                                    {Web3.utils.fromWei(a.price, "ether")} ONE
-                                  </span>
-                                </div>
-                              </div>
-                            )}
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              {sales
-                ?.filter((sale, i) => passFilter(sale.nftId))
-                .filter((sale) => {
-                  return (
-                    Math.floor(new Date().getTime() / 1000) <=
-                    parseInt(sale?.duration) + parseInt(sale?.startedAt)
-                  );
-                }).length > 12 && (
-                <div className="flex w-full items-center justify-center gap-2">
-                  <div
-                    className="rounded-md bg-secondary text-white p-3 cursor-pointer"
-                    onClick={() => {
-                      if (page > 0) {
-                        setPage((prev) => {
-                          return prev - 1;
-                        });
-                      }
-                    }}
-                  >
-                    {"<"}
+                      </Link>
+                    );
+                  })}
+                {sales
+                  ?.filter((sale, i) => passFilter(sale.nftId))
+                  .filter((sale) => {
+                    return (
+                      Math.floor(new Date().getTime() / 1000) <=
+                      parseInt(sale?.duration) + parseInt(sale?.startedAt)
+                    );
+                  }).length > 12 && (
+                  <div className="flex w-full items-center justify-center gap-2">
+                    <div
+                      className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                      onClick={() => {
+                        if (page > 0) {
+                          setPage((prev) => {
+                            return prev - 1;
+                          });
+                        }
+                      }}
+                    >
+                      {"<"}
+                    </div>
+                    <div className="p-4 rounded-md bg-overlay border border-primary text-primary">
+                      {page + 1}
+                    </div>
+                    <div
+                      className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                      onClick={() => {
+                        if (
+                          page <
+                          Math.floor(
+                            (sales
+                              .filter((sale, i) => passFilter(sale.nftId))
+                              .filter((sale) => {
+                                return (
+                                  Math.floor(new Date().getTime() / 1000) <=
+                                  parseInt(sale?.duration) +
+                                    parseInt(sale?.startedAt)
+                                );
+                              }).length -
+                              1) /
+                              12,
+                          )
+                        ) {
+                          setPage((prev) => {
+                            return prev + 1;
+                          });
+                        }
+                      }}
+                    >
+                      {">"}
+                    </div>
                   </div>
-                  <div className="p-4 rounded-md bg-overlay border border-primary text-primary">
-                    {page + 1}
-                  </div>
-                  <div
-                    className="rounded-md bg-secondary text-white p-3 cursor-pointer"
-                    onClick={() => {
-                      if (
-                        page <
-                        Math.floor(
-                          (sales
-                            .filter((sale, i) => passFilter(sale.nftId))
-                            .filter((sale) => {
-                              return (
-                                Math.floor(new Date().getTime() / 1000) <=
-                                parseInt(sale?.duration) +
-                                  parseInt(sale?.startedAt)
-                              );
-                            }).length -
-                            1) /
-                            12,
-                        )
-                      ) {
-                        setPage((prev) => {
-                          return prev + 1;
-                        });
-                      }
-                    }}
-                  >
-                    {">"}
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>
+      </div>{" "}
+      <div className="flex flex-col w-full">
+        <Newsletter />
+        <JoinTheCommunity />
+        <GetStarted />
+        <Partners />
       </div>
     </div>
   );

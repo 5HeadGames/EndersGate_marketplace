@@ -165,7 +165,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                     }}
                   />
                   {sellNFTData.amount > NFTs?.balanceCards[id]?.balance && (
-                    <Typography type="caption" className="text-red-600">
+                    <Typography type="caption" className="text-red-primary">
                       The amount can't be higher than your balance
                     </Typography>
                   )}

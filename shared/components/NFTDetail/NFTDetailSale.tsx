@@ -1,13 +1,13 @@
 import React from "react";
-import {LeftOutlined, LoadingOutlined, MenuOutlined} from "@ant-design/icons";
-import {useRouter} from "next/router";
+import { LeftOutlined, LoadingOutlined, MenuOutlined } from "@ant-design/icons";
+import { useRouter } from "next/router";
 import Web3 from "web3";
-import {useMoralis} from "react-moralis";
+import { useMoralis } from "react-moralis";
 
-import {useAppDispatch} from "redux/store";
-import {onBuyERC1155, onLoadSales, onGetAssets} from "@redux/actions";
-import {Button} from "../common/button/button";
-import {Icons} from "@shared/const/Icons";
+import { useAppDispatch } from "redux/store";
+import { onBuyERC1155, onLoadSales, onGetAssets } from "@redux/actions";
+import { Button } from "../common/button/button";
+import { Icons } from "@shared/const/Icons";
 import { AddressText, Type } from "../common/specialFields/SpecialFields";
 import { getAddresses, loadSale } from "@shared/web3";
 import { Typography } from "../common/typography";
@@ -69,7 +69,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
           tokenId: id,
           moralis: Moralis,
           nftContract: isPack ? pack : endersGate,
-        })
+        }),
       );
     } catch {}
     setMessage("");
@@ -112,7 +112,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         "rounded-md": !isPack
                           ? cards[sale.nftId].typeCard != "avatar"
                           : false,
-                      }
+                      },
                     )}
                     alt=""
                   />
@@ -131,7 +131,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                     }}
                   />
                   {buyNFTData > sale?.amount && (
-                    <Typography type="caption" className="text-red-600">
+                    <Typography type="caption" className="text-red-primary">
                       The quantity of tokens can't exceed available to buy
                     </Typography>
                   )}
@@ -261,7 +261,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         "rounded-md": !isPack
                           ? cards[sale.nftId].typeCard != "avatar"
                           : false,
-                      }
+                      },
                     )}
                     alt=""
                   />

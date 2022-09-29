@@ -1,15 +1,15 @@
 import React from "react";
-import {useForm} from "react-hook-form";
-import {useRouter} from "next/router";
-import {useMoralis} from "react-moralis";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
+import { useMoralis } from "react-moralis";
 
-import {useModal} from "@shared/hooks/modal";
-import {useAppDispatch} from "redux/store";
-import {Button} from "shared/components/common/button";
+import { useModal } from "@shared/hooks/modal";
+import { useAppDispatch } from "redux/store";
+import { Button } from "shared/components/common/button";
 import Dialog from "shared/components/common/dialog";
-import {Typography} from "shared/components/common/typography";
-import {InputPassword} from "shared/components/common/form/input-password";
-import {InputEmail} from "shared/components/common/form/input-email";
+import { Typography } from "shared/components/common/typography";
+import { InputPassword } from "shared/components/common/form/input-password";
+import { InputEmail } from "shared/components/common/form/input-email";
 import clsx from "clsx";
 
 type Values = {
@@ -33,7 +33,7 @@ const Login = () => {
     setLoading(true);
     try {
       await enableWeb3();
-      await(window as any).ethereum.request({
+      await (window as any).ethereum.request({
         method: "wallet_switchEthereumChain",
         params: [
           {
@@ -95,18 +95,18 @@ const Login = () => {
       <div className="flex flex-col gap-4">
         <Button
           disabled={loading}
-          decoration="fillPrimary"
+          decoration="line-white"
           size="medium"
-          className="w-full mb-2 bg-primary text-white"
+          className="w-full mb-2 bg-overlay border border-primary text-white hover:text-overlay"
           onClick={handleWalletConnect}
         >
           {loading ? "..." : "Login with WalletConnect"}
         </Button>
         <Button
           disabled={loading}
-          decoration="fillPrimary"
+          decoration="line-white"
           size="medium"
-          className="w-full mb-2 bg-primary text-white"
+          className="w-full mb-2 bg-overlay border border-primary text-white hover:text-overlay"
           onClick={handleMetamaskConnect}
         >
           {loading ? "..." : "Login with Metamask Wallet"}
@@ -122,7 +122,7 @@ const Login = () => {
             disabled={loading}
             decoration="line-primary"
             size="medium"
-            className="w-full mb-2"
+            className="w-full mb-2 bg-overlay border border-primary text-white hover:text-overlay"
             onClick={() => setOpenForm(true)}
           >
             {loading ? "..." : "Login with email & password"}
@@ -158,7 +158,7 @@ interface EmailPasswordFormProps {
 }
 
 const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
-  props
+  props,
 ) => {
   const { onLogin, onRegister, loading } = props;
   const { Modal: ModalRegister, isShow, show, hide } = useModal();
@@ -202,7 +202,7 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
           <div className="mb-4 w-full">
             <InputEmail
               register={register}
-              placeholder="email"
+              placeholder="Email"
               name="email"
               error={errors.email}
             />
@@ -210,7 +210,7 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
           <div className="mb-4">
             <InputPassword
               register={register}
-              placeholder=" password"
+              placeholder="Password"
               error={errors.password}
               name="password"
             />
@@ -292,11 +292,11 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
                 <div
                   className={clsx(
                     { "bg-gray-700": passwordStrength() === -1 },
-                    { "bg-red-500": passwordStrength() === 0 },
+                    { "bg-red-primary": passwordStrength() === 0 },
                     { "bg-orange-500": passwordStrength() === 1 },
                     { "bg-yellow-500": passwordStrength() === 2 },
                     { "bg-green-500": passwordStrength() === 3 },
-                    "w-full h-2 rounded-md"
+                    "w-full h-2 rounded-md",
                   )}
                 ></div>
                 <div
@@ -306,7 +306,7 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
                     { "bg-yellow-500": passwordStrength() === 2 },
                     { "bg-green-500": passwordStrength() === 3 },
                     { "bg-green-500": passwordStrength() === 3 },
-                    "w-full h-2 rounded-md"
+                    "w-full h-2 rounded-md",
                   )}
                 ></div>
                 <div
@@ -314,25 +314,25 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
                     { "bg-gray-700": passwordStrength() <= 1 },
                     { "bg-yellow-500": passwordStrength() === 2 },
                     { "bg-green-500": passwordStrength() === 3 },
-                    "w-full h-2 rounded-md"
+                    "w-full h-2 rounded-md",
                   )}
                 ></div>
                 <div
                   className={clsx(
                     { "bg-gray-700": passwordStrength() <= 2 },
                     { "bg-green-500": passwordStrength() === 3 },
-                    "w-full h-2 rounded-md"
+                    "w-full h-2 rounded-md",
                   )}
                 ></div>
               </div>
               <Typography
                 className={clsx(
                   { "text-gray-700": passwordStrength() === -1 },
-                  { "text-red-500": passwordStrength() === 0 },
+                  { "text-red-primary": passwordStrength() === 0 },
                   { "text-orange-500": passwordStrength() === 1 },
                   { "text-yellow-500": passwordStrength() === 2 },
                   { "text-green-500": passwordStrength() === 3 },
-                  "mt-2"
+                  "mt-2",
                 )}
                 type="subTitle"
               >

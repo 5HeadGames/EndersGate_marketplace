@@ -45,8 +45,12 @@ const styles = {
 };
 
 const navItems = [
-  { name: "DASHBOARD", link: "/dashboard", icon: <AreaChartOutlined /> },
-  { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
+  { name: "EXPLORE", link: "/dashboard", icon: <ShopOutlined /> },
+  {
+    name: "STATS",
+    link: "/marketplace",
+    icon: <AreaChartOutlined />,
+  },
   {
     link: "/profile/inventory",
     name: "INVENTORY",
@@ -241,10 +245,10 @@ export const NavbarItem = ({ name, link, route }) => {
         <div
           className={clsx(
             { "opacity-50": link !== route },
-            "gap-2 flex items-center text-white",
+            "gap-2 flex items-center text-white hover:opacity-100",
           )}
         >
-          <h3 className={clsx("text-md font-[450]")}>{name}</h3>
+          <h3 className={clsx("text-md font-bold")}>{name}</h3>
         </div>
       </a>
     </Link>

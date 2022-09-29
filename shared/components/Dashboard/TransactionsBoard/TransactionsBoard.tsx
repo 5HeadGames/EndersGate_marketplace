@@ -85,13 +85,12 @@ const TransactionsBoard: React.FC<any> = ({
                   type="subTitle"
                   className={clsx(
                     {
-                      "bg-primary-disabled text-white":
-                        columnSelected === item.value,
+                      "bg-primary text-overlay": columnSelected === item.value,
                     },
                     {
                       "text-primary": columnSelected !== item.value,
                     },
-                    "px-6 py-4",
+                    "px-6 py-2",
                   )}
                 >
                   {item.title}
