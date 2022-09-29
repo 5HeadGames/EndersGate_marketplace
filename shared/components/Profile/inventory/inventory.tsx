@@ -40,6 +40,7 @@ const Inventory = () => {
   }, [user]);
 
   React.useEffect(() => {
+    console.log(nfts);
     const arrayPacks = [];
     nfts.balancePacks.forEach((pack, index) => {
       arrayPacks.push({
