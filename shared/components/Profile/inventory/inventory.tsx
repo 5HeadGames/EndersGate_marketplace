@@ -1,9 +1,9 @@
-import {Button} from "@shared/components/common/button";
-import {Typography} from "@shared/components/common/typography";
-import {Icons} from "@shared/const/Icons";
+import { Button } from "@shared/components/common/button";
+import { Typography } from "@shared/components/common/typography";
+import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
-import {useAppSelector} from "redux/store";
+import { useAppSelector } from "redux/store";
 import {
   AppstoreOutlined,
   SearchOutlined,
@@ -86,12 +86,12 @@ const Inventory = () => {
               className={clsx(
                 {
                   "bg-primary-disabled text-white":
-                    columnSelected === item.value,
+                    columnSelected === item?.value,
                 },
                 {
-                  "text-primary": columnSelected !== item.value,
+                  "text-primary": columnSelected !== item?.value,
                 },
-                "border-r-2 border-overlay-border cursor-pointer px-4 py-2 "
+                "border-r-2 border-overlay-border cursor-pointer px-4 py-2 ",
               )}
               onClick={() => setColumnSelected(item.value)}
             >
@@ -129,30 +129,24 @@ const Inventory = () => {
               (inventoryCards.length > 0 &&
                 columnSelected === "trading_cards") ||
               (inventoryPacks.length > 0 && columnSelected === "packs"),
-          }
+          },
         )}
       >
         {inventoryCards.length > 0 && columnSelected === "trading_cards" ? (
-          inventoryCards
-            .filter((card) =>
-              cards[card.id].properties.name.value
-                .toLowerCase()
-                .includes(search.toLowerCase())
-            )
-            .map((card) => {
-              return (
-                card.balance > 0 && (
-                  <NFTCard
-                    key={card.id}
-                    id={card.id}
-                    icon={cards[card.id].properties.image.value}
-                    name={cards[card.id].properties.name.value}
-                    balance={card.balance}
-                    byId
-                  />
-                )
-              );
-            })
+          inventoryCards.map((card) => {
+            return (
+              card.balance > 0 && (
+                <NFTCard
+                  key={card?.id}
+                  id={card?.id}
+                  icon={cards[card.id].properties?.image?.value}
+                  name={cards[card.id].properties?.name?.value}
+                  balance={card?.balance}
+                  byId
+                />
+              )
+            );
+          })
         ) : inventoryPacks.length > 0 && columnSelected === "packs" ? (
           inventoryPacks.map((pack, index) => {
             return (
@@ -160,7 +154,7 @@ const Inventory = () => {
                 <Link href={`/PackDetailID/${pack.id}`} key={index}>
                   <div
                     className={clsx(
-                      "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer"
+                      "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer",
                     )}
                   >
                     <div className="w-full flex flex-col text-xs gap-1">
