@@ -10,8 +10,8 @@ const Partners = () => {
     { logo: "/icons/XP.Network.svg", link: "https://xp.network/" },
   ];
   return (
-    <div className="py-10 px-10 flex flex-col">
-      <p className="text-xl text-white font-bold">OUR PARTNERS</p>
+    <div className="py-10 px-10 flex flex-col items-center border-t border-overlay-border bg-overlay-3">
+      <img src="/icons/5HGPARTNERS.svg" className="w-40 mb-6" alt="" />
 
       <div className="flex flex-wrap gap-x-10 gap-y-4 items-center justify-center">
         {partners.map(({ logo, link }) => (

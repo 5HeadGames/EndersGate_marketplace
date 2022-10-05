@@ -31,6 +31,7 @@ import { Newsletter } from "../common/footerComponents/newsletter";
 import { JoinTheCommunity } from "../common/footerComponents/joinTheCommunity";
 import { GetStarted } from "../common/footerComponents/getStarted";
 import Partners from "../common/footerComponents/partners";
+import { XIcon } from "@heroicons/react/solid";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("older_listed");
@@ -38,12 +39,13 @@ const MarketplaceComponent = () => {
   const [sales, setSales] = React.useState([]);
   const { nfts } = useAppSelector((state) => state);
   const [page, setPage] = React.useState(0);
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = React.useState<any>("");
   const [openFilters, setOpenFilters] = React.useState(true);
 
-  const [columnSelected, setColumnSelected] = React.useState("last_7d");
+  const [columnSelected, setColumnSelected] = React.useState("forever");
   const [listedSelected, setListedSelected] = React.useState("trading_cards");
   const [soldSelected, setSoldSelected] = React.useState("trading_cards");
+  const { search: searched } = useRouter().query;
   const cards = convertArrayCards();
 
   const { transactionsBoard } = useStats({
@@ -64,7 +66,11 @@ const MarketplaceComponent = () => {
     getSales(currentOrder);
   }, [currentOrder]);
 
-  React.useEffect(() => {}, [sales]);
+  React.useEffect(() => {
+    if (searched) {
+      setSearch(searched);
+    }
+  }, [searched]);
 
   const getSales = async (currentOrder: string) => {
     const { endersGate, pack } = getAddresses();
@@ -158,7 +164,6 @@ const MarketplaceComponent = () => {
         packSalesCreated.push(sale);
       }
     });
-    console.log(cardSalesCreated, "Cards");
     switch (type) {
       case "trading_cards":
         setSales(cardSalesCreated);
@@ -269,7 +274,6 @@ const MarketplaceComponent = () => {
     }
 
     let thereIsFilters = false;
-    console.log(Object.values(filter));
     Object.values(filter).forEach((element) => {
       if (element) {
         thereIsFilters = true;
@@ -296,7 +300,7 @@ const MarketplaceComponent = () => {
         </div>
         <div className="w-full flex justify-between items-center sm:flex-row flex-col gap-10 lg:px-20 px-4">
           <div
-            className="flex justify-center items-center cursor-pointer rounded-md border border-overlay-border text-primary-disabled bg-overlay-2 p-3"
+            className="flex justify-center items-center cursor-pointer rounded-md border border-overlay-border bg-overlay-2 p-3 text-red-primary hover:text-orange-500"
             onClick={() => setOpenFilters((prev) => !prev)}
           >
             {openFilters ? <CaretLeftOutlined /> : <CaretDownOutlined />}
@@ -305,15 +309,23 @@ const MarketplaceComponent = () => {
             </Typography>
           </div>
           <div className="border flex items-center text-lg justify-center border-overlay-border bg-overlay-2 rounded-xl w-full">
-            <input
-              type="text"
-              className="text-white w-full py-3 px-4 rounded-xl bg-overlay border-r border-overlay-border"
-              placeholder="Search"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-            />
+            <div className="text-white flex items-center w-full py-3 px-4 rounded-xl bg-overlay border-r border-overlay-border">
+              <input
+                type="text"
+                className="text-white w-full bg-transparent focus:outline-none"
+                placeholder="Search"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+              />
+              <div
+                className="text-white cursor-pointer flex items-center"
+                onClick={() => setSearch("")}
+              >
+                <XIcon color="#fff" width={"16px"} />
+              </div>
+            </div>
             <div className="text-white text-xl flex items-center justify-center px-2">
               <SearchOutlined />
             </div>
@@ -371,7 +383,6 @@ const MarketplaceComponent = () => {
                   })
                   .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
                   .map((a, id) => {
-                    console.log(a, "sale");
                     return type !== "packs" ? (
                       <NftCard
                         classes={{ root: "m-4 cursor-pointer" }}
@@ -538,12 +549,6 @@ const MarketplaceComponent = () => {
           </div>
         </div>
       </div>{" "}
-      <div className="flex flex-col w-full">
-        <Newsletter />
-        <JoinTheCommunity />
-        <GetStarted />
-        <Partners />
-      </div>
     </div>
   );
 };

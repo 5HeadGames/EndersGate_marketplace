@@ -1,5 +1,6 @@
 export enum Icons {
   logo = "/icons/logo.png",
+  logoCard = "/icons/card_logo.svg",
   logo5HG = "/icons/5HG.svg",
   logoenders = "/icons/EG_FULL_LOGO.svg",
   harmony = "/icons/harmony.png",

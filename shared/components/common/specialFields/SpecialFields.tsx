@@ -5,13 +5,7 @@ const cards = convertArrayCards();
 
 export const AddressText = ({ text }) => {
   return (
-    <>
-      {"(" +
-        (text?.substring(0, 5) || "") +
-        "..." +
-        (text?.substring(36) || "") +
-        ")"}
-    </>
+    <>{(text?.substring(0, 5) || "") + "..." + (text?.substring(38) || "")}</>
   );
 };
 
@@ -22,7 +16,6 @@ export const TransactionText = ({ text }) => {
 };
 
 export const Type = ({ id }) => {
-
   return (
     <>
       {cards[id]?.properties?.attack?.value
@@ -31,4 +24,17 @@ export const Type = ({ id }) => {
           cards[id].typeCard.substring(1, cards[id].typeCard.length)}
     </>
   );
+};
+
+export const nFormatter = (num) => {
+  if (num >= 1000000000) {
+    return (num / 1000000000).toFixed(1).replace(/\.0$/, "") + "G";
+  }
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+  }
+  if (num >= 1000) {
+    return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+  }
+  return num;
 };

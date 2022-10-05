@@ -19,7 +19,7 @@ interface Props
   balance?: any;
   price?: any;
   byId: boolean;
-  seller: string;
+  seller?: string;
 }
 
 const NFTCard: React.FunctionComponent<Props> = (props) => {
@@ -28,7 +28,7 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
   return (
     <>
       {props.byId ? (
-        <Link href={`/NFTDetailSale/${props.id}`}>
+        <Link href={`/NFTDetailID/${props.id}`}>
           <div
             className={clsx(
               "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 ",
@@ -60,21 +60,25 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                 <div className="flex text-lg font-bold text-left py-2 ">
                   <div className="w-40 relative">
                     <img
-                      src="icons/card_logo.svg"
+                      src={Icons.logoCard}
                       className="w-40 absolute top-[-60px]"
                       alt=""
                     />
                   </div>
-                  <div className="w-full flex flex-col">
+                  <div className="w-full flex flex-col justify-center">
                     <span className="uppercase text-white text-lg">
                       {props.name || "Enders Gate"}
                     </span>
-                    <span
-                      className="text-[12px] text-gray-500 font-medium"
-                      style={{ lineHeight: "10px" }}
-                    >
-                      Owner: {<AddressText text={props.seller} /> || "Owner"}
-                    </span>
+                    {props.seller ? (
+                      <span
+                        className="text-[12px] text-gray-500 font-medium"
+                        style={{ lineHeight: "10px" }}
+                      >
+                        Owner: {<AddressText text={props.seller} /> || "Owner"}
+                      </span>
+                    ) : (
+                      ""
+                    )}
                   </div>
                   <img src={Icons.logo} className="w-10 h-10" alt="" />
                 </div>

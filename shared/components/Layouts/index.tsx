@@ -16,6 +16,7 @@ import {
   AppstoreFilled,
   AreaChartOutlined,
   GoldenFilled,
+  SearchOutlined,
   ShopOutlined,
   TwitterOutlined,
   WalletOutlined,
@@ -27,6 +28,8 @@ import {
   getWeb3,
   loginMetamaskWallet,
 } from "@shared/web3";
+import { XIcon } from "@heroicons/react/solid";
+import { Footer } from "../common/footerComponents/footer";
 
 const styles = {
   content: {
@@ -66,6 +69,7 @@ export default function AppLayout({ children }) {
     message: "",
     value: false,
   });
+  const [search, setSearch] = React.useState("");
   const { blur, message } = useAppSelector((state) => ({
     ...state.layout,
   }));
@@ -155,6 +159,38 @@ export default function AppLayout({ children }) {
         )}
       >
         <Logo />
+        <div className="border flex items-center text-md justify-center border-overlay-border bg-primary-disabled rounded-xl">
+          <div className="text-white flex items-center w-full py-1 px-4 rounded-xl bg-overlay border-r border-overlay-border">
+            <input
+              type="text"
+              className="text-white w-full bg-transparent focus:outline-none"
+              placeholder="Search"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+            />
+            <div
+              className="text-white cursor-pointer flex items-center"
+              onClick={() => setSearch("")}
+            >
+              <XIcon color="#fff" width={"14px"} />
+            </div>
+          </div>
+          <div
+            className="text-dark text-xl flex items-center justify-center px-2 cursor-pointer"
+            onClick={() => {
+              if (search) {
+                if (router.asPath == "/marketplace?search=" + search) {
+                  router.push("/marketplace");
+                }
+                router.push("/marketplace?search=" + search);
+              }
+            }}
+          >
+            <SearchOutlined />
+          </div>
+        </div>
         <div className="md:flex hidden gap-4 items-center">
           {navItems.map((item, index) => {
             return (
@@ -196,15 +232,16 @@ export default function AppLayout({ children }) {
           {notAvailable.message}
         </div>
       ) : (
-        <div
-          className={clsx("bg-overlay", {
-            ["md:px-10 px-6"]: router.asPath !== "/marketplace",
-          })}
-          style={styles.content}
-        >
-          {children}
-          <Message content={message} open={Boolean(message)} />
-        </div>
+        <>
+          <div
+            className={clsx("bg-overlay flex flex-col")}
+            style={styles.content}
+          >
+            {children}
+            <Message content={message} open={Boolean(message)} />
+          </div>
+          <Footer />
+        </>
       )}
     </Layout>
   );

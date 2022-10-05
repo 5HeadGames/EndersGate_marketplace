@@ -3,7 +3,7 @@ import Head from "next/head";
 import type { AppProps } from "next/app";
 import "shared/styles/global-tailwind.css";
 import "shared/styles/index.scss";
-import "shared/styles/style.css";
+import "shared/styles/style.scss";
 import Layout from "shared/components/Layouts";
 import { store } from "redux/store";
 import { Provider } from "react-redux";

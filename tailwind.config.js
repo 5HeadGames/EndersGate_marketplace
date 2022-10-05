@@ -26,6 +26,7 @@ module.exports = {
       overlay: "var(--color-overlay)",
       ["overlay-2"]: "var(--color-overlay-2)",
       ["overlay-3"]: "var(--color-overlay-3)",
+      ["green-button"]: "var(--color-green-button)",
       "overlay-border": "var(--color-overlay-border)",
       alert: {
         success: "var(--color-alert-success)",

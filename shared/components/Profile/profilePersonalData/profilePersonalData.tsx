@@ -52,7 +52,7 @@ const ProfileDataAndActions = () => {
     await setUserData(
       moralisFile
         ? { profileImage: moralisFile, name: values.name }
-        : { name: values.name }
+        : { name: values.name },
     );
     toggleForm(false);
     hide();
@@ -130,7 +130,7 @@ const ProfileDataAndActions = () => {
                     htmlFor="profile_picture"
                     className={clsx(
                       "bg-overlay border border-primary cursor-pointer",
-                      "text-primary px-4 py-2 text-md rounded-md md:ml-4 md:mt-0 mt-4"
+                      "text-primary px-4 py-2 text-md rounded-md md:ml-4 md:mt-0 mt-4",
                     )}
                   >
                     Change Picture
@@ -156,7 +156,7 @@ const ProfileDataAndActions = () => {
           <div
             className={clsx(
               "p-4 flex flex-col w-full justify-center items-center",
-              "border border-overlay-border rounded-md mb-2"
+              "border border-overlay-border rounded-md mb-2",
             )}
           >
             <img src={profileImage} className="h-16 w-16 rounded-full" alt="" />
@@ -186,9 +186,9 @@ const ProfileDataAndActions = () => {
               return (
                 <Button
                   {...link}
-                  decoration={link.decoration || ("fill" as any)}
+                  decoration={"line-white"}
                   key={"profile-option-" + index}
-                  className="p-3 flex justify-start items-start w-full"
+                  className="p-3 flex justify-start items-start w-full rounded-md text-white hover:text-overlay"
                 />
               );
             })}

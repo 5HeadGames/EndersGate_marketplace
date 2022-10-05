@@ -18,6 +18,7 @@ import { convertArrayCards } from "../common/convertCards";
 import clsx from "clsx";
 import Styles from "./styles.module.scss";
 import Tilt from "react-parallax-tilt";
+import { DropdownActions } from "../common/dropdownActions/dropdownActions";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const { user, Moralis, isWeb3Enabled } = useMoralis();
@@ -29,6 +30,11 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const { isAuthenticated } = useMoralis();
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const [currentOrder, setCurrentOrder] = React.useState("lowest_price");
+  const orderMapper = {
+    lowest_price: "Price: Low to High",
+    highest_price: "Price: High to Low",
+  };
 
   const cards: any[] = convertArrayCards();
 
@@ -91,7 +97,9 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
         {id !== undefined && sale !== undefined ? (
           <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
             <h2 className="font-bold text-primary text-center">Buy NFT</h2>
-            <div className="flex sm:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
+            <div className="flex sm:flex-row flex-col gap-4 w-full items-center">
+              {/* <div className="px-10 py-8"> */}
+
               <Tilt>
                 <div className="h-auto">
                   <img
@@ -118,6 +126,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   />
                 </div>
               </Tilt>
+              {/* </div> */}
               <div className="flex flex-col gap-4  justify-between">
                 <div className="flex sm:flex-row flex-col gap-4 w-full justify-end items-center">
                   <label className="text-primary font-medium">
@@ -188,239 +197,179 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
         )}
       </Modal>
       {id !== undefined && sale !== undefined ? (
-        <div className="min-h-screen w-full flex flex-col xl:px-20 md:px-10 sm:px-6 pt-32 pb-20">
-          <div className="flex sm:flex-row flex-col sm:justify-between  w-full">
+        <div className="min-h-screen w-full flex flex-col xl:px-36 md:px-10 sm:px-6 px-4 pt-10 pb-20">
+          <div className="w-full flex xl:flex-row flex-col mt-10 gap-4 justify-center">
             <div className="flex flex-col gap-2">
-              <div
-                className="cursor-pointer text-white flex font-bold items-center gap-1"
-                onClick={() => router.back()}
-              >
-                <LeftOutlined />
-                Back
-              </div>
-              <Typography type="title" className="text-primary">
-                {isPack ? `Pack #${sale?.nftId}` : `Card #${sale?.nftId}`}
-              </Typography>
-              <Typography type="title" className="text-primary">
-                Sale #{id}
-              </Typography>
-            </div>
-            <div className="flex gap-2 items-center sm:mt-0 mt-4 sm:justify-end justify-between">
-              {!notAvailable && (
-                <>
-                  {" "}
-                  <div className="flex flex-col items-end">
-                    <div className="text-primary font-bold flex items-center gap-2">
-                      <MenuOutlined />
-                      <Typography type="title">
-                        {Web3.utils.fromWei(sale.price, "ether")} ONE
-                      </Typography>
-                      {/* <Typography type="subTitle" className="text-white">
-                    $116.15
-                  </Typography> */}
-                    </div>
-
-                    <Typography type="subTitle" className="text-white">
-                      Amount Available: {sale.amount}
-                    </Typography>
-                  </div>
-                  <Button
-                    decoration="fillPrimary"
-                    className="degradated hover:text-white border-none"
-                    size="small"
-                    onClick={() => {
-                      show();
-                    }}
-                  >
-                    <img src={Icons.harmony} className="h-6 w-6" alt="" /> Buy
-                    now
-                  </Button>
-                </>
-              )}
-            </div>
-          </div>
-          <div className="w-full flex md:flex-row flex-col mt-10">
-            <div className="flex relative justify-center md:w-1/2 xl:px-24">
-              <Tilt>
-                <div className="sm:sticky sm:top-32 h-min w-auto">
-                  <img
-                    src={
-                      isPack
-                        ? packs[sale.nftId].properties.image.value
-                        : cards[sale.nftId].properties.image?.value ||
-                          Icons.logo
-                    }
-                    className={clsx(
-                      Styles.animatedImageMain,
-                      {
-                        "rounded-full": !isPack
-                          ? cards[sale.nftId].typeCard == "avatar"
-                          : false,
-                      },
-                      {
-                        "rounded-md": !isPack
-                          ? cards[sale.nftId].typeCard != "avatar"
-                          : false,
-                      },
-                    )}
-                    alt=""
-                  />
-                </div>
-              </Tilt>
-            </div>
-            <div className="flex flex-col md:w-1/2">
-              <div className="flex flex-col">
-                <Typography type="title" className="text-primary font-bold">
-                  About NFT
-                </Typography>
-                <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
-                  <div className="flex flex-row gap-4">
-                    <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
-                        NAME
-                      </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
-                        {isPack
-                          ? packs[sale.nftId].properties.name.value
-                          : cards[sale.nftId].properties.name?.value}
-                      </Typography>
-                    </div>
-                    {!isPack &&
-                      (cards[sale.nftId].properties.type?.value ||
-                        cards[sale.nftId].properties.attack?.value) && (
-                        <div className="flex flex-col">
-                          <Typography
-                            type="subTitle"
-                            className="text-white font-bold"
-                          >
-                            TYPE
-                          </Typography>
-                          <Typography
-                            type="subTitle"
-                            className="text-primary opacity-75"
-                          >
-                            <Type id={sale.nftId}></Type>
-                          </Typography>
-                        </div>
+              <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
+                <img
+                  src={
+                    isPack
+                      ? packs[sale?.nftId].properties.image.value
+                      : cards[sale?.nftId]?.properties?.image?.value ||
+                        Icons.logo
+                  }
+                  className="absolute xl:top-[-20%] top-[-25%] bottom-0 xl:left-[-55%] left-[-35%] right-0 margin-auto opacity-50 xl:min-w-[1050px] min-w-[175%]"
+                  alt=""
+                />
+                <Tilt className="flex items-center justify-center">
+                  <div className="sm:sticky sm:top-32 h-min w-auto">
+                    <img
+                      src={
+                        isPack
+                          ? packs[sale.nftId].properties.image.value
+                          : cards[sale.nftId].properties.image?.value ||
+                            Icons.logo
+                      }
+                      className={clsx(
+                        Styles.animatedImageMain,
+                        {
+                          "rounded-full": !isPack
+                            ? cards[sale.nftId].typeCard == "avatar"
+                            : false,
+                        },
+                        {
+                          "rounded-md": !isPack
+                            ? cards[sale.nftId].typeCard != "avatar"
+                            : false,
+                        },
                       )}
-                    {!isPack && cards[sale.nftId].properties.rarity?.value && (
-                      <div className="flex flex-col">
-                        <Typography
-                          type="subTitle"
-                          className="text-white font-bold"
-                        >
-                          RARITY
-                        </Typography>
-                        <Typography
-                          type="subTitle"
-                          className="text-primary opacity-75"
-                        >
-                          {cards[sale.nftId].properties.rarity?.value}
-                        </Typography>
-                      </div>
-                    )}
+                      alt=""
+                    />
                   </div>
-                  <div>
-                    <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
-                        DESCRIPTION
-                      </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
-                        {isPack
-                          ? packs[sale.nftId].properties.description.value
-                          : cards[sale.nftId].properties.description?.value}
-                      </Typography>
+                </Tilt>
+              </div>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
+                  <p className="absolute top-4 right-6 text-overlay-border text-sm">
+                    OWNER INFO
+                  </p>
+                  <img src={Icons.logoCard} className="w-16 h-16" alt="" />
+                  <div className="flex flex-col">
+                    <h2 className="text-xl font-[450] text-white">
+                      Owner Name
+                    </h2>
+                    <p className="text-overlay-border text-xl font-bold">
+                      <AddressText text={sale.seller}></AddressText>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col xl:w-max w-full py-10">
+              <div className="flex flex-col w-full md:min-h-[620px] md:max-h-[620px]">
+                <div className="flex flex-col">
+                  <h1 className="text-primary uppercase md:text-4xl text-3xl font-bold">
+                    {isPack
+                      ? packs[sale?.nftId].properties.name.value
+                      : cards[sale?.nftId]?.properties?.name?.value}
+                  </h1>
+                  <div className="flex flex-col md:px-6 md:py-4 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
+                    <p className="absolute md:top-4 md:right-6 top-2 right-4 text-overlay-border text-sm">
+                      BUY PANEL
+                    </p>
+                    <div className="flex flex-row gap-4 w-full">
+                      <h2 className="md:text-2xl text-lg font-[450] text-white">
+                        Current price:
+                      </h2>
+                    </div>
+                    <div className="flex flex-row xl:gap-32 gap-16 w-full">
+                      <div className="flex flex-col">
+                        <h2 className="md:text-3xl text-xl font-[450] text-white whitespace-nowrap">
+                          {Web3.utils.fromWei(sale.price, "ether")} ONE{" "}
+                          <span className="!text-sm text-overlay-border">
+                            ($1.500)
+                          </span>
+                        </h2>
+                        <img
+                          src="/icons/HARMONY.svg"
+                          className="md:h-10 md:w-10 w-8 h-8"
+                          alt=""
+                        />
+                      </div>
+                      <div className="flex flex-col gap-4 w-full items-center md:pl-10 md:pr-16 pr-4">
+                        <Button
+                          decoration="fill"
+                          className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                          onClick={() => {
+                            show();
+                          }}
+                        >
+                          Buy Now
+                        </Button>
+                        <Button
+                          decoration="line-white"
+                          className="bg-dark md:text-lg text-md md:w-48 w-32 py-[6px] rounded-lg text-white hover:text-overlay border-none"
+                        >
+                          Make Offer
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex flex-row gap-4 w-full justify-between">
+                      <div className="flex flex-col w-1/2 justify-end">
+                        <p className="text-primary-disabled md:text-lg text-md">
+                          Time left:{" "}
+                          <span className="text-white font-bold md:text-xl text-lg">
+                            6h 8m
+                          </span>
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-4 pb-2">
+                        <img
+                          src={Icons.logo}
+                          className="md:w-12 md:h-12 w-8 h-8"
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col pt-2 h-full">
+                  <div className="flex flex-col px-6 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative min-h-full">
+                    <p className="absolute top-4 right-6 text-overlay-border text-sm">
+                      OFFERS
+                    </p>
+                    <div className="flex flex-row gap-4 w-full pb-2">
+                      <h2 className="md:text-2xl text-lg font-[450] text-white">
+                        Offers
+                      </h2>
+                    </div>
+                    <div className="flex flex-row xl:gap-20 gap-16 w-full">
+                      <DropdownActions
+                        title={orderMapper[currentOrder]}
+                        className="!py-2 !bg-dark !rounded-xl !px-4 !text-white"
+                        actions={[
+                          {
+                            label: "Price: Low to High",
+                            onClick: () => setCurrentOrder("lowest_price"),
+                          },
+                          {
+                            label: "Price: High to Low",
+                            onClick: () => setCurrentOrder("highest_price"),
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div className="h-full flex flex-col items-center justify-center text-white font-bold gap-4">
+                      <img src={Icons.logoCard} className="w-24 h-24" alt="" />
+                      There aren't offers for this NFT
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col pt-6">
-                <Typography type="title" className="text-primary font-bold">
-                  Sale Details
-                </Typography>
-                <div className="flex flex-col gap-4 px-10 py-6 border border-primary rounded-xl mt-4">
-                  <div className="flex flex-row gap-4">
+              <div className="flex flex-col w-full min-h-[400px] max-h-[400px]">
+                <div className="flex flex-col pt-6 ">
+                  <div className="flex items-center gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
+                    <p className="absolute top-4 right-6 text-overlay-border text-sm">
+                      OWNER INFO
+                    </p>
+                    <img src={Icons.logoCard} className="w-16 h-16" alt="" />
                     <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
-                        OWNER
-                      </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
+                      <h2 className="md:text-xl text-lg font-[450] text-white">
+                        Owner Name
+                      </h2>
+                      <p className="text-primary-disabled md:text-xl text-lg font-bold">
                         <AddressText text={sale.seller}></AddressText>
-                      </Typography>
-                    </div>
-                    <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
-                        AMOUNT OF {isPack ? "PACKS" : "CARDS"} AVAILABLE
-                      </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
-                        {sale.amount}
-                      </Typography>
-                    </div>
-                  </div>
-                  <div className="flex flex-row gap-4">
-                    <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
-                        FINISH AT
-                      </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
-                        <TimeConverter
-                          UNIX_timestamp={
-                            parseInt(sale.duration) + parseInt(sale.startedAt)
-                          }
-                        ></TimeConverter>
-                      </Typography>
-                    </div>
-                    <div className="flex flex-col">
-                      <Typography
-                        type="subTitle"
-                        className="text-white font-bold"
-                      >
-                        STATUS
-                      </Typography>
-                      <Typography
-                        type="subTitle"
-                        className="text-primary opacity-75"
-                      >
-                        {sale.status == 0 &&
-                        Math.floor(new Date().getTime() / 1000) <=
-                          parseInt(sale?.duration) + parseInt(sale?.startedAt)
-                          ? "Active"
-                          : sale.status == 1
-                          ? "Sold"
-                          : sale.status == 2
-                          ? "Cancelled"
-                          : "Outdated"}
-                      </Typography>
+                      </p>
                     </div>
                   </div>
                 </div>

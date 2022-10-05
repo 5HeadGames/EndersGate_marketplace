@@ -1,9 +1,9 @@
-import {Button} from "@shared/components/common/button";
-import {Typography} from "@shared/components/common/typography";
-import {Icons} from "@shared/const/Icons";
+import { Button } from "@shared/components/common/button";
+import { Typography } from "@shared/components/common/typography";
+import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
-import {useAppSelector} from "redux/store";
+import { useAppSelector } from "redux/store";
 import {
   AppstoreOutlined,
   SearchOutlined,
@@ -16,10 +16,11 @@ import { useMoralis } from "react-moralis";
 import Link from "next/link";
 import { Images } from "@shared/const/Images";
 import { convertArrayCards } from "@shared/components/common/convertCards";
+import { Dropdown } from "@shared/components/common/dropdown/dropdown";
 
 const navItems = [
-  { title: "Trading Cards", value: "trading_cards" },
-  { title: "Packs", value: "packs" },
+  { title: "Trading Cards", value: "Trading Cards" },
+  { title: "Packs", value: "Packs" },
 ];
 
 const Inventory = () => {
@@ -27,7 +28,7 @@ const Inventory = () => {
   const { user } = useMoralis();
   const inventoryCards = nfts.balanceCards;
   const [inventoryPacks, setInventoryPacks] = React.useState([]);
-  const [columnSelected, setColumnSelected] = React.useState("trading_cards");
+  const [columnSelected, setColumnSelected] = React.useState("Trading Cards");
   const [balance, setBalance] = React.useState("0");
   const [search, setSearch] = React.useState("");
 
@@ -78,29 +79,24 @@ const Inventory = () => {
           {balance} ONE
         </Typography>
       </div>
-      <div className="flex rounded-t-md border-2 border-overlay-border mt-4 mb-4 overflow-hidden">
-        {navItems.map((item, index) => {
-          return (
-            <div
-              key={"navBarItem-" + index}
-              className={clsx(
-                {
-                  "bg-primary-disabled text-white":
-                    columnSelected === item.value,
-                },
-                {
-                  "text-primary": columnSelected !== item.value,
-                },
-                "border-r-2 border-overlay-border cursor-pointer px-4 py-2 "
-              )}
-              onClick={() => setColumnSelected(item.value)}
-            >
-              <Typography type="subTitle">{item.title}</Typography>
-            </div>
-          );
-        })}
+      <div className="flex w-full items-center justify-center py-4 text-xl">
+        <Dropdown
+          classTitle={"text-red-primary hover:text-orange-500"}
+          title={columnSelected}
+        >
+          <div className="flex flex-col rounded-md border border-overlay-border">
+            {navItems.map((item) => (
+              <div
+                className="p-4 text-center font-bold hover:text-orange-500 text-primary whitespace-nowrap cursor-pointer"
+                onClick={() => setColumnSelected(item.value)}
+              >
+                {item.title}
+              </div>
+            ))}
+          </div>
+        </Dropdown>
       </div>
-      <div className="flex">
+      <div className="flex mb-4">
         <div className="border flex items-center text-md justify-center border-primary rounded-xl px-4 py-2 md:w-64 w-40 ml-10">
           <div className="text-white text-xl flex items-center justify-center">
             <SearchOutlined />
@@ -117,27 +113,27 @@ const Inventory = () => {
       </div>
       <div
         className={clsx(
-          "flex mb-10  justify-center",
+          "flex mb-10 justify-center",
           {
             [`${Styles.gray} flex-col items-center gap-6 h-72`]:
               (inventoryCards.length == 0 &&
-                columnSelected === "trading_cards") ||
-              (inventoryPacks.length == 0 && columnSelected === "packs"),
+                columnSelected === "Trading Cards") ||
+              (inventoryPacks.length == 0 && columnSelected === "Packs"),
           },
           {
-            ["gap-2 flex-wrap gap-2"]:
+            ["gap-2 flex-wrap gap-6"]:
               (inventoryCards.length > 0 &&
-                columnSelected === "trading_cards") ||
-              (inventoryPacks.length > 0 && columnSelected === "packs"),
-          }
+                columnSelected === "Trading Cards") ||
+              (inventoryPacks.length > 0 && columnSelected === "Packs"),
+          },
         )}
       >
-        {inventoryCards.length > 0 && columnSelected === "trading_cards" ? (
+        {inventoryCards.length > 0 && columnSelected === "Trading Cards" ? (
           inventoryCards
             .filter((card) =>
-              cards[card.id].properties.name.value
+              cards[card.id]?.properties?.name?.value
                 .toLowerCase()
-                .includes(search.toLowerCase())
+                .includes(search.toLowerCase()),
             )
             .map((card) => {
               return (
@@ -145,34 +141,61 @@ const Inventory = () => {
                   <NFTCard
                     key={card.id}
                     id={card.id}
-                    icon={cards[card.id].properties.image.value}
-                    name={cards[card.id].properties.name.value}
+                    icon={cards[card.id]?.properties?.image?.value}
+                    name={cards[card.id]?.properties?.name?.value}
                     balance={card.balance}
                     byId
                   />
                 )
               );
             })
-        ) : inventoryPacks.length > 0 && columnSelected === "packs" ? (
+        ) : inventoryPacks.length > 0 && columnSelected === "Packs" ? (
           inventoryPacks.map((pack, index) => {
             return (
               parseInt(pack.quantity) > 0 && (
-                <Link href={`/PackDetailID/${pack.id}`} key={index}>
+                <Link href={`/PackDetailID/${pack.id}`}>
                   <div
                     className={clsx(
-                      "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer"
+                      "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 m-4 cursor-pointer",
+                      Styles.cardHover,
                     )}
                   >
-                    <div className="w-full flex flex-col text-xs gap-1">
-                      <div className="w-full flex justify-end">
-                        <span>X{pack.quantity}</span>
+                    <img
+                      src={pack.image}
+                      className="absolute top-[-40%] bottom-0 left-[-5%] right-0 margin-auto opacity-50 min-w-[110%]"
+                      alt=""
+                    />
+                    <div className="flex flex-col items-center relative">
+                      <div className="w-full flex flex-col items-center text-xs gap-1">
+                        <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
+                          <span>
+                            Pack #{pack.id !== undefined ? pack.id : "12345"}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="w-full h-36 flex justify-center items-center my-4">
-                      <img src={pack.image} className={"h-36"} />
-                    </div>
-                    <div className="flex flex-col text-sm text-center">
-                      <span>{pack.name}</span>
+                      <div className="w-full h-72 flex justify-center items-center my-6">
+                        <img
+                          src={pack.image || Icons.logo}
+                          className={pack.image ? "h-64" : "h-24"}
+                        />
+                      </div>
+                      <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
+                        <div className="flex text-lg font-bold text-left py-2 ">
+                          <div className="w-40 relative">
+                            <img
+                              src={Icons.logoCard}
+                              className="w-40 absolute top-[-60px]"
+                              alt=""
+                            />
+                          </div>
+                          <div className="w-full flex flex-col justify-center">
+                            <span className="uppercase text-white text-lg">
+                              {pack.name || "Enders Gate"}
+                            </span>
+                          </div>
+                          <img src={Icons.logo} className="w-10 h-10" alt="" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </Link>

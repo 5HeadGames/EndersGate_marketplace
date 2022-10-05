@@ -5,6 +5,7 @@ import { Typography } from "../../typography";
 import { InputProps } from "@shared/interfaces/common";
 import { Icons } from "@shared/const/Icons";
 import { Icon } from "../../icon";
+import { XIcon } from "@heroicons/react/solid";
 
 export const Input: React.FC<
   InputProps & React.InputHTMLAttributes<HTMLInputElement>
@@ -143,7 +144,7 @@ export const Input: React.FC<
             onClick={() => reset({ [name]: "" })}
             className="absolute right-3 top-0 bottom-0 my-auto text-primary-disabled flex items-center justify-center font-bold cursor-pointer"
           >
-            x
+            <XIcon color="#fff" width={"16px"} />
           </div>
         </div>
       </div>

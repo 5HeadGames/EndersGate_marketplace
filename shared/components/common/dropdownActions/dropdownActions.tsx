@@ -6,7 +6,11 @@ import { Typography } from "../typography";
 import { Icons } from "@shared/const/Icons";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 
-export const DropdownActions: React.FC<any> = ({ title, actions }) => {
+export const DropdownActions: React.FC<any> = ({
+  title,
+  actions,
+  className,
+}) => {
   return (
     <div>
       <Menu as="div" className="relative inline-block text-left">
@@ -16,7 +20,12 @@ export const DropdownActions: React.FC<any> = ({ title, actions }) => {
             <>
               <div>
                 <Menu.Button className="inline-flex justify-center w-full font-normal bg-transparent focus:outline-none">
-                  <div className="flex justify-center items-center cursor-pointer rounded-md border border-overlay-border text-primary-disabled bg-overlay-2 p-3">
+                  <div
+                    className={clsx(
+                      className,
+                      "flex justify-center items-center cursor-pointer rounded-md border border-overlay-border bg-overlay-2 p-3 text-red-primary hover:text-orange-500",
+                    )}
+                  >
                     <Typography
                       type="subTitle"
                       className="mr-2 text-lg whitespace-nowrap"
@@ -45,7 +54,7 @@ export const DropdownActions: React.FC<any> = ({ title, actions }) => {
                           {() => (
                             <div
                               className={clsx(
-                                "flex justify-start items-center py-[10px] px-3 text-primary opacity-50 hover:opacity-100 hover:text-white",
+                                "flex justify-start items-center py-[10px] px-3 text-primary hover:text-orange-500",
                                 "whitespace-nowrap",
                               )}
                               onClick={() => {
