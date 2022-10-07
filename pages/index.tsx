@@ -1,20 +1,9 @@
+import DashboardComponent from "@shared/components/Dashboard/dashboard";
 import React from "react";
-import NFTTokenIds from "../shared/components/NFTTokenIds";
-import "antd/dist/antd.css";
-import { GetServerSideProps } from "next";
+import Moralis from "moralis";
 
-const App = () => {
-  const [inputValue, setInputValue] = React.useState("explore");
-  return <NFTTokenIds inputValue={inputValue} setInputValue={setInputValue} />;
+const Dashboard = () => {
+  return <DashboardComponent />;
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  return {
-    redirect: {
-      destination: "/dashboard",
-      permanent: false,
-    },
-  };
-};
-
-export default App;
+export default Dashboard;

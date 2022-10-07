@@ -142,9 +142,9 @@ export const Input: React.FC<
           )}
           <div
             onClick={() => reset({ [name]: "" })}
-            className="absolute right-3 top-0 bottom-0 my-auto text-primary-disabled flex items-center justify-center font-bold cursor-pointer"
+            className="absolute right-2 top-0 bottom-0 my-auto text-primary-disabled flex items-center justify-center font-bold cursor-pointer"
           >
-            <XIcon color="#fff" width={"16px"} />
+            <XIcon color="#fff" width={"12px"} />
           </div>
         </div>
       </div>

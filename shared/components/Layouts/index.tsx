@@ -30,6 +30,7 @@ import {
 } from "@shared/web3";
 import { XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
+import { Dropdown } from "../common/dropdown/dropdown";
 
 const styles = {
   content: {
@@ -48,16 +49,41 @@ const styles = {
 };
 
 const navItems = [
-  { name: "EXPLORE", link: "/dashboard", icon: <ShopOutlined /> },
+  { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
   {
     name: "STATS",
-    link: "/marketplace",
+    link: "/",
     icon: <AreaChartOutlined />,
   },
   {
     link: "/profile/inventory",
     name: "INVENTORY",
     icon: <GoldenFilled />,
+  },
+];
+
+const profileItems = [
+  { name: "PROFILE", link: "/profile", icon: <ShopOutlined /> },
+  {
+    name: "ACTIVITY",
+    link: "/profile/activity",
+    icon: <AreaChartOutlined />,
+  },
+
+  {
+    link: "/profile/inventory",
+    name: "INVENTORY",
+    icon: <GoldenFilled />,
+  },
+  {
+    name: "MY SALES",
+    link: "/profile/mySales",
+    icon: <AreaChartOutlined />,
+  },
+  {
+    name: "SETTINGS",
+    link: "/profile/accountSettings",
+    icon: <AreaChartOutlined />,
   },
 ];
 
@@ -204,11 +230,33 @@ export default function AppLayout({ children }) {
               </>
             );
           })}
-          <NavbarItem
-            name={isAuthenticated ? "MY ACCOUNT" : "Log In"}
-            link={isAuthenticated ? "/profile" : "/login"}
-            route={router.asPath}
-          />
+          {isAuthenticated ? (
+            <Dropdown
+              classTitle={"text-white opacity-50 hover:opacity-100 font-bold"}
+              title={"MY ACCOUNT"}
+            >
+              <div className="flex flex-col items-center px-4 border border-overlay-border rounded-xl">
+                {profileItems.map((item, index) => {
+                  return (
+                    <>
+                      <NavbarItem
+                        key={index}
+                        name={item.name}
+                        link={item.link}
+                        route={router.asPath}
+                      />
+                    </>
+                  );
+                })}
+              </div>
+            </Dropdown>
+          ) : (
+            <NavbarItem
+              name={isAuthenticated ? "MY ACCOUNT" : "LOG IN"}
+              link={isAuthenticated ? "/profile" : "/login"}
+              route={router.asPath}
+            />
+          )}
         </div>
         <div
           className="md:hidden flex"
@@ -267,7 +315,7 @@ export const Message: React.FunctionComponent<{
 };
 
 export const Logo = () => (
-  <Link href="/dashboard">
+  <Link href="/">
     <div className="mr-4 md:py-0 py-2 flex gap-2 items-center cursor-pointer">
       <img className="h-6" src={Icons.logo5HG} alt="logo" />
       <img className="h-6 xl:block hidden" src={Icons.logoenders} alt="logo" />

@@ -17,6 +17,7 @@ import Link from "next/link";
 import { Images } from "@shared/const/Images";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import { Dropdown } from "@shared/components/common/dropdown/dropdown";
+import { XIcon } from "@heroicons/react/solid";
 
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
@@ -72,43 +73,51 @@ const Inventory = () => {
     setBalance(balance);
   };
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex items-center rounded-md border border-overlay-border p-4 w-56 gap-4">
-        <img src={Icons.harmony} className="h-16 w-16" alt="" />
-        <Typography type="title" className="text-primary">
-          {balance} ONE
-        </Typography>
-      </div>
-      <div className="flex w-full items-center justify-center py-4 text-xl">
-        <Dropdown
-          classTitle={"text-red-primary hover:text-orange-500"}
-          title={columnSelected}
-        >
-          <div className="flex flex-col rounded-md border border-overlay-border">
-            {navItems.map((item) => (
-              <div
-                className="p-4 text-center font-bold hover:text-orange-500 text-primary whitespace-nowrap cursor-pointer"
-                onClick={() => setColumnSelected(item.value)}
-              >
-                {item.title}
-              </div>
-            ))}
+    <div className="flex flex-col w-full px-24">
+      <h2 className="text-white font-bold text-4xl mb-8">
+        My Enders Gate NFTs
+      </h2>
+      <div className="flex gap-4 items-center mb-4">
+        <div className="border flex items-center text-lg justify-center border-overlay-border bg-overlay-2 rounded-xl w-full">
+          <div className="text-white flex items-center w-full py-3 px-4 rounded-xl bg-overlay border-r border-overlay-border">
+            <input
+              type="text"
+              className="text-white w-full bg-transparent focus:outline-none"
+              placeholder="Search"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+            />
+            <div
+              className="text-white cursor-pointer flex items-center"
+              onClick={() => setSearch("")}
+            >
+              <XIcon color="#fff" width={"16px"} />
+            </div>
           </div>
-        </Dropdown>
-      </div>
-      <div className="flex mb-4">
-        <div className="border flex items-center text-md justify-center border-primary rounded-xl px-4 py-2 md:w-64 w-40 ml-10">
-          <div className="text-white text-xl flex items-center justify-center">
+          <div className="text-white text-xl flex items-center justify-center px-2">
             <SearchOutlined />
           </div>
-          <input
-            type="text"
-            className="ml-2 text-white bg-transparent w-full"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-            }}
-          />
+        </div>
+        <div className="flex items-center justify-center py-4 text-xl">
+          <Dropdown
+            classTitle={
+              "text-red-primary hover:text-orange-500 whitespace-nowrap w-60"
+            }
+            title={columnSelected}
+          >
+            <div className="flex flex-col rounded-md border border-overlay-border">
+              {navItems.map((item) => (
+                <div
+                  className="p-4 text-center font-bold hover:text-orange-500 text-primary whitespace-nowrap cursor-pointer"
+                  onClick={() => setColumnSelected(item.value)}
+                >
+                  {item.title}
+                </div>
+              ))}
+            </div>
+          </Dropdown>
         </div>
       </div>
       <div

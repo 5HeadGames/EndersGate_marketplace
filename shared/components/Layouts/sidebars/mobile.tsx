@@ -1,13 +1,13 @@
-import React, {Fragment, useRef} from "react";
-import {Dialog, Transition} from "@headlessui/react";
+import React, { Fragment, useRef } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 import clsx from "clsx";
-import {XIcon} from "@heroicons/react/outline";
+import { XIcon } from "@heroicons/react/outline";
 import Link from "next/link";
-import {useMoralis} from "react-moralis";
+import { useMoralis } from "react-moralis";
 
-import {useRouter} from "next/router";
-import {Icons} from "@shared/const/Icons";
-import {Button} from "@shared/components/common/button/button";
+import { useRouter } from "next/router";
+import { Icons } from "@shared/const/Icons";
+import { Button } from "@shared/components/common/button/button";
 import ProfileDataAndActions from "@shared/components/Profile/profilePersonalData/profilePersonalData";
 import {
   AppstoreFilled,
@@ -80,8 +80,8 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
         },
       ],
     },
-    { name: "Dashboard", link: "/dashboard", icon: <AreaChartOutlined /> },
-    { name: "Marketplace", link: "/marketplace", icon: <ShopOutlined /> },
+    { name: "Explore", link: "/marketplace", icon: <AreaChartOutlined /> },
+    { name: "Stats", link: "/", icon: <ShopOutlined /> },
     {
       link: "/profile/inventory",
       name: "Inventory",
@@ -89,7 +89,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
     },
   ];
   const [collapse, setCollapse] = React.useState(
-    new Array(navItems.length).fill(false)
+    new Array(navItems.length).fill(false),
   );
 
   return (
@@ -152,7 +152,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                   <Link href="/">
                     <a
                       className={clsx(
-                        "cursor-pointer flex items-center justify-center"
+                        "cursor-pointer flex items-center justify-center",
                       )}
                     >
                       <img className="w-40" src={Icons.logo} alt="" />
@@ -169,7 +169,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                               "opacity-50": item.link !== router.asPath,
                             },
 
-                            "flex justify-between items-center"
+                            "flex justify-between items-center",
                           )}
                           onClick={() =>
                             setCollapse((prev) => {
@@ -187,7 +187,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                         >
                           <p
                             className={clsx(
-                              "group flex items-center px-3 py-4 hover:opacity-90 text-base rounded-md  relative text-primary"
+                              "group flex items-center px-3 py-4 hover:opacity-90 text-base rounded-md  relative text-primary",
                             )}
                           >
                             <div className="mr-4 flex-shrink-0 flex items-start text-primary text-xl">
@@ -215,7 +215,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                                   {
                                     "opacity-50":
                                       subItem.href !== router.asPath,
-                                  }
+                                  },
                                 )}
                                 target="_blank"
                                 rel="noreferrer"
@@ -242,7 +242,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                               "group flex items-center px-3 py-4  hover:opacity-90 text-base rounded-md  relative text-primary",
                               {
                                 "opacity-50": item.link !== router.asPath,
-                              }
+                              },
                             )}
                             onClick={() => setSidebarOpen(false)}
                           >
@@ -265,14 +265,14 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                   ) : (
                     <div className="mb-4">
                       <Button
-                        decoration="fill"
+                        decoration="line-white"
                         size="small"
                         onClick={() => {
                           setSidebarOpen(false);
                           router.push("/login");
                         }}
                       >
-                        Log In
+                        LOG IN
                       </Button>
                     </div>
                   )}

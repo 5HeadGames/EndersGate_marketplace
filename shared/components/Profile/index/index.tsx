@@ -1,17 +1,19 @@
-import {Typography} from "@shared/components/common/typography";
+import { Typography } from "@shared/components/common/typography";
 import React from "react";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import clsx from "clsx";
-import {useMoralis} from "react-moralis";
-import {Icons} from "@shared/const/Icons";
-import {CopyOutlined, LoginOutlined, SelectOutlined} from "@ant-design/icons";
-import {AddressText} from "@shared/components/common/specialFields/SpecialFields";
-import {useToasts} from "react-toast-notifications";
+import { useMoralis } from "react-moralis";
+import { Icons } from "@shared/const/Icons";
+import { CopyOutlined, LoginOutlined, SelectOutlined } from "@ant-design/icons";
+import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
+import { useToasts } from "react-toast-notifications";
 import Styles from "./styles.module.scss";
 import Link from "next/link";
-import {getBalance} from "@shared/web3";
+import { getBalance } from "@shared/web3";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import Web3 from "web3";
+import { Button } from "@shared/components/common/button/button";
+import Inventory from "../inventory/inventory";
 
 const ProfileIndexPage = () => {
   const [balance, setBalance] = React.useState("0");
@@ -36,7 +38,7 @@ const ProfileIndexPage = () => {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
         })
-        .slice(0, activities.length > 5 ? 5 : activities.length)
+        .slice(0, activities.length > 5 ? 5 : activities.length),
     );
   };
 
@@ -56,102 +58,28 @@ const ProfileIndexPage = () => {
 
   const { addToast } = useToasts();
 
+  const profileImage = user?.get("profileImage")
+    ? user.get("profileImage").url()
+    : Icons.logo;
+
   return (
-    <>
-      <div
-        className={clsx(
-          "flex flex-col justify-between border border-overlay-border p-4 rounded-t-md h-52 relative overflow-hidden"
-        )}
-      >
+    <div className="flex flex-col py-8">
+      <div className="flex flex-col relative mb-28">
+        <div className="w-full">
+          <img
+            src="/images/bg_landing.png"
+            className="w-full border-b border-overlay-border"
+            alt=""
+          />
+        </div>
         <img
-          src={Icons.harmony}
-          className="absolute top-[-80px] right-[-80px]"
+          className="w-40 rounded-full border-t border-overlay-border p-2 bg-overlay absolute bottom-[-80px] left-[100px]"
+          src={profileImage}
           alt=""
         />
-        <div className="flex flex-row relative">
-          <div className="flex flex-col ">
-            {" "}
-            <Typography type="title" className="text-primary ">
-              Balance
-            </Typography>
-            <h1 className="text-white" style={{ fontSize: "32px" }}>
-              {balance} ONE
-            </h1>
-          </div>
-        </div>
       </div>
-      <div className="flex justify-between border border-t-0 border-overlay-border p-4 rounded-b-md">
-        <Typography type="subTitle" className="text-primary">
-          Address: <AddressText text={user?.get("ethAddress") || ""} />
-        </Typography>
-        <div className="flex items-center text-primary gap-4">
-          <div
-            onClick={() => {
-              navigator.clipboard.writeText(user?.get("ethAddress"));
-              addToast("Copied to clipboard", { appearance: "info" });
-            }}
-            className="cursor-pointer"
-          >
-            <CopyOutlined />
-          </div>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={`https://explorer.harmony.one/address/${user?.get(
-              "ethAddress"
-            )}`}
-          >
-            <SelectOutlined />
-          </a>
-        </div>
-      </div>
-      <div className="flex flex-col w-full mt-10">
-        <div className="flex justify-between w-full items-center">
-          <Typography type="title" className="text-white">
-            Activities
-          </Typography>
-          <Link href="/profile/activity">
-            <a href="/profile/activity">
-              <Typography type="span" className="text-primary cursor-pointer">
-                View More
-              </Typography>
-            </a>
-          </Link>
-        </div>
-        <hr className="w-full mt-4" />
-        <div
-          className={clsx(
-            "w-full ",
-            "flex flex-col mb-10",
-            {
-              [`${Styles.gray} justify-center items-center gap-6 h-72`]:
-                activities.length === 0,
-            },
-            {
-              ["py-10 gap-y-2"]: activities.length > 0,
-            }
-          )}
-        >
-          {activities.length > 0 ? (
-            activities.map(({ createdAt, type, metadata }, index) => {
-              return (
-                <Activity date={createdAt} type={type} metadata={metadata} />
-              );
-            })
-          ) : (
-            <>
-              <img src={Icons.logo} className="h-40 w-40" alt="" />
-              <Typography
-                type="subTitle"
-                className={clsx(Styles.title, "text-primary")}
-              >
-                You don't have any activity yet
-              </Typography>
-            </>
-          )}
-        </div>
-      </div>
-    </>
+      <Inventory />
+    </div>
   );
 };
 

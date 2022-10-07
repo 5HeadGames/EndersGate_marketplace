@@ -21,6 +21,15 @@ import { Newsletter } from "../common/footerComponents/newsletter";
 import { JoinTheCommunity } from "../common/footerComponents/joinTheCommunity";
 import { GetStarted } from "../common/footerComponents/getStarted";
 import Partners from "../common/footerComponents/partners";
+import { Button } from "../common/button/button";
+import NFTCardSlider from "../Marketplace/itemCard/cardSliderMain";
+import { SliderMain } from "./sliderMain";
+import { Zoom, Navigation } from "swiper";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 
 const DashboardComponent = () => {
   const [columnSelected, setColumnSelected] = React.useState("last_7d");
@@ -58,33 +67,21 @@ const DashboardComponent = () => {
   }, [recentlyListed, recentlySold, salesType]);
 
   React.useEffect(() => {
-    setSalesDefault(recentlyListedCards);
+    setSalesDefault(recentlyListedCards.filter((row, i) => i < 4));
   }, [recentlyListedCards]);
-
-  const [counter, setCounter] = React.useState(0);
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setCounter((prevCount) => {
-        return prevCount < 60 ? prevCount + 1 : 0;
-      }); // <-- Change this line!
-    }, 1500);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
 
   return (
     <>
       <div className="min-h-screen relative flex flex-col">
-        <div className="max-w-[100vw] overflow-hidden h-[100vh] bg-overlay relative flex items-center">
+        <div className="max-w-[100vw] overflow-hidden min-h-[100vh] bg-overlay relative flex items-center">
           <img
             src="/images/bg_landing.svg"
             className={`absolute min-w-[165vw] max-h-[85vh] top-0 banner border-b border-overlay-border`}
             alt=""
           />
-          <div className="flex flex-col pt-36 w-full items-center h-screen relative gap-2 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 px-8 text-white">
+          <div className="flex flex-col pt-36 w-full items-center min-h-screen relative gap-4 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 px-8 text-white">
             <div className="max-w-[1200px] w-full flex justify-between">
-              <div className="flex flex-col gap-8 md:w-1/2">
+              <div className="flex flex-col items-start gap-8 md:w-1/2">
                 <h1 className="text-5xl flex flex-col font-bold">
                   Discover, collect, buy or sell <br /> Endersgate NFTs
                 </h1>
@@ -94,36 +91,116 @@ const DashboardComponent = () => {
                   <span className="text-white font-bold">HEADGAMES</span>{" "}
                   Studio's dedicated NFT marketplace.
                 </p>
+                <div className="flex flex-col gap-1">
+                  <Button
+                    // type="submit"
+                    href={"/marketplace"}
+                    decoration="line-white"
+                    className="rounded-xl bg-overlay text-primary-disabled hover:text-overlay text-[20px] border border-overlay-border py-3 px-10"
+                  >
+                    Explore
+                  </Button>
+                  <a
+                    href="https://www.endersgate.one/legal#marketplace"
+                    className="text-sm text-red-primary"
+                  >
+                    {"> "}Learn more about EG Marketplace
+                  </a>
+                </div>
               </div>
               <div className="xl:w-1/2 flex items-end justify-end">
-                {salesDefault.map((a, id) => {
-                  return (
-                    id === 0 && (
-                      <NFTCard
-                        classes={{ root: "m-4 cursor-pointer" }}
-                        id={a.nftId}
-                        transactionId={a.id}
-                        seller={a.seller}
-                        icon={cards[a.nftId].properties.image.value}
-                        name={cards[a.nftId].properties.name.value}
-                        byId={false}
-                        price={a.price}
-                      />
-                    )
-                  );
-                })}
+                <SliderMain
+                  cards={cards}
+                  salesDefault={salesDefault}
+                ></SliderMain>
               </div>
             </div>
-            <h1 className="max-w-[1200px] w-full">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro
-              officia aperiam voluptatum eius, ipsum sequi? Praesentium,
-              perspiciatis itaque iusto deleniti vero laboriosam quibusdam
-              assumenda. Quas, omnis doloribus. Perspiciatis, blanditiis vel.
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Non
-              repellendus voluptatem totam ad repudiandae assumenda itaque hic,
-              quo quae laborum est sit fugit eum minus optio, alias amet, aut
-              quibusdam?
-            </h1>
+            <div className="max-w-[1200px] w-full flex flex-col gap-4 items-center min-h-[400px] pb-10">
+              <h2 className="font-bold text-white text-xl w-full text-center">
+                Enders Gate Drops
+              </h2>
+              <div className="w-full">
+                <Swiper
+                  slidesPerView={3}
+                  onSlideChange={() => console.log("slide change")}
+                  onSwiper={(swiper) => console.log(swiper)}
+                  zoom={true}
+                  navigation={{
+                    enabled: true,
+                    // nextEl: ".swiper-button-next",
+                    // prevEl: ".swiper-button-prev",
+                  }}
+                  modules={[Zoom, Navigation]}
+                  className="mySwiper"
+                  spaceBetween={10}
+                  breakpoints={{
+                    1300: {
+                      slidesPerView: 3,
+                    },
+                    700: {
+                      slidesPerView: 2,
+                    },
+                    100: {
+                      slidesPerView: 1,
+                    },
+                  }}
+                >
+                  {[
+                    {
+                      name: "Gen 0 Pack Drop",
+                      description:
+                        "Enjoy +230 Unique hand drawn playing cards.",
+                      image: "/images/gen0_pack.png",
+                    },
+                    {
+                      name: "EG NFT Comics",
+                      description: "Collect the lore & enjoy original stories.",
+                      image: "/images/comic_pack.png",
+                    },
+                    ,
+                    {
+                      name: "EG Starter Pack",
+                      description: "Claim a Free Starter Pack!",
+                      image: "/images/starter_pack.png",
+                    },
+                  ]?.map(({ name, description, image }: any) => {
+                    return (
+                      <SwiperSlide>
+                        <div className="w-full flex flex-col items-center justify-center h-[450px]  overflow-hidden">
+                          {/* <div className="px-4"> */}
+                          <div className="bg-secondary rounded-xl border border-overlay-border h-[440px] flex items-end overflow-hidden w-full">
+                            <img
+                              src={image}
+                              className="absolute w-full h-[440px]"
+                              alt=""
+                            />
+                            <div className="p-4 flex items-center justify-center relative w-full rounded-xl bg-secondary border border-secondary gap-2">
+                              <img
+                                src={Icons.logo}
+                                className="w-12 h-12"
+                                alt=""
+                              />
+                              <div className="w-full flex flex-col">
+                                <h2 className="font-bold text-white text-xl">
+                                  {name}
+                                </h2>
+                                <p
+                                  className="text-primary-disabled text-md w-[75%]"
+                                  style={{ lineHeight: "16px" }}
+                                >
+                                  {description}
+                                </p>
+                              </div>
+                            </div>
+                            {/* </div> */}
+                          </div>
+                        </div>
+                      </SwiperSlide>
+                    );
+                  })}
+                </Swiper>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -11,6 +11,7 @@ import { Typography } from "shared/components/common/typography";
 import { InputPassword } from "shared/components/common/form/input-password";
 import { InputEmail } from "shared/components/common/form/input-email";
 import clsx from "clsx";
+import { LoadingOutlined } from "@ant-design/icons";
 
 type Values = {
   email?: string;
@@ -87,66 +88,98 @@ const Login = () => {
   };
 
   React.useEffect(() => {
-    if (isAuthenticated) router.push("/dashboard");
+    if (isAuthenticated) router.push("/");
   }, [isAuthenticated]);
 
   return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center">
-      <div className="flex flex-col gap-4">
-        <Button
-          disabled={loading}
-          decoration="line-white"
-          size="medium"
-          className="w-full mb-2 bg-overlay border border-primary text-white hover:text-overlay"
-          onClick={handleWalletConnect}
-        >
-          {loading ? "..." : "Login with WalletConnect"}
-        </Button>
-        <Button
-          disabled={loading}
-          decoration="line-white"
-          size="medium"
-          className="w-full mb-2 bg-overlay border border-primary text-white hover:text-overlay"
-          onClick={handleMetamaskConnect}
-        >
-          {loading ? "..." : "Login with Metamask Wallet"}
-        </Button>
-        {openForm ? (
-          <EmailPasswordForm
-            onLogin={handleLogin}
-            onRegister={handleRegister}
-            loading={loading}
+    <div className="max-w-[100vw] h-screen overflow-hidden">
+      <div className="max-w-[100vw] overflow-hidden h-[100vh] w-full flex flex-col items-center justify-center gap-10">
+        <div className="absolute h-full max-w-full overflow-hidden">
+          <img
+            src="/images/community.svg"
+            className={`relative min-w-[120vw] min-h-[101vh] top-0 right-0 left-[-8%] mx-auto opacity-25`}
+            alt=""
           />
-        ) : (
-          <Button
-            disabled={loading}
-            decoration="line-primary"
-            size="medium"
-            className="w-full mb-2 bg-overlay border border-primary text-white hover:text-overlay"
-            onClick={() => setOpenForm(true)}
-          >
-            {loading ? "..." : "Login with email & password"}
-          </Button>
-        )}
-      </div>
-      <Modal isShow={Boolean(isShow)}>
-        <div className="flex flex-col items-center p-6">
-          <Typography type="title" className="text-purple-400/75">
-            {`Install Metamask`}
-          </Typography>
-          <p className="text-purple-200/75">
-            You must install{" "}
-            <a
-              href={"https://metamask.io/"}
-              className="text-primary"
-              target="_blank"
-            >
-              metamask
-            </a>{" "}
-            official wallet to connect through this method
-          </p>
         </div>
-      </Modal>
+        <h1 className="font-bold text-white text-3xl relative">
+          JOIN TO <span className="text-red-primary font-bold">5</span>
+          <span className="text-white font-bold">HEADGAMES</span> MARKETPLACE
+        </h1>
+        <div
+          className={clsx(
+            "flex flex-col gap-4 relative h-96 items-center justify-center",
+          )}
+        >
+          {loading == true ? (
+            <LoadingOutlined className="text-5xl text-white" />
+          ) : (
+            <>
+              <Button
+                disabled={loading}
+                decoration="line-white"
+                size="medium"
+                className={clsx(
+                  { ["hidden"]: loading },
+                  "w-full mb-2 bg-overlay border border-primary text-white hover:text-overlay rounded-xl",
+                )}
+                onClick={handleWalletConnect}
+              >
+                {loading ? "..." : "Login with WalletConnect"}
+              </Button>
+              <Button
+                disabled={loading}
+                decoration="line-white"
+                size="medium"
+                className={clsx(
+                  { ["hidden"]: loading },
+                  "w-full mb-2 bg-overlay border border-primary text-white hover:text-overlay rounded-xl",
+                )}
+                onClick={handleMetamaskConnect}
+              >
+                {loading ? "..." : "Login with Metamask Wallet"}
+              </Button>
+              {openForm ? (
+                <EmailPasswordForm
+                  onLogin={handleLogin}
+                  onRegister={handleRegister}
+                  loading={loading}
+                />
+              ) : (
+                <Button
+                  disabled={loading}
+                  decoration="line-white"
+                  size="medium"
+                  className={clsx(
+                    { ["hidden"]: loading },
+                    "w-full mb-2 bg-overlay border border-primary text-white hover:text-overlay rounded-xl",
+                  )}
+                  onClick={() => setOpenForm(true)}
+                >
+                  {loading ? "..." : "Login with email & password"}
+                </Button>
+              )}{" "}
+            </>
+          )}
+        </div>
+        <Modal isShow={Boolean(isShow)}>
+          <div className="flex flex-col items-center p-6">
+            <Typography type="title" className="text-purple-400/75">
+              {`Install Metamask`}
+            </Typography>
+            <p className="text-purple-200/75">
+              You must install{" "}
+              <a
+                href={"https://metamask.io/"}
+                className="text-primary"
+                target="_blank"
+              >
+                metamask
+              </a>{" "}
+              official wallet to connect through this method
+            </p>
+          </div>
+        </Modal>
+      </div>
     </div>
   );
 };
@@ -166,6 +199,7 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -198,12 +232,14 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
   return (
     <>
       <form onSubmit={handleSubmit(onLogin)}>
-        <div className="p-4 flex flex-col bg-secondary rounded-md">
+        <div className="p-4 flex flex-col bg-secondary rounded-xl">
           <div className="mb-4 w-full">
             <InputEmail
               register={register}
               placeholder="Email"
               name="email"
+              classNameContainer="rounded-xl"
+              reset={reset}
               error={errors.email}
             />
           </div>
@@ -212,22 +248,24 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
               register={register}
               placeholder="Password"
               error={errors.password}
+              reset={reset}
+              classNameContainer="rounded-xl"
               name="password"
             />
           </div>
           <Button
-            decoration="fill"
+            decoration="line-white"
             size="small"
             type="submit"
-            className="w-full mb-2"
+            className="w-full mb-2 text-white hover:text-overlay rounded-xl"
             disabled={loading}
           >
-            {loading ? "..." : "Sign in"}
+            {loading ? <LoadingOutlined /> : "Sign in"}
           </Button>
           <span className="text-primary text-xs">
             You dont have an account?{" "}
             <a
-              className="text-white"
+              className="text-red-primary"
               href="#"
               onClick={() => {
                 show();
@@ -239,27 +277,35 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
           </span>
         </div>
       </form>
-      <ModalRegister isShow={isShow}>
+      <ModalRegister isShow={isShow} withoutX>
         <form onSubmit={handleSubmit(onRegister)}>
-          <Typography type="title" className="text-center text-primary">
-            {" "}
-            Register{" "}
-          </Typography>
-          <div className="p-4 flex flex-col bg-secondary rounded-md">
-            <div className="mb-4 w-full">
+          <div className="p-4 flex flex-col gap-4 bg-secondary items-center rounded-md w-96">
+            <Typography
+              type="title"
+              className="text-center text-primary font-bold"
+            >
+              {" "}
+              REGISTER TO <span className="text-red-primary font-bold">5</span>
+              <span className="text-white font-bold">HEADGAMES</span>
+            </Typography>
+            <div className="w-full">
               <InputEmail
                 register={register}
-                placeholder="email"
+                placeholder="Email"
                 name="email"
+                reset={reset}
+                classNameContainer="rounded-xl"
                 error={errors.email}
               />
             </div>
-            <div className="mb-4">
+            <div className="w-full">
               <InputPassword
                 register={register}
-                placeholder=" password"
+                placeholder="Password"
                 name="password"
                 error={errors.password}
+                classNameContainer="rounded-xl"
+                reset={reset}
                 onChangeCustom={(e: any) => {
                   const regexMayus = /[A-Z]/g;
                   if (regexMayus.test(e.target.value)) {
@@ -287,7 +333,7 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
                 }}
               />
             </div>
-            <div className="mb-4">
+            <div className="w-full">
               <div className="grid grid-cols-4 gap-1">
                 <div
                   className={clsx(
@@ -351,10 +397,12 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
               decoration="fill"
               size="small"
               type="submit"
-              className="w-full mb-2"
+              className="md:w-48 w-32 font-bold md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
               disabled={loading}
             >
-              {loading ? "..." : "Register"}
+              <p className="font-bold">
+                {loading ? <LoadingOutlined /> : "REGISTER"}
+              </p>
             </Button>
           </div>
         </form>

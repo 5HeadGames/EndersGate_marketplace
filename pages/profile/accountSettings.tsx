@@ -1,11 +1,11 @@
 import ProfileLayoutComponent from "@shared/components/Profile/profile";
-import {useMoralis} from "react-moralis";
+import { useMoralis } from "react-moralis";
 import React from "react";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import AccountSettingsComponent from "@shared/components/Profile/accountSettings/accountSettings";
 
 const ProfileSettings = () => {
-  const {isAuthenticated} = useMoralis();
+  const { isAuthenticated } = useMoralis();
   const router = useRouter();
 
   React.useEffect(() => {
@@ -14,11 +14,7 @@ const ProfileSettings = () => {
       router.push("/login");
     }
   }, [isAuthenticated]);
-  return (
-    <ProfileLayoutComponent>
-      <AccountSettingsComponent />
-    </ProfileLayoutComponent>
-  );
+  return <AccountSettingsComponent />;
 };
 
 export default ProfileSettings;

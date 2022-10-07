@@ -1,11 +1,11 @@
 import ProfileLayoutComponent from "@shared/components/Profile/profile";
 import React from "react";
-import {useMoralis} from "react-moralis";
-import {useRouter} from "next/router";
+import { useMoralis } from "react-moralis";
+import { useRouter } from "next/router";
 import Inventory from "@shared/components/Profile/inventory/inventory";
 
 const ProfileInventory = () => {
-  const {isAuthenticated} = useMoralis();
+  const { isAuthenticated } = useMoralis();
   const router = useRouter();
 
   React.useEffect(() => {
@@ -14,11 +14,7 @@ const ProfileInventory = () => {
     }
   }, [isAuthenticated]);
 
-  return (
-    <ProfileLayoutComponent>
-      <Inventory></Inventory>
-    </ProfileLayoutComponent>
-  );
+  return <Inventory />;
 };
 
 export default ProfileInventory;
