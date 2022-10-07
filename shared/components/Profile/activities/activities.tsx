@@ -1,22 +1,29 @@
-import {Typography} from "@shared/components/common/typography";
-import {Icons} from "@shared/const/Icons";
+import { Typography } from "@shared/components/common/typography";
+import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
-import {useMoralis} from "react-moralis";
+import { useMoralis } from "react-moralis";
 import Styles from "./styles.module.scss";
-import {Activity} from "../index/index";
+import { Activity } from "../index/index";
+import { getAddresses } from "@shared/web3";
+import {
+  ArrowLeftOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
 
 const navItems = [
-  {title: "Trading Cards", value: "trading_cards"},
-  {title: "Packs", value: "packs"},
-  {title: "Comics", value: "comics"},
+  { title: "Trading Cards", value: "trading_cards" },
+  { title: "Packs", value: "packs" },
+  { title: "Comics", value: "comics" },
 ];
 
 const Activities = () => {
-  const {user} = useMoralis();
+  const { user } = useMoralis();
   const [activities, setActivities] = React.useState<Activity[]>([]);
   const [page, setPage] = React.useState(0);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
+  const { pack } = getAddresses();
 
   const loadEvents = async () => {
     const relation = user.relation("events");
@@ -34,7 +41,7 @@ const Activities = () => {
           return (
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
-        })
+        }),
     );
   };
 
@@ -49,24 +56,23 @@ const Activities = () => {
   }, [activities]);
 
   return (
-    <>
-      <div className="flex justify-between w-full items-center">
-        <Typography type="title" className="text-white">
-          Activities
-        </Typography>
+    <div className="flex flex-col items-center w-full">
+      <div className="flex justify-between  w-full items-center pt-28 mb-10">
+        <h1 className="text-white text-4xl font-bold text-center w-full">
+          My Activities
+        </h1>
       </div>
-      <hr className="w-full my-4" />
       <div
         className={clsx(
           "w-full ",
-          "flex flex-col mb-4",
+          "flex flex-col mb-4 max-w-[900px]",
           {
             [`${Styles.gray} justify-center items-center gap-6 h-72`]:
               activities.length === 0,
           },
           {
             ["gap-y-2"]: activities.length > 0,
-          }
+          },
         )}
       >
         {activities.length > 0 ? (
@@ -75,12 +81,17 @@ const Activities = () => {
               .filter((activity, i) => i < (page + 1) * 10 && i >= page * 10)
               .map(({ createdAt, type, metadata }, index) => {
                 return (
-                  <Activity date={createdAt} type={type} metadata={metadata} />
+                  <Activity
+                    date={createdAt}
+                    type={type}
+                    metadata={metadata}
+                    pack={(metadata as any)?.address == pack}
+                  />
                 );
               })}
             <div className="flex w-full items-center justify-center gap-2">
               <div
-                className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                className="rounded-full flex items-center bg-secondary text-white p-4 cursor-pointer"
                 onClick={() => {
                   if (page > 0) {
                     setPage((prev) => {
@@ -89,13 +100,13 @@ const Activities = () => {
                   }
                 }}
               >
-                {"<"}
+                <LeftOutlined />
               </div>
-              <div className="p-4 rounded-md bg-overlay border border-primary text-primary">
+              <div className="p-3 px-5 flex items-center rounded-full bg-overlay border border-primary text-primary">
                 {page + 1}
               </div>
               <div
-                className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                className="rounded-full flex items-center bg-secondary text-white p-4 cursor-pointer"
                 onClick={() => {
                   if (page < Math.floor((activities.length - 1) / 10)) {
                     setPage((prev) => {
@@ -104,7 +115,7 @@ const Activities = () => {
                   }
                 }}
               >
-                {">"}
+                <RightOutlined />
               </div>
             </div>
           </>
@@ -120,7 +131,7 @@ const Activities = () => {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

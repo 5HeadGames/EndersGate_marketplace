@@ -6,6 +6,7 @@ import React from "react";
 import { useAppSelector } from "redux/store";
 import {
   AppstoreOutlined,
+  LoadingOutlined,
   SearchOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
@@ -72,6 +73,8 @@ const Inventory = () => {
     const balance = await getBalance(user.get("ethAddress"));
     setBalance(balance);
   };
+
+  console.log(inventoryCards, inventoryPacks);
   return (
     <div className="flex flex-col w-full px-24">
       <h2 className="text-white font-bold text-4xl mb-8">
@@ -137,16 +140,22 @@ const Inventory = () => {
           },
         )}
       >
-        {inventoryCards.length > 0 && columnSelected === "Trading Cards" ? (
-          inventoryCards
-            .filter((card) =>
+        {columnSelected === "Trading Cards" ? (
+          inventoryCards.filter(
+            (card) =>
               cards[card.id]?.properties?.name?.value
                 .toLowerCase()
-                .includes(search.toLowerCase()),
-            )
-            .map((card) => {
-              return (
-                card.balance > 0 && (
+                .includes(search.toLowerCase()) && card.balance > 0,
+          ).length > 0 ? (
+            inventoryCards
+              .filter(
+                (card) =>
+                  cards[card.id]?.properties?.name?.value
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) && card.balance > 0,
+              )
+              .map((card) => {
+                return (
                   <NFTCard
                     key={card.id}
                     id={card.id}
@@ -155,62 +164,79 @@ const Inventory = () => {
                     balance={card.balance}
                     byId
                   />
-                )
-              );
-            })
-        ) : inventoryPacks.length > 0 && columnSelected === "Packs" ? (
-          inventoryPacks.map((pack, index) => {
-            return (
-              parseInt(pack.quantity) > 0 && (
-                <Link href={`/PackDetailID/${pack.id}`}>
-                  <div
-                    className={clsx(
-                      "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 m-4 cursor-pointer",
-                      Styles.cardHover,
-                    )}
-                  >
-                    <img
-                      src={pack.image}
-                      className="absolute top-[-40%] bottom-0 left-[-5%] right-0 margin-auto opacity-50 min-w-[110%]"
-                      alt=""
-                    />
-                    <div className="flex flex-col items-center relative">
-                      <div className="w-full flex flex-col items-center text-xs gap-1">
-                        <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
-                          <span>
-                            Pack #{pack.id !== undefined ? pack.id : "12345"}
-                          </span>
+                );
+              })
+          ) : (
+            <div className="h-72 flex flex-col items-center justify-center text-white font-bold gap-4 relative">
+              <img src={Icons.logoCard} className="w-24 h-24" alt="" />
+              You don't own EG NFTs Cards yet
+            </div>
+          )
+        ) : columnSelected === "Packs" ? (
+          inventoryPacks.filter((pack) => parseInt(pack.quantity) > 0).length >
+          0 ? (
+            inventoryPacks
+              .filter((pack) => parseInt(pack.quantity) > 0)
+              .map((pack, index) => {
+                return (
+                  <Link href={`/PackDetailID/${pack.id}`}>
+                    <div
+                      className={clsx(
+                        "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 m-4 cursor-pointer",
+                        Styles.cardHover,
+                      )}
+                    >
+                      <img
+                        src={pack.image}
+                        className="absolute top-[-40%] bottom-0 left-[-5%] right-0 margin-auto opacity-50 min-w-[110%]"
+                        alt=""
+                      />
+                      <div className="flex flex-col items-center relative">
+                        <div className="w-full flex flex-col items-center text-xs gap-1">
+                          <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
+                            <span>
+                              Pack #{pack.id !== undefined ? pack.id : "12345"}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div className="w-full h-72 flex justify-center items-center my-6">
-                        <img
-                          src={pack.image || Icons.logo}
-                          className={pack.image ? "h-64" : "h-24"}
-                        />
-                      </div>
-                      <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
-                        <div className="flex text-lg font-bold text-left py-2 ">
-                          <div className="w-40 relative">
+                        <div className="w-full h-72 flex justify-center items-center my-6">
+                          <img
+                            src={pack.image || Icons.logo}
+                            className={pack.image ? "h-64" : "h-24"}
+                          />
+                        </div>
+                        <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
+                          <div className="flex text-lg font-bold text-left py-2 ">
+                            <div className="w-40 relative">
+                              <img
+                                src={Icons.logoCard}
+                                className="w-40 absolute top-[-60px]"
+                                alt=""
+                              />
+                            </div>
+                            <div className="w-full flex flex-col justify-center">
+                              <span className="uppercase text-white text-lg">
+                                {pack.name || "Enders Gate"}
+                              </span>
+                            </div>
                             <img
-                              src={Icons.logoCard}
-                              className="w-40 absolute top-[-60px]"
+                              src={Icons.logo}
+                              className="w-10 h-10"
                               alt=""
                             />
                           </div>
-                          <div className="w-full flex flex-col justify-center">
-                            <span className="uppercase text-white text-lg">
-                              {pack.name || "Enders Gate"}
-                            </span>
-                          </div>
-                          <img src={Icons.logo} className="w-10 h-10" alt="" />
                         </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              )
-            );
-          })
+                  </Link>
+                );
+              })
+          ) : (
+            <div className="h-72 flex flex-col items-center justify-center text-white font-bold gap-4 relative">
+              <img src={Icons.logoCard} className="w-24 h-24" alt="" />
+              You don't own EG NFTs Packs yet
+            </div>
+          )
         ) : (
           <>
             <img src={Icons.logo} className="h-40 w-40" alt="" />

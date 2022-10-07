@@ -48,6 +48,8 @@ const styles = {
   // },
 };
 
+type ButtonsTypes = { logout: boolean; userData: boolean };
+
 const navItems = [
   { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
   {
@@ -55,36 +57,11 @@ const navItems = [
     link: "/",
     icon: <AreaChartOutlined />,
   },
-  {
-    link: "/profile/inventory",
-    name: "INVENTORY",
-    icon: <GoldenFilled />,
-  },
-];
-
-const profileItems = [
-  { name: "PROFILE", link: "/profile", icon: <ShopOutlined /> },
-  {
-    name: "ACTIVITY",
-    link: "/profile/activity",
-    icon: <AreaChartOutlined />,
-  },
-
-  {
-    link: "/profile/inventory",
-    name: "INVENTORY",
-    icon: <GoldenFilled />,
-  },
-  {
-    name: "MY SALES",
-    link: "/profile/mySales",
-    icon: <AreaChartOutlined />,
-  },
-  {
-    name: "SETTINGS",
-    link: "/profile/accountSettings",
-    icon: <AreaChartOutlined />,
-  },
+  // {
+  //   link: "/profile/inventory",
+  //   name: "INVENTORY",
+  //   icon: <GoldenFilled />,
+  // },
 ];
 
 export default function AppLayout({ children }) {
@@ -95,13 +72,23 @@ export default function AppLayout({ children }) {
     message: "",
     value: false,
   });
+  const [disabled, setDisabled] = React.useState<ButtonsTypes>({
+    logout: false,
+    userData: false,
+  });
   const [search, setSearch] = React.useState("");
   const { blur, message } = useAppSelector((state) => ({
     ...state.layout,
   }));
   const router = useRouter();
-  const { enableWeb3, isWeb3Enabled, isAuthenticated, authenticate, user } =
-    useMoralis();
+  const {
+    enableWeb3,
+    isWeb3Enabled,
+    isAuthenticated,
+    logout,
+    authenticate,
+    user,
+  } = useMoralis();
 
   const chainChangedHandler = async () => {
     // window.location.reload();
@@ -164,6 +151,48 @@ export default function AppLayout({ children }) {
     handleEnableWeb3();
   }, [isWeb3Enabled]);
 
+  const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
+    setDisabled((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSignOut = async () => {
+    const toggleLogout = handleDisabled("logout");
+    toggleLogout(true);
+    logout();
+    toggleLogout(false);
+  };
+
+  const profileItems = [
+    { name: "PROFILE", link: "/profile", icon: <ShopOutlined /> },
+    {
+      name: "ACTIVITY",
+      link: "/profile/activity",
+      icon: <AreaChartOutlined />,
+    },
+
+    // {
+    //   link: "/profile/inventory",
+    //   name: "INVENTORY",
+    //   icon: <GoldenFilled />,
+    // },
+    {
+      name: "MY SALES",
+      link: "/profile/mySales",
+      icon: <AreaChartOutlined />,
+    },
+    {
+      name: "SETTINGS",
+      link: "/profile/accountSettings",
+      icon: <AreaChartOutlined />,
+    },
+    {
+      name: "LOG OUT",
+      decoration: "line-primary",
+      onClick: handleSignOut,
+      disabled: disabled.logout,
+    },
+  ];
+
   return (
     <Layout
       style={{
@@ -181,7 +210,7 @@ export default function AppLayout({ children }) {
         className={clsx(
           "fixed top-0 z-10",
           "bg-overlay",
-          "w-[100%] px-8 py-2 flex flex-row items-center justify-between shadow-md",
+          "w-[100%] px-8 py-2 flex flex-row items-center justify-between gap-x-4 shadow-md",
         )}
       >
         <Logo />
@@ -239,12 +268,25 @@ export default function AppLayout({ children }) {
                 {profileItems.map((item, index) => {
                   return (
                     <>
-                      <NavbarItem
-                        key={index}
-                        name={item.name}
-                        link={item.link}
-                        route={router.asPath}
-                      />
+                      {item.onClick ? (
+                        <div
+                          className={clsx(
+                            "gap-2 py-2 flex items-center text-white opacity-50 hover:opacity-100 cursor-pointer",
+                          )}
+                          onClick={item.onClick}
+                        >
+                          <h3 className={clsx("text-md font-bold")}>
+                            {item.name}
+                          </h3>
+                        </div>
+                      ) : (
+                        <NavbarItem
+                          key={index}
+                          name={item.name}
+                          link={item.link}
+                          route={router.asPath}
+                        />
+                      )}
                     </>
                   );
                 })}
@@ -316,7 +358,7 @@ export const Message: React.FunctionComponent<{
 
 export const Logo = () => (
   <Link href="/">
-    <div className="mr-4 md:py-0 py-2 flex gap-2 items-center cursor-pointer">
+    <div className="md:py-0 py-2 flex gap-2 items-center cursor-pointer">
       <img className="h-6" src={Icons.logo5HG} alt="logo" />
       <img className="h-6 xl:block hidden" src={Icons.logoenders} alt="logo" />
     </div>

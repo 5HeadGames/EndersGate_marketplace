@@ -76,16 +76,16 @@ const DashboardComponent = () => {
         <div className="max-w-[100vw] overflow-hidden min-h-[100vh] bg-overlay relative flex items-center">
           <img
             src="/images/bg_landing.svg"
-            className={`absolute min-w-[165vw] max-h-[85vh] top-0 banner border-b border-overlay-border`}
+            className={`absolute 2xl:min-w-[165vw] lg:min-w-[250vw] min-w-[350vw] max-h-[85vh] top-0 banner border-b border-overlay-border`}
             alt=""
           />
           <div className="flex flex-col pt-36 w-full items-center min-h-screen relative gap-4 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 px-8 text-white">
-            <div className="max-w-[1200px] w-full flex justify-between">
-              <div className="flex flex-col items-start gap-8 md:w-1/2">
-                <h1 className="text-5xl flex flex-col font-bold">
-                  Discover, collect, buy or sell <br /> Endersgate NFTs
+            <div className="max-w-[1200px] w-full flex justify-between relative min-h-[450px]">
+              <div className="flex flex-col lg:items-start items-center gap-8 lg:pr-[400px] w-full lg:pl-0 pl-16 pr-16">
+                <h1 className="text-5xl flex flex-col font-bold w-full lg:text-left text-center">
+                  Discover, collect, buy or sell Endersgate NFTs
                 </h1>
-                <p className="text-2xl font-[450]  text-primary-disabled w-[360px]">
+                <p className="text-2xl font-[450] text-primary-disabled w-[360px] lg:text-left text-center">
                   The Enders Gate Marketplace is <br />
                   <span className="text-red-primary font-bold">5</span>
                   <span className="text-white font-bold">HEADGAMES</span>{" "}
@@ -96,7 +96,7 @@ const DashboardComponent = () => {
                     // type="submit"
                     href={"/marketplace"}
                     decoration="line-white"
-                    className="rounded-xl bg-overlay text-primary-disabled hover:text-overlay text-[20px] border border-overlay-border py-3 px-10"
+                    className="rounded-xl bg-overlay text-primary-disabled hover:text-white hover:!bg-overlay-2 transition duration-500 text-[20px] border hover:border-overlay border-overlay-border py-3 px-10"
                   >
                     Explore
                   </Button>
@@ -108,7 +108,7 @@ const DashboardComponent = () => {
                   </a>
                 </div>
               </div>
-              <div className="xl:w-1/2 flex items-end justify-end">
+              <div className="lg:block hidden w-[600px] flex items-end justify-end absolute right-0">
                 <SliderMain
                   cards={cards}
                   salesDefault={salesDefault}
@@ -331,7 +331,7 @@ const DashboardComponent = () => {
           </div>
           <div className="flex items-center justify-center">
             <Link href={"/marketplace"}>
-              <div className="p-3 px-6 hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border text-overlay-border rounded-md cursor-pointer">
+              <div className="p-3 px-6 font-[450] hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border text-overlay-border rounded-md cursor-pointer">
                 Browse More
               </div>
             </Link>

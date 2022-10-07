@@ -4,7 +4,7 @@ import { useMoralis } from "react-moralis";
 import { useRouter } from "next/router";
 import Sales from "@shared/components/Profile/sales/sales";
 
-const ProfileInventory = () => {
+const ProfileSales = () => {
   const { isAuthenticated } = useMoralis();
   const router = useRouter();
 
@@ -14,11 +14,7 @@ const ProfileInventory = () => {
     }
   }, [isAuthenticated]);
 
-  return (
-    <ProfileLayoutComponent>
-      <Sales></Sales>
-    </ProfileLayoutComponent>
-  );
+  return <Sales />;
 };
 
-export default ProfileInventory;
+export default ProfileSales;

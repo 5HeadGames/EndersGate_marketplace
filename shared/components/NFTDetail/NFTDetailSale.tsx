@@ -1,5 +1,10 @@
 import React from "react";
-import { LeftOutlined, LoadingOutlined, MenuOutlined } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  LinkOutlined,
+  LoadingOutlined,
+  MenuOutlined,
+} from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Web3 from "web3";
 import { useMoralis } from "react-moralis";
@@ -90,6 +95,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     sale?.status != 0 ||
     Math.floor(new Date().getTime() / 1000) >=
       parseInt(sale?.duration) + parseInt(sale?.startedAt);
+
+  console.log(sale);
 
   return (
     <>
@@ -238,24 +245,80 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   </div>
                 </Tilt>
               </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                  <p className="absolute top-4 right-6 text-overlay-border text-sm">
-                    OWNER INFO
+              <div className="flex flex-col xl:max-w-[500px] xl:min-h-[450px] xl:max-h-[450px]">
+                <div className="flex h-full gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
+                  <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    CARD INFO
                   </p>
-                  <img src={Icons.logoCard} className="w-16 h-16" alt="" />
-                  <div className="flex flex-col">
-                    <h2 className="text-xl font-[450] text-white">
-                      Owner Name
-                    </h2>
-                    <p className="text-overlay-border text-xl font-bold">
-                      <AddressText text={sale.seller}></AddressText>
-                    </p>
+                  <div className="flex flex-col w-full gap-2 h-full justify-between">
+                    <div className="flex flex-col w-full">
+                      <div className="flex flex-col w-full">
+                        <h2 className="text-primary uppercase md:text-4xl text-3xl font-bold">
+                          {isPack
+                            ? packs[sale?.nftId].properties.name.value
+                            : cards[sale?.nftId]?.properties?.name?.value}
+                        </h2>
+                        <div className="flex w-full justify-between">
+                          <p className="text-primary-disabled text-lg font-[450]">
+                            {isPack
+                              ? "Pack #" +
+                                packs[sale?.nftId].properties.id.value
+                              : "Card #" +
+                                cards[sale?.nftId]?.properties?.id?.value}
+                          </p>
+                          <p className="text-primary-disabled text-xl font-[450]">
+                            Sale #{id}
+                          </p>
+                          <p className="text-primary-disabled text-xl font-[450]">
+                            Level: 1
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <h2 className="text-lg font-bold text-white">
+                          Description:
+                        </h2>
+                        <p className="text-primary-disabled text-md">
+                          {isPack
+                            ? packs[sale?.nftId].properties.description.value
+                            : cards[sale?.nftId]?.properties?.description
+                                ?.value}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-4 w-full">
+                      <div className="flex flex-col gap-2">
+                        <h2 className="text-lg font-bold text-white">
+                          Card Type
+                        </h2>
+                        <p className="text-primary-disabled text-md">
+                          {cards[sale?.nftId]?.typeCard[0].toUpperCase() +
+                            cards[sale?.nftId]?.typeCard.substr(1)}
+                        </p>
+                      </div>
+                      {!isPack && (
+                        <div className="flex flex-col gap-2">
+                          <h2 className="text-lg font-bold text-white">
+                            {cards[sale?.nftId]?.typeCard[0].toUpperCase() +
+                              cards[sale?.nftId]?.typeCard.substr(1)}{" "}
+                            Type
+                          </h2>
+                          <p className="text-primary-disabled text-md">
+                            {cards[sale?.nftId]?.properties?.type?.value
+                              ? cards[sale?.nftId]?.properties?.type?.value
+                              : cards[sale?.nftId]?.properties?.isGuardian
+                                  ?.value
+                              ? "Guardian"
+                              : ""}
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col xl:w-max w-full py-10">
+            <div className="flex flex-col xl:w-max w-full pt-10">
               <div className="flex flex-col w-full md:min-h-[620px] md:max-h-[620px]">
                 <div className="flex flex-col">
                   <h1 className="text-primary uppercase md:text-4xl text-3xl font-bold">
@@ -264,7 +327,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       : cards[sale?.nftId]?.properties?.name?.value}
                   </h1>
                   <div className="flex flex-col md:px-6 md:py-4 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute md:top-4 md:right-6 top-2 right-4 text-overlay-border text-sm">
+                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
                       BUY PANEL
                     </p>
                     <div className="flex flex-row gap-4 w-full">
@@ -307,9 +370,13 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                     <div className="flex flex-row gap-4 w-full justify-between">
                       <div className="flex flex-col w-1/2 justify-end">
                         <p className="text-primary-disabled md:text-lg text-md">
-                          Time left:{" "}
+                          Expire at:{" "}
                           <span className="text-white font-bold md:text-xl text-lg">
-                            6h 8m
+                            {new Date(
+                              (parseInt(sale?.duration) +
+                                parseInt(sale?.startedAt)) *
+                                1000,
+                            ).toDateString()}
                           </span>
                         </p>
                       </div>
@@ -325,7 +392,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex flex-col pt-2 h-full">
                   <div className="flex flex-col px-6 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative min-h-full">
-                    <p className="absolute top-4 right-6 text-overlay-border text-sm">
+                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
                       OFFERS
                     </p>
                     <div className="flex flex-row gap-4 w-full pb-2">
@@ -356,10 +423,10 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col w-full min-h-[400px] max-h-[400px]">
-                <div className="flex flex-col pt-6 ">
-                  <div className="flex items-center gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-4 right-6 text-overlay-border text-sm">
+              <div className="flex flex-col justify-between w-full xl:min-h-[474px] xl:max-h-[474px]">
+                <div className="flex flex-col pt-6">
+                  <div className="flex items-center gap-4 px-4 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
+                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
                       OWNER INFO
                     </p>
                     <img src={Icons.logoCard} className="w-16 h-16" alt="" />
@@ -370,6 +437,87 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       <p className="text-primary-disabled md:text-xl text-lg font-bold">
                         <AddressText text={sale.seller}></AddressText>
                       </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
+                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                      TOKEN INFO
+                    </p>
+                    <div className="flex flex-col w-full">
+                      <h2 className="text-white font-bold text-lg border-b border-overlay-border pb-2 px-6">
+                        Token Details:
+                      </h2>
+                      <div className="w-full flex justify-between py-2 border-b border-overlay-border px-6">
+                        <p className="text-lg font-[400] text-primary-disabled ">
+                          Blockchain:
+                        </p>
+                        <p className="text-primary-disabled  font-[400] text-lg">
+                          Harmony (ONE)
+                        </p>
+                      </div>
+                      <div className="w-full flex justify-between py-2 border-b border-overlay-border px-6">
+                        <p className="text-lg font-[400] text-primary-disabled ">
+                          Token ID:
+                        </p>
+                        <p className="text-primary-disabled  font-[400] text-lg">
+                          {sale.nftId}
+                        </p>
+                      </div>
+                      <div className="w-full flex justify-between py-2 border-b border-overlay-border px-6">
+                        <p className="text-lg font-[400] text-primary-disabled ">
+                          Token Standard:
+                        </p>
+                        <p className="text-primary-disabled  font-[400] text-lg">
+                          ERC1155
+                        </p>
+                      </div>
+                      <div className="w-full flex justify-between py-2 border-b border-overlay-border px-6">
+                        <p className="text-lg font-[400] text-primary-disabled ">
+                          Contract:
+                        </p>
+                        <a
+                          href={
+                            "https://explorer.harmony.one/address/" + sale.nft
+                          }
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-red-primary font-[400] text-lg flex items-center gap-1"
+                        >
+                          <AddressText text={sale.nft}></AddressText>{" "}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-6 h-6"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                            />
+                          </svg>
+                        </a>
+                      </div>
+                      <div className="w-full flex justify-between py-2 border-b border-overlay-border px-6">
+                        <p className="text-lg font-[400] text-primary-disabled ">
+                          Partner Royalty:
+                        </p>
+                        <p className="text-primary-disabled font-[400] text-lg">
+                          0%
+                        </p>
+                      </div>
+                      <div className="w-full flex justify-between pt-2 px-6">
+                        <p className="text-lg font-[400] text-primary-disabled ">
+                          5HG Fee:
+                        </p>
+                        <p className="text-primary-disabled font-[400] text-lg">
+                          4%
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

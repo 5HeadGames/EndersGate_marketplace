@@ -113,8 +113,8 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
         <Link href={`/NFTDetailSale/${props.transactionId}`}>
           <div
             className={clsx(
-              "rounded-xl flex flex-col text-gray-100 w-80 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 ",
-              Styles.cardHover,
+              "rounded-xl flex flex-col text-gray-100 w-80 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 hover:border-green-button transition duration-500",
+
               classes?.root,
             )}
           >

@@ -16,6 +16,8 @@ import { convertArrayCards } from "../common/convertCards";
 import clsx from "clsx";
 import Styles from "./styles.module.scss";
 import Tilt from "react-parallax-tilt";
+import { DropdownActions } from "../common/dropdownActions/dropdownActions";
+import { AddressText } from "../common/specialFields/SpecialFields";
 
 const { marketplace } = getAddresses();
 
@@ -237,7 +239,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           ""
         )}
       </Modal>
-      {id ? (
+      {/*id ? (
         <div className="min-h-screen w-full flex flex-col xl:px-20 md:px-10 sm:px-6 pt-32 pb-20">
           <div className="flex sm:flex-row flex-col sm:justify-between  w-full">
             <div className="flex flex-col gap-2">
@@ -253,7 +255,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               </Typography>
               {/* <Typography type="title" className="text-primary">
                 Transaction #{id}
-              </Typography> */}
+              </Typography> 
             </div>
             <div className="flex gap-2 items-start sm:mt-0 mt-4 sm:justify-end justify-between">
               {NFTs?.balanceCards[id] && NFTs?.balanceCards[id]?.balance && (
@@ -386,8 +388,99 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
             </div>
           </div>
         </div>
+      )*/}
+      {id !== undefined ? (
+        <div className="min-h-screen w-full flex flex-col xl:px-36 md:px-10 sm:px-6 px-4 pt-10 pb-20">
+          <div className="w-full flex xl:flex-row flex-col mt-10 gap-4 justify-center">
+            <div className="flex flex-col gap-2">
+              <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
+                <img
+                  src={cards[id].properties.image?.value}
+                  className="absolute xl:top-[-20%] top-[-25%] bottom-0 xl:left-[-55%] left-[-35%] right-0 margin-auto opacity-50 xl:min-w-[1050px] min-w-[175%]"
+                  alt=""
+                />
+                <Tilt className="flex items-center justify-center">
+                  <div className="sm:sticky sm:top-32 h-min w-auto">
+                    <img
+                      src={cards[id].properties.image?.value || Icons.logo}
+                      className={clsx(
+                        Styles.animatedImageMain,
+                        {
+                          "rounded-full": cards[id].typeCard == "avatar",
+                        },
+                        {
+                          "rounded-md": cards[id].typeCard != "avatar",
+                        },
+                      )}
+                      alt=""
+                    />
+                  </div>
+                </Tilt>
+              </div>
+              <div className="flex flex-col"></div>
+            </div>
+            <div className="flex flex-col xl:w-max w-full py-10">
+              <div className="flex flex-col w-full md:min-h-[620px] md:max-h-[620px]">
+                <div className="flex flex-col">
+                  <h1 className="text-primary uppercase md:text-4xl text-3xl font-bold">
+                    {cards[id]?.properties?.name?.value}
+                  </h1>
+                  <div className="flex flex-col md:px-6 md:py-10 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
+                    <p className="absolute md:top-4 md:right-6 top-2 right-4 text-overlay-border text-sm">
+                      SELL PANEL
+                    </p>
+                    <div className="flex flex-row xl:gap-32 gap-16 w-full">
+                      <div className="flex flex-col gap-4 w-full items-center md:pl-10 md:pr-16 pr-4">
+                        <Button
+                          decoration="fill"
+                          className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                          onClick={() => {
+                            show();
+                          }}
+                        >
+                          Sell Now
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex flex-row gap-4 w-full justify-end">
+                      <div className="flex flex-col gap-4 pb-2">
+                        <img
+                          src={Icons.logo}
+                          className="md:w-12 md:h-12 w-8 h-8"
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col w-full min-h-[400px] max-h-[400px]">
+                <div className="flex flex-col pt-6 ">
+                  <div className="flex items-center gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
+                    <p className="absolute top-4 right-6 text-overlay-border text-sm">
+                      OWNER INFO
+                    </p>
+                    <img src={Icons.logoCard} className="w-16 h-16" alt="" />
+                    <div className="flex flex-col">
+                      <h2 className="md:text-xl text-lg font-[450] text-white">
+                        {user?.get("name")}
+                      </h2>
+                      <p className="text-primary-disabled md:text-xl text-lg font-bold">
+                        <AddressText
+                          text={user?.get("ethAddress")}
+                        ></AddressText>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       ) : (
-        ""
+        <div className="h-screen w-screen bg-overlay flex items-center justify-center text-3xl text-primary">
+          <LoadingOutlined />
+        </div>
       )}
     </>
   );

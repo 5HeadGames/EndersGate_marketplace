@@ -4,6 +4,8 @@ import {
   CaretDownOutlined,
   CaretLeftOutlined,
   CaretUpOutlined,
+  LeftOutlined,
+  RightOutlined,
   SearchOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
@@ -34,7 +36,7 @@ import Partners from "../common/footerComponents/partners";
 import { XIcon } from "@heroicons/react/solid";
 
 const MarketplaceComponent = () => {
-  const [currentOrder, setCurrentOrder] = React.useState("older_listed");
+  const [currentOrder, setCurrentOrder] = React.useState("recently_listed");
   const [type, setType] = React.useState("trading_cards");
   const [sales, setSales] = React.useState([]);
   const { nfts } = useAppSelector((state) => state);
@@ -501,7 +503,7 @@ const MarketplaceComponent = () => {
                   }).length > 12 && (
                   <div className="flex w-full items-center justify-center gap-2">
                     <div
-                      className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                      className="rounded-full flex items-center bg-secondary text-white p-4 cursor-pointer"
                       onClick={() => {
                         if (page > 0) {
                           setPage((prev) => {
@@ -510,13 +512,13 @@ const MarketplaceComponent = () => {
                         }
                       }}
                     >
-                      {"<"}
+                      <LeftOutlined></LeftOutlined>
                     </div>
-                    <div className="p-4 rounded-md bg-overlay border border-primary text-primary">
+                    <div className="p-3 px-5 flex items-center justify-center rounded-full bg-overlay border border-primary text-primary">
                       {page + 1}
                     </div>
                     <div
-                      className="rounded-md bg-secondary text-white p-3 cursor-pointer"
+                      className="rounded-full flex items-center bg-secondary text-white p-4 cursor-pointer"
                       onClick={() => {
                         if (
                           page <
@@ -540,7 +542,7 @@ const MarketplaceComponent = () => {
                         }
                       }}
                     >
-                      {">"}
+                      <RightOutlined></RightOutlined>
                     </div>
                   </div>
                 )}

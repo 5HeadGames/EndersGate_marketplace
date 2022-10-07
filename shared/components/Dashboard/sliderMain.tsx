@@ -45,7 +45,12 @@ export const SliderMain = ({ salesDefault, cards }) => {
   }, [arrayPos]);
 
   return (
-    <div className="w-full relative flex items-end justify-end rounded-xl overflow-hidden">
+    <div
+      className={clsx(
+        { ["items-center justify-center text-xl"]: arraySlider.length < 2 },
+        "w-full relative flex items-end justify-end rounded-xl overflow-hidden min-h-[300px]",
+      )}
+    >
       {arraySlider.length > 2 ? (
         <>
           <div className="absolute bottom-0 left-0 w-full">

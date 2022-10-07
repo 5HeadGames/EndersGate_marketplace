@@ -107,7 +107,7 @@ const Login = () => {
         </h1>
         <div
           className={clsx(
-            "flex flex-col gap-4 relative h-96 items-center justify-center",
+            "flex flex-col gap-4 relative h-60 items-center justify-center",
           )}
         >
           {loading == true ? (

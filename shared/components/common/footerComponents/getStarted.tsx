@@ -15,7 +15,7 @@ export const GetStarted = () => {
         It's <span className="text-red-primary">easy</span> to get started!
         Here's how,
       </h2>
-      <div className="flex flex-wrap gap-10">
+      <div className="flex flex-wrap items-center justify-center gap-10">
         <div className="flex flex-col items-center text-white gap-2 w-[300px]">
           <img src="/icons/getStarted2.svg" className="w-10" alt="" />
           <h3 className="text-xl font-bold">Set up your wallet</h3>

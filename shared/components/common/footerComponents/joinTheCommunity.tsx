@@ -41,9 +41,13 @@ export const JoinTheCommunity = () => {
       )}
     >
       <h2 className="font-bold text-xl text-white">Join the community</h2>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap items-center justify-center gap-4">
         {icons.map(({ icon, href }) => (
-          <a href={href} target="_blank">
+          <a
+            href={href}
+            target="_blank"
+            className="opacity-50 hover:opacity-100"
+          >
             <img src={icon} className="w-16 h-16" />
           </a>
         ))}

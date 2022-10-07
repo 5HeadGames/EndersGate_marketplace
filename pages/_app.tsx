@@ -8,6 +8,7 @@ import Layout from "shared/components/Layouts";
 import { store } from "redux/store";
 import { Provider } from "react-redux";
 import { MoralisProvider } from "react-moralis";
+import ReactTooltip from "react-tooltip";
 
 const { ToastProvider } = require("react-toast-notifications"); //it throws ts error
 
