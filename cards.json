@@ -20291,6 +20291,9 @@
           "value": "https://cdn.discordapp.com/attachments/974017438171672616/981746361290592377/SHINOBI_GUARDIAN_1_FRONT.png"
         },
 
+        "name": {
+          "value": "Shinobi Guardian"
+        },
         "attack": {
           "name": "attack",
           "value": 50
@@ -20314,6 +20317,10 @@
           "value": "https://cdn.discordapp.com/attachments/974017438171672616/981746361567412244/SHINOBI_GUARDIAN_2_FRONT.png"
         },
 
+        "name": {
+          "value": "Shinobi Guardian"
+        },
+
         "attack": {
           "name": "attack",
           "value": 50
@@ -20335,6 +20342,9 @@
         "image": {
           "name": "image",
           "value": "https://cdn.discordapp.com/attachments/974017438171672616/981746361831677982/SHINOBI_GUARDIAN_3_FRONT.png"
+        },
+        "name": {
+          "value": "Shinobi Guardian"
         },
         "attack": {
           "name": "attack",
