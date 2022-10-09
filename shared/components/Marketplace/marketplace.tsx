@@ -461,116 +461,138 @@ const MarketplaceComponent = () => {
                       parseInt(sale?.duration) + parseInt(sale?.startedAt)
                     );
                   })
-                  .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
-                  .map((a, id) => {
-                    return type !== "packs" ? (
-                      <NftCard
-                        classes={{ root: "m-4 cursor-pointer" }}
-                        id={a.nftId}
-                        transactionId={a.id}
-                        seller={a.seller}
-                        icon={cards[a.nftId].properties.image.value}
-                        name={cards[a.nftId].properties.name.value}
-                        byId={false}
-                        price={a.price}
-                      />
-                    ) : (
-                      <Link href={`/NFTDetailSale/${a.id}`}>
-                        <div
-                          className={clsx(
-                            "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 m-4 cursor-pointer",
-                            Styles.cardHover,
-                          )}
-                        >
-                          <img
-                            src={packs[a.nftId]?.properties?.image?.value}
-                            className="absolute top-[-40%] bottom-0 left-[-5%] right-0 margin-auto opacity-50 min-w-[110%]"
-                            alt=""
-                          />
-                          <div className="flex flex-col relative">
-                            <div className="w-full flex flex-col text-xs gap-1">
-                              <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
-                                <span>
-                                  Pack #
-                                  {a.nftId !== undefined ? a.nftId : "12345"}
-                                </span>
-                                {<span>#{a.id}</span>}
+                  .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12) >
+                0 ? (
+                  sales
+                    ?.filter((sale, i) =>
+                      type !== "packs"
+                        ? filterCards(cards[sale.nftId])
+                        : filterCards(packs[sale.nftId]),
+                    )
+                    .filter((sale) => {
+                      return (
+                        Math.floor(new Date().getTime() / 1000) <=
+                        parseInt(sale?.duration) + parseInt(sale?.startedAt)
+                      );
+                    })
+                    .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
+                    .map((a, id) => {
+                      return type !== "packs" ? (
+                        <NftCard
+                          classes={{ root: "m-4 cursor-pointer" }}
+                          id={a.nftId}
+                          transactionId={a.id}
+                          seller={a.seller}
+                          icon={cards[a.nftId].properties.image.value}
+                          name={cards[a.nftId].properties.name.value}
+                          byId={false}
+                          price={a.price}
+                        />
+                      ) : (
+                        <Link href={`/NFTDetailSale/${a.id}`}>
+                          <div
+                            className={clsx(
+                              "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 m-4 cursor-pointer",
+                              Styles.cardHover,
+                            )}
+                          >
+                            <img
+                              src={packs[a.nftId]?.properties?.image?.value}
+                              className="absolute top-[-40%] bottom-0 left-[-5%] right-0 margin-auto opacity-50 min-w-[110%]"
+                              alt=""
+                            />
+                            <div className="flex flex-col relative">
+                              <div className="w-full flex flex-col text-xs gap-1">
+                                <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
+                                  <span>
+                                    Pack #
+                                    {a.nftId !== undefined ? a.nftId : "12345"}
+                                  </span>
+                                  {<span>#{a.id}</span>}
+                                </div>
                               </div>
-                            </div>
-                            <div className="w-full h-72 flex justify-center items-center my-6">
-                              <img
-                                src={
-                                  packs[a.nftId]?.properties?.image?.value ||
-                                  Icons.logo
-                                }
-                                className={
-                                  packs[a.nftId]?.properties?.image?.value
-                                    ? "h-64"
-                                    : "h-24"
-                                }
-                              />
-                            </div>
-                            <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
-                              <div className="flex text-lg font-bold text-left py-2 ">
-                                <div className="w-40 relative">
+                              <div className="w-full h-72 flex justify-center items-center my-6">
+                                <img
+                                  src={
+                                    packs[a.nftId]?.properties?.image?.value ||
+                                    Icons.logo
+                                  }
+                                  className={
+                                    packs[a.nftId]?.properties?.image?.value
+                                      ? "h-64"
+                                      : "h-24"
+                                  }
+                                />
+                              </div>
+                              <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
+                                <div className="flex text-lg font-bold text-left py-2 ">
+                                  <div className="w-40 relative">
+                                    <img
+                                      src="icons/card_logo.svg"
+                                      className="w-40 absolute top-[-60px]"
+                                      alt=""
+                                    />
+                                  </div>
+                                  <div className="w-full flex flex-col">
+                                    <span className="uppercase text-white text-lg">
+                                      {packs[a.nftId]?.properties?.name
+                                        ?.value || "Enders Gate"}
+                                    </span>
+                                    <span
+                                      className="text-[12px] text-gray-500 font-medium"
+                                      style={{ lineHeight: "10px" }}
+                                    >
+                                      Owner:{" "}
+                                      {<AddressText text={a.seller} /> ||
+                                        "Owner"}
+                                    </span>
+                                  </div>
                                   <img
-                                    src="icons/card_logo.svg"
-                                    className="w-40 absolute top-[-60px]"
+                                    src={Icons.logo}
+                                    className="w-10 h-10"
                                     alt=""
                                   />
                                 </div>
-                                <div className="w-full flex flex-col">
-                                  <span className="uppercase text-white text-lg">
-                                    {packs[a.nftId]?.properties?.name?.value ||
-                                      "Enders Gate"}
-                                  </span>
-                                  <span
-                                    className="text-[12px] text-gray-500 font-medium"
-                                    style={{ lineHeight: "10px" }}
+                                {a.price && (
+                                  <div
+                                    className="flex justify-between text-md text-white "
+                                    style={{ lineHeight: "18px" }}
                                   >
-                                    Owner:{" "}
-                                    {<AddressText text={a.seller} /> || "Owner"}
-                                  </span>
-                                </div>
-                                <img
-                                  src={Icons.logo}
-                                  className="w-10 h-10"
-                                  alt=""
-                                />
-                              </div>
-                              {a.price && (
-                                <div
-                                  className="flex justify-between text-md text-white "
-                                  style={{ lineHeight: "18px" }}
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <img
-                                      src="/icons/HARMONY.svg"
-                                      className="h-8 w-8"
-                                      alt=""
-                                    />
+                                    <div className="flex items-center gap-2">
+                                      <img
+                                        src="/icons/HARMONY.svg"
+                                        className="h-8 w-8"
+                                        alt=""
+                                      />
+                                      <div className="flex flex-col text-md font-medium">
+                                        <p>Price:</p>
+                                        <span>
+                                          {Web3.utils.fromWei(a.price, "ether")}{" "}
+                                          ONE
+                                        </span>
+                                      </div>
+                                    </div>
                                     <div className="flex flex-col text-md font-medium">
-                                      <p>Price:</p>
+                                      <p>Highest Bid:</p>
                                       <span>
                                         {Web3.utils.fromWei(a.price, "ether")}{" "}
                                         ONE
                                       </span>
                                     </div>
                                   </div>
-                                  <div className="flex flex-col text-md font-medium">
-                                    <p>Highest Bid:</p>
-                                    <span>
-                                      {Web3.utils.fromWei(a.price, "ether")} ONE
-                                    </span>
-                                  </div>
-                                </div>
-                              )}
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </Link>
-                    );
-                  })}
+                        </Link>
+                      );
+                    })
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-white font-bold gap-4 text-xl">
+                    <img src={Icons.logoCard} className="w-40 h-40" alt="" />
+                    There aren't sales for this search, try with other.
+                  </div>
+                )}
                 {sales
                   ?.filter((sale, i) =>
                     type !== "packs"
