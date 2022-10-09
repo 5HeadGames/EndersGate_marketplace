@@ -38,6 +38,7 @@ import { XIcon } from "@heroicons/react/solid";
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("recently_listed");
   const [type, setType] = React.useState("trading_cards");
+  const [cardType, setCardType] = React.useState("all");
   const [sales, setSales] = React.useState([]);
   const { nfts } = useAppSelector((state) => state);
   const [page, setPage] = React.useState(0);
@@ -179,112 +180,183 @@ const MarketplaceComponent = () => {
     }
   }, [type, nfts]);
 
-  const [filter, setFilter] = React.useState({
-    avatar: false,
-    guardian: false,
-    action_cards: false,
-    reaction_cards: false,
-    // tanks: false,
-    // damage: false,
-    // mages: false,
-    // healers: false,
-    // void: false,
-    // fire: false,
-    // water: false,
-    // mystic: false,
-    // earth: false,
-    // venom: false,
-    wood: false,
-    stone: false,
-    iron: false,
-    gold: false,
-    legendary: false,
-    // limited_edition: false,
-    // attack: false,
-    // damage_stats: false,
-    // mages_stats: false,
-    common: false,
-    rare: false,
-    ultra_rare: false,
-    uncommon: false,
+  const [filters, setFilters] = React.useState({
+    avatar: [],
+    cardRole: [],
+    cardRace: [],
+    cardElement: [],
   });
 
-  const passFilter = (id: any) => {
+  const filterCards = (card) => {
     let passed = false;
-    if (filter.guardian && id >= 54) {
-      passed = true;
-    }
-
-    if (
-      filter.common &&
-      cards[id]?.properties?.rarity?.value.toLowerCase() === "common"
-    ) {
-      passed = true;
-    }
-    if (
-      filter.uncommon &&
-      cards[id]?.properties?.rarity?.value.toLowerCase() === "uncommon"
-    ) {
-      passed = true;
-    }
-    if (
-      filter.rare &&
-      cards[id]?.properties?.rarity?.value.toLowerCase() === "rare"
-    ) {
-      passed = true;
-    }
-    if (
-      filter.ultra_rare &&
-      cards[id]?.properties?.rarity?.value.toLowerCase() === "ultra rare"
-    ) {
-      passed = true;
-    }
-    if (
-      filter.reaction_cards &&
-      cards[id]?.typeCard.toLowerCase() === "reaction"
-    ) {
-      passed = true;
-    }
-    if (filter.action_cards && cards[id]?.typeCard.toLowerCase() === "action") {
-      passed = true;
-    }
-    if (filter.wood && cards[id]?.typeCard.toLowerCase() === "wood") {
-      passed = true;
-    }
-    if (filter.stone && cards[id]?.typeCard.toLowerCase() === "stone") {
-      passed = true;
-    }
-    if (filter.iron && cards[id]?.typeCard.toLowerCase() === "iron") {
-      passed = true;
-    }
-    if (filter.gold && cards[id]?.typeCard.toLowerCase() === "gold") {
-      passed = true;
-    }
-    if (filter.legendary && cards[id]?.typeCard.toLowerCase() === "legendary") {
-      passed = true;
-    }
-    if (filter.avatar && cards[id]?.typeCard.toLowerCase() === "avatar") {
-      passed = true;
-    }
-
-    if (
-      cards[id]?.properties.name.value
-        .toLowerCase()
-        .includes(search.toLowerCase())
-    ) {
-      passed = true;
-    }
-
-    let thereIsFilters = false;
-    Object.values(filter).forEach((element) => {
-      if (element) {
-        thereIsFilters = true;
+    if (cardType === "all") {
+      if (
+        filters.avatar.length === 0 &&
+        filters.cardRace.length === 0 &&
+        filters.cardRole.length === 0 &&
+        filters.cardElement.length === 0
+      ) {
+        return true;
       }
-    });
-    if (!thereIsFilters && search === "") {
-      return true;
+      if (filters.cardElement.length > 0) {
+        if (
+          filters.cardElement?.includes(
+            card?.properties?.element?.value?.toLowerCase(),
+          )
+        ) {
+          passed = true;
+        } else {
+          return false;
+        }
+      }
+      if (filters.cardRace.length > 0) {
+        if (
+          filters.cardRace?.includes(
+            card?.properties?.race?.value?.toLowerCase(),
+          )
+        ) {
+          passed = true;
+        } else {
+          return false;
+        }
+      }
+      if (filters.cardRole.length > 0) {
+        if (
+          filters.cardRole?.includes(
+            card?.properties?.role?.value?.toLowerCase(),
+          )
+        ) {
+          passed = true;
+        } else {
+          return false;
+        }
+      }
+      if (filters.avatar.length > 0) {
+        if (filters.avatar?.includes("avatars")) {
+          if (card?.typeCard === "avatar") {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.avatar?.includes("guardians")) {
+          if (card?.properties?.isGuardian?.value === true) {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.avatar?.includes("reaction cards")) {
+          if (card.typeCard == "reaction") {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.avatar?.includes("action cards")) {
+          if (card.typeCard == "action") {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.avatar?.includes("ghost cards")) {
+          if (card?.name === "Shinobi Guardian") {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+      }
+    } else {
+      if (cardType === card.typeCard) {
+        if (
+          filters.avatar.length === 0 &&
+          filters.cardRace.length === 0 &&
+          filters.cardRole.length === 0 &&
+          filters.cardElement.length === 0
+        ) {
+          return true;
+        }
+        if (filters.cardElement.length > 0) {
+          if (
+            filters.cardElement?.includes(
+              card?.properties?.element?.value?.toLowerCase(),
+            )
+          ) {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.cardRace.length > 0) {
+          if (
+            filters.cardRace?.includes(
+              card?.properties?.race?.value?.toLowerCase(),
+            )
+          ) {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.cardRole.length > 0) {
+          if (
+            filters.cardRole?.includes(
+              card?.properties?.role?.value?.toLowerCase(),
+            )
+          ) {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.avatar.length > 0) {
+          if (filters.avatar?.includes("avatars")) {
+            if (card?.properties?.isGuardian?.value === true) {
+              passed = true;
+            } else {
+              return false;
+            }
+          }
+          if (filters.avatar?.includes("guardians")) {
+            if (card?.properties?.isGuardian?.value === true) {
+              passed = true;
+            } else {
+              return false;
+            }
+          }
+          if (filters.avatar?.includes("reaction cards")) {
+            if (card.typeCard == "reaction") {
+              passed = true;
+            } else {
+              return false;
+            }
+          }
+          if (filters.avatar?.includes("action cards")) {
+            if (card.typeCard == "reaction") {
+              passed = true;
+            } else {
+              return false;
+            }
+          }
+          if (filters.avatar?.includes("ghost cards")) {
+            if (card?.name === "Shinobi Guardian") {
+              passed = true;
+            } else {
+              return false;
+            }
+          }
+        }
+      }
     }
-    return passed;
+    if (search === "") {
+      return passed;
+    } else if (card?.name.toLowerCase().includes(search.toLowerCase())) {
+      return passed;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -365,8 +437,10 @@ const MarketplaceComponent = () => {
             )}
           >
             <FiltersBoard
-              filter={filter}
-              setFilter={setFilter}
+              filters={filters}
+              setFilters={setFilters}
+              setCardType={setCardType}
+              cardType={cardType}
               setPage={setPage}
               type={type}
               setType={setType}
@@ -376,7 +450,11 @@ const MarketplaceComponent = () => {
             <div>
               <div className="flex flex-wrap w-full justify-center items-center relative">
                 {sales
-                  ?.filter((sale, i) => passFilter(sale.nftId))
+                  ?.filter((sale, i) =>
+                    type !== "packs"
+                      ? filterCards(cards[sale.nftId])
+                      : filterCards(packs[sale.nftId]),
+                  )
                   .filter((sale) => {
                     return (
                       Math.floor(new Date().getTime() / 1000) <=
@@ -494,7 +572,11 @@ const MarketplaceComponent = () => {
                     );
                   })}
                 {sales
-                  ?.filter((sale, i) => passFilter(sale.nftId))
+                  ?.filter((sale, i) =>
+                    type !== "packs"
+                      ? filterCards(cards[sale.nftId])
+                      : filterCards(packs[sale.nftId]),
+                  )
                   .filter((sale) => {
                     return (
                       Math.floor(new Date().getTime() / 1000) <=
@@ -524,7 +606,11 @@ const MarketplaceComponent = () => {
                           page <
                           Math.floor(
                             (sales
-                              .filter((sale, i) => passFilter(sale.nftId))
+                              .filter((sale, i) =>
+                                type !== "packs"
+                                  ? filterCards(cards[sale.nftId])
+                                  : filterCards(packs[sale.nftId]),
+                              )
                               .filter((sale) => {
                                 return (
                                   Math.floor(new Date().getTime() / 1000) <=

@@ -5,148 +5,363 @@ import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { CollapseMenu } from "@shared/components/common/collapseMenu/collapseMenu";
 import { SlideButton } from "@shared/components/common/slideButton/slideButton";
 
-const FiltersBoard = ({ filter, setFilter, type, setType, setPage }) => {
-  const handleChange = (title) => {
-    console.log(title);
-    setPage(0);
-    setFilter((prev) => {
-      return { ...prev, [`${title}`]: !prev[`${title}`] };
-    });
+const FiltersBoard = ({
+  filters,
+  setFilters,
+  setCardType,
+  cardType,
+  type,
+  setType,
+  setPage,
+}) => {
+  const handleAvatarChange = (checked, value) => {
+    if (checked) {
+      setFilters({ ...filters, avatar: [...filters.avatar, value] });
+    } else {
+      let arr = [...filters.avatar];
+      const index = arr.findIndex((item) => item === value);
+      arr.splice(index, 1);
+      setFilters({ ...filters, avatar: arr });
+    }
+  };
+
+  const handleRaceChange = (checked, value) => {
+    if (checked) {
+      setFilters({ ...filters, cardRace: [...filters.cardRace, value] });
+    } else {
+      let arr = [...filters.cardRace];
+      const index = arr.findIndex((item) => item === value);
+      arr.splice(index, 1);
+      setFilters({ ...filters, cardRace: arr });
+    }
+  };
+
+  const handleRoleChange = (checked, value) => {
+    if (checked) {
+      setFilters({ ...filters, cardRole: [...filters.cardRole, value] });
+    } else {
+      let arr = [...filters.cardRole];
+      const index = arr.findIndex((item) => item === value);
+      arr.splice(index, 1);
+      setFilters({ ...filters, cardRole: arr });
+    }
+  };
+
+  const handleElementChange = (checked, value) => {
+    if (checked) {
+      setFilters({ ...filters, cardElement: [...filters.cardElement, value] });
+    } else {
+      let arr = [...filters.cardElement];
+      const index = arr.findIndex((item) => item === value);
+      arr.splice(index, 1);
+      setFilters({ ...filters, cardElement: arr });
+    }
   };
 
   const filterItems = [
+    // {
+    //   title: "Card Type",
+    //   subItems: [
+    //     {
+    //       title: "Avatar",
+    //       onClick: () =>
+    //         handleAvatarChange(!filters.avatar.includes("avatar"), "avatar"),
+    //       value: "avatar",
+    //       valueBool: filters.avatar.includes("avatar"),
+    //     },
+    //     {
+    //       title: "Guardian",
+    //       onClick: () =>
+    //         handleAvatarChange(
+    //           !filters.avatar.includes("guardian"),
+    //           "guardian",
+    //         ),
+    //       value: "guardian",
+    //       valueBool: filters.avatar.includes("guardian"),
+    //     },
+    //     {
+    //       title: "Action Cards",
+    //       onClick: () =>
+    //         handleAvatarChange(
+    //           !filters.avatar.includes("action_cards"),
+    //           "action_cards",
+    //         ),
+    //       value: "action_cards",
+    //       valueBool: filters.avatar.includes("action_cards"),
+    //     },
+    //     {
+    //       title: "Reaction Cards",
+    //       onClick: () =>
+    //         handleAvatarChange(
+    //           !filters.avatar.includes("reaction_cards"),
+    //           "reaction_cards",
+    //         ),
+    //       value: "reaction_cards",
+    //       valueBool: filters.avatar.includes("reaction_cards"),
+    //     },
+    //   ],
+    // },
     {
-      title: "Card Type",
+      title: "Role",
       subItems: [
         {
-          title: "Avatar",
-          onClick: () => handleChange("avatar"),
-          value: "avatar",
+          title: "Fighter",
+          onClick: () =>
+            handleRoleChange(!filters.cardRole.includes("fighter"), "fighter"),
+          value: "fighter",
+          valueBool: filters.cardRole.includes("fighter"),
         },
         {
-          title: "Guardian",
-          onClick: () => handleChange("guardian"),
-          value: "guardian",
+          title: "Mage",
+          onClick: () =>
+            handleRoleChange(!filters.cardRole.includes("mage"), "mage"),
+          value: "mage",
+          valueBool: filters.cardRole.includes("mage"),
         },
         {
-          title: "Action Cards",
-          onClick: () => handleChange("action_cards"),
-          value: "action_cards",
+          title: "Assassin",
+          onClick: () =>
+            handleRoleChange(
+              !filters.cardRole.includes("assassin"),
+              "assassin",
+            ),
+          value: "assassin",
+          valueBool: filters.cardRole.includes("assassin"),
         },
         {
-          title: "Reaction Cards",
-          onClick: () => handleChange("reaction_cards"),
-          value: "reaction_cards",
+          title: "Tank",
+          onClick: () =>
+            handleRoleChange(!filters.cardRole.includes("tank"), "tank"),
+          value: "tank",
+          valueBool: filters.cardRole.includes("tank"),
+        },
+        {
+          title: "Support",
+          onClick: () =>
+            handleRoleChange(!filters.cardRole.includes("support"), "support"),
+          value: "support",
+          valueBool: filters.cardRole.includes("support"),
+        },
+        {
+          title: "Healer",
+          onClick: () =>
+            handleRoleChange(!filters.cardRole.includes("healer"), "healer"),
+          value: "healer",
+          valueBool: filters.cardRole.includes("healer"),
         },
       ],
     },
-    // {
-    //   title: "Class",
-    //   subItems: [
-    //     {
-    //       title: "Tanks",
-    //       onClick: () => handleChange("tanks"),
-    //       value: "tanks",
-    //     },
-    //     {
-    //       title: "Damage",
-    //       onClick: () => handleChange("damage"),
-    //       value: "damage",
-    //     },
-    //     {
-    //       title: "Mages",
-    //       onClick: () => handleChange("mages"),
-    //       value: "mages",
-    //     },
-    //     {
-    //       title: "Healers",
-    //       onClick: () => handleChange("healers"),
-    //       value: "healers",
-    //     },
-    //   ],
-    // },
-    // {
-    //   title: "Elements",
-    //   subItems: [
-    //     {
-    //       title: "Void",
-    //       onClick: () => handleChange("void"),
-    //       value: "void",
-    //     },
-    //     {
-    //       title: "Fire",
-    //       onClick: () => handleChange("fire"),
-    //       value: "fire",
-    //     },
-    //     {
-    //       title: "Water",
-    //       onClick: () => handleChange("water"),
-    //       value: "water",
-    //     },
-    //     {
-    //       title: "Mystic",
-    //       onClick: () => handleChange("mystic"),
-    //       value: "mystic",
-    //     },
-    //     {
-    //       title: "Earth",
-    //       onClick: () => handleChange("earth"),
-    //       value: "earth",
-    //     },
-    //     {
-    //       title: "Venom",
-    //       onClick: () => handleChange("venom"),
-    //       value: "venom",
-    //     },
-    //   ],
-    // },
     {
-      title: "Rarity",
+      title: "Race",
       subItems: [
         {
-          title: "Wood",
-          onClick: () => handleChange("wood"),
-          value: "wood",
+          title: "Human",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("human"), "human"),
+          value: "human",
+          valueBool: filters.cardRace.includes("human"),
         },
         {
-          title: "Stone",
-          onClick: () => handleChange("stone"),
-          value: "stone",
+          title: "Dwarf",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("dwarf"), "dwarf"),
+          value: "dwarf",
+          valueBool: filters.cardRace.includes("dwarf"),
         },
         {
-          title: "Iron",
-          onClick: () => handleChange("iron"),
-          value: "iron",
+          title: "Beast",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("beast"), "beast"),
+          value: "beast",
+          valueBool: filters.cardRace.includes("beast"),
         },
         {
-          title: "Epic",
-          onClick: () => handleChange("epic"),
-          value: "epic",
+          title: "Goblin",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("goblin"), "goblin"),
+          value: "goblin",
+          valueBool: filters.cardRace.includes("goblin"),
         },
         {
-          title: "Legendary",
-          onClick: () => handleChange("legendary"),
-          value: "legendary",
+          title: "Ogre",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("ogre"), "ogre"),
+          value: "ogre",
+          valueBool: filters.cardRace.includes("ogre"),
         },
         {
-          title: "Common",
-          onClick: () => handleChange("common"),
-          value: "common",
+          title: "Zombie",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("zombie"), "zombie"),
+          value: "zombie",
+          valueBool: filters.cardRace.includes("zombie"),
         },
         {
-          title: "Uncommon",
-          onClick: () => handleChange("uncommon"),
-          value: "uncommon",
+          title: "Vampire",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("vampire"), "vampire"),
+          value: "vampire",
+          valueBool: filters.cardRace.includes("vampire"),
         },
         {
-          title: "Rare",
-          onClick: () => handleChange("rare"),
-          value: "rare",
+          title: "Demon",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("demon"), "demon"),
+          value: "demon",
+          valueBool: filters.cardRace.includes("demon"),
+        },
+
+        {
+          title: "Undead",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("undead"), "undead"),
+          value: "undead",
+          valueBool: filters.cardRace.includes("undead"),
         },
         {
-          title: "Ultra Rare",
-          onClick: () => handleChange("ultra_rare"),
-          value: "ultra_rare",
+          title: "Insect",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("insect"), "insect"),
+          value: "insect",
+          valueBool: filters.cardRace.includes("insect"),
+        },
+        {
+          title: "Elemental",
+          onClick: () =>
+            handleRaceChange(
+              !filters.cardRace.includes("elemental"),
+              "elemental",
+            ),
+          value: "elemental",
+          valueBool: filters.cardRace.includes("elemental"),
+        },
+        {
+          title: "Golem",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("golem"), "golem"),
+          value: "golem",
+          valueBool: filters.cardRace.includes("golem"),
+        },
+        {
+          title: "Cephalo",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("cephalo"), "cephalo"),
+          value: "cephalo",
+          valueBool: filters.cardRace.includes("cephalo"),
+        },
+        {
+          title: "Spirit",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("spirit"), "spirit"),
+          value: "spirit",
+          valueBool: filters.cardRace.includes("spirit"),
+        },
+        {
+          title: "Monster",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("monster"), "monster"),
+          value: "monster",
+          valueBool: filters.cardRace.includes("monster"),
+        },
+        {
+          title: "Monster",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("monster"), "monster"),
+          value: "monster",
+          valueBool: filters.cardRace.includes("monster"),
+        },
+        {
+          title: "Ascended",
+          onClick: () =>
+            handleRaceChange(
+              !filters.cardRace.includes("ascended"),
+              "ascended",
+            ),
+          value: "ascended",
+          valueBool: filters.cardRace.includes("ascended"),
+        },
+        {
+          title: "Giant",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("giant"), "giant"),
+          value: "giant",
+          valueBool: filters.cardRace.includes("giant"),
+        },
+        {
+          title: "Sentinel",
+          onClick: () =>
+            handleRaceChange(
+              !filters.cardRace.includes("sentinel"),
+              "sentinel",
+            ),
+          value: "sentinel",
+          valueBool: filters.cardRace.includes("sentinel"),
+        },
+        {
+          title: "Shark",
+          onClick: () =>
+            handleRaceChange(!filters.cardRace.includes("shark"), "shark"),
+          value: "shark",
+          valueBool: filters.cardRace.includes("shark"),
+        },
+      ],
+    },
+    {
+      title: "Elements",
+      subItems: [
+        {
+          title: "Void",
+          onClick: () =>
+            handleElementChange(!filters.cardElement.includes("void"), "void"),
+          value: "void",
+          valueBool: filters.cardElement.includes("void"),
+        },
+        {
+          title: "Fire",
+          onClick: () =>
+            handleElementChange(!filters.cardElement.includes("fire"), "fire"),
+          value: "fire",
+          valueBool: filters.cardElement.includes("fire"),
+        },
+        {
+          title: "Water",
+          onClick: () =>
+            handleElementChange(
+              !filters.cardElement.includes("water"),
+              "water",
+            ),
+          value: "water",
+          valueBool: filters.cardElement.includes("water"),
+        },
+        {
+          title: "Mystic",
+          onClick: () =>
+            handleElementChange(
+              !filters.cardElement.includes("mystic"),
+              "mystic",
+            ),
+          value: "mystic",
+          valueBool: filters.cardElement.includes("mystic"),
+        },
+        {
+          title: "Earth",
+          onClick: () =>
+            handleElementChange(
+              !filters.cardElement.includes("earth"),
+              "earth",
+            ),
+          value: "earth",
+          valueBool: filters.cardElement.includes("earth"),
+        },
+        {
+          title: "Venom",
+          onClick: () =>
+            handleElementChange(
+              !filters.cardElement.includes("venom"),
+              "venom",
+            ),
+          value: "venom",
+          valueBool: filters.cardElement.includes("venom"),
         },
       ],
     },
@@ -179,42 +394,12 @@ const FiltersBoard = ({ filter, setFilter, type, setType, setPage }) => {
   ];
 
   const Reset = () => {
-    setFilter({
-      packs: false,
-      comics: false,
-      avatar: false,
-      champions: false,
-      action_cards: false,
-      reaction_cards: false,
-      tanks: false,
-      damage: false,
-      mages: false,
-      healers: false,
-      void: false,
-      fire: false,
-      water: false,
-      mystic: false,
-      earth: false,
-      venom: false,
-      wood: false,
-      stone: false,
-      iron: false,
-      epic: false,
-      legendary: false,
-      common: false,
-      rare: false,
-      ultra_rare: false,
-      uncommon: false,
-      limited_edition: false,
-      attack: false,
-      damage_stats: false,
-      mages_stats: false,
-    });
+    setFilters();
   };
 
   React.useEffect(() => {
-    console.log(filter);
-  }, [filter]);
+    console.log(filters);
+  }, [filters]);
 
   return (
     <div className="xl:w-80 w-full flex flex-col shrink-0">
@@ -278,10 +463,10 @@ const FiltersBoard = ({ filter, setFilter, type, setType, setPage }) => {
                         <p
                           className={clsx(
                             {
-                              ["text-gray-300"]: !filter[`${subItem.value}`],
+                              ["text-gray-300"]: !subItem.valueBool,
                             },
                             {
-                              ["text-white"]: filter[`${subItem.value}`],
+                              ["text-white"]: subItem.valueBool,
                             },
                           )}
                         >
@@ -289,8 +474,8 @@ const FiltersBoard = ({ filter, setFilter, type, setType, setPage }) => {
                         </p>
                         <div
                           className={clsx(
-                            { ["bg-primary"]: filter[`${subItem.value}`] },
-                            { ["bg-gray-400"]: !filter[`${subItem.value}`] },
+                            { ["bg-primary"]: subItem.valueBool },
+                            { ["bg-gray-400"]: !subItem.valueBool },
                             "rounded-full w-6 h-6 border border-gray-800",
                           )}
                         ></div>
