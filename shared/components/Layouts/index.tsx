@@ -18,6 +18,7 @@ import {
   GoldenFilled,
   SearchOutlined,
   ShopOutlined,
+  ShoppingCartOutlined,
   TwitterOutlined,
   WalletOutlined,
 } from "@ant-design/icons";
@@ -28,9 +29,10 @@ import {
   getWeb3,
   loginMetamaskWallet,
 } from "@shared/web3";
-import { XIcon } from "@heroicons/react/solid";
+import { ShoppingCartIcon, XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
 import { Dropdown } from "../common/dropdown/dropdown";
+import { DropdownCart } from "../common/dropdownCart/dropdownCart";
 
 const styles = {
   content: {
@@ -260,38 +262,41 @@ export default function AppLayout({ children }) {
             );
           })}
           {isAuthenticated ? (
-            <Dropdown
-              classTitle={"text-white opacity-50 hover:opacity-100 font-bold"}
-              title={"MY ACCOUNT"}
-            >
-              <div className="flex flex-col items-center px-4 border border-overlay-border rounded-xl">
-                {profileItems.map((item, index) => {
-                  return (
-                    <>
-                      {item.onClick ? (
-                        <div
-                          className={clsx(
-                            "gap-2 py-2 flex items-center text-white opacity-50 hover:opacity-100 cursor-pointer",
-                          )}
-                          onClick={item.onClick}
-                        >
-                          <h3 className={clsx("text-md font-bold")}>
-                            {item.name}
-                          </h3>
-                        </div>
-                      ) : (
-                        <NavbarItem
-                          key={index}
-                          name={item.name}
-                          link={item.link}
-                          route={router.asPath}
-                        />
-                      )}
-                    </>
-                  );
-                })}
-              </div>
-            </Dropdown>
+            <>
+              <DropdownCart></DropdownCart>
+              <Dropdown
+                classTitle={"text-white opacity-50 hover:opacity-100 font-bold"}
+                title={"MY ACCOUNT"}
+              >
+                <div className="flex flex-col items-center px-4 border border-overlay-border rounded-xl">
+                  {profileItems.map((item, index) => {
+                    return (
+                      <>
+                        {item.onClick ? (
+                          <div
+                            className={clsx(
+                              "gap-2 py-2 flex items-center text-white opacity-50 hover:opacity-100 cursor-pointer",
+                            )}
+                            onClick={item.onClick}
+                          >
+                            <h3 className={clsx("text-md font-bold")}>
+                              {item.name}
+                            </h3>
+                          </div>
+                        ) : (
+                          <NavbarItem
+                            key={index}
+                            name={item.name}
+                            link={item.link}
+                            route={router.asPath}
+                          />
+                        )}
+                      </>
+                    );
+                  })}
+                </div>
+              </Dropdown>
+            </>
           ) : (
             <NavbarItem
               name={isAuthenticated ? "MY ACCOUNT" : "LOG IN"}

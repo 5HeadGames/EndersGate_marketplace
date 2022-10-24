@@ -76,7 +76,6 @@ export const onGetAssets = createAsyncThunk(
   async function prepare(address: string) {
     try {
       const { endersGate, pack } = getAddresses();
-      console.log(endersGate, pack);
       const cardsContract = getContract("ERC1155", endersGate);
       const packsContract = getContract("ERC1155", pack);
       const packsIds = [0, 1, 2, 3];
@@ -100,9 +99,6 @@ export const onGetAssets = createAsyncThunk(
           cardsIds,
         )
         .call();
-
-      console.log(balanceCards, balancePacks, "balances");
-      console.log(endersGate, pack, "addresses");
 
       return {
         balanceCards: cardsIds.map((id, i) => ({
@@ -134,7 +130,6 @@ export const onSellERC1155 = createAsyncThunk(
   }) {
     const { from, tokenId, startingPrice, amount, duration, address, moralis } =
       args;
-    console.log("aaaaaaaaaaa", moralis);
 
     const provider = moralis.web3.provider;
     const user = Moralis.User.current();

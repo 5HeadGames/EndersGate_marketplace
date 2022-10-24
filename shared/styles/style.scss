@@ -41,6 +41,12 @@
   height: 24px !important;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .item-prev {
   bottom: 0;
   left: -40px;

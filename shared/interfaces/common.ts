@@ -24,4 +24,5 @@ export interface InputProps {
   leftClick?: () => void;
   error?: any;
   classNameContainer?: string;
+  withoutX?: boolean;
 }

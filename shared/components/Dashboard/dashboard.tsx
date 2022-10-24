@@ -235,6 +235,8 @@ const DashboardComponent = () => {
                   icon={cards[a.nftId].properties.image.value}
                   name={cards[a.nftId].properties.name.value}
                   byId={false}
+                  setPage={(arg) => {}}
+                  sale={a}
                   price={a.price}
                 />
               ) : (

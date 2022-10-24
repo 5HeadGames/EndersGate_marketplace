@@ -24,6 +24,7 @@ import clsx from "clsx";
 import Styles from "./styles.module.scss";
 import Tilt from "react-parallax-tilt";
 import { DropdownActions } from "../common/dropdownActions/dropdownActions";
+import ReactCardFlip from "react-card-flip";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const { user, Moralis, isWeb3Enabled } = useMoralis();
@@ -32,6 +33,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const { Modal, show, hide, isShow } = useModal();
   const [isPack, setIsPack] = React.useState(false);
   const [saleData, setSaleData] = React.useState(false);
+  const [flippedCard, setFlippedCard] = React.useState(false);
   const { isAuthenticated } = useMoralis();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -208,6 +210,25 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
           <div className="w-full flex xl:flex-row flex-col mt-10 gap-4 justify-center">
             <div className="flex flex-col gap-2">
               <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
+                {!isPack && (
+                  <div
+                    className="absolute top-2 right-2 z-10 text-white text-2xl p-1"
+                    onClick={() => setFlippedCard((prev) => !prev)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                )}
                 <img
                   src={
                     isPack
@@ -218,32 +239,83 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   className="absolute xl:top-[-20%] top-[-25%] bottom-0 xl:left-[-55%] left-[-35%] right-0 margin-auto opacity-50 xl:min-w-[1050px] min-w-[175%]"
                   alt=""
                 />
-                <Tilt className="flex items-center justify-center">
-                  <div className="sm:sticky sm:top-32 h-min w-auto">
-                    <img
-                      src={
-                        isPack
-                          ? packs[sale.nftId].properties.image.value
-                          : cards[sale.nftId].properties.image?.value ||
-                            Icons.logo
-                      }
-                      className={clsx(
-                        Styles.animatedImageMain,
-                        {
-                          "rounded-full": !isPack
-                            ? cards[sale.nftId].typeCard == "avatar"
-                            : false,
-                        },
-                        {
-                          "rounded-md": !isPack
-                            ? cards[sale.nftId].typeCard != "avatar"
-                            : false,
-                        },
-                      )}
-                      alt=""
-                    />
-                  </div>
-                </Tilt>
+                {isPack ? (
+                  <Tilt className="flex items-center justify-center">
+                    <div className="sm:sticky sm:top-32 h-min w-auto">
+                      <img
+                        src={
+                          isPack
+                            ? packs[sale.nftId].properties.image.value
+                            : cards[sale.nftId].properties.image?.value ||
+                              Icons.logo
+                        }
+                        className={clsx(
+                          Styles.animatedImageMain,
+                          {
+                            "rounded-full": !isPack
+                              ? cards[sale.nftId].typeCard == "avatar"
+                              : false,
+                          },
+                          {
+                            "rounded-md": !isPack
+                              ? cards[sale.nftId].typeCard != "avatar"
+                              : false,
+                          },
+                        )}
+                        alt=""
+                      />
+                    </div>
+                  </Tilt>
+                ) : (
+                  <ReactCardFlip
+                    isFlipped={flippedCard}
+                    flipDirection="horizontal"
+                  >
+                    <Tilt className="flex items-center justify-center">
+                      <img
+                        src={
+                          cards[sale.nftId]?.properties?.image?.value ||
+                          Icons.logo
+                        }
+                        className={clsx(
+                          Styles.animatedImageMain,
+                          { ["hidden"]: flippedCard },
+
+                          {
+                            "rounded-full":
+                              cards[sale.nftId]?.typeCard == "avatar",
+                          },
+                          {
+                            "rounded-md":
+                              cards[sale.nftId]?.typeCard != "avatar",
+                          },
+                        )}
+                        alt=""
+                      />
+                    </Tilt>
+
+                    <Tilt className="flex items-center justify-center">
+                      <img
+                        src={`/images/${cards[
+                          sale.nftId
+                        ]?.typeCard.toLowerCase()}.png`}
+                        className={clsx(
+                          Styles.animatedImageMain,
+                          { ["hidden"]: !flippedCard },
+                          {
+                            "rounded-full":
+                              cards[sale.nftId]?.typeCard == "avatar",
+                          },
+                          {
+                            "rounded-md":
+                              cards[sale.nftId]?.typeCard != "avatar",
+                          },
+                        )}
+                        alt=""
+                      />
+                    </Tilt>
+                  </ReactCardFlip>
+                )}
               </div>
               <div className="flex flex-col xl:max-w-[500px] xl:min-h-[450px] xl:max-h-[450px]">
                 <div className="flex h-full gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">

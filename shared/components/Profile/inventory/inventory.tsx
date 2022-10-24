@@ -197,6 +197,12 @@ const Inventory = () => {
                             <span>
                               Pack #{pack.id !== undefined ? pack.id : "12345"}
                             </span>
+                            <span>
+                              x
+                              {nfts.balancePacks[pack.id].balance
+                                ? nfts.balancePacks[pack.id].balance
+                                : ""}
+                            </span>
                           </div>
                         </div>
                         <div className="w-full h-72 flex justify-center items-center my-6">

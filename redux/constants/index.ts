@@ -6,6 +6,9 @@ export const UPDATE_USER_CREDENTIALS = "update_user_credentials";
 
 export const BLUR_LAYOUT = "blur_layout";
 export const MESSAGE_LAYOUT = "message_layout";
+export const ADD_CART = "add_cart";
+export const REMOVE_FROM_CART = "remove_from_cart";
+export const REMOVE_ALL = "remove_all";
 export const BUY_NFT = "buy_nft";
 export const APPROVE_NFT = "approve_nft";
 export const SELL_NFT = "sell_nft";

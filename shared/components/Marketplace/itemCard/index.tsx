@@ -5,6 +5,20 @@ import Link from "next/link";
 import Styles from "./styles.module.scss";
 import Web3 from "web3";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
+import { useAppDispatch } from "@redux/store";
+import { useSelector } from "react-redux";
+import { XIcon } from "@heroicons/react/outline";
+import {
+  CheckCircleIcon,
+  CheckIcon,
+  PlusIcon,
+  SearchIcon,
+} from "@heroicons/react/solid";
+import { addCart, removeFromCart } from "@redux/actions";
+import { useRouter } from "next/router";
+import { Input } from "@shared/components/common/form/input";
+import { useForm } from "react-hook-form";
+import { useMoralis } from "react-moralis";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -20,11 +34,22 @@ interface Props
   price?: any;
   byId: boolean;
   seller?: string;
+  type?: string;
+  sale?: any;
+  setPage?: any;
 }
 
 const NFTCard: React.FunctionComponent<Props> = (props) => {
   const { classes, ...rest } = props;
-  console.log(props.seller);
+  const dispatch = useAppDispatch();
+  const { cart } = useSelector((state: any) => state.layout);
+  const [hoverAll, setHoverAll] = React.useState(false);
+  const [hoverBuy, setHoverBuy] = React.useState(false);
+  const [quantity, setQuantity] = React.useState(1);
+  const router = useRouter();
+  const { register, handleSubmit } = useForm();
+  const { isAuthenticated } = useMoralis();
+
   return (
     <>
       {props.byId ? (
@@ -110,11 +135,19 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
           </div>
         </Link>
       ) : (
-        <Link href={`/NFTDetailSale/${props.transactionId}`}>
+        <div
+          className="pb-6 relative"
+          onMouseOver={() => setHoverAll(true)}
+          onMouseLeave={() => setHoverAll(false)}
+        >
           <div
             className={clsx(
-              "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 ",
-              Styles.cardHover,
+              "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 z-[2]",
+              {
+                ["!border-green-button"]:
+                  cart.filter((e) => e.id === props.transactionId).length > 0,
+              },
+              // Styles.cardHover,
               classes?.root,
             )}
           >
@@ -133,7 +166,132 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                   {<span>#{props.transactionId}</span>}
                 </div>
               </div>
-              <div className="w-full h-72 flex justify-center items-center my-6">
+              <div className="w-full h-80 flex justify-center items-center my-6 relative">
+                <div
+                  className={clsx(
+                    { ["opacity-0"]: !hoverAll },
+                    "flex flex-col items-end transition-all duration-500 justify-center gap-4 top-4 right-3 absolute",
+                  )}
+                >
+                  {" "}
+                  <div
+                    onMouseOver={() => setHoverBuy(true)}
+                    onMouseLeave={() => setHoverBuy(false)}
+                    className={clsx(
+                      "rounded-full p-2 flex w-10 h-10 items-center justify-center border-overlay-border border",
+                      {
+                        ["gap-1 !w-20 px-1"]:
+                          hoverBuy &&
+                          cart.filter((e) => e.id === props.transactionId)
+                            .length == 0 &&
+                          parseInt(props.sale) > 1,
+                      },
+                      {
+                        ["hover:bg-red-500 bg-green-button hover:transition-all transition-all duration-500 hover:duration-500"]:
+                          cart.filter((e) => e.id === props.transactionId)
+                            .length > 0,
+                      },
+                      {
+                        ["bg-overlay hover:bg-overlay-2 hover:transition-all transition-all duration-500 hover:duration-500"]:
+                          cart.filter((e) => e.id === props.transactionId)
+                            .length == 0,
+                      },
+                    )}
+                    onClick={(e) => {
+                      e.preventDefault();
+                    }}
+                  >
+                    {cart.filter((e) => e.id === props.transactionId).length >
+                    0 ? (
+                      hoverBuy ? (
+                        <XIcon
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (
+                              cart.filter((e) => e.id === props.transactionId)
+                                .length > 0
+                            ) {
+                              dispatch(
+                                removeFromCart({ id: props.transactionId }),
+                              );
+                            } else {
+                              dispatch(addCart({ id: props.transactionId }));
+                            }
+                          }}
+                        />
+                      ) : (
+                        <CheckIcon
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (
+                              cart.filter((e) => e.id === props.transactionId)
+                                .length > 0
+                            ) {
+                              dispatch(
+                                removeFromCart({ id: props.transactionId }),
+                              );
+                            } else {
+                              dispatch(addCart({ id: props.transactionId }));
+                            }
+                          }}
+                        />
+                      )
+                    ) : (
+                      <>
+                        <PlusIcon
+                          width={"20px"}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (
+                              cart.filter((e) => e.id === props.transactionId)
+                                .length > 0
+                            ) {
+                              dispatch(
+                                removeFromCart({ id: props.transactionId }),
+                              );
+                            } else {
+                              dispatch(addCart({ id: props.transactionId }));
+                            }
+                          }}
+                        />
+                        {hoverBuy && parseInt(props.sale) > 1 && (
+                          <Input
+                            type="number"
+                            register={register}
+                            name="quantity"
+                            classNameContainer="!border-none ourline-none w-12 text-sm !p-0"
+                            className="!p-0"
+                            withoutX
+                            onClick={(e) => e.preventDefault()}
+                            max={10}
+                            min={1}
+                            value={quantity}
+                            onChange={(e) => {
+                              if (
+                                parseInt(e.target.value) > parseInt(props.sale)
+                              ) {
+                              } else {
+                                setQuantity(parseInt(e.target.value));
+                              }
+                            }}
+                          ></Input>
+                        )}
+                      </>
+                    )}
+                  </div>
+                  <div
+                    className={clsx(
+                      "rounded-full w-10 h-10 p-2 bg-overlay border-overlay-border border hover:bg-overlay-2",
+                    )}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      props.setPage(0);
+                      router.push("/marketplace?search=" + props.name);
+                    }}
+                  >
+                    <SearchIcon />
+                  </div>
+                </div>
                 <img
                   src={props.icon || Icons.logo}
                   className={props.icon ? "h-64" : "h-24"}
@@ -190,7 +348,26 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
               </div>
             </div>
           </div>
-        </Link>
+          <div
+            className={clsx(
+              { ["bottom-[8px]"]: hoverAll },
+              { ["bottom-[50px]"]: !hoverAll },
+              "flex w-full gap-4 absolute transition-all duration-500  px-8 z-[1]  font-bold text-white",
+            )}
+          >
+            <div
+              onClick={() => {}}
+              className="w-1/2 px-2 pb-1 flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-green-button hover:text-overlay transition-all duration-500"
+            >
+              Buy Now
+            </div>
+            <Link href={`/NFTDetailSale/${props.transactionId}`}>
+              <div className="w-1/2 px-2 pb-1  flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-overlay-2 transition-all duration-500">
+                Details
+              </div>
+            </Link>
+          </div>
+        </div>
       )}
     </>
   );

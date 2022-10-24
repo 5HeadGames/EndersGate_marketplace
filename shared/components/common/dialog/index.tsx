@@ -1,6 +1,5 @@
 import React from "react";
-import {useAppDispatch} from "redux/store";
-import {onBlurLayout} from "redux/actions";
+import { useAppDispatch } from "redux/store";
 
 const styles = {
   back: {
@@ -21,7 +20,7 @@ interface Props {
 }
 
 const Dialog: React.FunctionComponent<Props> = (props) => {
-  const {open, onClose, children} = props;
+  const { open, onClose, children } = props;
   const rootRef = React.useRef(null);
   const dispatch = useAppDispatch();
 
@@ -29,6 +28,8 @@ const Dialog: React.FunctionComponent<Props> = (props) => {
     if (!rootRef.current) return;
 
     document.addEventListener("click", onClose);
+
+    console.log("a");
 
     return () => {
       document.removeEventListener("click", onClose);
@@ -41,7 +42,12 @@ const Dialog: React.FunctionComponent<Props> = (props) => {
     <>
       <div
         className="bg-secondary text-white border-primary border border-2 p-5 absolute rounded-md"
-        style={{top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 200}}
+        style={{
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%,-50%)",
+          zIndex: 200,
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {children}

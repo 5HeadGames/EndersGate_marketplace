@@ -30,6 +30,7 @@ export const Input: React.FC<
   handleVerification,
   primary,
   reset,
+  withoutX = false,
   ...props
 }) => {
   //@typescript-eslint/no-unused-vars
@@ -140,12 +141,14 @@ export const Input: React.FC<
               <Icon src={leftImg} className="text-gray-500 cursor-pointer" />
             </div>
           )}
-          <div
-            onClick={() => reset({ [name]: "" })}
-            className="absolute right-2 top-0 bottom-0 my-auto text-primary-disabled flex items-center justify-center font-bold cursor-pointer"
-          >
-            <XIcon color="#fff" width={"12px"} />
-          </div>
+          {!withoutX && (
+            <div
+              onClick={() => reset({ [name]: "" })}
+              className="absolute right-2 top-0 bottom-0 my-auto text-primary-disabled flex items-center justify-center font-bold cursor-pointer"
+            >
+              <XIcon color="#fff" width={"12px"} />
+            </div>
+          )}
         </div>
       </div>
     </div>

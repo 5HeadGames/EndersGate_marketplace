@@ -67,7 +67,7 @@ const MarketplaceComponent = () => {
 
   React.useEffect(() => {
     getSales(currentOrder);
-  }, [currentOrder]);
+  }, [currentOrder, type, nfts]);
 
   React.useEffect(() => {
     if (searched) {
@@ -86,7 +86,7 @@ const MarketplaceComponent = () => {
         packSalesCreated.push(sale);
       }
     });
-
+    console.log(currentOrder);
     if (currentOrder === "recently_listed") {
       switch (type) {
         case "trading_cards":
@@ -156,30 +156,6 @@ const MarketplaceComponent = () => {
     }
   };
 
-  React.useEffect(() => {
-    const cardSalesCreated = [];
-    const packSalesCreated = [];
-    const { endersGate, pack } = getAddresses();
-    nfts.saleCreated.forEach((sale) => {
-      if (sale.nft == endersGate) {
-        cardSalesCreated.push(sale);
-      } else if (sale.nft == pack) {
-        packSalesCreated.push(sale);
-      }
-    });
-    switch (type) {
-      case "trading_cards":
-        setSales(cardSalesCreated);
-        break;
-      case "packs":
-        setSales(packSalesCreated);
-        break;
-      default:
-        setSales(nfts.saleCreated);
-        break;
-    }
-  }, [type, nfts]);
-
   const [filters, setFilters] = React.useState({
     avatar: [],
     cardRole: [],
@@ -196,8 +172,9 @@ const MarketplaceComponent = () => {
         filters.cardRole.length === 0 &&
         filters.cardElement.length === 0
       ) {
-        return true;
+        passed = true;
       }
+
       if (filters.cardElement.length > 0) {
         if (
           filters.cardElement?.includes(
@@ -276,7 +253,7 @@ const MarketplaceComponent = () => {
           filters.cardRole.length === 0 &&
           filters.cardElement.length === 0
         ) {
-          return true;
+          passed = true;
         }
         if (filters.cardElement.length > 0) {
           if (
@@ -390,6 +367,7 @@ const MarketplaceComponent = () => {
                 placeholder="Search"
                 value={search}
                 onChange={(e) => {
+                  setPage(0);
                   setSearch(e.target.value);
                 }}
               />
@@ -461,8 +439,8 @@ const MarketplaceComponent = () => {
                       parseInt(sale?.duration) + parseInt(sale?.startedAt)
                     );
                   })
-                  .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12) >
-                0 ? (
+                  .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
+                  .length > 0 ? (
                   sales
                     ?.filter((sale, i) =>
                       type !== "packs"
@@ -477,114 +455,28 @@ const MarketplaceComponent = () => {
                     })
                     .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
                     .map((a, id) => {
-                      return type !== "packs" ? (
+                      return (
                         <NftCard
                           classes={{ root: "m-4 cursor-pointer" }}
+                          setPage={setPage}
                           id={a.nftId}
                           transactionId={a.id}
                           seller={a.seller}
-                          icon={cards[a.nftId].properties.image.value}
-                          name={cards[a.nftId].properties.name.value}
+                          icon={
+                            type == "packs"
+                              ? packs[a.nftId].properties.image.value
+                              : cards[a.nftId].properties.image.value
+                          }
+                          name={
+                            type == "packs"
+                              ? packs[a.nftId].properties.name.value
+                              : cards[a.nftId].properties.name.value
+                          }
                           byId={false}
                           price={a.price}
+                          type={type}
+                          sale={a}
                         />
-                      ) : (
-                        <Link href={`/NFTDetailSale/${a.id}`}>
-                          <div
-                            className={clsx(
-                              "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 m-4 cursor-pointer",
-                              Styles.cardHover,
-                            )}
-                          >
-                            <img
-                              src={packs[a.nftId]?.properties?.image?.value}
-                              className="absolute top-[-40%] bottom-0 left-[-5%] right-0 margin-auto opacity-50 min-w-[110%]"
-                              alt=""
-                            />
-                            <div className="flex flex-col relative">
-                              <div className="w-full flex flex-col text-xs gap-1">
-                                <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
-                                  <span>
-                                    Pack #
-                                    {a.nftId !== undefined ? a.nftId : "12345"}
-                                  </span>
-                                  {<span>#{a.id}</span>}
-                                </div>
-                              </div>
-                              <div className="w-full h-72 flex justify-center items-center my-6">
-                                <img
-                                  src={
-                                    packs[a.nftId]?.properties?.image?.value ||
-                                    Icons.logo
-                                  }
-                                  className={
-                                    packs[a.nftId]?.properties?.image?.value
-                                      ? "h-64"
-                                      : "h-24"
-                                  }
-                                />
-                              </div>
-                              <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
-                                <div className="flex text-lg font-bold text-left py-2 ">
-                                  <div className="w-40 relative">
-                                    <img
-                                      src="icons/card_logo.svg"
-                                      className="w-40 absolute top-[-60px]"
-                                      alt=""
-                                    />
-                                  </div>
-                                  <div className="w-full flex flex-col">
-                                    <span className="uppercase text-white text-lg">
-                                      {packs[a.nftId]?.properties?.name
-                                        ?.value || "Enders Gate"}
-                                    </span>
-                                    <span
-                                      className="text-[12px] text-gray-500 font-medium"
-                                      style={{ lineHeight: "10px" }}
-                                    >
-                                      Owner:{" "}
-                                      {<AddressText text={a.seller} /> ||
-                                        "Owner"}
-                                    </span>
-                                  </div>
-                                  <img
-                                    src={Icons.logo}
-                                    className="w-10 h-10"
-                                    alt=""
-                                  />
-                                </div>
-                                {a.price && (
-                                  <div
-                                    className="flex justify-between text-md text-white "
-                                    style={{ lineHeight: "18px" }}
-                                  >
-                                    <div className="flex items-center gap-2">
-                                      <img
-                                        src="/icons/HARMONY.svg"
-                                        className="h-8 w-8"
-                                        alt=""
-                                      />
-                                      <div className="flex flex-col text-md font-medium">
-                                        <p>Price:</p>
-                                        <span>
-                                          {Web3.utils.fromWei(a.price, "ether")}{" "}
-                                          ONE
-                                        </span>
-                                      </div>
-                                    </div>
-                                    <div className="flex flex-col text-md font-medium">
-                                      <p>Highest Bid:</p>
-                                      <span>
-                                        {Web3.utils.fromWei(a.price, "ether")}{" "}
-                                        ONE
-                                      </span>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
                       );
                     })
                 ) : (
