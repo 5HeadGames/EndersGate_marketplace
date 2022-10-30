@@ -56,6 +56,7 @@ export const onLoadSales = createAsyncThunk(
       startedAt: sale[6],
       status: sale[7],
     }));
+    console.log(allSales, "ALL SALES");
     const created = allSales.filter((sale: Sale) => sale.status === "0");
     const successful = allSales.filter((sale: Sale) => sale.status === "1");
     const dailyVolume = getDailyVolume(successful);
