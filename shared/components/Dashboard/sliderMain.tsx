@@ -1,11 +1,14 @@
 import { LoadingOutlined } from "@ant-design/icons";
 import clsx from "clsx";
 import React from "react";
+import { timer } from "../common/CustomTimeout";
 import NFTCardSlider from "../Marketplace/itemCard/cardSliderMain";
 
 export const SliderMain = ({ salesDefault, cards }) => {
   const [arraySlider, setArraySlider] = React.useState([]);
   const [arrayPos, setArrayPos] = React.useState([0, 1, 2, 3]);
+
+  const [onTimeChange, setOnTimeChange] = React.useState(false);
 
   const timeoutRef = React.useRef(null);
 
@@ -21,7 +24,9 @@ export const SliderMain = ({ salesDefault, cards }) => {
 
   React.useEffect(() => {
     resetTimeout();
-    timeoutRef.current = setTimeout(() => {
+    setOnTimeChange(false);
+    setOnTimeChange(true);
+    timeoutRef.current = new timer(() => {
       switch (arrayPos[2]) {
         case 0:
           setArrayPos((prev) => [3, 2, 1, 0]);
@@ -39,10 +44,19 @@ export const SliderMain = ({ salesDefault, cards }) => {
       }
     }, 4000);
 
+    const interval = setInterval(() => {
+      timeoutRef.current.getTimeLeft();
+    }, 100);
+
     return () => {
+      clearInterval(interval);
       resetTimeout();
     };
   }, [arrayPos]);
+
+  React.useEffect(() => {
+    console.log(onTimeChange);
+  }, [onTimeChange]);
 
   return (
     <div
@@ -111,6 +125,7 @@ export const SliderMain = ({ salesDefault, cards }) => {
               icon={
                 cards[arraySlider[arrayPos[3]].nftId].properties.image.value
               }
+              onTimeChange={onTimeChange}
               name={cards[arraySlider[arrayPos[3]].nftId].properties.name.value}
               byId={false}
               price={arraySlider[arrayPos[3]].price}

@@ -26,11 +26,13 @@ interface LayoutDashboardProps {
   sidebarOpen?: boolean;
   setSidebarOpen?: any;
   initialFocus?: any;
+  navItems?: any;
 }
 export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
   // title = '',
   // isLoading = false,
   // children,
+  navItems,
   sidebarOpen = false,
   setSidebarOpen = {},
   initialFocus = null,
@@ -38,59 +40,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
   const router = useRouter();
   const { user } = useMoralis();
   const address = user?.get("ethAddress") || "";
-
-  const navItems = [
-    {
-      name: "Menu",
-      link: "/menu",
-      menu: true,
-      icon: <AppstoreFilled />,
-      items: [
-        {
-          title: "Enders Gate Website",
-          description:
-            "Sell your game items to anyone, anywhere, they're finally yours",
-          externalLink: "https://endersgate.one",
-          icon: <ShopOutlined />,
-        },
-        {
-          title: "Enders Gate Discord",
-          description: "Join to our Discord Server!",
-          href: "https://discord.com/invite/nHNkWdE99h",
-          icon: <ShopOutlined />,
-        },
-        {
-          title: "Enders Gate Twitter",
-          description: "Follow us in Twitter!",
-          externalLink: "https://twitter.com/EndersGate",
-          icon: <TwitterOutlined />,
-        },
-        {
-          title: "Harmony Block Explorer",
-          description: "Explore all the transactions in the harmony blockchain",
-          externalLink: "https://explorer.harmony.one/",
-          icon: <WalletOutlined />,
-        },
-        {
-          title: "Harmony Bridge",
-          description:
-            "Trusted chrome wallet extension, store your digital currency and NFTs",
-          externalLink: "https://bridge.harmony.one/busd",
-          icon: <WalletOutlined />,
-        },
-      ],
-    },
-    { name: "Explore", link: "/marketplace", icon: <AreaChartOutlined /> },
-    { name: "Stats", link: "/", icon: <ShopOutlined /> },
-    {
-      link: "/profile/inventory",
-      name: "Inventory",
-      icon: <GoldenFilled />,
-    },
-  ];
-  const [collapse, setCollapse] = React.useState(
-    new Array(navItems.length).fill(false),
-  );
+  const [set, setSet] = React.useState(false);
 
   return (
     <>
@@ -99,9 +49,9 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
         <Dialog
           as="div"
           static
-          className="fixed h-screen top-0 flex z-40 md:hidden bg-overlay"
+          className="fixed h-[calc(100vh-56px)] top-[56px] w-screen top-0 flex z-40 md:hidden bg-overlay"
           open={sidebarOpen}
-          onClose={setSidebarOpen}
+          onClose={setSet as any}
           initialFocus={initialFocus}
         >
           <Transition.Child
@@ -113,7 +63,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 z-0 blur-xl bg-transparent-color-gray-200" />
+            <Dialog.Overlay className="fixed top-[56px] inset-0 z-0 blur-xl w-screen h-[calc(100vh-56px)]" />
           </Transition.Child>
           <Transition.Child
             as={Fragment}
@@ -124,131 +74,22 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
             leaveFrom="translate-x-0"
             leaveTo="-translate-x-full"
           >
-            <div className="bg-overlay relative flex-1 flex flex-col max-w-xs w-full w-64">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-in-out duration-300"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="ease-in-out duration-300"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
-                <div className="absolute top-0 right-0 -mr-12 pt-2">
-                  <button
-                    className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-                    onClick={() => setSidebarOpen(false)}
-                  >
-                    <span className="sr-only">Close sidebar</span>
-                    <XIcon
-                      className="w-full p-1 text-white bg-secondary rounded-full"
-                      aria-hidden="true"
-                    />
-                  </button>
-                </div>
-              </Transition.Child>
-              <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                <div className="flex-shrink-0 flex items-center px-4">
-                  <Link href="/">
-                    <a
-                      className={clsx(
-                        "cursor-pointer flex items-center justify-center",
-                      )}
-                    >
-                      <img className="w-40" src={Icons.logo} alt="" />
-                    </a>
-                  </Link>
-                </div>
-                <nav className="mt-5 flex-1 px-7">
+            <div className="bg-secondary relative flex-1 flex flex-col w-screen">
+              <div className="flex-1 h-0 pt-6 pb-4 overflow-y-auto">
+                <nav className="flex-1 px-7">
                   {navItems.map((item, index) => {
-                    return item.menu ? (
-                      <Fragment key={"nav-modile-" + index}>
-                        <div
-                          className={clsx(
-                            {
-                              "opacity-50": item.link !== router.asPath,
-                            },
-
-                            "flex justify-between items-center",
-                          )}
-                          onClick={() =>
-                            setCollapse((prev) => {
-                              let newCollapse = [];
-                              prev.forEach((previus, id) => {
-                                if (index !== id) {
-                                  newCollapse.push(previus);
-                                } else {
-                                  newCollapse.push(!previus);
-                                }
-                              });
-                              return newCollapse;
-                            })
-                          }
-                        >
-                          <p
-                            className={clsx(
-                              "group flex items-center px-3 py-4 hover:opacity-90 text-base rounded-md  relative text-primary",
-                            )}
-                          >
-                            <div className="mr-4 flex-shrink-0 flex items-start text-primary text-xl">
-                              {item.icon}
-                            </div>
-                            {item.name}
-                          </p>
-
-                          <div className="flex-shrink-0 text-primary flex items-center text-xl">
-                            {!collapse[index] ? (
-                              <RightOutlined />
-                            ) : (
-                              <DownOutlined />
-                            )}
-                          </div>
-                        </div>
-                        <div className={clsx({ ["hidden"]: !collapse[index] })}>
-                          {item?.items?.map((subItem, index) => {
-                            return (
-                              // <Link key={subItem.title} href={subItem.href}>
-                              <a
-                                key={index}
-                                className={clsx(
-                                  "flex items-center px-3 py-4  text-base my-1 relative text-primary",
-                                  {
-                                    "opacity-50":
-                                      subItem.href !== router.asPath,
-                                  },
-                                )}
-                                target="_blank"
-                                rel="noreferrer"
-                                href={subItem.href}
-                                onClick={() => setSidebarOpen(false)}
-                              >
-                                <div className="mr-4 flex-shrink-0 flex items-start text-primary text-2xl">
-                                  {subItem.icon}
-                                </div>
-
-                                {subItem.title}
-                              </a>
-                              // </Link>
-                            );
-                          })}
-                        </div>
-                        <div className="divider mx-3 mt-4"></div>
-                      </Fragment>
-                    ) : (
+                    return (
                       <Fragment key={"nav-mobile-" + index}>
                         <Link href={item.link} key={"nav-desktop-" + index}>
                           <p
                             className={clsx(
-                              "group flex items-center px-3 py-4  hover:opacity-90 text-base rounded-md  relative text-primary",
+                              "group flex items-center px-3 pb-3 text-xl  hover:opacity-90 text-base rounded-md  relative text-primary font-[500]",
                               {
                                 "opacity-50": item.link !== router.asPath,
                               },
                             )}
                             onClick={() => setSidebarOpen(false)}
                           >
-                            <div className="mr-4 flex-shrink-0 flex items-start text-primary text-2xl">
-                              {item.icon}
-                            </div>
                             {item.name}
                           </p>
                         </Link>
@@ -256,26 +97,6 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                       </Fragment>
                     );
                   })}
-                  {address !== "" ? (
-                    <ProfileDataAndActions
-                    // name={"AN-Drew207"}
-                    // email="andrescontrerasoviedo740@gmail.com"
-                    // photo=""
-                    />
-                  ) : (
-                    <div className="mb-4">
-                      <Button
-                        decoration="line-white"
-                        size="small"
-                        onClick={() => {
-                          setSidebarOpen(false);
-                          router.push("/login");
-                        }}
-                      >
-                        LOG IN
-                      </Button>
-                    </div>
-                  )}
                 </nav>
               </div>
             </div>

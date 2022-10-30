@@ -18,7 +18,7 @@ export const Newsletter = () => {
       )}
     >
       <img src="/icons/5HGNewsletter.svg" className="w-40 mb-6" alt="" />
-      <p className="text-primary-disabled">
+      <p className="text-primary-disabled lg:text-left text-center">
         Join our mailing list to stay in the loop with our newest feature
         releases, NFT drops & more!
       </p>
@@ -38,7 +38,7 @@ export const Newsletter = () => {
         <Button
           type="submit"
           decoration="line-white"
-          className="rounded-xl bg-overlay-2 text-white hover:text-overlay text-[20px] border border-overlay-border py-3 px-10"
+          className="rounded-xl bg-overlay-2 text-white hover:text-overlay text-[20px] border border-overlay-border py-3 px-10 whitespace-nowrap"
         >
           Sign up
         </Button>

@@ -22,7 +22,10 @@ export const Dropdown: React.FC<any> = ({ classTitle, title, children }) => {
                       classTitle,
                     )}
                   >
-                    <Typography type="subTitle" className="mr-1">
+                    <Typography
+                      type="subTitle"
+                      className="mr-1 whitespace-nowrap"
+                    >
                       {title}
                     </Typography>
                     {open ? <CaretUpOutlined /> : <CaretDownOutlined />}

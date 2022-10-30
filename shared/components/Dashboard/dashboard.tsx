@@ -56,7 +56,7 @@ const DashboardComponent = () => {
 
   const [sales, setSales] = React.useState(recentlySold);
   const [salesDefault, setSalesDefault] = React.useState(recentlyListedCards);
-  const [salesType, setSalesType] = React.useState("Recently Sold");
+  const [salesType, setSalesType] = React.useState("Recently Listed");
 
   React.useEffect(() => {
     if (salesType === "Recently Sold") {
@@ -76,16 +76,16 @@ const DashboardComponent = () => {
         <div className="max-w-[100vw] overflow-hidden min-h-[100vh] bg-overlay relative flex items-center">
           <img
             src="/images/bg_landing.svg"
-            className={`absolute 2xl:min-w-[165vw] lg:min-w-[250vw] min-w-[350vw] max-h-[85vh] top-0 banner border-b border-overlay-border`}
+            className={`absolute 2xl:min-w-[165vw] lg:min-w-[250vw] min-w-[350vw] lg:max-h-[85vh] top-0 banner border-b border-overlay-border`}
             alt=""
           />
-          <div className="flex flex-col pt-36 w-full items-center min-h-screen relative gap-4 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 px-8 text-white">
-            <div className="max-w-[1200px] w-full flex justify-between relative min-h-[450px]">
+          <div className="flex flex-col pt-36 w-full items-center lg:min-h-screen relative gap-4 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 px-8 text-white">
+            <div className="max-w-[1200px] w-full flex justify-between relative lg:min-h-[450px]">
               <div className="flex flex-col lg:items-start items-center gap-8 lg:pr-[400px] w-full lg:pl-0 pl-16 pr-16">
-                <h1 className="text-5xl flex flex-col font-bold w-full lg:text-left text-center">
+                <h1 className="lg:text-5xl text-3xl flex flex-col font-bold w-full lg:text-left text-center">
                   Discover, collect, buy or sell Endersgate NFTs
                 </h1>
-                <p className="text-2xl font-[450] text-primary-disabled w-[360px] lg:text-left text-center">
+                <p className="lg:text-2xl text-lg font-[450] text-primary-disabled w-[360px] lg:text-left text-center">
                   The Enders Gate Marketplace is <br />
                   <span className="text-red-primary font-bold">5</span>
                   <span className="text-white font-bold">HEADGAMES</span>{" "}
@@ -168,13 +168,13 @@ const DashboardComponent = () => {
                       <SwiperSlide>
                         <div className="w-full flex flex-col items-center justify-center h-[450px]  overflow-hidden">
                           {/* <div className="px-4"> */}
-                          <div className="bg-secondary rounded-xl border border-overlay-border h-[440px] flex items-end overflow-hidden w-full">
+                          <div className="bg-secondary rounded-xl border border-overlay-border h-[440px] max-w-[400px] flex items-end overflow-hidden w-full">
                             <img
                               src={image}
-                              className="absolute w-full h-[440px]"
+                              className="absolute max-w-[400px] w-full h-[440px]"
                               alt=""
                             />
-                            <div className="p-4 flex items-center justify-center relative w-full rounded-xl bg-secondary border border-secondary gap-2">
+                            <div className="p-4 flex items-center justify-center relative max-w-[400px] w-full rounded-xl bg-secondary border border-secondary gap-2">
                               <img
                                 src={Icons.logo}
                                 className="w-12 h-12"
@@ -204,7 +204,7 @@ const DashboardComponent = () => {
           </div>
         </div>
       </div>
-      <div className="w-full flex flex-col md:px-16 min-h-screen bg-overlay px-4 pb-6">
+      <div className="w-full flex flex-col lg:px-16 min-h-screen bg-overlay px-2 pb-6">
         <div className="flex flex-col gap-2 mt-6">
           <div className="flex items-center justify-center w-full text-xl text-primary gap-1 font-bold">
             Browse{" "}
@@ -228,7 +228,7 @@ const DashboardComponent = () => {
             {sales.map((a, id) => {
               return a.nft.toLowerCase() !== pack.toLowerCase() ? (
                 <NFTCard
-                  classes={{ root: "m-4 cursor-pointer" }}
+                  classes={{ root: "lg:m-4 m-2 cursor-pointer" }}
                   id={a.nftId}
                   transactionId={a.id}
                   seller={a.seller}

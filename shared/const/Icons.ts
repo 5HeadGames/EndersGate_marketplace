@@ -3,6 +3,7 @@ export enum Icons {
   logoCard = "/icons/card_logo.svg",
   logo5HG = "/icons/5HG.svg",
   logoenders = "/icons/EG_FULL_LOGO.svg",
+  logoendersmobile = "/icons/EG_FULL_LOGO_MOBILE.svg",
   harmony = "/icons/harmony.png",
   axieSold = "/icons/axie-sold.png",
   totalSale = "/icons/totalSale.png",

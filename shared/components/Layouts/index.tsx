@@ -11,7 +11,18 @@ import { DropdownMenu } from "../common/dropdownMenu/dropdownMenu";
 import { MenuIcon } from "@heroicons/react/outline";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppSelector, useAppDispatch } from "redux/store";
-import { onGetAssets, onLoadSales } from "redux/actions";
+import {
+  onBuyERC1155,
+  onGetAssets,
+  onLoadSales,
+  removeAll,
+} from "redux/actions";
+import { removeFromCart } from "@redux/actions";
+import {
+  AddressText,
+  findSum,
+  nFormatter,
+} from "@shared/components/common/specialFields/SpecialFields";
 import {
   AppstoreFilled,
   AreaChartOutlined,
@@ -22,7 +33,7 @@ import {
   TwitterOutlined,
   WalletOutlined,
 } from "@ant-design/icons";
-
+import packs from "../../packs.json";
 import {
   getAddresses,
   getContract,
@@ -33,6 +44,8 @@ import { ShoppingCartIcon, XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
 import { Dropdown } from "../common/dropdown/dropdown";
 import { DropdownCart } from "../common/dropdownCart/dropdownCart";
+import { convertArrayCards } from "../common/convertCards";
+import Web3 from "web3";
 
 const styles = {
   content: {
@@ -68,6 +81,8 @@ const navItems = [
 
 export default function AppLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [messageBuy, setMessageBuy] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
   const refSidebarMobile = React.useRef(null);
   const [isExecuted, setIsExecuted] = React.useState(false);
   const [notAvailable, setNotAvailable] = React.useState({
@@ -79,10 +94,12 @@ export default function AppLayout({ children }) {
     userData: false,
   });
   const [search, setSearch] = React.useState("");
-  const { blur, message } = useAppSelector((state) => ({
+  const { blur, message, cart } = useAppSelector((state) => ({
     ...state.layout,
   }));
+
   const router = useRouter();
+
   const {
     enableWeb3,
     isWeb3Enabled,
@@ -90,7 +107,16 @@ export default function AppLayout({ children }) {
     logout,
     authenticate,
     user,
+    Moralis,
   } = useMoralis();
+
+  const { pack, endersGate } = getAddresses();
+
+  const cards = convertArrayCards();
+
+  React.useEffect(() => {
+    console.log(messageBuy);
+  }, [messageBuy]);
 
   const chainChangedHandler = async () => {
     // window.location.reload();
@@ -157,6 +183,31 @@ export default function AppLayout({ children }) {
     setDisabled((prev) => ({ ...prev, [field]: value }));
   };
 
+  const buyNFTs = async () => {
+    try {
+      cart.forEach(async (sale, i) => {
+        console.log("testing");
+        setMessageBuy(`Running ${i + 1} of ${cart.length} transactions`);
+        await dispatch(
+          onBuyERC1155({
+            seller: sale.seller,
+            amount: sale.quantity,
+            bid: Web3.utils
+              .toBN(sale.price)
+              .mul(Web3.utils.toBN(sale.quantity))
+              .toString(),
+            tokenId: sale.nftId,
+            moralis: Moralis,
+            nftContract: sale.nft === pack ? pack : endersGate,
+          }),
+        );
+        dispatch(removeFromCart({ id: sale.id }));
+      });
+    } catch (err) {}
+
+    setMessageBuy(``);
+  };
+
   const handleSignOut = async () => {
     const toggleLogout = handleDisabled("logout");
     toggleLogout(true);
@@ -195,6 +246,8 @@ export default function AppLayout({ children }) {
     },
   ];
 
+  console.log(cart);
+
   return (
     <Layout
       style={{
@@ -216,7 +269,7 @@ export default function AppLayout({ children }) {
         )}
       >
         <Logo />
-        <div className="border flex items-center text-md justify-center border-overlay-border bg-primary-disabled rounded-xl">
+        <div className="border md:flex hidden items-center text-md justify-center border-overlay-border bg-primary-disabled rounded-xl">
           <div className="text-white flex items-center w-full py-1 px-4 rounded-xl bg-overlay border-r border-overlay-border">
             <input
               type="text"
@@ -263,7 +316,181 @@ export default function AppLayout({ children }) {
           })}
           {isAuthenticated ? (
             <>
-              <DropdownCart></DropdownCart>
+              <DropdownCart items={cart.length}>
+                {cart.length ? (
+                  <div className="flex flex-col items-center border border-overlay-border rounded-md min-w-[500px] w-max py-2">
+                    <div className="flex justify-between gap-4 w-full">
+                      <h2 className="text-xl font-bold text-white py-4 px-4">
+                        Your Cart
+                      </h2>
+                      <h2 className="text-lg font-bold text-primary-disabled py-4 px-4">
+                        {cart.length} Item{cart.length > 1 ? "s" : ""}
+                      </h2>{" "}
+                    </div>
+                    <div className="px-4 py-2 pb-4 gap-2 flex flex-col items-center w-full">
+                      {cart.map((item, index) => {
+                        return (
+                          <div
+                            className={clsx(
+                              "gap-2 py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-overlay-border rounded-md",
+                            )}
+                            // onClick={item.onClick}
+                          >
+                            <div className="flex items-center justify-start gap-2 w-full">
+                              <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
+                                <img
+                                  src={
+                                    item.nft == pack
+                                      ? packs[item.nftId]?.properties?.image
+                                          ?.value
+                                      : cards[item.nftId]?.properties.image
+                                          ?.value
+                                  }
+                                  className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
+                                  alt=""
+                                />
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <h3
+                                  className={clsx(
+                                    "text-md font-[700] uppercase",
+                                  )}
+                                >
+                                  {cards[item.nftId]?.properties?.name?.value}
+                                </h3>
+                                <span
+                                  className="text-[12px] text-gray-500 font-medium"
+                                  style={{ lineHeight: "10px" }}
+                                >
+                                  Owner:{" "}
+                                  {<AddressText text={item.seller} /> ||
+                                    "Owner"}
+                                </span>
+                                <div className="flex gap-2 items-end">
+                                  <img
+                                    src={Icons.logo}
+                                    className="w-8 h-8"
+                                    alt=""
+                                  />
+                                  <img
+                                    src="icons/HARMONY.svg"
+                                    className="w-6 h-6"
+                                    alt=""
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex gap-2 shrink-0">
+                              <div className="flex flex-col !shrink-0">
+                                <h3
+                                  className={clsx(
+                                    "text-sm font-[700] whitespace-nowrap w-24",
+                                  )}
+                                >
+                                  Price:
+                                </h3>
+                                <h3
+                                  className={clsx(
+                                    "text-sm font-[700] uppercase whitespace-nowrap w-24",
+                                  )}
+                                >
+                                  {nFormatter(
+                                    Web3.utils.fromWei(item.price, "ether"),
+                                  )}{" "}
+                                  ONE{" "}
+                                  <span className="!text-sm text-overlay-border">
+                                    ($1.5k)
+                                  </span>
+                                </h3>
+                                <h3
+                                  className={clsx(
+                                    "text-sm font-[700] whitespace-nowrap w-max",
+                                  )}
+                                >
+                                  Highest Bid:
+                                </h3>
+                                <h3
+                                  className={clsx(
+                                    "text-sm font-[700] uppercase whitespace-nowrap w-max",
+                                  )}
+                                >
+                                  {nFormatter(
+                                    Web3.utils.fromWei(item.price, "ether"),
+                                  )}{" "}
+                                  ONE{" "}
+                                  <span className="!text-sm text-overlay-border">
+                                    ($1.5k)
+                                  </span>
+                                </h3>
+                              </div>
+                              <div
+                                className="rounded-full p-1 w-8 h-8 border border-overlay-border hover:bg-red-primary text-white shrink-0"
+                                onClick={() => {
+                                  dispatch(removeFromCart({ id: item.id }));
+                                }}
+                              >
+                                <XIcon></XIcon>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="flex gap-6 justify-between w-full text-md text-xl py-4 px-8 border-y border-overlay-border bg-secondary">
+                      <div className="flex gap-1 items-center">
+                        <img src={Icons.logo} className="w-8 h-8" alt="" />
+                        <h3
+                          className="text-[12px] text-primary-disabled font-[700]"
+                          style={{ lineHeight: "14px" }}
+                        >
+                          Total price on <br />
+                          <span className="text-red-primary font-bold">5</span>
+                          <span className="text-white font-bold">HG</span>{" "}
+                          Marketplace:
+                        </h3>
+                      </div>
+                      <h3 className="text-lg font-[700] text-white">
+                        {nFormatter(
+                          Web3.utils.fromWei(
+                            cart
+                              ?.map((item, i) => item.price)
+                              .reduce((item, acc) => {
+                                return findSum(item, acc);
+                              }),
+                            "ether",
+                          ),
+                        )}{" "}
+                        ONE{" "}
+                        <span className="!text-sm text-overlay-border">
+                          ($1.5k)
+                        </span>
+                      </h3>
+                    </div>
+                    {messageBuy !== "" ? (
+                      <div className="py-2 text-lg text-white font-bold text-center w-full">
+                        {messageBuy}
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    <div className="w-full flex items-center justify-center py-2">
+                      <div
+                        onClick={() => {
+                          buyNFTs();
+                        }}
+                        className="w-auto px-6 py-2 flex justify-center items-center rounded-xl hover:border-green-button hover:bg-overlay hover:text-green-button border border-overlay-border cursor-pointer bg-green-button font-bold text-overlay transition-all duration-500"
+                      >
+                        Complete Purchase
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-white font-bold gap-4 text-md text-center w-64 p-4 border border-overlay-border rounded-md">
+                    <img src={Icons.logoCard} className="w-20 h-20" alt="" />
+                    There aren't items in your cart.
+                  </div>
+                )}
+              </DropdownCart>
               <Dropdown
                 classTitle={"text-white opacity-50 hover:opacity-100 font-bold"}
                 title={"MY ACCOUNT"}
@@ -308,19 +535,27 @@ export default function AppLayout({ children }) {
         <div
           className="md:hidden flex"
           onClick={() => {
-            setSidebarOpen(true);
+            setSidebarOpen((prev) => !prev);
           }}
         >
-          <MenuIcon
-            className="h-6 w-6 text-primary cursor-pointer"
-            aria-hidden="true"
-          />
+          {!sidebarOpen ? (
+            <MenuIcon
+              className="h-6 w-6 text-primary cursor-pointer"
+              aria-hidden="true"
+            />
+          ) : (
+            <XIcon
+              className="h-6 w-6 text-primary cursor-pointer"
+              aria-hidden="true"
+            />
+          )}
         </div>
       </nav>
       <SidebarMobile
         initialFocus={refSidebarMobile}
         setSidebarOpen={setSidebarOpen}
         sidebarOpen={sidebarOpen}
+        navItems={navItems}
       />
       {notAvailable.value ? (
         <div className="bg-overlay md:px-10 px-6 flex flex-col items-center justify-center w-screen h-screen text-primary text-3xl font-bold">
@@ -366,6 +601,11 @@ export const Logo = () => (
     <div className="md:py-0 py-2 flex gap-2 items-center cursor-pointer">
       <img className="h-6" src={Icons.logo5HG} alt="logo" />
       <img className="h-6 xl:block hidden" src={Icons.logoenders} alt="logo" />
+      <img
+        className="h-6 block xl:hidden"
+        src={Icons.logoendersmobile}
+        alt="logo"
+      />
     </div>
   </Link>
 );

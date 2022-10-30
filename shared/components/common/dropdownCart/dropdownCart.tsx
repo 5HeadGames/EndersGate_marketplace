@@ -13,6 +13,7 @@ import {
 export const DropdownCart: React.FC<any> = ({
   classTitle,
   title,
+  items,
   children,
 }) => {
   return (
@@ -26,11 +27,16 @@ export const DropdownCart: React.FC<any> = ({
                 <Menu.Button className="inline-flex justify-center w-full font-medium bg-transparent focus:outline-none">
                   <div
                     className={clsx(
-                      { ["!opacity-100"]: open },
-                      "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap",
+                      { ["!opacity-100"]: open || items > 0 },
+                      "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
                       classTitle,
                     )}
                   >
+                    {items > 0 && (
+                      <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary">
+                        {items}
+                      </div>
+                    )}
                     <ShoppingCartOutlined />
                   </div>
                 </Menu.Button>

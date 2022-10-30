@@ -464,13 +464,13 @@ const MarketplaceComponent = () => {
                           seller={a.seller}
                           icon={
                             type == "packs"
-                              ? packs[a.nftId].properties.image.value
-                              : cards[a.nftId].properties.image.value
+                              ? packs[a.nftId]?.properties?.image?.value
+                              : cards[a.nftId]?.properties?.image?.value
                           }
                           name={
                             type == "packs"
-                              ? packs[a.nftId].properties.name.value
-                              : cards[a.nftId].properties.name.value
+                              ? packs[a.nftId]?.properties?.name?.value
+                              : cards[a.nftId]?.properties?.name?.value
                           }
                           byId={false}
                           price={a.price}

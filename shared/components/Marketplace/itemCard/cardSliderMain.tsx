@@ -20,11 +20,15 @@ interface Props
   price?: any;
   byId: boolean;
   seller?: string;
+  onTimeChange?: any;
 }
 
 const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
   const { classes, ...rest } = props;
-  console.log(props.seller);
+  console.log(props.onTimeChange);
+  React.useEffect(() => {
+    console.log(props.onTimeChange);
+  }, [props.onTimeChange]);
   return (
     <>
       {props.byId ? (
@@ -139,7 +143,7 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                   className={props.icon ? "h-40" : "h-24"}
                 />
               </div>
-              <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
+              <div className="flex flex-col rounded-t-xl bg-secondary w-full px-4 pb-1 relative">
                 <div className="flex text-md font-bold text-left py-2 ">
                   <div className="w-32 relative">
                     <img
@@ -187,6 +191,18 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                     </div>
                   </div>
                 )}
+              </div>
+              <div className="flex rounded-b-xl h-2 bg-secondary w-full border-t border-overlay-border">
+                <div
+                  className={clsx(
+                    {
+                      ["w-[100%] duration-[4000ms] transition-all "]:
+                        props.onTimeChange,
+                    },
+                    { ["w-[0%]"]: !props.onTimeChange },
+                    `bg-primary-disabled`,
+                  )}
+                ></div>
               </div>
             </div>
           </div>
