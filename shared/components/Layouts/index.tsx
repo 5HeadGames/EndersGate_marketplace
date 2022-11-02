@@ -1,8 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Layout } from "antd";
-import { useMoralis } from "react-moralis";
-
+import useMagicLink from "@shared/hooks/useMagicLink";
 import { Icons } from "@shared/const/Icons";
 import { useRouter } from "next/dist/client/router";
 import clsx from "clsx";
@@ -106,8 +105,8 @@ export default function AppLayout({ children }) {
     ...state.layout,
   }));
   const router = useRouter();
-  const { enableWeb3, isWeb3Enabled, isAuthenticated, authenticate, user } =
-    useMoralis();
+  const { isAuthenticated, user, login } = useMagicLink();
+  const dispatch = useAppDispatch();
 
   const chainChangedHandler = async () => {
     // window.location.reload();
@@ -130,8 +129,6 @@ export default function AppLayout({ children }) {
     const web3 = await loginMetamaskWallet();
     await dispatch(onGetAssets((window as any).ethereum.selectedAddress));
     // if (user !== null) {
-    await enableWeb3();
-    const user = await authenticate();
     // }
   };
   if (
@@ -144,31 +141,21 @@ export default function AppLayout({ children }) {
     setIsExecuted(true);
   }
 
-  const dispatch = useAppDispatch();
-
   const initApp = async () => {
     const addresses = getAddresses();
     const marketplace = getContract("ClockSale", addresses.marketplace);
     await dispatch(onLoadSales());
   };
 
-  const handleEnableWeb3 = async () => {
-    if (!isWeb3Enabled) {
-      await enableWeb3();
-    }
-  };
-
   React.useEffect(() => {
     initApp();
   }, []);
 
-  React.useEffect(() => {
-    if (isAuthenticated && user) dispatch(onGetAssets(user.get("ethAddress")));
-  }, [isAuthenticated]);
+  console.log(isAuthenticated, user, "auth");
 
   React.useEffect(() => {
-    handleEnableWeb3();
-  }, [isWeb3Enabled]);
+    if (isAuthenticated && user) dispatch(onGetAssets(user?.ethAddress));
+  }, [isAuthenticated]);
 
   return (
     <Layout
@@ -222,7 +209,13 @@ export default function AppLayout({ children }) {
           <Button
             decoration="fill"
             size="small"
-            onClick={() => router.push(isAuthenticated ? "/profile" : "/login")}
+            onClick={() => {
+              if (isAuthenticated) {
+                router.push("/profile");
+              } else {
+                login(dispatch);
+              }
+            }}
           >
             {isAuthenticated ? "Profile" : "Log In"}
           </Button>

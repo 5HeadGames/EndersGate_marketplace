@@ -1,18 +1,19 @@
 import ProfileLayoutComponent from "@shared/components/Profile/profile";
 import React from "react";
-import {useMoralis} from "react-moralis";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import Inventory from "@shared/components/Profile/inventory/inventory";
+import useMagicLink from "@shared/hooks/useMagicLink";
+import { useSelector } from "react-redux";
 
 const ProfileInventory = () => {
-  const {isAuthenticated} = useMoralis();
+  const { user } = useMagicLink();
   const router = useRouter();
 
   React.useEffect(() => {
-    if (!isAuthenticated) {
+    if (user && !user.ethAddress) {
       router.push("/login");
     }
-  }, [isAuthenticated]);
+  }, [user]);
 
   return (
     <ProfileLayoutComponent>

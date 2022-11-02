@@ -2,7 +2,6 @@ import React from "react";
 import { LeftOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Web3 from "web3";
-import { useMoralis } from "react-moralis";
 
 import { useAppDispatch, useAppSelector } from "redux/store";
 import { onSellERC1155, onLoadSales, onGetAssets } from "@redux/actions";
@@ -18,9 +17,10 @@ import { convertArrayCards } from "../common/convertCards";
 import Styles from "../NFTDetail/styles.module.scss";
 import clsx from "clsx";
 import Tilt from "react-parallax-tilt";
+import useMagicLink from "@shared/hooks/useMagicLink";
 
 const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
-  const { user, Moralis, web3 } = useMoralis();
+  const { user, provider, web3 } = useMagicLink();
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -58,29 +58,30 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       const packs = getContractCustom("ERC1155", pack, web3.provider);
 
       // const isApprovedForAll = await packs.methods.isApprovedForAll(
-      //   user.get("ethAddress"),
+      //   user?.ethAddress,
       //   marketplace,
       // );
       // console.log(isApprovedForAll);
       // if (isApprovedForAll == false) {
-        setMessage("Allowing us to sell your tokens");
-        await approveERC1155({
-          provider: web3.provider,
-          from: user.get("ethAddress"),
-          to: marketplace,
-          address: pack,
-        });
+      setMessage("Allowing us to sell your tokens");
+      await approveERC1155({
+        provider: web3.provider,
+        from: user?.ethAddress,
+        to: marketplace,
+        address: pack,
+      });
       // }
       setMessage("Listing your tokens");
       await dispatch(
         onSellERC1155({
           address: pack,
-          from: user.get("ethAddress"),
+          from: user?.ethAddress,
           startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
           amount: sellNFTData.amount,
           tokenId: tokenId,
           duration: sellNFTData.duration.toString(),
-          moralis: Moralis,
+          provider: provider,
+          user: user,
         }),
       );
     } catch (err) {
@@ -88,7 +89,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     }
 
     dispatch(onLoadSales());
-    dispatch(onGetAssets(user.get("ethAddress")));
+    dispatch(onGetAssets(user?.ethAddress));
 
     setMessage(
       "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens",

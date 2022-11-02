@@ -131,15 +131,21 @@ export const onSellERC1155 = createAsyncThunk(
     amount: number | string;
     duration: string;
     address: string;
-    moralis: Moralis;
+    provider: any;
+    user: any;
   }) {
-    const { from, tokenId, startingPrice, amount, duration, address, moralis } =
-      args;
-    console.log("aaaaaaaaaaa", moralis);
+    const {
+      from,
+      tokenId,
+      startingPrice,
+      amount,
+      duration,
+      address,
+      // user,
+      provider,
+    } = args;
 
-    const provider = moralis.web3.provider;
-    const user = Moralis.User.current();
-    const relation = user.relation("events");
+    // const relation = user.relation("events");
 
     const { marketplace } = getAddresses();
     const marketplaceContract = getContractCustom(
@@ -165,8 +171,8 @@ export const onSellERC1155 = createAsyncThunk(
     });
 
     await event.save();
-    relation.add(event);
-    await user.save();
+    // relation.add(event);
+    // await user.save();
 
     return { from, tokenId, startingPrice, amount, duration, address };
   },
@@ -180,12 +186,12 @@ export const onBuyERC1155 = createAsyncThunk(
     bid: string | number;
     amount: string | number;
     nftContract: string;
-    moralis: Moralis;
+    provider: any;
+    user: any;
   }) {
-    const { seller, tokenId, amount, bid, moralis } = args;
-    const provider = moralis.web3.provider;
-    const user = Moralis.User.current();
-    const relation = user.relation("events");
+    const { seller, tokenId, amount, bid, provider, user } = args;
+    // const user = Moralis.User.current();
+    // const relation = user.relation("events");
 
     const { marketplace } = getAddresses();
     const marketplaceContract = getContractCustom(
@@ -195,7 +201,7 @@ export const onBuyERC1155 = createAsyncThunk(
     );
     const { transactionHash } = await marketplaceContract.methods
       .buy(tokenId, amount)
-      .send({ from: user.get("ethAddress"), value: bid });
+      .send({ from: user?.ethAddress, value: bid });
 
     const event = createEvent({
       type: "buy",
@@ -203,10 +209,10 @@ export const onBuyERC1155 = createAsyncThunk(
     });
 
     await event.save();
-    relation.add(event);
-    await user.save();
+    // relation.add(event);
+    // await user.save();
 
-    return { seller, tokenId, amount, bid, moralis };
+    return { seller, tokenId, amount, bid, provider };
   },
 );
 
@@ -215,12 +221,11 @@ export const onCancelSale = createAsyncThunk(
   async function prepare(args: {
     tokenId: number | string;
     nftContract: string;
-    moralis: Moralis;
+    provider: any;
+    user: any;
   }) {
-    const { tokenId, moralis } = args;
-    const provider = moralis.web3.provider;
-    const user = Moralis.User.current();
-    const relation = user.relation("events");
+    const { tokenId, provider, user } = args;
+    // const relation = user.relation("events");
 
     const { marketplace } = getAddresses();
     const marketplaceContract = getContractCustom(
@@ -230,17 +235,17 @@ export const onCancelSale = createAsyncThunk(
     );
     const { transactionHash } = await marketplaceContract.methods
       .cancelSale(tokenId)
-      .send({ from: user.get("ethAddress") });
+      .send({ from: user?.ethAddress });
 
     const event = createEvent({
       type: "cancel",
-      metadata: { tokenId, from: user.get("ethAddress"), transactionHash },
+      metadata: { tokenId, from: user?.ethAddress, transactionHash },
     });
 
     await event.save();
-    relation.add(event);
+    // relation.add(event);
     await user.save();
 
-    return { tokenId, moralis };
+    return { tokenId, provider };
   },
 );

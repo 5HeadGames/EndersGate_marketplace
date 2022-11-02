@@ -1,56 +1,55 @@
-import {Typography} from "@shared/components/common/typography";
+import { Typography } from "@shared/components/common/typography";
 import React from "react";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import clsx from "clsx";
-import {useMoralis} from "react-moralis";
-import {Icons} from "@shared/const/Icons";
-import {CopyOutlined, LoginOutlined, SelectOutlined} from "@ant-design/icons";
-import {AddressText} from "@shared/components/common/specialFields/SpecialFields";
-import {useToasts} from "react-toast-notifications";
+
+import { Icons } from "@shared/const/Icons";
+import { CopyOutlined, LoginOutlined, SelectOutlined } from "@ant-design/icons";
+import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
+import { useToasts } from "react-toast-notifications";
 import Styles from "./styles.module.scss";
 import Link from "next/link";
-import {getBalance} from "@shared/web3";
+import { getBalance } from "@shared/web3";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import Web3 from "web3";
+import { useSelector } from "react-redux";
+import useMagicLink from "@shared/hooks/useMagicLink";
 
 const ProfileIndexPage = () => {
   const [balance, setBalance] = React.useState("0");
   const [activities, setActivities] = React.useState<Activity[]>([]);
-  const { user, isAuthenticated } = useMoralis();
-  const router = useRouter();
+  const { user: xd } = useMagicLink();
+  const { user } = useSelector((state: any) => state.layout);
+
+  console.log(user);
 
   const loadEvents = async () => {
-    const relation = user.relation("events");
-    const query = relation.query();
-
-    const activities = await query.find({});
-    setActivities(
-      activities
-        .map((act) => ({
-          createdAt: act.get("createdAt"),
-          type: act.get("type"),
-          metadata: JSON.parse(act.get("metadata")),
-        }))
-        .sort((a, b) => {
-          return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-        })
-        .slice(0, activities.length > 5 ? 5 : activities.length)
-    );
+    // const relation = user.relation("events");
+    // const query = relation.query();
+    // const activities = await query.find({});
+    // setActivities(
+    //   activities
+    //     .map((act) => ({
+    //       createdAt: act.get("createdAt"),
+    //       type: act.get("type"),
+    //       metadata: JSON.parse(act.get("metadata")),
+    //     }))
+    //     .sort((a, b) => {
+    //       return (
+    //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    //       );
+    //     })
+    //     .slice(0, activities.length > 5 ? 5 : activities.length)
+    // );
   };
 
   React.useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/login");
-      return;
-    }
     handleSetBalance();
     loadEvents();
   }, [user]);
 
   const handleSetBalance = async () => {
-    const balance = await getBalance(user?.get("ethAddress"));
+    const balance = await getBalance(user?.ethAddress);
     setBalance(balance);
   };
 
@@ -60,7 +59,7 @@ const ProfileIndexPage = () => {
     <>
       <div
         className={clsx(
-          "flex flex-col justify-between border border-overlay-border p-4 rounded-t-md h-52 relative overflow-hidden"
+          "flex flex-col justify-between border border-overlay-border p-4 rounded-t-md h-52 relative overflow-hidden",
         )}
       >
         <img
@@ -82,12 +81,12 @@ const ProfileIndexPage = () => {
       </div>
       <div className="flex justify-between border border-t-0 border-overlay-border p-4 rounded-b-md">
         <Typography type="subTitle" className="text-primary">
-          Address: <AddressText text={user?.get("ethAddress") || ""} />
+          Address: <AddressText text={user?.ethAddress || ""} />
         </Typography>
         <div className="flex items-center text-primary gap-4">
           <div
             onClick={() => {
-              navigator.clipboard.writeText(user?.get("ethAddress"));
+              navigator.clipboard.writeText(user?.ethAddress);
               addToast("Copied to clipboard", { appearance: "info" });
             }}
             className="cursor-pointer"
@@ -97,9 +96,7 @@ const ProfileIndexPage = () => {
           <a
             target="_blank"
             rel="noreferrer"
-            href={`https://explorer.harmony.one/address/${user?.get(
-              "ethAddress"
-            )}`}
+            href={`https://explorer.harmony.one/address/${user?.ethAddress}`}
           >
             <SelectOutlined />
           </a>
@@ -129,7 +126,7 @@ const ProfileIndexPage = () => {
             },
             {
               ["py-10 gap-y-2"]: activities.length > 0,
-            }
+            },
           )}
         >
           {activities.length > 0 ? (

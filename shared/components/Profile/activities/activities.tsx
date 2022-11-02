@@ -1,41 +1,42 @@
-import {Typography} from "@shared/components/common/typography";
-import {Icons} from "@shared/const/Icons";
+import { Typography } from "@shared/components/common/typography";
+import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
-import {useMoralis} from "react-moralis";
+// import { useMoralis } from "react-moralis";
 import Styles from "./styles.module.scss";
-import {Activity} from "../index/index";
+import { Activity } from "../index/index";
+import { useSelector } from "react-redux";
+import useMagicLink from "@shared/hooks/useMagicLink";
 
 const navItems = [
-  {title: "Trading Cards", value: "trading_cards"},
-  {title: "Packs", value: "packs"},
-  {title: "Comics", value: "comics"},
+  { title: "Trading Cards", value: "trading_cards" },
+  { title: "Packs", value: "packs" },
+  { title: "Comics", value: "comics" },
 ];
 
 const Activities = () => {
-  const {user} = useMoralis();
+  const { user } = useMagicLink();
   const [activities, setActivities] = React.useState<Activity[]>([]);
   const [page, setPage] = React.useState(0);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
 
   const loadEvents = async () => {
-    const relation = user.relation("events");
-    const query = relation.query();
-
-    const activities = await query.find({});
-    setActivities(
-      activities
-        .map((act) => ({
-          createdAt: act.get("createdAt"),
-          type: act.get("type"),
-          metadata: JSON.parse(act.get("metadata")),
-        }))
-        .sort((a, b) => {
-          return (
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-        })
-    );
+    // // const relation = user.relation("events");
+    // const query = relation.query();
+    // const activities = await query.find({});
+    // setActivities(
+    //   activities
+    //     .map((act) => ({
+    //       createdAt: act.get("createdAt"),
+    //       type: act.get("type"),
+    //       metadata: JSON.parse(act.get("metadata")),
+    //     }))
+    //     .sort((a, b) => {
+    //       return (
+    //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    //       );
+    //     }),
+    // );
   };
 
   React.useEffect(() => {
@@ -66,7 +67,7 @@ const Activities = () => {
           },
           {
             ["gap-y-2"]: activities.length > 0,
-          }
+          },
         )}
       >
         {activities.length > 0 ? (

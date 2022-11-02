@@ -2,7 +2,6 @@ import React from "react";
 import { LeftOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Web3 from "web3";
-import { useMoralis } from "react-moralis";
 
 import { useAppDispatch, useAppSelector } from "redux/store";
 import { onSellERC1155, onLoadSales, onGetAssets } from "@redux/actions";
@@ -62,14 +61,14 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       );
 
       const isApprovedForAll = await endersgateInstance.methods
-        .isApprovedForAll(user.get("ethAddress"), marketplace)
+        .isApprovedForAll(user?.ethAddress, marketplace)
         .call();
       console.log(isApprovedForAll, "APPROVED");
       if (isApprovedForAll == false) {
         setMessage("Allowing us to sell your tokens");
         await approveERC1155({
           provider: web3.provider,
-          from: user.get("ethAddress"),
+          from: user?.ethAddress,
           to: marketplace,
           address: endersGate,
         });
@@ -79,7 +78,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       await dispatch(
         onSellERC1155({
           address: endersGate,
-          from: user.get("ethAddress"),
+          from: user?.ethAddress,
           startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
           amount: sellNFTData.amount,
           tokenId: tokenId,
@@ -94,7 +93,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     console.log(":(");
 
     dispatch(onLoadSales());
-    dispatch(onGetAssets(user.get("ethAddress")));
+    dispatch(onGetAssets(user?.ethAddress));
     setMessage(
       "You will have to make two transactions(if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
     );

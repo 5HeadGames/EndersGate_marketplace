@@ -1,13 +1,12 @@
 import React from "react";
-import {LeftOutlined, LoadingOutlined, MenuOutlined} from "@ant-design/icons";
-import {useRouter} from "next/router";
+import { LeftOutlined, LoadingOutlined, MenuOutlined } from "@ant-design/icons";
+import { useRouter } from "next/router";
 import Web3 from "web3";
-import {useMoralis} from "react-moralis";
 
-import {useAppDispatch} from "redux/store";
-import {onBuyERC1155, onLoadSales, onGetAssets} from "@redux/actions";
-import {Button} from "../common/button/button";
-import {Icons} from "@shared/const/Icons";
+import { useAppDispatch } from "redux/store";
+import { onBuyERC1155, onLoadSales, onGetAssets } from "@redux/actions";
+import { Button } from "../common/button/button";
+import { Icons } from "@shared/const/Icons";
 import { AddressText, Type } from "../common/specialFields/SpecialFields";
 import { getAddresses, loadSale } from "@shared/web3";
 import { Typography } from "../common/typography";
@@ -18,15 +17,15 @@ import { convertArrayCards } from "../common/convertCards";
 import clsx from "clsx";
 import Styles from "./styles.module.scss";
 import Tilt from "react-parallax-tilt";
+import useMagicLink from "@shared/hooks/useMagicLink";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
-  const { user, Moralis, isWeb3Enabled } = useMoralis();
+  const { user, magic, provider, isAuthenticated } = useMagicLink();
   const [sale, setSale] = React.useState<any>();
   const [buyNFTData, setBuyNFTData] = React.useState(0);
   const { Modal, show, hide, isShow } = useModal();
   const [isPack, setIsPack] = React.useState(false);
   const [saleData, setSaleData] = React.useState(false);
-  const { isAuthenticated } = useMoralis();
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -67,16 +66,17 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
             .mul(Web3.utils.toBN(buyNFTData))
             .toString(),
           tokenId: id,
-          moralis: Moralis,
+          provider: provider,
           nftContract: isPack ? pack : endersGate,
-        })
+          user: user,
+        }),
       );
     } catch {}
     setMessage("");
     await getSale();
     hide();
     dispatch(onLoadSales());
-    dispatch(onGetAssets(user.get("ethAddress")));
+    dispatch(onGetAssets(user?.ethAddress));
     setBuyNFTData(0);
   };
 
@@ -112,7 +112,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         "rounded-md": !isPack
                           ? cards[sale.nftId].typeCard != "avatar"
                           : false,
-                      }
+                      },
                     )}
                     alt=""
                   />
@@ -261,7 +261,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         "rounded-md": !isPack
                           ? cards[sale.nftId].typeCard != "avatar"
                           : false,
-                      }
+                      },
                     )}
                     alt=""
                   />

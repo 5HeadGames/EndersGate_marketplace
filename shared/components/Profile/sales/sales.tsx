@@ -1,23 +1,24 @@
-import {Button} from "@shared/components/common/button";
-import {Typography} from "@shared/components/common/typography";
-import {Icons} from "@shared/const/Icons";
+import { Button } from "@shared/components/common/button";
+import { Typography } from "@shared/components/common/typography";
+import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
 import Web3 from "web3";
 import Link from "next/link";
 
-import {useAppDispatch, useAppSelector} from "redux/store";
+import { useAppDispatch, useAppSelector } from "redux/store";
 import Styles from "./styles.module.scss";
 import packs from "../../../packs.json";
 import { getAddresses } from "@shared/web3";
-import { useMoralis } from "react-moralis";
+
 import { useModal } from "@shared/hooks/modal";
 import { onCancelSale, onLoadSales, onGetAssets } from "@redux/actions";
 import { convertArrayCards } from "@shared/components/common/convertCards";
+import useMagicLink from "@shared/hooks/useMagicLink";
 
 const Sales = () => {
   const nfts = useAppSelector((state) => state.nfts);
-  const { user, Moralis } = useMoralis();
+  const { user, provider } = useMagicLink();
 
   const [cancelId, setCancelId] = React.useState({ id: -1, pack: false });
   const { Modal, show, hide, isShow } = useModal();
@@ -32,12 +33,13 @@ const Sales = () => {
     await dispatch(
       onCancelSale({
         tokenId: cancelId.id,
-        moralis: Moralis,
+        provider: provider,
+        user: user,
         nftContract: cancelId.pack ? addresses.pack : addresses.endersGate,
-      })
+      }),
     );
     dispatch(onLoadSales());
-    dispatch(onGetAssets(user.get("ethAddress")));
+    dispatch(onGetAssets(user?.ethAddress));
     hide();
   };
 
@@ -46,11 +48,11 @@ const Sales = () => {
     console.log(nfts.saleCreated);
     nfts.saleCreated.forEach((sale, index) => {
       console.log(
-        sale.seller === user.get("ethAddress"),
+        sale.seller === user?.ethAddress,
         sale.seller,
-        user.get("ethAddress")
+        user?.ethAddress,
       );
-      if (sale.seller.toLowerCase() === user.get("ethAddress").toLowerCase()) {
+      if (sale.seller.toLowerCase() === user?.ethAddress.toLowerCase()) {
         if (sale.status !== 3) {
           arrayPacks.push(sale);
         }
@@ -109,7 +111,7 @@ const Sales = () => {
           },
           {
             ["gap-2 flex-wrap gap-2"]: sales.length != 0,
-          }
+          },
         )}
       >
         {sales.length > 0 ? (

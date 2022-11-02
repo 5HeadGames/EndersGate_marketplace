@@ -1,18 +1,19 @@
 import ProfileLayoutComponent from "@shared/components/Profile/profile";
 import React from "react";
-import {useRouter} from "next/router";
-import {useMoralis} from "react-moralis";
+import { useRouter } from "next/router";
 import Activities from "@shared/components/Profile/activities/activities";
+import useMagicLink from "@shared/hooks/useMagicLink";
+import { useSelector } from "react-redux";
 
 const ProfileActivities = () => {
-  const {isAuthenticated} = useMoralis();
+  const { user } = useMagicLink();
   const router = useRouter();
 
   React.useEffect(() => {
-    if (!isAuthenticated) {
+    if (user && !user.ethAddress) {
       router.push("/login");
     }
-  }, [isAuthenticated]);
+  }, [user]);
   return (
     <ProfileLayoutComponent>
       <Activities></Activities>
