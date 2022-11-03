@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 
 import { useModal } from "@shared/hooks/modal";
-import { useAppDispatch } from "redux/store";
+import { useAppDispatch, store } from "redux/store";
 import { Button } from "shared/components/common/button";
 import Dialog from "shared/components/common/dialog";
 import { Typography } from "shared/components/common/typography";
@@ -21,55 +21,11 @@ type Values = {
 
 const Login = () => {
   const [loading, setLoading] = React.useState(false);
-  const { login, isAuthenticated, magic } = useMagicLink();
+  const { login, isAuthenticated, magic } = useMagicLink(
+    store.getState()['networks'].networkId);
 
   const router = useRouter();
   const dispatch = useAppDispatch();
-
-  // const handleMetamaskConnect = async () => {
-  //   setLoading(true);
-  //   try {
-  //     await enableWeb3();
-  //     await (window as any).ethereum.request({
-  //       method: "wallet_switchEthereumChain",
-  //       params: [
-  //         {
-  //           chainId:
-  //             "0x" + parseInt(process.env.NEXT_PUBLIC_CHAIN_ID).toString(16),
-  //         },
-  //       ],
-  //     });
-  //     const user = await authenticate();
-  //   } catch (err) {
-  //     console.log({ err });
-  //     setLoading(false);
-  //   }
-  //   setLoading(false);
-  // };
-
-  // const handleWalletConnect = async () => {
-  //   setLoading(true);
-  //   try {
-  //     await enableWeb3({
-  //       provider: "walletconnect",
-  //     });
-  //     await authenticate({
-  //       provider: "walletconnect",
-  //     });
-  //   } catch (err) {
-  //     console.log({ err });
-  //     setLoading(false);
-  //   }
-  //   setLoading(false);
-  // };
-
-  // const handleRegister = async (user: Values) => {
-  //   try {
-  //     await signup(user.email, user.password, user.email);
-  //   } catch (err) {
-  //     console.log({ err });
-  //   }
-  // };
 
   const handleLogin = () => {
     setLoading(true);
