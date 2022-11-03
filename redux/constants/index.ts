@@ -15,3 +15,5 @@ export const GET_LISTED_NFTS = "get_listed_nfts";
 export const GET_LISTED_NFT = "get_listed_nft";
 export const GET_ASSETS = "get_assets";
 export const GET_VOLUME = "get_volume";
+
+export const SET_NETWORK = "set_network";

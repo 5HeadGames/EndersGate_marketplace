@@ -1,8 +1,6 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import contracts from "shared/contracts";
-import WalletConnect from "@walletconnect/client";
-import QRCodeModal from "@walletconnect/qrcode-modal";
 import Moralis from "moralis";
 
 export const loginMetamaskWallet = async () => {
@@ -10,13 +8,6 @@ export const loginMetamaskWallet = async () => {
   if (!provider) return false;
   await (window as any).ethereum.request({ method: "eth_requestAccounts" });
   return new Web3(provider);
-};
-
-export const getWalletConnect = () => {
-  return new WalletConnect({
-    bridge: "https://bridge.walletconnect.org", // Required
-    qrcodeModal: QRCodeModal,
-  });
 };
 
 export const getWeb3 = (provider?: any) => {
