@@ -3,8 +3,18 @@ import { Magic } from "magic-sdk";
 import { ConnectExtension } from "@magic-ext/connect";
 import Web3 from "web3";
 import { onUpdateUser } from "@redux/actions";
+import { networkConfigs } from "@shared/helpers/networks";
 
-export default function useMagicLink() {
+const getMagicConfig = (networkId: number) => {
+  const network = networkConfigs[networkId];
+  return { 
+    rpcUrl: network['rpc'],
+    chainId: networkId
+   }
+};
+
+export default function useMagicLink(networkId: number) {
+
   const [account, setAccount] = useState<any>(null);
   const [loading, setLoading] = useState<any>(null);
   const [web3, setWeb3] = useState<any>(null);
@@ -24,21 +34,12 @@ export default function useMagicLink() {
     const key = process.env.NEXT_PUBLIC_MAGIC_KEY
       ? process.env.NEXT_PUBLIC_MAGIC_KEY
       : "";
-    const chainId = process.env.NEXT_PUBLIC_POLYGON_ID
-      ? process.env.NEXT_PUBLIC_POLYGON_ID
-      : "";
-    const rpcUrl = process.env.NEXT_PUBLIC_SECONDARY_RPC
-      ? process.env.NEXT_PUBLIC_SECONDARY_RPC
-      : "";
+
     const magic: any = new Magic(key, {
-      network: {
-        rpcUrl: rpcUrl,
-        chainId: parseInt(chainId),
-      },
+      network: getMagicConfig(networkId),
       locale: "en_US",
       extensions: [new ConnectExtension()],
     });
-    console.log(key, chainId, rpcUrl);
 
     setMagic(magic);
     setProvider(magic.rpcProvider);
