@@ -10,6 +10,7 @@ import { InputEmail } from "@shared/components/common/form/input-email";
 import { InputPassword } from "@shared/components/common/form/input-password";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useSelector } from "react-redux";
+import { useWeb3React } from "@web3-react/core";
 
 const AccountSettingsComponent = () => {
   const {
@@ -22,8 +23,7 @@ const AccountSettingsComponent = () => {
   const [loadingForm, setLoading] = React.useState(false);
   const [successPassword, setSuccessPassword] = React.useState(false);
   // const {user, setUserData, signup, Moralis} = useMoralis();
-  const { user } = useMagicLink();
-  const { login } = useMagicLink();
+  const { account: user } = useWeb3React();
   // const {saveFile} = useMoralisFile();
   const dispatch = useAppDispatch();
 
@@ -124,7 +124,6 @@ const AccountSettingsComponent = () => {
                   title="User Name"
                   labelVisible
                   className="text-primary mt-2"
-                  defaultValue={user?.get("name")}
                   onBlur={handleSetField("name")}
                 />
 
@@ -136,20 +135,19 @@ const AccountSettingsComponent = () => {
                   title="Status"
                   labelVisible
                   className="text-primary mt-2"
-                  defaultValue={user?.get("userStatus")}
                   onBlur={handleSetField("userStatus")}
                 />
               </div>
             </div>
             <div className={clsx("w-full flex flex-col items-center")}>
-              {!user.email ? (
+              {user ? (
                 <>
                   <InputEmail
                     register={register}
                     error={errors.newEmail}
                     isFill={!!watch("newEmail")}
                     name="newEmail"
-                    title={user?.get("email") ? "New email" : "Email"}
+                    title={user ? "New email" : "Email"}
                     labelVisible
                     className="text-primary mt-2"
                   />
@@ -158,7 +156,7 @@ const AccountSettingsComponent = () => {
                     error={errors.newPassword}
                     isFill={!!watch("newPassword")}
                     name="newPassword"
-                    title={user?.get("email") ? "New password" : "Password"}
+                    title={user ? "New password" : "Password"}
                     labelVisible
                     className="text-primary mt-2"
                   />

@@ -25,6 +25,12 @@
       ],
       "@redux/*": [
         "redux/*"
+      ],
+      "utils/*": [
+        "shared/utils/*"
+      ],
+            "components/*": [
+        "shared/components/*"
       ]
     }
   },

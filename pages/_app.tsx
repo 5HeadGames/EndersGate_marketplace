@@ -7,8 +7,7 @@ import "shared/styles/style.css";
 import Layout from "shared/components/Layouts";
 import { store } from "redux/store";
 import { Provider } from "react-redux";
-import { MoralisProvider } from "react-moralis";
-
+import Web3Provider from "@shared/components/Web3Provider";
 const { ToastProvider } = require("react-toast-notifications"); //it throws ts error
 
 const MyApp = ({ Component, pageProps }: AppProps & { Component: any }) => {
@@ -20,13 +19,13 @@ const MyApp = ({ Component, pageProps }: AppProps & { Component: any }) => {
         <title>Ender's Gate Marketplace</title>
       </Head>
       <Provider store={store}>
-        {/* <MoralisProvider appId={appId} serverUrl={serverUrl}> */}
         <ToastProvider autoDismiss placement="bottom-center">
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <Web3Provider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </Web3Provider>
         </ToastProvider>
-        {/* </MoralisProvider> */}
       </Provider>
     </>
   );

@@ -18,9 +18,10 @@ import Styles from "../NFTDetail/styles.module.scss";
 import clsx from "clsx";
 import Tilt from "react-parallax-tilt";
 import useMagicLink from "@shared/hooks/useMagicLink";
+import { useWeb3React } from "@web3-react/core";
 
 const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
-  const { user, provider, web3 } = useMagicLink();
+  const { account: user, provider } = useWeb3React();
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -55,8 +56,8 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     try {
       const tokenId = id;
       const { pack, marketplace } = getAddresses();
-      const packs = getContractCustom("ERC1155", pack, web3.provider);
-
+      const packs = getContractCustom("ERC1155", pack, provider);
+      console.log(sellNFTData);
       // const isApprovedForAll = await packs.methods.isApprovedForAll(
       //   user?.ethAddress,
       //   marketplace,
@@ -65,8 +66,8 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       // if (isApprovedForAll == false) {
       setMessage("Allowing us to sell your tokens");
       await approveERC1155({
-        provider: web3.provider,
-        from: user?.ethAddress,
+        provider: provider.provider,
+        from: user,
         to: marketplace,
         address: pack,
       });
@@ -75,12 +76,12 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       await dispatch(
         onSellERC1155({
           address: pack,
-          from: user?.ethAddress,
+          from: user,
           startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
           amount: sellNFTData.amount,
           tokenId: tokenId,
           duration: sellNFTData.duration.toString(),
-          provider: provider,
+          provider: provider.provider,
           user: user,
         }),
       );
@@ -89,7 +90,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     }
 
     dispatch(onLoadSales());
-    dispatch(onGetAssets(user?.ethAddress));
+    dispatch(onGetAssets(user));
 
     setMessage(
       "You will have to make two transactions. The first one to approve us to have listed your tokens and the second one to list the tokens",

@@ -15,11 +15,14 @@ import { convertArrayCards } from "../common/convertCards";
 import clsx from "clsx";
 import Styles from "./styles.module.scss";
 import Tilt from "react-parallax-tilt";
+import useMagicLink from "@shared/hooks/useMagicLink";
+import { useWeb3React } from "@web3-react/core";
 
 const { marketplace } = getAddresses();
 
 const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
-  const { web3, user, Moralis, isWeb3Enabled, enableWeb3 } = useMoralis();
+  const { account: user, provider } = useWeb3React();
+
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -57,43 +60,41 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       const endersgateInstance = getContractCustom(
         "ERC1155",
         endersGate,
-        web3.provider,
+        provider.provider,
       );
 
       const isApprovedForAll = await endersgateInstance.methods
-        .isApprovedForAll(user?.ethAddress, marketplace)
+        .isApprovedForAll(user, marketplace)
         .call();
       console.log(isApprovedForAll, "APPROVED");
       if (isApprovedForAll == false) {
         setMessage("Allowing us to sell your tokens");
         await approveERC1155({
-          provider: web3.provider,
-          from: user?.ethAddress,
+          provider: provider.provider,
+          from: user,
           to: marketplace,
           address: endersGate,
         });
       }
       setMessage("Listing your tokens");
-      console.log(":(");
       await dispatch(
         onSellERC1155({
           address: endersGate,
-          from: user?.ethAddress,
+          from: user,
           startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
           amount: sellNFTData.amount,
           tokenId: tokenId,
           duration: sellNFTData.duration.toString(),
-          moralis: Moralis,
+          provider: provider.provider,
+          user: user,
         }),
       );
-      console.log(":(x2");
     } catch (err) {
       console.log({ err });
     }
-    console.log(":(");
 
     dispatch(onLoadSales());
-    dispatch(onGetAssets(user?.ethAddress));
+    dispatch(onGetAssets(user));
     setMessage(
       "You will have to make two transactions(if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
     );

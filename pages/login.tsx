@@ -11,6 +11,7 @@ import { InputPassword } from "shared/components/common/form/input-password";
 import { InputEmail } from "shared/components/common/form/input-email";
 import clsx from "clsx";
 import useMagicLink from "@shared/hooks/useMagicLink";
+import { WALLETS } from "@shared/utils/connection/utils";
 
 type Values = {
   email?: string;
@@ -22,7 +23,8 @@ type Values = {
 const Login = () => {
   const [loading, setLoading] = React.useState(false);
   const { login, isAuthenticated, magic } = useMagicLink(
-    store.getState()['networks'].networkId);
+    store.getState()["networks"].networkId,
+  );
 
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -42,18 +44,30 @@ const Login = () => {
     if (isAuthenticated) router.push("/dashboard");
   }, [isAuthenticated]);
 
+  const handleConnection = async (connection) => {
+    try {
+      await connection.connector.activate();
+      router.push("/dashboard");
+    } catch (err) {
+      console.log({ err });
+    }
+  };
+
   return (
     <div className="h-screen w-screen flex flex-col items-center justify-center">
       <div className="flex flex-col gap-4">
-        <Button
-          disabled={loading}
-          decoration="fillPrimary"
-          size="medium"
-          className="w-full mb-2 bg-primary text-white"
-          onClick={handleLogin}
-        >
-          {loading ? "..." : "Login"}
-        </Button>
+        {WALLETS.map((k, i) => (
+          <Button
+            disabled={loading}
+            decoration="fillPrimary"
+            size="medium"
+            className="w-full mb-2 bg-primary text-white"
+            onClick={() => handleConnection(k.connection)}
+          >
+            {loading ? "..." : "Login with " + k.title}
+          </Button>
+        ))}
+        {}
       </div>
     </div>
   );

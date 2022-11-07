@@ -15,10 +15,11 @@ import { useModal } from "@shared/hooks/modal";
 import { onCancelSale, onLoadSales, onGetAssets } from "@redux/actions";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import useMagicLink from "@shared/hooks/useMagicLink";
+import { useWeb3React } from "@web3-react/core";
 
 const Sales = () => {
   const nfts = useAppSelector((state) => state.nfts);
-  const { user, provider } = useMagicLink();
+  const { account: user, provider } = useWeb3React();
 
   const [cancelId, setCancelId] = React.useState({ id: -1, pack: false });
   const { Modal, show, hide, isShow } = useModal();
@@ -33,13 +34,13 @@ const Sales = () => {
     await dispatch(
       onCancelSale({
         tokenId: cancelId.id,
-        provider: provider,
+        provider: provider.provider,
         user: user,
         nftContract: cancelId.pack ? addresses.pack : addresses.endersGate,
       }),
     );
     dispatch(onLoadSales());
-    dispatch(onGetAssets(user?.ethAddress));
+    dispatch(onGetAssets(user));
     hide();
   };
 
@@ -47,12 +48,8 @@ const Sales = () => {
     const arrayPacks = [];
     console.log(nfts.saleCreated);
     nfts.saleCreated.forEach((sale, index) => {
-      console.log(
-        sale.seller === user?.ethAddress,
-        sale.seller,
-        user?.ethAddress,
-      );
-      if (sale.seller.toLowerCase() === user?.ethAddress.toLowerCase()) {
+      console.log(sale.seller === user, sale.seller, user);
+      if (sale.seller.toLowerCase() === user.toLowerCase()) {
         if (sale.status !== 3) {
           arrayPacks.push(sale);
         }

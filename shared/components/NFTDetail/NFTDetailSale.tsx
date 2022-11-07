@@ -18,9 +18,11 @@ import clsx from "clsx";
 import Styles from "./styles.module.scss";
 import Tilt from "react-parallax-tilt";
 import useMagicLink from "@shared/hooks/useMagicLink";
+import { useWeb3React } from "@web3-react/core";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
-  const { user, magic, provider, isAuthenticated } = useMagicLink();
+  const { account: user, provider } = useWeb3React();
+
   const [sale, setSale] = React.useState<any>();
   const [buyNFTData, setBuyNFTData] = React.useState(0);
   const { Modal, show, hide, isShow } = useModal();
@@ -51,7 +53,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   };
 
   const buyNft = async () => {
-    if (!isAuthenticated) {
+    if (!user) {
       router.push("/login");
     }
     try {
@@ -66,7 +68,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
             .mul(Web3.utils.toBN(buyNFTData))
             .toString(),
           tokenId: id,
-          provider: provider,
+          provider: provider.provider,
           nftContract: isPack ? pack : endersGate,
           user: user,
         }),
@@ -76,7 +78,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     await getSale();
     hide();
     dispatch(onLoadSales());
-    dispatch(onGetAssets(user?.ethAddress));
+    dispatch(onGetAssets(user));
     setBuyNFTData(0);
   };
 

@@ -1,25 +1,31 @@
 const publicRpc = {
   harmony: "https://api.harmony.one",
-  polygon: "https://polygon-rpc.com/"
-}
+  polygon: "https://polygon-rpc.com/",
+};
 
 export const networkConfigs = {
   1666600000: {
     name: "Harmony Mainnet",
-    rpc: process.env['NEXT_PUBLIC_HARMONY_RPC'] || publicRpc['harmony'],
+    rpc: process.env["NEXT_PUBLIC_HARMONY_RPC"] || publicRpc["harmony"],
     blockExplorerUrl: "https://explorer.harmony.one/",
-    currencySymbol: "ONE" 
+    currencySymbol: "ONE",
+  },
+  1666700000: {
+    name: "Harmony Mainnet",
+    rpc: process.env["NEXT_PUBLIC_HARMONY_RPC"] || publicRpc["harmony"],
+    blockExplorerUrl: "https://explorer.harmony.one/",
+    currencySymbol: "ONE",
   },
   137: {
     name: "Polygon Mainnet",
-    rpc: process.env['NEXT_PUBLIC_POLYGON_RPC'] || publicRpc['polygon'],
+    rpc: process.env["NEXT_PUBLIC_POLYGON_RPC"] || publicRpc["polygon"],
     blockExplorerURl: "https://polygonscan.com/",
-    currencySymbol: "MATIC"
-  }
+    currencySymbol: "MATIC",
+  },
 };
 
 export const getNativeByChain = (chainId) =>
   networkConfigs[chainId]?.currencySymbol || "ETH";
 
-export const getExplorer = (chainId) => 
+export const getExplorer = (chainId) =>
   networkConfigs[chainId]?.blockExplorerUrl;

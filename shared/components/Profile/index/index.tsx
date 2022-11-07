@@ -14,12 +14,12 @@ import { convertArrayCards } from "@shared/components/common/convertCards";
 import Web3 from "web3";
 import { useSelector } from "react-redux";
 import useMagicLink from "@shared/hooks/useMagicLink";
+import { useWeb3React } from "@web3-react/core";
 
 const ProfileIndexPage = () => {
   const [balance, setBalance] = React.useState("0");
   const [activities, setActivities] = React.useState<Activity[]>([]);
-  const { user: xd } = useMagicLink();
-  const { user } = useSelector((state: any) => state.layout);
+  const { account: user } = useWeb3React();
 
   console.log(user);
 
@@ -49,7 +49,7 @@ const ProfileIndexPage = () => {
   }, [user]);
 
   const handleSetBalance = async () => {
-    const balance = await getBalance(user?.ethAddress);
+    const balance = await getBalance(user);
     setBalance(balance);
   };
 
@@ -81,12 +81,12 @@ const ProfileIndexPage = () => {
       </div>
       <div className="flex justify-between border border-t-0 border-overlay-border p-4 rounded-b-md">
         <Typography type="subTitle" className="text-primary">
-          Address: <AddressText text={user?.ethAddress || ""} />
+          Address: <AddressText text={user || ""} />
         </Typography>
         <div className="flex items-center text-primary gap-4">
           <div
             onClick={() => {
-              navigator.clipboard.writeText(user?.ethAddress);
+              navigator.clipboard.writeText(user);
               addToast("Copied to clipboard", { appearance: "info" });
             }}
             className="cursor-pointer"
@@ -96,7 +96,7 @@ const ProfileIndexPage = () => {
           <a
             target="_blank"
             rel="noreferrer"
-            href={`https://explorer.harmony.one/address/${user?.ethAddress}`}
+            href={`https://explorer.harmony.one/address/${user}`}
           >
             <SelectOutlined />
           </a>

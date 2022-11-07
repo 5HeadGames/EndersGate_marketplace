@@ -77,7 +77,6 @@ export const onGetAssets = createAsyncThunk(
   async function prepare(address: string) {
     try {
       const { endersGate, pack } = getAddresses();
-      console.log(endersGate, pack);
       const cardsContract = getContract("ERC1155", endersGate);
       const packsContract = getContract("ERC1155", pack);
       const packsIds = [0, 1, 2, 3];
@@ -101,9 +100,6 @@ export const onGetAssets = createAsyncThunk(
           cardsIds,
         )
         .call();
-
-      console.log(balanceCards, balancePacks, "balances");
-      console.log(endersGate, pack, "addresses");
 
       return {
         balanceCards: cardsIds.map((id, i) => ({
@@ -201,7 +197,7 @@ export const onBuyERC1155 = createAsyncThunk(
     );
     const { transactionHash } = await marketplaceContract.methods
       .buy(tokenId, amount)
-      .send({ from: user?.ethAddress, value: bid });
+      .send({ from: user, value: bid });
 
     const event = createEvent({
       type: "buy",
@@ -235,11 +231,11 @@ export const onCancelSale = createAsyncThunk(
     );
     const { transactionHash } = await marketplaceContract.methods
       .cancelSale(tokenId)
-      .send({ from: user?.ethAddress });
+      .send({ from: user });
 
     const event = createEvent({
       type: "cancel",
-      metadata: { tokenId, from: user?.ethAddress, transactionHash },
+      metadata: { tokenId, from: user, transactionHash },
     });
 
     await event.save();

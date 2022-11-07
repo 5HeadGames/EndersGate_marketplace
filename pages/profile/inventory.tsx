@@ -4,13 +4,14 @@ import { useRouter } from "next/router";
 import Inventory from "@shared/components/Profile/inventory/inventory";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useSelector } from "react-redux";
+import { useWeb3React } from "@web3-react/core";
 
 const ProfileInventory = () => {
-  const { user } = useMagicLink();
+  const { account: user } = useWeb3React();
   const router = useRouter();
 
   React.useEffect(() => {
-    if (user && !user.ethAddress) {
+    if (!user) {
       router.push("/login");
     }
   }, [user]);

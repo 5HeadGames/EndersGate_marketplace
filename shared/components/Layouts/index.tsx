@@ -26,6 +26,7 @@ import {
   getWeb3,
   loginMetamaskWallet,
 } from "@shared/web3";
+import { useWeb3React } from "@web3-react/core";
 
 const styles = {
   content: {
@@ -105,7 +106,7 @@ export default function AppLayout({ children }) {
     ...state.layout,
   }));
   const router = useRouter();
-  const { isAuthenticated, user, login } = useMagicLink();
+  const { account: user } = useWeb3React();
   const dispatch = useAppDispatch();
 
   const chainChangedHandler = async () => {
@@ -151,11 +152,12 @@ export default function AppLayout({ children }) {
     initApp();
   }, []);
 
-  console.log(isAuthenticated, user, "auth");
-
   React.useEffect(() => {
-    if (isAuthenticated && user) dispatch(onGetAssets(user?.ethAddress));
-  }, [isAuthenticated]);
+    console.log(user, "np");
+    if (user) dispatch(onGetAssets(user));
+  }, [user]);
+
+  console.log(user, "xd");
 
   return (
     <Layout
@@ -210,14 +212,14 @@ export default function AppLayout({ children }) {
             decoration="fill"
             size="small"
             onClick={() => {
-              if (isAuthenticated) {
+              if (user) {
                 router.push("/profile");
               } else {
-                login(dispatch);
+                router.push("/login");
               }
             }}
           >
-            {isAuthenticated ? "Profile" : "Log In"}
+            {user ? "Profile" : "Log In"}
           </Button>
         </div>
         <div

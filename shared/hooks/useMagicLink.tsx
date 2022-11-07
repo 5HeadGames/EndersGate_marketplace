@@ -7,14 +7,13 @@ import { networkConfigs } from "@shared/helpers/networks";
 
 const getMagicConfig = (networkId: number) => {
   const network = networkConfigs[networkId];
-  return { 
-    rpcUrl: network['rpc'],
-    chainId: networkId
-   }
+  return {
+    rpcUrl: network["rpc"],
+    chainId: networkId,
+  };
 };
 
-export default function useMagicLink(networkId: number) {
-
+export default function useMagicLink(networkId: number = 137) {
   const [account, setAccount] = useState<any>(null);
   const [loading, setLoading] = useState<any>(null);
   const [web3, setWeb3] = useState<any>(null);
@@ -35,16 +34,42 @@ export default function useMagicLink(networkId: number) {
       ? process.env.NEXT_PUBLIC_MAGIC_KEY
       : "";
 
+    console.log(getMagicConfig(networkId), "lamama");
+
     const magic: any = new Magic(key, {
       network: getMagicConfig(networkId),
       locale: "en_US",
       extensions: [new ConnectExtension()],
     });
-
+    console.log(magic);
     setMagic(magic);
     setProvider(magic.rpcProvider);
     setWeb3(new Web3(magic.rpcProvider));
   }
+
+  React.useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      magic == null &&
+      process.env.NEXT_PUBLIC_MAGIC_KEY
+    ) {
+      const key = process.env.NEXT_PUBLIC_MAGIC_KEY
+        ? process.env.NEXT_PUBLIC_MAGIC_KEY
+        : "";
+
+      console.log(getMagicConfig(networkId), "lamama");
+
+      const magic: any = new Magic(key, {
+        network: getMagicConfig(networkId),
+        locale: "en_US",
+        extensions: [new ConnectExtension()],
+      });
+      console.log(magic);
+      setMagic(magic);
+      setProvider(magic.rpcProvider);
+      setWeb3(new Web3(magic.rpcProvider));
+    }
+  }, [networkId]);
 
   const sendTransaction = async () => {
     const publicAddress = (await web3.eth.getAccounts())[0];

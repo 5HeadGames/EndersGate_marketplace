@@ -1,12 +1,26 @@
 import { createReducer } from "@reduxjs/toolkit";
+import { ConnectionType } from "@shared/utils/connection";
 import * as actions from "../actions";
 
-const INITIAL_STATE = {
+interface InitialState {
+  user: {
+    ethAddress: string;
+    email: string;
+    wallet: any;
+    networkId: any;
+  };
+  blur: boolean;
+  message: string;
+}
+
+const INITIAL_STATE: InitialState = {
   blur: false,
   message: "",
   user: {
     ethAddress: "",
     email: "",
+    wallet: ConnectionType.INJECTED,
+    networkId: null,
   },
 };
 

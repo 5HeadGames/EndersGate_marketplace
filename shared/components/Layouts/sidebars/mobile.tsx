@@ -19,6 +19,7 @@ import {
   WalletOutlined,
 } from "@ant-design/icons";
 import useMagicLink from "@shared/hooks/useMagicLink";
+import { useWeb3React } from "@web3-react/core";
 
 interface LayoutDashboardProps {
   title?: string;
@@ -38,8 +39,8 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
   const router = useRouter();
   // const { user } = useMoralis();
 
-  const { user } = useMagicLink();
-  const address = user?.ethAddress || "";
+  const { account: user } = useWeb3React();
+  const address = user || "";
 
   const navItems = [
     {

@@ -17,6 +17,7 @@ import Link from "next/link";
 import { Images } from "@shared/const/Images";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import useMagicLink from "@shared/hooks/useMagicLink";
+import { useWeb3React } from "@web3-react/core";
 
 const navItems = [
   { title: "Trading Cards", value: "trading_cards" },
@@ -25,7 +26,7 @@ const navItems = [
 
 const Inventory = () => {
   const nfts = useAppSelector((state) => state.nfts);
-  const { user } = useAppSelector((state: any) => state.layout);
+  const { account: user } = useWeb3React();
   const inventoryCards = nfts.balanceCards;
   const [inventoryPacks, setInventoryPacks] = React.useState([]);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
@@ -35,7 +36,7 @@ const Inventory = () => {
   const cards = convertArrayCards();
 
   React.useEffect(() => {
-    if (user?.ethAddress) {
+    if (user) {
       handleSetBalance();
     }
   }, [user]);
@@ -69,7 +70,7 @@ const Inventory = () => {
   }, [nfts]);
 
   const handleSetBalance = async () => {
-    const balance = await getBalance(user?.ethAddress);
+    const balance = await getBalance(user);
     setBalance(balance);
   };
 

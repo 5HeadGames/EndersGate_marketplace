@@ -5,8 +5,7 @@ import React from "react";
 // import { useMoralis } from "react-moralis";
 import Styles from "./styles.module.scss";
 import { Activity } from "../index/index";
-import { useSelector } from "react-redux";
-import useMagicLink from "@shared/hooks/useMagicLink";
+import { useWeb3React } from "@web3-react/core";
 
 const navItems = [
   { title: "Trading Cards", value: "trading_cards" },
@@ -15,7 +14,7 @@ const navItems = [
 ];
 
 const Activities = () => {
-  const { user } = useMagicLink();
+  const { account: user } = useWeb3React();
   const [activities, setActivities] = React.useState<Activity[]>([]);
   const [page, setPage] = React.useState(0);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
