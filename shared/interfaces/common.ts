@@ -18,8 +18,11 @@ export interface InputProps {
   labelVisible?: boolean;
   verifyValue?: any;
   primary?: boolean;
+  reset?: any;
   handleVerification?: any;
   rightClick?: () => void;
   leftClick?: () => void;
   error?: any;
+  classNameContainer?: string;
+  withoutX?: boolean;
 }

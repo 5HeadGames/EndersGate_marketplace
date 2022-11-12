@@ -10,11 +10,14 @@ import {
 import Web3 from "web3";
 import { getAddresses, getContractWebSocket } from "@shared/web3";
 import contracts from "@shared/contracts";
+import { Dropdown } from "@shared/components/common/dropdown/dropdown";
+import { nFormatter } from "@shared/components/common/specialFields/SpecialFields";
 
 const navItems = [
-  { title: "Last 24h", value: "last_24h" },
   { title: "7 days", value: "last_7d" },
   { title: "30 days", value: "last_30d" },
+  { title: "90 days", value: "last_90d" },
+  { title: "All Time", value: "forever" },
 ];
 
 const TransactionsBoard: React.FC<any> = ({
@@ -27,8 +30,8 @@ const TransactionsBoard: React.FC<any> = ({
 }) => {
   const platformItems = [
     {
-      title: "TOTAL SALE",
-      value: totalSale,
+      title: "Items",
+      value: nFormatter(totalSale),
       iconHtml: <PieChartFilled />,
       css: {
         /* Chrome 10-25, Safari 5.1-6 */
@@ -37,8 +40,8 @@ const TransactionsBoard: React.FC<any> = ({
       },
     },
     {
-      title: "TOTAL VOLUME",
-      value: totalVolume.toString() + " ONE",
+      title: "Volume",
+      value: nFormatter(totalVolume).toString() + " ONE",
       // value2: "$1,57M",
       iconHtml: <LineChartOutlined />,
       css: {
@@ -48,8 +51,8 @@ const TransactionsBoard: React.FC<any> = ({
       },
     },
     {
-      title: "CARDS SOLD",
-      value: cardsSold,
+      title: "Cards Sold",
+      value: nFormatter(cardsSold),
       icon: Icons.cards,
       css: {
         /* Chrome 10-25, Safari 5.1-6 */
@@ -58,8 +61,8 @@ const TransactionsBoard: React.FC<any> = ({
       },
     },
     {
-      title: "PACKS SOLD",
-      value: packsSold,
+      title: "Packs Sold",
+      value: nFormatter(packsSold),
       icon: Icons.packs,
       css: {
         /* Chrome 10-25, Safari 5.1-6 */
@@ -70,9 +73,12 @@ const TransactionsBoard: React.FC<any> = ({
   ];
 
   return (
-    <div className="w-full flex flex-col">
-      <div className="w-full rounded-md border-2 border-overlay-border">
-        <div className="flex border-b-2 border-overlay-border">
+    <div className="w-full flex flex-col items-center justify-center">
+      <div className="w-[900px] rounded-xl border border-overlay-border relative">
+        <p className="absolute top-4 right-6 text-overlay-border text-sm">
+          STATS PANEL
+        </p>
+        {/* <div className="flex border-b-2 border-overlay-border">
           {navItems.map((item, index) => {
             return (
               <div
@@ -84,13 +90,12 @@ const TransactionsBoard: React.FC<any> = ({
                   type="subTitle"
                   className={clsx(
                     {
-                      "bg-primary-disabled text-white":
-                        columnSelected === item.value,
+                      "bg-primary text-overlay": columnSelected === item.value,
                     },
                     {
                       "text-primary": columnSelected !== item.value,
                     },
-                    "px-6 py-4"
+                    "px-6 py-2",
                   )}
                 >
                   {item.title}
@@ -98,8 +103,25 @@ const TransactionsBoard: React.FC<any> = ({
               </div>
             );
           })}
-        </div>
-        <div className="sm:flex sm:flex-row grid grid-cols-4 py-10 sm:px-8 px-4 sm:gap-x-16 gap-x-2 md:justify-start justify-center">
+        </div> */}
+        <div className="sm:flex sm:flex-row grid grid-cols-4 py-4 px-6 sm:gap-x-16 gap-x-2 md:justify-start items-center justify-center">
+          <Dropdown
+            classTitle={"text-red-primary hover:text-orange-500 text-3xl"}
+            title={"Stats"}
+          >
+            <div className="flex flex-col rounded-md border border-overlay-border">
+              {["Price in USDC", "Price in ONE", "Price in MATIC"].map(
+                (item) => (
+                  <div
+                    className="p-4 text-center font-bold hover:text-orange-500 text-primary whitespace-nowrap cursor-pointer"
+                    onClick={() => console.log(item)}
+                  >
+                    {item}
+                  </div>
+                ),
+              )}
+            </div>
+          </Dropdown>
           {platformItems.map((item, index) => {
             return (
               <PlatformMovements
@@ -128,22 +150,13 @@ export const PlatformMovements = ({
   iconHtml,
 }) => {
   return (
-    <div className="flex xl:flex-row flex-col items-center">
-      <div
-        className="flex items-center justify-center p-4 rounded-full h-max w-max text-3xl text-white"
-        style={css}
-      >
-        {iconHtml && iconHtml}
-        {icon && <img src={icon} className="h-8 w-8" alt="" />}
-      </div>
-      <div className="xl:pl-4 xl:block flex flex-col items-center xl:mt-0 mt-4">
-        <Typography className="text-primary text-center" type="label">
-          {label}
-        </Typography>
-        <Typography type="subTitle" className="text-white text-center">
-          {value} {value2}
-        </Typography>
-      </div>
+    <div className="xl:pl-4 xl:block flex flex-col items-center justify-center xl:mt-0 mt-4">
+      <p className="text-sm text-center" style={{ color: "#47E439" }}>
+        {label}
+      </p>
+      <p className="text-white text-center font-bold text-xl">
+        {value} {value2}
+      </p>
     </div>
   );
 };

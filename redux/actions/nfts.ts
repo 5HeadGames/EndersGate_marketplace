@@ -44,8 +44,9 @@ export const onLoadSales = createAsyncThunk(
     const rawSales = await marketplace.methods
       .getSales(new Array(lastSale).fill(0).map((a, i) => i))
       .call();
-
+    console.log(rawSales, "a ver");
     const allSales = rawSales.map((sale: string[], i) => ({
+      index: sale[8],
       id: i,
       seller: sale[0],
       nft: sale[1],

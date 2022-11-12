@@ -27,3 +27,22 @@ export const onUpdateUser = createAction(
     };
   },
 );
+export const addCart = createAction(
+  actionTypes.ADD_CART,
+  function prepare(cart: any) {
+    return {
+      payload: cart,
+    };
+  },
+);
+
+export const removeFromCart = createAction(
+  actionTypes.REMOVE_FROM_CART,
+  function prepare(item: any) {
+    return {
+      payload: item,
+    };
+  },
+);
+
+export const removeAll = createAction(actionTypes.REMOVE_ALL);

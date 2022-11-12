@@ -1,11 +1,10 @@
 import ProfileLayoutComponent from "@shared/components/Profile/profile";
-
 import React from "react";
 import { useRouter } from "next/router";
-import AccountSettingsComponent from "@shared/components/Profile/accountSettings/accountSettings";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
+import AccountSettingsComponent from "@shared/components/Profile/accountSettings/accountSettings";
 
 const ProfileSettings = () => {
   const { account: user } = useWeb3React();
@@ -17,11 +16,7 @@ const ProfileSettings = () => {
     }
   }, [user]);
 
-  return (
-    <ProfileLayoutComponent>
-      <AccountSettingsComponent />
-    </ProfileLayoutComponent>
-  );
+  return <AccountSettingsComponent />;
 };
 
 export default ProfileSettings;

@@ -2,7 +2,6 @@ import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import { useRouter } from "next/router";
 import clsx from "clsx";
-
 import { Icons } from "@shared/const/Icons";
 import { CopyOutlined, LoginOutlined, SelectOutlined } from "@ant-design/icons";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
@@ -15,6 +14,9 @@ import Web3 from "web3";
 import { useSelector } from "react-redux";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
+import Inventory from "../inventory/inventory";
+import packs from "../../../packs.json";
+import { Tooltip } from "@mui/material";
 
 const ProfileIndexPage = () => {
   const [balance, setBalance] = React.useState("0");
@@ -55,146 +57,110 @@ const ProfileIndexPage = () => {
 
   const { addToast } = useToasts();
 
+  const profileImage = Icons.logo;
+
   return (
-    <>
-      <div
-        className={clsx(
-          "flex flex-col justify-between border border-overlay-border p-4 rounded-t-md h-52 relative overflow-hidden",
-        )}
-      >
-        <img
-          src={Icons.harmony}
-          className="absolute top-[-80px] right-[-80px]"
-          alt=""
-        />
-        <div className="flex flex-row relative">
-          <div className="flex flex-col ">
-            {" "}
-            <Typography type="title" className="text-primary ">
-              Balance
-            </Typography>
-            <h1 className="text-white" style={{ fontSize: "32px" }}>
-              {balance} ONE
-            </h1>
-          </div>
+    <div className="flex flex-col py-8">
+      <div className="flex flex-col relative mb-40">
+        <div className="w-full">
+          <img
+            src="/images/bg_landing.png"
+            className="w-full border-b border-overlay-border"
+            alt=""
+          />
+        </div>
+        <div className="absolute bottom-[-120px] left-[120px] flex flex-col gap-2 items-center justify-center">
+          <img
+            className="md:w-40 w-32 rounded-full border-t border-overlay-border p-2 bg-overlay"
+            src={profileImage}
+            alt=""
+          />{" "}
+          <h2 className="mt-2 text-white font-bold md:text-2xl text-lg">
+            {"EG Enthusiast"}
+          </h2>{" "}
         </div>
       </div>
-      <div className="flex justify-between border border-t-0 border-overlay-border p-4 rounded-b-md">
-        <Typography type="subTitle" className="text-primary">
-          Address: <AddressText text={user || ""} />
-        </Typography>
-        <div className="flex items-center text-primary gap-4">
-          <div
-            onClick={() => {
-              navigator.clipboard.writeText(user);
-              addToast("Copied to clipboard", { appearance: "info" });
-            }}
-            className="cursor-pointer"
-          >
-            <CopyOutlined />
-          </div>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={`https://explorer.harmony.one/address/${user}`}
-          >
-            <SelectOutlined />
-          </a>
-        </div>
-      </div>
-      <div className="flex flex-col w-full mt-10">
-        <div className="flex justify-between w-full items-center">
-          <Typography type="title" className="text-white">
-            Activities
-          </Typography>
-          <Link href="/profile/activity">
-            <a href="/profile/activity">
-              <Typography type="span" className="text-primary cursor-pointer">
-                View More
-              </Typography>
-            </a>
-          </Link>
-        </div>
-        <hr className="w-full mt-4" />
-        <div
-          className={clsx(
-            "w-full ",
-            "flex flex-col mb-10",
-            {
-              [`${Styles.gray} justify-center items-center gap-6 h-72`]:
-                activities.length === 0,
-            },
-            {
-              ["py-10 gap-y-2"]: activities.length > 0,
-            },
-          )}
-        >
-          {activities.length > 0 ? (
-            activities.map(({ createdAt, type, metadata }, index) => {
-              return (
-                <Activity date={createdAt} type={type} metadata={metadata} />
-              );
-            })
-          ) : (
-            <>
-              <img src={Icons.logo} className="h-40 w-40" alt="" />
-              <Typography
-                type="subTitle"
-                className={clsx(Styles.title, "text-primary")}
-              >
-                You don't have any activity yet
-              </Typography>
-            </>
-          )}
-        </div>
-      </div>
-    </>
+      <Inventory />
+    </div>
   );
 };
 
-export const Activity = ({ date, type, metadata }) => {
+export const Activity = ({ date, type, metadata, pack }) => {
   const cards = convertArrayCards();
+  console.log("metadata", metadata);
   return (
     <a
       href={`https://explorer.harmony.one/tx/${metadata.transactionHash}`}
       target="_blank"
       rel="noreferrer"
-      className="flex cursor-pointer sm:gap-4 gap-2 text-primary items-primary sm:px-10"
+      className="flex justify-between cursor-pointer sm:gap-4 gap-2 text-primary items-primary sm:px-10"
     >
-      <div className="flex flex-col items-center justify-center text-sm">
-        <div>
-          {new Date(date).getUTCHours()}:
-          {new Date(date).getUTCMinutes() < 10
-            ? `0${new Date(date).getUTCMinutes()}`
-            : new Date(date).getUTCMinutes()}
-        </div>
-        <div>
-          {new Date(date).getMonth() + 1}-{new Date(date).getDate()}-
-          {new Date(date).getFullYear()}
-        </div>
-      </div>
-      <div className="bg-overlay-border p-4 rounded-full flex items-center">
+      <div className="flex gap-4">
         {type === "login" && (
-          <div className="text-xl h-6 w-6 flex items-center justify-center">
-            <LoginOutlined />
+          <div className="p-4 rounded-xl border border-overlay-border flex items-center relative w-20 h-20">
+            <div className="text-xl h-6 w-6 flex items-center justify-center">
+              <LoginOutlined />
+            </div>
           </div>
         )}
         {type !== "login" && (
-          <img className="h-6 w-6" src={Icons.logo} alt="" />
+          <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-16 w-16">
+            <img
+              src={
+                pack
+                  ? packs[metadata?.tokenId]?.properties?.image?.value
+                  : cards[metadata?.tokenId]?.properties.image?.value
+              }
+              className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
+              alt=""
+            />
+          </div>
         )}
-      </div>
 
-      <div className="flex items-center justify-center">
-        {type === "login" && "You loged in for first time"}
-        {type === "buy" &&
-          `You have bought ${metadata?.amount} ${
-            cards[metadata?.tokenId].properties.name.value
-          } at ${Web3.utils.fromWei(metadata?.bid)} ONE`}
-        {type === "sell" &&
-          `You have listed ${metadata?.amount} ${
-            cards[metadata?.tokenId].properties.name.value
-          } at ${Web3.utils.fromWei(metadata?.startingPrice)} ONE`}
-        {type === "cancel" && "You have cancelled a sale"}
+        <div className="flex items-center justify-center text-white lg:text-xl text-md font-bold">
+          {type === "login" && "You loged in for first time"}
+          {type === "buy" &&
+            `You have bought ${metadata?.amount} ${
+              cards[metadata?.tokenId].properties.name.value
+            } at ${Web3.utils.fromWei(metadata?.bid)} ONE`}
+          {type === "sell" &&
+            `You have listed ${metadata?.amount} ${
+              cards[metadata?.tokenId].properties.name.value
+            } at ${Web3.utils.fromWei(metadata?.startingPrice)} ONE`}
+          {type === "cancel" && "You have cancelled a sale"}
+        </div>
+      </div>
+      <div className="flex gap-4 items-center">
+        <Tooltip title="View on explorer">
+          <div className="hover:text-red-primary">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+              />
+            </svg>
+          </div>
+        </Tooltip>
+        <div className="flex flex-col items-center justify-center text-sm w-40 font-bold">
+          <div>
+            {new Date(date).getUTCHours()}:
+            {new Date(date).getUTCMinutes() < 10
+              ? `0${new Date(date).getUTCMinutes()}`
+              : new Date(date).getUTCMinutes()}
+          </div>
+          <div>
+            {new Date(date).getMonth() + 1}-{new Date(date).getDate()}-
+            {new Date(date).getFullYear()}
+          </div>
+        </div>
       </div>
     </a>
   );

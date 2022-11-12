@@ -192,9 +192,9 @@ const ProfileDataAndActions = () => {
               return (
                 <Button
                   {...link}
-                  decoration={link.decoration || ("fill" as any)}
+                  decoration={"line-white"}
                   key={"profile-option-" + index}
-                  className="p-3 flex justify-start items-start w-full"
+                  className="p-3 flex justify-start items-start w-full rounded-md text-white hover:text-overlay"
                 />
               );
             })}

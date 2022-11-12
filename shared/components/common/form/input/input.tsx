@@ -1,10 +1,11 @@
-import * as React from 'react';
-import clsx from 'clsx';
-import styles from './input.module.scss';
+import * as React from "react";
+import clsx from "clsx";
+import styles from "./input.module.scss";
 import { Typography } from "../../typography";
 import { InputProps } from "@shared/interfaces/common";
 import { Icons } from "@shared/const/Icons";
 import { Icon } from "../../icon";
+import { XIcon } from "@heroicons/react/solid";
 
 export const Input: React.FC<
   InputProps & React.InputHTMLAttributes<HTMLInputElement>
@@ -22,14 +23,18 @@ export const Input: React.FC<
   onChangeCustom,
   error,
   className,
+  classNameContainer,
   InputSelect,
   labelVisible,
   verifyValue,
   handleVerification,
   primary,
+  reset,
+  withoutX = false,
   ...props
 }) => {
   //@typescript-eslint/no-unused-vars
+
   const [showLabel, setShowLabel] = React.useState(false);
   const registerAux = register(name, rules);
   return (
@@ -44,7 +49,7 @@ export const Input: React.FC<
                   { "text-alert-error": error || verifyValue === false },
                   { "text-primary": isFill },
                   { "text-primary": primary && !error },
-                  "mb-2 block f-14 text-primary"
+                  "mb-2 block f-14 text-primary",
                 )}
               >
                 {(showLabel || labelVisible) && title}
@@ -57,7 +62,7 @@ export const Input: React.FC<
               <Typography
                 type="label"
                 className={clsx(
-                  "ml-3 font-bold mb-2 block f-18 text-gray-500 cursor-pointer"
+                  "ml-3 font-bold mb-2 block f-18 text-gray-500 cursor-pointer",
                 )}
                 onClick={handleVerification}
               >
@@ -101,15 +106,17 @@ export const Input: React.FC<
                   !isFill && !error,
               },
               !!isFill && styles.inputDateWithValue,
-              "placeholder-gray-500 py-2 w-full text-dark font-montserrat border rounded-lg",
+              "placeholder-primary-disabled py-2 w-full font-montserrat border",
               {
                 "border-gray-500": !error && !isFill,
               },
               "disabled:placeholder-gray-200 disabled:cursor-not-allowed disabled:text-gray-500",
+              "bg-transparent text-white border border-white",
               {
-                "focus:outline-none focus:bg-gray-opacity-10 focus:ring-offset-transparent focus:ring-opacity-0 focus:border-none focus:ring-transparent":
+                "focus:outline-none focus:bg-gray-opacity-10 focus:ring-offset-transparent focus:ring-opacity-0 focus:border-white focus:ring-transparent":
                   !error,
-              }
+              },
+              classNameContainer,
             )}
             ref={registerAux && registerAux.ref}
             onChange={(e) => {
@@ -134,12 +141,12 @@ export const Input: React.FC<
               <Icon src={leftImg} className="text-gray-500 cursor-pointer" />
             </div>
           )}
-          {rightImg && (
+          {!withoutX && (
             <div
-              onClick={rightClick}
-              className="absolute right-2 top-1/4 w-5 h-4"
+              onClick={() => reset({ [name]: "" })}
+              className="absolute right-2 top-0 bottom-0 my-auto text-primary-disabled flex items-center justify-center font-bold cursor-pointer"
             >
-              <Icon src={rightImg} className="cursor-pointer" />
+              <XIcon color="#fff" width={"12px"} />
             </div>
           )}
         </div>

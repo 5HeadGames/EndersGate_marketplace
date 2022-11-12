@@ -11,6 +11,7 @@ interface InitialState {
   };
   blur: boolean;
   message: string;
+  cart: any[];
 }
 
 const INITIAL_STATE: InitialState = {
@@ -22,6 +23,7 @@ const INITIAL_STATE: InitialState = {
     wallet: ConnectionType.INJECTED,
     networkId: null,
   },
+  cart: [],
 };
 
 export const layoutReducer = createReducer(INITIAL_STATE, (builder) => {
@@ -36,5 +38,14 @@ export const layoutReducer = createReducer(INITIAL_STATE, (builder) => {
       console.log(action.payload, "payload");
       state.user.email = action.payload.email;
       state.user.ethAddress = action.payload.ethAddress;
+    })
+    .addCase(actions.addCart, (state: typeof INITIAL_STATE, action) => {
+      state.cart.push(action.payload);
+    })
+    .addCase(actions.removeFromCart, (state: typeof INITIAL_STATE, action) => {
+      state.cart = state.cart.filter((item) => item.id !== action.payload.id);
+    })
+    .addCase(actions.removeAll, (state: typeof INITIAL_STATE) => {
+      state.cart = [];
     });
 });

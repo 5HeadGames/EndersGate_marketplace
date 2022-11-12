@@ -2,7 +2,10 @@ import React from "react";
 import {
   AppstoreOutlined,
   CaretDownOutlined,
+  CaretLeftOutlined,
   CaretUpOutlined,
+  LeftOutlined,
+  RightOutlined,
   SearchOutlined,
   UnorderedListOutlined,
 } from "@ant-design/icons";
@@ -22,32 +25,55 @@ import { useAppDispatch, useAppSelector } from "@redux/store";
 import Link from "next/link";
 import Web3 from "web3";
 import Styles from "./itemCard/styles.module.scss";
+import { Icons } from "@shared/const/Icons";
+import { AddressText } from "../common/specialFields/SpecialFields";
+import TransactionsBoard from "../Dashboard/TransactionsBoard/TransactionsBoard";
+import { useStats } from "@shared/hooks/useStats";
+import { Newsletter } from "../common/footerComponents/newsletter";
+import { JoinTheCommunity } from "../common/footerComponents/joinTheCommunity";
+import { GetStarted } from "../common/footerComponents/getStarted";
+import Partners from "../common/footerComponents/partners";
+import { XIcon } from "@heroicons/react/solid";
 
 const MarketplaceComponent = () => {
-  const [currentOrder, setCurrentOrder] = React.useState("older_listed");
+  const [currentOrder, setCurrentOrder] = React.useState("recently_listed");
   const [type, setType] = React.useState("trading_cards");
+  const [cardType, setCardType] = React.useState("all");
   const [sales, setSales] = React.useState([]);
   const { nfts } = useAppSelector((state) => state);
   const [page, setPage] = React.useState(0);
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = React.useState<any>("");
+  const [openFilters, setOpenFilters] = React.useState(true);
 
-  const router = useRouter();
-  const dispatch = useAppDispatch();
+  const [columnSelected, setColumnSelected] = React.useState("forever");
+  const [listedSelected, setListedSelected] = React.useState("trading_cards");
+  const [soldSelected, setSoldSelected] = React.useState("trading_cards");
+  const { search: searched } = useRouter().query;
+  const cards = convertArrayCards();
+
+  const { transactionsBoard } = useStats({
+    nfts,
+    listedSelected,
+    soldSelected,
+    columnSelected,
+  });
 
   const orderMapper = {
-    lowest_price: "Lowest Price",
-    highest_price: "Highest Price",
-    recently_listed: "Recently Listed",
-    older_listed: "Older Listed",
+    lowest_price: "Price: Low to High",
+    highest_price: "Price: High to Low",
+    recently_listed: "Recent to Older",
+    older_listed: "Older to Recent",
   };
 
   React.useEffect(() => {
     getSales(currentOrder);
-  }, [currentOrder]);
+  }, [currentOrder, type, nfts]);
 
-  const cards = convertArrayCards();
-
-  React.useEffect(() => {}, [sales]);
+  React.useEffect(() => {
+    if (searched) {
+      setSearch(searched);
+    }
+  }, [searched]);
 
   const getSales = async (currentOrder: string) => {
     const { endersGate, pack } = getAddresses();
@@ -60,7 +86,7 @@ const MarketplaceComponent = () => {
         packSalesCreated.push(sale);
       }
     });
-
+    console.log(currentOrder);
     if (currentOrder === "recently_listed") {
       switch (type) {
         case "trading_cards":
@@ -130,321 +156,401 @@ const MarketplaceComponent = () => {
     }
   };
 
-  React.useEffect(() => {
-    const cardSalesCreated = [];
-    const packSalesCreated = [];
-    const { endersGate, pack } = getAddresses();
-    nfts.saleCreated.forEach((sale) => {
-      if (sale.nft == endersGate) {
-        cardSalesCreated.push(sale);
-      } else if (sale.nft == pack) {
-        packSalesCreated.push(sale);
-      }
-    });
-    console.log(cardSalesCreated, "Cards");
-    switch (type) {
-      case "trading_cards":
-        setSales(cardSalesCreated);
-        break;
-      case "packs":
-        setSales(packSalesCreated);
-        break;
-      default:
-        setSales(nfts.saleCreated);
-        break;
-    }
-  }, [type, nfts]);
-
-  const [filter, setFilter] = React.useState({
-    avatar: false,
-    guardian: false,
-    action_cards: false,
-    reaction_cards: false,
-    // tanks: false,
-    // damage: false,
-    // mages: false,
-    // healers: false,
-    // void: false,
-    // fire: false,
-    // water: false,
-    // mystic: false,
-    // earth: false,
-    // venom: false,
-    wood: false,
-    stone: false,
-    iron: false,
-    gold: false,
-    legendary: false,
-    // limited_edition: false,
-    // attack: false,
-    // damage_stats: false,
-    // mages_stats: false,
-    common: false,
-    rare: false,
-    ultra_rare: false,
-    uncommon: false,
+  const [filters, setFilters] = React.useState({
+    avatar: [],
+    cardRole: [],
+    cardRace: [],
+    cardElement: [],
   });
 
-  const passFilter = (id: any) => {
+  const filterCards = (card) => {
     let passed = false;
-    if (filter.guardian && id >= 54) {
-      passed = true;
-    }
-    // if (filter.avatar) {
-
-    // }
-    if (
-      filter.common &&
-      cards[id]?.properties?.rarity?.value.toLowerCase() === "common"
-    ) {
-      passed = true;
-    }
-    if (
-      filter.uncommon &&
-      cards[id]?.properties?.rarity?.value.toLowerCase() === "uncommon"
-    ) {
-      passed = true;
-    }
-    if (
-      filter.rare &&
-      cards[id]?.properties?.rarity?.value.toLowerCase() === "rare"
-    ) {
-      passed = true;
-    }
-    if (
-      filter.ultra_rare &&
-      cards[id]?.properties?.rarity?.value.toLowerCase() === "ultra rare"
-    ) {
-      passed = true;
-    }
-    if (
-      filter.reaction_cards &&
-      cards[id]?.typeCard.toLowerCase() === "reaction"
-    ) {
-      passed = true;
-    }
-    if (filter.action_cards && cards[id]?.typeCard.toLowerCase() === "action") {
-      passed = true;
-    }
-    if (filter.wood && cards[id]?.typeCard.toLowerCase() === "wood") {
-      passed = true;
-    }
-    if (filter.stone && cards[id]?.typeCard.toLowerCase() === "stone") {
-      passed = true;
-    }
-    if (filter.iron && cards[id]?.typeCard.toLowerCase() === "iron") {
-      passed = true;
-    }
-    if (filter.gold && cards[id]?.typeCard.toLowerCase() === "gold") {
-      passed = true;
-    }
-    if (filter.legendary && cards[id]?.typeCard.toLowerCase() === "legendary") {
-      passed = true;
-    }
-    if (filter.avatar && cards[id]?.typeCard.toLowerCase() === "avatar") {
-      passed = true;
-    }
-
-    if (
-      cards[id]?.properties.name.value
-        .toLowerCase()
-        .includes(search.toLowerCase())
-    ) {
-      passed = true;
-    }
-
-    let thereIsFilters = false;
-    console.log(Object.values(filter));
-    Object.values(filter).forEach((element) => {
-      if (element) {
-        thereIsFilters = true;
+    if (cardType === "all") {
+      if (
+        filters.avatar.length === 0 &&
+        filters.cardRace.length === 0 &&
+        filters.cardRole.length === 0 &&
+        filters.cardElement.length === 0
+      ) {
+        passed = true;
       }
-    });
-    if (!thereIsFilters && search === "") {
-      return true;
+
+      if (filters.cardElement.length > 0) {
+        if (
+          filters.cardElement?.includes(
+            card?.properties?.element?.value?.toLowerCase(),
+          )
+        ) {
+          passed = true;
+        } else {
+          return false;
+        }
+      }
+      if (filters.cardRace.length > 0) {
+        if (
+          filters.cardRace?.includes(
+            card?.properties?.race?.value?.toLowerCase(),
+          )
+        ) {
+          passed = true;
+        } else {
+          return false;
+        }
+      }
+      if (filters.cardRole.length > 0) {
+        if (
+          filters.cardRole?.includes(
+            card?.properties?.role?.value?.toLowerCase(),
+          )
+        ) {
+          passed = true;
+        } else {
+          return false;
+        }
+      }
+      if (filters.avatar.length > 0) {
+        if (filters.avatar?.includes("avatars")) {
+          if (card?.typeCard === "avatar") {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.avatar?.includes("guardians")) {
+          if (card?.properties?.isGuardian?.value === true) {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.avatar?.includes("reaction cards")) {
+          if (card.typeCard == "reaction") {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.avatar?.includes("action cards")) {
+          if (card.typeCard == "action") {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.avatar?.includes("ghost cards")) {
+          if (card?.name === "Shinobi Guardian") {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+      }
+    } else {
+      if (cardType === card.typeCard) {
+        if (
+          filters.avatar.length === 0 &&
+          filters.cardRace.length === 0 &&
+          filters.cardRole.length === 0 &&
+          filters.cardElement.length === 0
+        ) {
+          passed = true;
+        }
+        if (filters.cardElement.length > 0) {
+          if (
+            filters.cardElement?.includes(
+              card?.properties?.element?.value?.toLowerCase(),
+            )
+          ) {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.cardRace.length > 0) {
+          if (
+            filters.cardRace?.includes(
+              card?.properties?.race?.value?.toLowerCase(),
+            )
+          ) {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.cardRole.length > 0) {
+          if (
+            filters.cardRole?.includes(
+              card?.properties?.role?.value?.toLowerCase(),
+            )
+          ) {
+            passed = true;
+          } else {
+            return false;
+          }
+        }
+        if (filters.avatar.length > 0) {
+          if (filters.avatar?.includes("avatars")) {
+            if (card?.properties?.isGuardian?.value === true) {
+              passed = true;
+            } else {
+              return false;
+            }
+          }
+          if (filters.avatar?.includes("guardians")) {
+            if (card?.properties?.isGuardian?.value === true) {
+              passed = true;
+            } else {
+              return false;
+            }
+          }
+          if (filters.avatar?.includes("reaction cards")) {
+            if (card.typeCard == "reaction") {
+              passed = true;
+            } else {
+              return false;
+            }
+          }
+          if (filters.avatar?.includes("action cards")) {
+            if (card.typeCard == "reaction") {
+              passed = true;
+            } else {
+              return false;
+            }
+          }
+          if (filters.avatar?.includes("ghost cards")) {
+            if (card?.name === "Shinobi Guardian") {
+              passed = true;
+            } else {
+              return false;
+            }
+          }
+        }
+      }
     }
-    return passed;
+    if (search === "") {
+      return passed;
+    } else if (card?.name.toLowerCase().includes(search.toLowerCase())) {
+      return passed;
+    } else {
+      return false;
+    }
   };
 
   return (
-    <div className="w-full flex xl:flex-row flex-col md:px-8 px-4 pt-36 pb-10 min-h-screen">
-      <FiltersBoard
-        filter={filter}
-        setFilter={setFilter}
-        setPage={setPage}
-        type={type}
-        setType={setType}
-      />
-      <div className="xl:w-2/3 xl:mt-0 mt-6 flex flex-col pb-10">
-        <div className="border flex items-center text-md justify-center border-primary rounded-xl px-4 py-2 md:w-64 w-40 ml-10">
-          <div className="text-white text-xl flex items-center justify-center">
-            <SearchOutlined />
-          </div>
-          <input
-            type="text"
-            className="ml-2 text-white bg-transparent w-full"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-            }}
+    <div className="flex flex-col w-full">
+      <div className="flex flex-col min-h-screen pt-36 pb-10 gap-8 w-full">
+        <div className="flex w-full lg:px-20 px-4">
+          <TransactionsBoard
+            totalSale={transactionsBoard.totalSale}
+            totalVolume={transactionsBoard.totalVolume}
+            cardsSold={transactionsBoard.cardsSold}
+            packsSold={transactionsBoard.packsSold}
+            columnSelected={columnSelected}
+            setColumnSelected={setColumnSelected}
           />
         </div>
-        <div>
-          <div className="w-full flex justify-between items-center sm:flex-row flex-col">
-            <h3 className="text-2xl text-primary ml-4 sm:mb-0 mb-4">
-              {
-                sales
-                  ?.filter((sale, i) => passFilter(sale.nftId))
+        <div className="w-full flex justify-between items-center sm:flex-row flex-col gap-10 lg:px-20 px-4">
+          <div
+            className="flex justify-center items-center cursor-pointer rounded-md border border-overlay-border bg-overlay-2 p-3 text-red-primary hover:text-orange-500"
+            onClick={() => setOpenFilters((prev) => !prev)}
+          >
+            {openFilters ? <CaretLeftOutlined /> : <CaretDownOutlined />}
+            <Typography type="subTitle" className="ml-2 text-lg">
+              Filters
+            </Typography>
+          </div>
+          <div className="border flex items-center text-lg justify-center border-overlay-border bg-overlay-2 rounded-xl w-full">
+            <div className="text-white flex items-center w-full py-3 px-4 rounded-xl bg-overlay border-r border-overlay-border">
+              <input
+                type="text"
+                className="text-white w-full bg-transparent focus:outline-none"
+                placeholder="Search"
+                value={search}
+                onChange={(e) => {
+                  setPage(0);
+                  setSearch(e.target.value);
+                }}
+              />
+              <div
+                className="text-white cursor-pointer flex items-center"
+                onClick={() => setSearch("")}
+              >
+                <XIcon color="#fff" width={"16px"} />
+              </div>
+            </div>
+            <div className="text-white text-xl flex items-center justify-center px-2">
+              <SearchOutlined />
+            </div>
+          </div>
+          <div className="flex">
+            <DropdownActions
+              title={orderMapper[currentOrder]}
+              actions={[
+                {
+                  label: "Price: Low to High",
+                  onClick: () => setCurrentOrder("lowest_price"),
+                },
+                {
+                  label: "Price: High to Low",
+                  onClick: () => setCurrentOrder("highest_price"),
+                },
+                {
+                  label: "Recent to Older",
+                  onClick: () => setCurrentOrder("recently_listed"),
+                },
+                {
+                  label: "Older to Recent",
+                  onClick: () => setCurrentOrder("older_listed"),
+                },
+              ]}
+            />
+          </div>
+        </div>
+        <div className="w-full h-[1px] bg-overlay-border"></div>
+        <div className="w-full flex xl:flex-row flex-col lg:px-20 px-4">
+          <div
+            className={clsx(
+              { ["flex xl:w-auto w-full"]: openFilters },
+              { ["hidden"]: !openFilters },
+            )}
+          >
+            <FiltersBoard
+              filters={filters}
+              setFilters={setFilters}
+              setCardType={setCardType}
+              cardType={cardType}
+              setPage={setPage}
+              type={type}
+              setType={setType}
+            />
+          </div>
+          <div className="w-full xl:mt-0 mt-6 flex flex-col pb-10">
+            <div>
+              <div className="flex flex-wrap w-full justify-center items-center relative">
+                {sales
+                  ?.filter((sale, i) =>
+                    type !== "packs"
+                      ? filterCards(cards[sale.nftId])
+                      : filterCards(packs[sale.nftId]),
+                  )
                   .filter((sale) => {
                     return (
                       Math.floor(new Date().getTime() / 1000) <=
                       parseInt(sale?.duration) + parseInt(sale?.startedAt)
                     );
-                  }).length
-              }{" "}
-              Sales
-            </h3>
-            <div className="flex">
-              <DropdownActions
-                title={orderMapper[currentOrder]}
-                actions={[
-                  {
-                    label: "Lowest Price",
-                    onClick: () => setCurrentOrder("lowest_price"),
-                  },
-                  {
-                    label: "Highest Price",
-                    onClick: () => setCurrentOrder("highest_price"),
-                  },
-                  {
-                    label: "Recently Listed",
-                    onClick: () => setCurrentOrder("recently_listed"),
-                  },
-                  {
-                    label: "Older Listed",
-                    onClick: () => setCurrentOrder("older_listed"),
-                  },
-                ]}
-              />
-
-              {/* <div className=" border-2 border rounded-md overflow-hidden border-primary flex justify-center items-center text-primary h-10 ml-4">
-                <div className="flex flex-1 justify-center items-center text-primary h-10 border-r-2 border-primary p-2 cursor-pointer hover:bg-primary hover:text-secondary">
-                  <AppstoreOutlined />
-                </div>
-                <div className="flex flex-1 justify-center items-center text-primary h-10 p-2 cursor-pointer hover:bg-primary hover:text-secondary">
-                  <UnorderedListOutlined />
-                </div>
-              </div>*/}
+                  })
+                  .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
+                  .length > 0 ? (
+                  sales
+                    ?.filter((sale, i) =>
+                      type !== "packs"
+                        ? filterCards(cards[sale.nftId])
+                        : filterCards(packs[sale.nftId]),
+                    )
+                    .filter((sale) => {
+                      return (
+                        Math.floor(new Date().getTime() / 1000) <=
+                        parseInt(sale?.duration) + parseInt(sale?.startedAt)
+                      );
+                    })
+                    .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
+                    .map((a, id) => {
+                      return (
+                        <NftCard
+                          classes={{ root: "m-4 cursor-pointer" }}
+                          setPage={setPage}
+                          id={a.nftId}
+                          transactionId={a.id}
+                          seller={a.seller}
+                          icon={
+                            type == "packs"
+                              ? packs[a.nftId]?.properties?.image?.value
+                              : cards[a.nftId]?.properties?.image?.value
+                          }
+                          name={
+                            type == "packs"
+                              ? packs[a.nftId]?.properties?.name?.value
+                              : cards[a.nftId]?.properties?.name?.value
+                          }
+                          byId={false}
+                          price={a.price}
+                          type={type}
+                          sale={a}
+                        />
+                      );
+                    })
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-white font-bold gap-4 text-xl">
+                    <img src={Icons.logoCard} className="w-40 h-40" alt="" />
+                    There aren't sales for this search, try with other.
+                  </div>
+                )}
+                {sales
+                  ?.filter((sale, i) =>
+                    type !== "packs"
+                      ? filterCards(cards[sale.nftId])
+                      : filterCards(packs[sale.nftId]),
+                  )
+                  .filter((sale) => {
+                    return (
+                      Math.floor(new Date().getTime() / 1000) <=
+                      parseInt(sale?.duration) + parseInt(sale?.startedAt)
+                    );
+                  }).length > 12 && (
+                  <div className="flex w-full items-center justify-center gap-2">
+                    <div
+                      className="rounded-full flex items-center bg-secondary text-white p-4 cursor-pointer"
+                      onClick={() => {
+                        if (page > 0) {
+                          setPage((prev) => {
+                            return prev - 1;
+                          });
+                        }
+                      }}
+                    >
+                      <LeftOutlined></LeftOutlined>
+                    </div>
+                    <div className="p-3 px-5 flex items-center justify-center rounded-full bg-overlay border border-primary text-primary">
+                      {page + 1}
+                    </div>
+                    <div
+                      className="rounded-full flex items-center bg-secondary text-white p-4 cursor-pointer"
+                      onClick={() => {
+                        if (
+                          page <
+                          Math.floor(
+                            (sales
+                              .filter((sale, i) =>
+                                type !== "packs"
+                                  ? filterCards(cards[sale.nftId])
+                                  : filterCards(packs[sale.nftId]),
+                              )
+                              .filter((sale) => {
+                                return (
+                                  Math.floor(new Date().getTime() / 1000) <=
+                                  parseInt(sale?.duration) +
+                                    parseInt(sale?.startedAt)
+                                );
+                              }).length -
+                              1) /
+                              12,
+                          )
+                        ) {
+                          setPage((prev) => {
+                            return prev + 1;
+                          });
+                        }
+                      }}
+                    >
+                      <RightOutlined></RightOutlined>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-          <div className="flex flex-wrap w-full justify-center items-center relative">
-            {sales
-              ?.filter((sale, i) => passFilter(sale.nftId))
-              .filter((sale) => {
-                return (
-                  Math.floor(new Date().getTime() / 1000) <=
-                  parseInt(sale?.duration) + parseInt(sale?.startedAt)
-                );
-              })
-              .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
-              .map((a, id) => {
-                console.log(a, "sale");
-                return type !== "packs" ? (
-                  <NftCard
-                    classes={{ root: "m-4 cursor-pointer" }}
-                    id={a.nftId}
-                    transactionId={a.id}
-                    icon={cards[a.nftId].properties.image.value}
-                    name={cards[a.nftId].properties.name.value}
-                    byId={false}
-                    price={a.price}
-                  />
-                ) : (
-                  <Link href={`/NFTDetailSale/${a.id}`}>
-                    <div
-                      className={clsx(
-                        "rounded-xl p-4 flex flex-col text-white w-56 bg-secondary cursor-pointer m-4 cursor-pointer",
-                        Styles.cardHover,
-                      )}
-                    >
-                      <div className="w-full flex flex-col text-xs gap-1">
-                        <div className="w-full flex justify-between">
-                          <span>Pack #{a.nftId}</span>
-                          <span>#{a.id}</span>
-                        </div>
-                      </div>
-                      <div className="w-full h-36 flex justify-center items-center my-4">
-                        <img
-                          src={packs[a.nftId]?.properties?.image?.value}
-                          className={"h-36"}
-                        />
-                      </div>
-                      <div className="flex flex-col text-sm text-center">
-                        <span>{a.name}</span>
-                      </div>
-                      <div className="flex flex-col text-sm font-bold text-primary text-center">
-                        <span>{Web3.utils.fromWei(a.price, "ether")} ONE</span>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            {sales
-              ?.filter((sale, i) => passFilter(sale.nftId))
-              .filter((sale) => {
-                return (
-                  Math.floor(new Date().getTime() / 1000) <=
-                  parseInt(sale?.duration) + parseInt(sale?.startedAt)
-                );
-              }).length > 0 && (
-              <div className="flex w-full items-center justify-center gap-2">
-                <div
-                  className="rounded-md bg-secondary text-white p-3 cursor-pointer"
-                  onClick={() => {
-                    if (page > 0) {
-                      setPage((prev) => {
-                        return prev - 1;
-                      });
-                    }
-                  }}
-                >
-                  {"<"}
-                </div>
-                <div className="p-4 rounded-md bg-overlay border border-primary text-primary">
-                  {page + 1}
-                </div>
-                <div
-                  className="rounded-md bg-secondary text-white p-3 cursor-pointer"
-                  onClick={() => {
-                    if (
-                      page <
-                      Math.floor(
-                        (sales
-                          .filter((sale, i) => passFilter(sale.nftId))
-                          .filter((sale) => {
-                            return (
-                              Math.floor(new Date().getTime() / 1000) <=
-                              parseInt(sale?.duration) +
-                                parseInt(sale?.startedAt)
-                            );
-                          }).length -
-                          1) /
-                          12,
-                      )
-                    ) {
-                      setPage((prev) => {
-                        return prev + 1;
-                      });
-                    }
-                  }}
-                >
-                  {">"}
-                </div>
-              </div>
-            )}
-          </div>
         </div>
-      </div>
+      </div>{" "}
     </div>
   );
 };

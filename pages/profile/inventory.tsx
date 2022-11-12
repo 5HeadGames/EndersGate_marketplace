@@ -16,11 +16,7 @@ const ProfileInventory = () => {
     }
   }, [user]);
 
-  return (
-    <ProfileLayoutComponent>
-      <Inventory></Inventory>
-    </ProfileLayoutComponent>
-  );
+  return <Inventory />;
 };
 
 export default ProfileInventory;

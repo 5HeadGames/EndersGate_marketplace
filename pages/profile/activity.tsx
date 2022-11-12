@@ -15,11 +15,7 @@ const ProfileActivities = () => {
       router.push("/login");
     }
   }, [user]);
-  return (
-    <ProfileLayoutComponent>
-      <Activities></Activities>
-    </ProfileLayoutComponent>
-  );
+  return <Activities></Activities>;
 };
 
 export default ProfileActivities;

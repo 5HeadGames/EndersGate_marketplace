@@ -59,10 +59,10 @@ const config: any = {
       gas: 2100000,
       gasPrice: 8000000000,
     },
-    // harmony: {
-    //   url: `https://api.harmony.one`,
-    //   accounts: [process.env.PRIVATE_KEY],
-    // },
+    harmony: {
+      url: `https://api.harmony.one`,
+      accounts: [process.env.PRIVATE_KEY],
+    },
     // harmony_test: {
     //   url: `https://api.s0.b.hmny.io`,
     //   accounts: [process.env.PRIVATE_KEY],

@@ -1,5 +1,4 @@
 import React from "react";
-
 import { useRouter } from "next/router";
 import ProfileLayoutComponent from "@shared/components/Profile/profile";
 import ProfileIndexPage from "@shared/components/Profile/index";
@@ -18,11 +17,7 @@ const Profile: React.FunctionComponent<{}> = () => {
     }
   }, [user]);
 
-  return (
-    <ProfileLayoutComponent>
-      <ProfileIndexPage />
-    </ProfileLayoutComponent>
-  );
+  return <ProfileIndexPage />;
 };
 
 export default Profile;

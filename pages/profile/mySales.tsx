@@ -7,7 +7,7 @@ import useMagicLink from "@shared/hooks/useMagicLink";
 import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 
-const ProfileInventory = () => {
+const ProfileSales = () => {
   const { account: user } = useWeb3React();
   const router = useRouter();
 
@@ -17,11 +17,7 @@ const ProfileInventory = () => {
     }
   }, [user]);
 
-  return (
-    <ProfileLayoutComponent>
-      <Sales></Sales>
-    </ProfileLayoutComponent>
-  );
+  return <Sales />;
 };
 
-export default ProfileInventory;
+export default ProfileSales;

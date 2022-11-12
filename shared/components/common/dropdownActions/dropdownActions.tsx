@@ -6,7 +6,11 @@ import { Typography } from "../typography";
 import { Icons } from "@shared/const/Icons";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 
-export const DropdownActions: React.FC<any> = ({ title, actions }) => {
+export const DropdownActions: React.FC<any> = ({
+  title,
+  actions,
+  className,
+}) => {
   return (
     <div>
       <Menu as="div" className="relative inline-block text-left">
@@ -15,12 +19,20 @@ export const DropdownActions: React.FC<any> = ({ title, actions }) => {
           return (
             <>
               <div>
-                <Menu.Button className="inline-flex justify-center w-full font-medium bg-transparent focus:outline-none">
-                  <div className="flex justify-center items-center cursor-pointer rounded-md border-2 border-primary text-primary p-2">
-                    {open ? <CaretUpOutlined /> : <CaretDownOutlined />}
-                    <Typography type="subTitle" className="ml-2">
+                <Menu.Button className="inline-flex justify-center w-full font-normal bg-transparent focus:outline-none">
+                  <div
+                    className={clsx(
+                      className,
+                      "flex justify-center items-center cursor-pointer rounded-md border border-overlay-border bg-overlay-2 p-3 text-red-primary hover:text-orange-500",
+                    )}
+                  >
+                    <Typography
+                      type="subTitle"
+                      className="mr-2 text-lg whitespace-nowrap"
+                    >
                       {title}
                     </Typography>
+                    {open ? <CaretUpOutlined /> : <CaretDownOutlined />}
                   </div>
                 </Menu.Button>
               </div>
@@ -42,8 +54,8 @@ export const DropdownActions: React.FC<any> = ({ title, actions }) => {
                           {() => (
                             <div
                               className={clsx(
-                                "flex justify-start items-center py-[10px] px-3 text-primary hover:bg-primary hover:text-white",
-                                "whitespace-nowrap"
+                                "flex justify-start items-center py-[10px] px-3 text-primary hover:text-orange-500",
+                                "whitespace-nowrap",
                               )}
                               onClick={() => {
                                 item.onClick();
