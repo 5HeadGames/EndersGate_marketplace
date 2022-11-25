@@ -247,8 +247,7 @@ export default function AppLayout({ children }) {
     {
       name: "LOG OUT",
       decoration: "line-primary",
-      onClick:
-        providerName === "magic" ? handleSignOut : window.location.reload(),
+      onClick: providerName === "magic" ? handleSignOut : undefined,
       disabled: disabled.logout,
     },
   ];
