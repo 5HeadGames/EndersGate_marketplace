@@ -632,7 +632,7 @@ export const NavbarItem = ({ name, link, route }) => {
             "gap-2 flex items-center text-white hover:opacity-100",
           )}
         >
-          <h3 className={clsx("text-md font-bold")}>{name}</h3>
+          <h3 className={clsx("text-md font-[500]")}>{name}</h3>
         </div>
       </a>
     </Link>
