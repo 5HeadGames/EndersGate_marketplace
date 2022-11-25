@@ -79,10 +79,10 @@ const DashboardComponent = () => {
             className={`absolute 2xl:min-w-[165vw] lg:min-w-[250vw] min-w-[350vw] lg:max-h-[85vh] top-0 banner border-b border-overlay-border`}
             alt=""
           />
-          <div className="flex flex-col pt-36 w-full items-center lg:min-h-screen relative gap-4 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 px-8 text-white">
-            <div className="max-w-[1200px] w-full flex justify-between relative lg:min-h-[450px]">
-              <div className="flex flex-col lg:items-start items-center gap-8 lg:pr-[400px] w-full lg:pl-0 pl-16 pr-16">
-                <h1 className="lg:text-5xl text-3xl flex flex-col font-bold w-full lg:text-left text-center">
+          <div className="flex flex-col pt-24 w-full items-center lg:min-h-screen relative gap-4 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 px-8 text-white">
+            <div className="max-w-[1000px] xl:px-10 w-full flex justify-center relative lg:min-h-[350px]">
+              <div className="flex flex-col lg:items-start items-center gap-8 lg:pr-[250px] w-full lg:pl-0 pl-16 pr-16">
+                <h1 className="lg:text-3xl text-3xl flex flex-col font-bold w-full lg:text-left text-center">
                   Discover, collect, buy or sell Endersgate NFTs
                 </h1>
                 <p className="lg:text-2xl text-lg font-[450] text-primary-disabled w-[360px] lg:text-left text-center">
@@ -108,7 +108,7 @@ const DashboardComponent = () => {
                   </a>
                 </div>
               </div>
-              <div className="lg:block hidden w-[600px] flex items-end justify-end absolute right-0">
+              <div className="lg:block hidden w-[485px] flex items-end justify-end absolute right-0">
                 <SliderMain
                   cards={cards}
                   salesDefault={salesDefault}
@@ -119,9 +119,9 @@ const DashboardComponent = () => {
               <h2 className="font-bold text-white text-xl w-full text-center">
                 Enders Gate Drops
               </h2>
-              <div className="w-full">
+              <div className="w-full flex">
                 <Swiper
-                  slidesPerView={3}
+                  slidesPerView={2}
                   onSlideChange={() => console.log("slide change")}
                   onSwiper={(swiper) => console.log(swiper)}
                   zoom={true}
@@ -130,13 +130,12 @@ const DashboardComponent = () => {
                     // nextEl: ".swiper-button-next",
                     // prevEl: ".swiper-button-prev",
                   }}
+                  initialSlide={0}
+                  // centeredSlides={true}
                   modules={[Zoom, Navigation]}
-                  className="mySwiper"
+                  className="mySwiper w-full"
                   spaceBetween={10}
                   breakpoints={{
-                    1300: {
-                      slidesPerView: 3,
-                    },
                     700: {
                       slidesPerView: 2,
                     },
@@ -145,6 +144,61 @@ const DashboardComponent = () => {
                     },
                   }}
                 >
+                  <SwiperSlide
+                    className="xl:block !w-full hidden"
+                    style={{ width: "100%!important", marginRight: "0px" }}
+                  >
+                    <div className="!w-full flex items-center justify-center gap-2">
+                      {[
+                        {
+                          name: "Gen 0 Pack Drop",
+                          description:
+                            "Enjoy +230 Unique hand drawn playing cards.",
+                          image: "/images/gen0_pack.png",
+                        },
+                        {
+                          name: "EG NFT Comics",
+                          description:
+                            "Collect the lore & enjoy original stories.",
+                          image: "/images/comic_pack.png",
+                        },
+                      ]?.map(({ name, description, image }: any) => {
+                        return (
+                          // <SwiperSlide>
+                          <div className="flex flex-col items-center justify-center h-[400px] sm:max-w-[350px] overflow-hidden shrink-0">
+                            {/* <div className="px-4"> */}
+                            <div className="bg-secondary rounded-xl border border-overlay-border h-[390px] sm:max-w-[350px] flex items-end overflow-hidden w-full">
+                              <img
+                                src={image}
+                                className="absolute sm:max-w-[350px] w-full h-[390px]"
+                                alt=""
+                              />
+                              <div className="p-4 flex items-center justify-center relative sm:min-w-[400px] max-w-[350px] w-full rounded-xl bg-secondary border border-secondary gap-2">
+                                <img
+                                  src={Icons.logo}
+                                  className="w-12 h-12"
+                                  alt=""
+                                />
+                                <div className="w-full flex flex-col">
+                                  <h2 className="font-bold text-white text-xl">
+                                    {name}
+                                  </h2>
+                                  <p
+                                    className="text-primary-disabled text-md w-[75%]"
+                                    style={{ lineHeight: "16px" }}
+                                  >
+                                    {description}
+                                  </p>
+                                </div>
+                              </div>
+                              {/* </div> */}
+                            </div>
+                          </div>
+                          // </SwiperSlide>
+                        );
+                      })}
+                    </div>
+                  </SwiperSlide>
                   {[
                     {
                       name: "Gen 0 Pack Drop",
@@ -157,17 +211,10 @@ const DashboardComponent = () => {
                       description: "Collect the lore & enjoy original stories.",
                       image: "/images/comic_pack.png",
                     },
-                    ,
-                    {
-                      name: "EG Starter Pack",
-                      description: "Claim a Free Starter Pack!",
-                      image: "/images/starter_pack.png",
-                    },
                   ]?.map(({ name, description, image }: any) => {
                     return (
-                      <SwiperSlide>
-                        <div className="w-full flex flex-col items-center justify-center h-[450px]  overflow-hidden">
-                          {/* <div className="px-4"> */}
+                      <SwiperSlide className="xl:hidden flex">
+                        <div className="flex flex-col items-center justify-center h-[450px] max-w-[400px] overflow-hidden">
                           <div className="bg-secondary rounded-xl border border-overlay-border h-[440px] max-w-[400px] flex items-end overflow-hidden w-full">
                             <img
                               src={image}
@@ -192,7 +239,6 @@ const DashboardComponent = () => {
                                 </p>
                               </div>
                             </div>
-                            {/* </div> */}
                           </div>
                         </div>
                       </SwiperSlide>

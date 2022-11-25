@@ -11,6 +11,8 @@ interface InitialState {
   };
   blur: boolean;
   message: string;
+  provider: any;
+  providerName: string;
   cart: any[];
 }
 
@@ -23,6 +25,8 @@ const INITIAL_STATE: InitialState = {
     wallet: ConnectionType.INJECTED,
     networkId: null,
   },
+  providerName: "",
+  provider: undefined,
   cart: [],
 };
 
@@ -35,9 +39,10 @@ export const layoutReducer = createReducer(INITIAL_STATE, (builder) => {
       state.message = action.payload;
     })
     .addCase(actions.onUpdateUser, (state: typeof INITIAL_STATE, action) => {
-      console.log(action.payload, "payload");
       state.user.email = action.payload.email;
       state.user.ethAddress = action.payload.ethAddress;
+      state.provider = action.payload.provider;
+      state.providerName = action.payload.providerName;
     })
     .addCase(actions.addCart, (state: typeof INITIAL_STATE, action) => {
       state.cart.push(action.payload);

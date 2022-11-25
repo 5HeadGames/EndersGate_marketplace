@@ -7,15 +7,16 @@ import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 
 const Profile: React.FunctionComponent<{}> = () => {
-  const { account: user } = useWeb3React();
+  const { account } = useWeb3React();
+  const { ethAddress } = useSelector((state: any) => state.layout.user);
   const router = useRouter();
 
   React.useEffect(() => {
-    console.log(user, "aaaaaaaaa");
-    if (!user) {
+    console.log(account, ethAddress, "?");
+    if (!account && !ethAddress) {
       router.push("/login");
     }
-  }, [user]);
+  }, [account, ethAddress]);
 
   return <ProfileIndexPage />;
 };

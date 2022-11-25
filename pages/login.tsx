@@ -13,6 +13,8 @@ import clsx from "clsx";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { WALLETS } from "@shared/utils/connection/utils";
 import { LoadingOutlined } from "@ant-design/icons";
+import { onUpdateUser } from "@redux/actions";
+import { useWeb3React } from "@web3-react/core";
 
 type Values = {
   email?: string;
@@ -29,11 +31,11 @@ const Login = () => {
 
   const router = useRouter();
   const dispatch = useAppDispatch();
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setLoading(true);
     try {
-      login(dispatch);
+      await login(dispatch);
+      router.push("/");
     } catch (err) {
       console.log({ err });
       setLoading(false);
@@ -49,6 +51,7 @@ const Login = () => {
     setLoading(true);
     try {
       await connection.connector.activate();
+
       router.push("/");
     } catch (err) {
       console.log({ err });
@@ -72,23 +75,34 @@ const Login = () => {
         </h1>
         <div
           className={clsx(
-            "flex flex-col gap-4 relative h-60 items-center justify-center",
+            "flex flex-col gap-4 relative h-80 items-center justify-center",
           )}
         >
           {loading == true ? (
             <LoadingOutlined className="text-5xl text-white" />
           ) : (
-            WALLETS.map((k, i) => (
+            <>
+              {WALLETS.map((k, i) => (
+                <Button
+                  disabled={loading}
+                  decoration="line-white"
+                  size="medium"
+                  className="w-full mb-2 bg-overlay rounded-md  text-white hover:text-overlay"
+                  onClick={() => handleConnection(k.connection)}
+                >
+                  {loading ? "..." : "Login with " + k.title}
+                </Button>
+              ))}
               <Button
                 disabled={loading}
                 decoration="line-white"
                 size="medium"
                 className="w-full mb-2 bg-overlay rounded-md  text-white hover:text-overlay"
-                onClick={() => handleConnection(k.connection)}
+                onClick={() => handleLogin()}
               >
-                {loading ? "..." : "Login with " + k.title}
+                {loading ? "..." : "Login with Magic Link"}
               </Button>
-            ))
+            </>
           )}
         </div>
       </div>

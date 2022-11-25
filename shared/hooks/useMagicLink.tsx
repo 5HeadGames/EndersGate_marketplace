@@ -34,10 +34,10 @@ export default function useMagicLink(networkId: number = 137) {
       ? process.env.NEXT_PUBLIC_MAGIC_KEY
       : "";
 
-    console.log(getMagicConfig(networkId), "lamama");
+    console.log(getMagicConfig(137), "lamama");
 
     const magic: any = new Magic(key, {
-      network: getMagicConfig(networkId),
+      network: getMagicConfig(137),
       locale: "en_US",
       extensions: [new ConnectExtension()],
     });
@@ -47,29 +47,35 @@ export default function useMagicLink(networkId: number = 137) {
     setWeb3(new Web3(magic.rpcProvider));
   }
 
-  React.useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      magic == null &&
-      process.env.NEXT_PUBLIC_MAGIC_KEY
-    ) {
-      const key = process.env.NEXT_PUBLIC_MAGIC_KEY
-        ? process.env.NEXT_PUBLIC_MAGIC_KEY
-        : "";
+  const showWallet = () => {
+    magic.connect.showWallet().catch((e: any) => {
+      console.log(e);
+    });
+  };
 
-      console.log(getMagicConfig(networkId), "lamama");
+  // React.useEffect(() => {
+  //   if (
+  //     typeof window !== "undefined" &&
+  //     magic == null &&
+  //     process.env.NEXT_PUBLIC_MAGIC_KEY
+  //   ) {
+  //     const key = process.env.NEXT_PUBLIC_MAGIC_KEY
+  //       ? process.env.NEXT_PUBLIC_MAGIC_KEY
+  //       : "";
 
-      const magic: any = new Magic(key, {
-        network: getMagicConfig(networkId),
-        locale: "en_US",
-        extensions: [new ConnectExtension()],
-      });
-      console.log(magic);
-      setMagic(magic);
-      setProvider(magic.rpcProvider);
-      setWeb3(new Web3(magic.rpcProvider));
-    }
-  }, [networkId]);
+  //     console.log(getMagicConfig(networkId), "lamama");
+
+  //     const magic: any = new Magic(key, {
+  //       network: getMagicConfig(networkId),
+  //       locale: "en_US",
+  //       extensions: [new ConnectExtension()],
+  //     });
+  //     console.log(magic);
+  //     setMagic(magic);
+  //     setProvider(magic.rpcProvider);
+  //     setWeb3(new Web3(magic.rpcProvider));
+  //   }
+  // }, [networkId]);
 
   const sendTransaction = async () => {
     const publicAddress = (await web3.eth.getAccounts())[0];
@@ -102,7 +108,14 @@ export default function useMagicLink(networkId: number = 137) {
       // const email = await magic.connect.requestUserInfo();
       // setEmail(email);
       console.log(publicAddress);
-      dispatch(onUpdateUser({ ethAddress: publicAddress, email }));
+      dispatch(
+        onUpdateUser({
+          ethAddress: publicAddress,
+          email,
+          provider: provider,
+          providerName: "magic",
+        }),
+      );
     } catch (error) {
       console.log(error, "aqui");
     }
@@ -116,14 +129,14 @@ export default function useMagicLink(networkId: number = 137) {
     });
     setIsAuthenticated(false);
     setAccount(null);
-    // dispatch(
-    //   updateState({
-    //     address: "",
-    //     typeOfWallet: "",
-    //     offersActiveReceived: [],
-    //     offersActiveMade: [],
-    //   }),
-    // );
+    dispatch(
+      onUpdateUser({
+        ethAddress: "",
+        providerName: "",
+        email: "",
+        provider: undefined,
+      }),
+    );
     setLoading(false);
   };
 
@@ -163,6 +176,7 @@ export default function useMagicLink(networkId: number = 137) {
     // refetchUserData: () => Promise<MoralisType.User | undefined>;
     // enableWeb3: (options?: Web3EnableOptions) => Promise<MoralisType.Web3Provider | undefined>;
     // deactivateWeb3: () => Promise<void>;
+    showWallet,
     web3,
     isWeb3Enabled: web3 !== undefined,
     // web3EnableError: Error | null;

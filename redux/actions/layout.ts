@@ -21,9 +21,9 @@ export const onMessage = createAction(
 
 export const onUpdateUser = createAction(
   actionTypes.UPDATE_USER_INTERN,
-  function prepare({ ethAddress, email }: any) {
+  function prepare({ ethAddress, email, provider, providerName }: any) {
     return {
-      payload: { ethAddress, email },
+      payload: { ethAddress, email, provider, providerName },
     };
   },
 );

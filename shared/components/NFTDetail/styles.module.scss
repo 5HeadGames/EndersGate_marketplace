@@ -1,28 +1,27 @@
-.animatedImage{
-	transition: 0.5s;
-	width: 12rem;
-	height: 19rem;
-	// border-radius: 10px;
+.animatedImage {
+  transition: 0.5s;
+  width: 12rem;
+  height: 19rem;
+  // border-radius: 10px;
 }
 
-.animatedImage:hover{
-	transition: 0.5s;
-	width: 14rem;
-	height: 22rem;
-	box-shadow: 2px 3px 25px 17px rgba(255,255,255,0.1);
-	background-color: rgba(255,255,255,0.1);
+.animatedImage:hover {
+  transition: 0.5s;
+  width: 13rem;
+  height: 20rem;
+  box-shadow: 2px 3px 25px 17px rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.animatedImageMain{
-	transition: 0.5s;
-	width: 18rem;
-	// border-radius: 10px;
+.animatedImageMain {
+  transition: 0.5s;
+  width: 18rem;
+  // border-radius: 10px;
 }
 
-.animatedImageMain:hover{
-	transition: 0.5s;
-	width: 19rem;
-	box-shadow: 2px 3px 25px 17px rgba(255,255,255,0.1);
-	background-color: rgba(255,255,255,0.1);
+.animatedImageMain:hover {
+  transition: 0.5s;
+  width: 19rem;
+  box-shadow: 2px 3px 25px 17px rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
-

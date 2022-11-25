@@ -17,11 +17,14 @@ import { useWeb3React } from "@web3-react/core";
 import Inventory from "../inventory/inventory";
 import packs from "../../../packs.json";
 import { Tooltip } from "@mui/material";
+import { Button } from "@shared/components/common/button/button";
 
 const ProfileIndexPage = () => {
   const [balance, setBalance] = React.useState("0");
   const [activities, setActivities] = React.useState<Activity[]>([]);
-  const { account: user } = useWeb3React();
+  const { ethAddress: user } = useSelector((state: any) => state.layout.user);
+  const { providerName } = useSelector((state: any) => state.layout);
+  const { showWallet } = useMagicLink();
 
   console.log(user);
 
@@ -75,9 +78,21 @@ const ProfileIndexPage = () => {
             src={profileImage}
             alt=""
           />{" "}
-          <h2 className="mt-2 text-white font-bold md:text-2xl text-lg">
-            {"EG Enthusiast"}
-          </h2>{" "}
+          <div className="flex mt-2 gap-5 items-center">
+            <h2 className="text-white font-bold md:text-2xl text-lg">
+              {"EG Enthusiast"}
+            </h2>
+            {providerName == "magic" && (
+              <Button
+                type="submit"
+                decoration="line-white"
+                className="rounded-xl bg-overlay-2 text-white hover:text-overlay text-[12px] border border-overlay-border py-2 px-4 whitespace-nowrap"
+                onClick={() => showWallet()}
+              >
+                Show Wallet
+              </Button>
+            )}
+          </div>
         </div>
       </div>
       <Inventory />

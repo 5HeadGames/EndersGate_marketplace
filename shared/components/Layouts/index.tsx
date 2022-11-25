@@ -14,6 +14,7 @@ import {
   onBuyERC1155,
   onGetAssets,
   onLoadSales,
+  onUpdateUser,
   removeAll,
 } from "redux/actions";
 import { removeFromCart } from "@redux/actions";
@@ -46,6 +47,7 @@ import { Dropdown } from "../common/dropdown/dropdown";
 import { DropdownCart } from "../common/dropdownCart/dropdownCart";
 import { convertArrayCards } from "../common/convertCards";
 import Web3 from "web3";
+import { useSelector } from "react-redux";
 
 const styles = {
   content: {
@@ -101,9 +103,37 @@ export default function AppLayout({ children }) {
 
   const cards = convertArrayCards();
 
+  const [user, setUser] = React.useState<any>();
+
   const router = useRouter();
-  const { account: user, provider } = useWeb3React();
+  const { account } = useWeb3React();
+  const { logout } = useMagicLink();
+  const { ethAddress } = useSelector((state: any) => state.layout.user);
+  const { provider, providerName } = useSelector((state: any) => state.layout);
   const dispatch = useAppDispatch();
+
+  React.useEffect(() => {
+    console.log(account);
+    if (account) {
+      dispatch(
+        onUpdateUser({
+          ethAddress: account,
+          email: "",
+          provider: provider,
+          providerName: "web3react",
+        }),
+      );
+    }
+  }, [account]);
+
+  React.useEffect(() => {
+    console.log(ethAddress, "accounts");
+    if (ethAddress) {
+      setUser(ethAddress);
+    } else {
+      setUser("");
+    }
+  }, [ethAddress]);
 
   const { pack, endersGate } = getAddresses();
 
@@ -154,8 +184,6 @@ export default function AppLayout({ children }) {
     if (user) dispatch(onGetAssets(user));
   }, [user]);
 
-  console.log(user, "xd");
-
   const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
     setDisabled((prev) => ({ ...prev, [field]: value }));
   };
@@ -189,7 +217,7 @@ export default function AppLayout({ children }) {
   const handleSignOut = async () => {
     const toggleLogout = handleDisabled("logout");
     toggleLogout(true);
-    // logout();
+    logout(dispatch);
     toggleLogout(false);
   };
 
@@ -243,43 +271,45 @@ export default function AppLayout({ children }) {
         className={clsx(
           "fixed top-0 z-10",
           "bg-overlay",
-          "w-[100%] px-8 py-2 flex flex-row items-center justify-between gap-x-4 shadow-md",
+          "w-[100%] px-10 py-2 flex flex-row items-center gap-x-4 shadow-md",
         )}
       >
-        <Logo />
-        <div className="border md:flex hidden items-center text-md justify-center border-overlay-border bg-primary-disabled rounded-xl">
-          <div className="text-white flex items-center w-full py-1 px-4 rounded-xl bg-overlay border-r border-overlay-border">
-            <input
-              type="text"
-              className="text-white w-full bg-transparent focus:outline-none"
-              placeholder="Search"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-            />
+        <div className="w-full gap-2 flex">
+          <Logo />
+          <div className="border md:flex hidden items-center text-md justify-center border-overlay-border bg-primary-disabled rounded-xl w-1/2">
+            <div className="text-white flex items-center w-full py-1 px-4 rounded-xl bg-overlay border-r border-overlay-border">
+              <input
+                type="text"
+                className="text-white w-full bg-transparent focus:outline-none"
+                placeholder="Search"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+              />
+              <div
+                className="text-white cursor-pointer flex items-center"
+                onClick={() => setSearch("")}
+              >
+                <XIcon color="#fff" width={"14px"} />
+              </div>
+            </div>
             <div
-              className="text-white cursor-pointer flex items-center"
-              onClick={() => setSearch("")}
+              className="text-dark text-xl flex items-center justify-center px-2 cursor-pointer"
+              onClick={() => {
+                if (search) {
+                  if (router.asPath == "/marketplace?search=" + search) {
+                    router.push("/marketplace");
+                  }
+                  router.push("/marketplace?search=" + search);
+                }
+              }}
             >
-              <XIcon color="#fff" width={"14px"} />
+              <SearchOutlined />
             </div>
           </div>
-          <div
-            className="text-dark text-xl flex items-center justify-center px-2 cursor-pointer"
-            onClick={() => {
-              if (search) {
-                if (router.asPath == "/marketplace?search=" + search) {
-                  router.push("/marketplace");
-                }
-                router.push("/marketplace?search=" + search);
-              }
-            }}
-          >
-            <SearchOutlined />
-          </div>
         </div>
-        <div className="md:flex hidden gap-4 items-center">
+        <div className="md:flex hidden gap-4 shrink-0 items-center">
           {navItems.map((item, index) => {
             return (
               <>
@@ -376,9 +406,9 @@ export default function AppLayout({ children }) {
                                     Web3.utils.fromWei(item.price, "ether"),
                                   )}{" "}
                                   ONE{" "}
-                                  <span className="!text-sm text-overlay-border">
+                                  {/* <span className="!text-sm text-overlay-border">
                                     ($1.5k)
-                                  </span>
+                                  </span> */}
                                 </h3>
                                 <h3
                                   className={clsx(
@@ -396,9 +426,9 @@ export default function AppLayout({ children }) {
                                     Web3.utils.fromWei(item.price, "ether"),
                                   )}{" "}
                                   ONE{" "}
-                                  <span className="!text-sm text-overlay-border">
+                                  {/* <span className="!text-sm text-overlay-border">
                                     ($1.5k)
-                                  </span>
+                                  </span> */}
                                 </h3>
                               </div>
                               <div
@@ -439,9 +469,9 @@ export default function AppLayout({ children }) {
                           ),
                         )}{" "}
                         ONE{" "}
-                        <span className="!text-sm text-overlay-border">
+                        {/* <span className="!text-sm text-overlay-border">
                           ($1.5k)
-                        </span>
+                        </span> */}
                       </h3>
                     </div>
                     {messageBuy !== "" ? (
@@ -475,26 +505,38 @@ export default function AppLayout({ children }) {
               >
                 <div className="flex flex-col items-center px-4 border border-overlay-border rounded-xl">
                   {profileItems.map((item, index) => {
+                    console.log(
+                      providerName,
+                      item.name === "LOG OUT" && providerName === "magic",
+                    );
                     return (
                       <>
-                        {item.onClick ? (
-                          <div
-                            className={clsx(
-                              "gap-2 py-2 flex items-center text-white opacity-50 hover:opacity-100 cursor-pointer",
+                        {(item.name === "LOG OUT" &&
+                          providerName === "magic") ||
+                        item.name !== "LOG OUT" ? (
+                          <>
+                            {item.onClick ? (
+                              <div
+                                className={clsx(
+                                  "gap-2 py-2 flex items-center text-white opacity-50 hover:opacity-100 cursor-pointer",
+                                )}
+                                onClick={item.onClick}
+                              >
+                                <h3 className={clsx("text-md font-bold")}>
+                                  {item.name}
+                                </h3>
+                              </div>
+                            ) : (
+                              <NavbarItem
+                                key={index}
+                                name={item.name}
+                                link={item.link}
+                                route={router.asPath}
+                              />
                             )}
-                            onClick={item.onClick}
-                          >
-                            <h3 className={clsx("text-md font-bold")}>
-                              {item.name}
-                            </h3>
-                          </div>
+                          </>
                         ) : (
-                          <NavbarItem
-                            key={index}
-                            name={item.name}
-                            link={item.link}
-                            route={router.asPath}
-                          />
+                          ""
                         )}
                       </>
                     );

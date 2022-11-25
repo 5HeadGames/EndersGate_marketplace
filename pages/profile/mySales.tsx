@@ -8,15 +8,15 @@ import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 
 const ProfileSales = () => {
-  const { account: user } = useWeb3React();
+  const { account } = useWeb3React();
+  const { ethAddress } = useSelector((state: any) => state.layout.user);
   const router = useRouter();
 
   React.useEffect(() => {
-    if (!user) {
+    if (!account && !ethAddress) {
       router.push("/login");
     }
-  }, [user]);
-
+  }, [account, ethAddress]);
   return <Sales />;
 };
 

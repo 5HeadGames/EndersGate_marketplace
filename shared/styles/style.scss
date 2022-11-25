@@ -87,14 +87,14 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .item-1 {
   bottom: 0;
-  left: 80px;
+  left: 45px;
   transition: 1s;
   opacity: 0.7;
 }
 
 .item-2 {
   bottom: 0;
-  left: 180px;
+  left: 110px;
   transition: 1s;
   opacity: 0.9;
 }
@@ -102,7 +102,8 @@ input[type="number"]::-webkit-outer-spin-button {
 .item-3 {
   bottom: 0;
   left: 100%;
-  transition: 1s;
+  transition: 0.2s;
+  opacity: 0;
 }
 
 .item-0-width {
