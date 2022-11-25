@@ -141,9 +141,9 @@ export default function AppLayout({ children }) {
     // window.location.reload();
     const web3 = await getWeb3();
     const networkId = await web3.eth.net.getId();
-    if (networkId != 1666600000 && networkId != 1666600000) {
+    if (networkId != 1666600000 && networkId != 137) {
       setNotAvailable({
-        message: "Change your network to harmony mainnet please",
+        message: "Change your network to harmony or polygon mainnet please",
         value: true,
       });
     } else {
@@ -247,7 +247,8 @@ export default function AppLayout({ children }) {
     {
       name: "LOG OUT",
       decoration: "line-primary",
-      onClick: handleSignOut,
+      onClick:
+        providerName === "magic" ? handleSignOut : window.location.reload(),
       disabled: disabled.logout,
     },
   ];
@@ -511,32 +512,24 @@ export default function AppLayout({ children }) {
                     );
                     return (
                       <>
-                        {(item.name === "LOG OUT" &&
-                          providerName === "magic") ||
-                        item.name !== "LOG OUT" ? (
-                          <>
-                            {item.onClick ? (
-                              <div
-                                className={clsx(
-                                  "gap-2 py-2 flex items-center text-white opacity-50 hover:opacity-100 cursor-pointer",
-                                )}
-                                onClick={item.onClick}
-                              >
-                                <h3 className={clsx("text-md font-bold")}>
-                                  {item.name}
-                                </h3>
-                              </div>
-                            ) : (
-                              <NavbarItem
-                                key={index}
-                                name={item.name}
-                                link={item.link}
-                                route={router.asPath}
-                              />
+                        {item.onClick ? (
+                          <div
+                            className={clsx(
+                              "gap-2 py-2 flex items-center text-white opacity-50 hover:opacity-100 cursor-pointer",
                             )}
-                          </>
+                            onClick={item.onClick}
+                          >
+                            <h3 className={clsx("text-md font-bold")}>
+                              {item.name}
+                            </h3>
+                          </div>
                         ) : (
-                          ""
+                          <NavbarItem
+                            key={index}
+                            name={item.name}
+                            link={item.link}
+                            route={router.asPath}
+                          />
                         )}
                       </>
                     );
