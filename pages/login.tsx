@@ -1,16 +1,20 @@
 import React from "react";
-import {useForm} from "react-hook-form";
-import {useRouter} from "next/router";
-import {useMoralis} from "react-moralis";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
 
-import {useModal} from "@shared/hooks/modal";
-import {useAppDispatch} from "redux/store";
-import {Button} from "shared/components/common/button";
+import { useModal } from "@shared/hooks/modal";
+import { useAppDispatch, store } from "redux/store";
+import { Button } from "shared/components/common/button";
 import Dialog from "shared/components/common/dialog";
-import {Typography} from "shared/components/common/typography";
-import {InputPassword} from "shared/components/common/form/input-password";
-import {InputEmail} from "shared/components/common/form/input-email";
+import { Typography } from "shared/components/common/typography";
+import { InputPassword } from "shared/components/common/form/input-password";
+import { InputEmail } from "shared/components/common/form/input-email";
 import clsx from "clsx";
+import useMagicLink from "@shared/hooks/useMagicLink";
+import { WALLETS } from "@shared/utils/connection/utils";
+import { LoadingOutlined } from "@ant-design/icons";
+import { onUpdateUser } from "@redux/actions";
+import { useWeb3React } from "@web3-react/core";
 
 type Values = {
   email?: string;
@@ -20,65 +24,18 @@ type Values = {
 };
 
 const Login = () => {
-  const [openForm, setOpenForm] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const { Modal, isShow, show, hide } = useModal();
-  const { authenticate, signup, login, enableWeb3, isAuthenticated, Moralis } =
-    useMoralis();
+  const { login, isAuthenticated, magic } = useMagicLink(
+    store.getState()["networks"].networkId,
+  );
 
   const router = useRouter();
   const dispatch = useAppDispatch();
-
-  const handleMetamaskConnect = async () => {
+  const handleLogin = async () => {
     setLoading(true);
     try {
-      await enableWeb3();
-      await(window as any).ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [
-          {
-            chainId:
-              "0x" + parseInt(process.env.NEXT_PUBLIC_CHAIN_ID).toString(16),
-          },
-        ],
-      });
-      const user = await authenticate();
-    } catch (err) {
-      console.log({ err });
-      setLoading(false);
-    }
-    setLoading(false);
-  };
-
-  const handleWalletConnect = async () => {
-    setLoading(true);
-    try {
-      await enableWeb3({
-        provider: "walletconnect",
-      });
-      await authenticate({
-        provider: "walletconnect",
-      });
-    } catch (err) {
-      console.log({ err });
-      setLoading(false);
-    }
-    setLoading(false);
-  };
-
-  const handleRegister = async (user: Values) => {
-    try {
-      await signup(user.email, user.password, user.email);
-    } catch (err) {
-      console.log({ err });
-    }
-  };
-
-  const handleLogin = async (user: Values) => {
-    setLoading(true);
-    try {
-      await login(user.email, user.password);
-      await handleMetamaskConnect();
+      await login(dispatch);
+      router.push("/");
     } catch (err) {
       console.log({ err });
       setLoading(false);
@@ -87,66 +44,68 @@ const Login = () => {
   };
 
   React.useEffect(() => {
-    if (isAuthenticated) router.push("/dashboard");
+    if (isAuthenticated) router.push("/");
   }, [isAuthenticated]);
 
+  const handleConnection = async (connection) => {
+    setLoading(true);
+    try {
+      await connection.connector.activate();
+
+      router.push("/");
+    } catch (err) {
+      console.log({ err });
+    }
+    setLoading(false);
+  };
+
   return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center">
-      <div className="flex flex-col gap-4">
-        <Button
-          disabled={loading}
-          decoration="fillPrimary"
-          size="medium"
-          className="w-full mb-2 bg-primary text-white"
-          onClick={handleWalletConnect}
-        >
-          {loading ? "..." : "Login with WalletConnect"}
-        </Button>
-        <Button
-          disabled={loading}
-          decoration="fillPrimary"
-          size="medium"
-          className="w-full mb-2 bg-primary text-white"
-          onClick={handleMetamaskConnect}
-        >
-          {loading ? "..." : "Login with Metamask Wallet"}
-        </Button>
-        {openForm ? (
-          <EmailPasswordForm
-            onLogin={handleLogin}
-            onRegister={handleRegister}
-            loading={loading}
+    <div className="max-w-[100vw] h-screen overflow-hidden">
+      <div className="max-w-[100vw] overflow-hidden h-[100vh] w-full flex flex-col items-center justify-center gap-10">
+        <div className="absolute h-full max-w-full overflow-hidden">
+          <img
+            src="/images/community.svg"
+            className={`relative min-w-[120vw] min-h-[101vh] top-0 right-0 left-[-8%] mx-auto opacity-25`}
+            alt=""
           />
-        ) : (
-          <Button
-            disabled={loading}
-            decoration="line-primary"
-            size="medium"
-            className="w-full mb-2"
-            onClick={() => setOpenForm(true)}
-          >
-            {loading ? "..." : "Login with email & password"}
-          </Button>
-        )}
-      </div>
-      <Modal isShow={Boolean(isShow)}>
-        <div className="flex flex-col items-center p-6">
-          <Typography type="title" className="text-purple-400/75">
-            {`Install Metamask`}
-          </Typography>
-          <p className="text-purple-200/75">
-            You must install{" "}
-            <a
-              href={"https://metamask.io/"}
-              className="text-primary"
-              target="_blank"
-            >
-              metamask
-            </a>{" "}
-            official wallet to connect through this method
-          </p>
         </div>
-      </Modal>
+        <h1 className="font-bold text-white text-3xl relative">
+          JOIN TO <span className="text-red-primary font-bold">5</span>
+          <span className="text-white font-bold">HEADGAMES</span> MARKETPLACE
+        </h1>
+        <div
+          className={clsx(
+            "flex flex-col gap-4 relative h-80 items-center justify-center",
+          )}
+        >
+          {loading == true ? (
+            <LoadingOutlined className="text-5xl text-white" />
+          ) : (
+            <>
+              {WALLETS.map((k, i) => (
+                <Button
+                  disabled={loading}
+                  decoration="line-white"
+                  size="medium"
+                  className="w-full mb-2 bg-overlay rounded-md  text-white hover:text-overlay"
+                  onClick={() => handleConnection(k.connection)}
+                >
+                  {loading ? "..." : "Login with " + k.title}
+                </Button>
+              ))}
+              <Button
+                disabled={loading}
+                decoration="line-white"
+                size="medium"
+                className="w-full mb-2 bg-overlay rounded-md  text-white hover:text-overlay"
+                onClick={() => handleLogin()}
+              >
+                {loading ? "..." : "Login with Magic Link"}
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
@@ -158,7 +117,7 @@ interface EmailPasswordFormProps {
 }
 
 const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
-  props
+  props,
 ) => {
   const { onLogin, onRegister, loading } = props;
   const { Modal: ModalRegister, isShow, show, hide } = useModal();
@@ -166,6 +125,7 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -198,36 +158,40 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
   return (
     <>
       <form onSubmit={handleSubmit(onLogin)}>
-        <div className="p-4 flex flex-col bg-secondary rounded-md">
+        <div className="p-4 flex flex-col bg-secondary rounded-xl">
           <div className="mb-4 w-full">
             <InputEmail
               register={register}
-              placeholder="email"
+              placeholder="Email"
               name="email"
+              classNameContainer="rounded-xl"
+              reset={reset}
               error={errors.email}
             />
           </div>
           <div className="mb-4">
             <InputPassword
               register={register}
-              placeholder=" password"
+              placeholder="Password"
               error={errors.password}
+              reset={reset}
+              classNameContainer="rounded-xl"
               name="password"
             />
           </div>
           <Button
-            decoration="fill"
+            decoration="line-white"
             size="small"
             type="submit"
-            className="w-full mb-2"
+            className="w-full mb-2 text-white hover:text-overlay rounded-xl"
             disabled={loading}
           >
-            {loading ? "..." : "Sign in"}
+            {loading ? <LoadingOutlined /> : "Sign in"}
           </Button>
           <span className="text-primary text-xs">
             You dont have an account?{" "}
             <a
-              className="text-white"
+              className="text-red-primary"
               href="#"
               onClick={() => {
                 show();
@@ -239,27 +203,35 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
           </span>
         </div>
       </form>
-      <ModalRegister isShow={isShow}>
+      <ModalRegister isShow={isShow} withoutX>
         <form onSubmit={handleSubmit(onRegister)}>
-          <Typography type="title" className="text-center text-primary">
-            {" "}
-            Register{" "}
-          </Typography>
-          <div className="p-4 flex flex-col bg-secondary rounded-md">
-            <div className="mb-4 w-full">
+          <div className="p-4 flex flex-col gap-4 bg-secondary items-center rounded-md w-96">
+            <Typography
+              type="title"
+              className="text-center text-primary font-bold"
+            >
+              {" "}
+              REGISTER TO <span className="text-red-primary font-bold">5</span>
+              <span className="text-white font-bold">HEADGAMES</span>
+            </Typography>
+            <div className="w-full">
               <InputEmail
                 register={register}
-                placeholder="email"
+                placeholder="Email"
                 name="email"
+                reset={reset}
+                classNameContainer="rounded-xl"
                 error={errors.email}
               />
             </div>
-            <div className="mb-4">
+            <div className="w-full">
               <InputPassword
                 register={register}
-                placeholder=" password"
+                placeholder="Password"
                 name="password"
                 error={errors.password}
+                classNameContainer="rounded-xl"
+                reset={reset}
                 onChangeCustom={(e: any) => {
                   const regexMayus = /[A-Z]/g;
                   if (regexMayus.test(e.target.value)) {
@@ -287,16 +259,16 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
                 }}
               />
             </div>
-            <div className="mb-4">
+            <div className="w-full">
               <div className="grid grid-cols-4 gap-1">
                 <div
                   className={clsx(
                     { "bg-gray-700": passwordStrength() === -1 },
-                    { "bg-red-500": passwordStrength() === 0 },
+                    { "bg-red-primary": passwordStrength() === 0 },
                     { "bg-orange-500": passwordStrength() === 1 },
                     { "bg-yellow-500": passwordStrength() === 2 },
                     { "bg-green-500": passwordStrength() === 3 },
-                    "w-full h-2 rounded-md"
+                    "w-full h-2 rounded-md",
                   )}
                 ></div>
                 <div
@@ -306,7 +278,7 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
                     { "bg-yellow-500": passwordStrength() === 2 },
                     { "bg-green-500": passwordStrength() === 3 },
                     { "bg-green-500": passwordStrength() === 3 },
-                    "w-full h-2 rounded-md"
+                    "w-full h-2 rounded-md",
                   )}
                 ></div>
                 <div
@@ -314,25 +286,25 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
                     { "bg-gray-700": passwordStrength() <= 1 },
                     { "bg-yellow-500": passwordStrength() === 2 },
                     { "bg-green-500": passwordStrength() === 3 },
-                    "w-full h-2 rounded-md"
+                    "w-full h-2 rounded-md",
                   )}
                 ></div>
                 <div
                   className={clsx(
                     { "bg-gray-700": passwordStrength() <= 2 },
                     { "bg-green-500": passwordStrength() === 3 },
-                    "w-full h-2 rounded-md"
+                    "w-full h-2 rounded-md",
                   )}
                 ></div>
               </div>
               <Typography
                 className={clsx(
                   { "text-gray-700": passwordStrength() === -1 },
-                  { "text-red-500": passwordStrength() === 0 },
+                  { "text-red-primary": passwordStrength() === 0 },
                   { "text-orange-500": passwordStrength() === 1 },
                   { "text-yellow-500": passwordStrength() === 2 },
                   { "text-green-500": passwordStrength() === 3 },
-                  "mt-2"
+                  "mt-2",
                 )}
                 type="subTitle"
               >
@@ -351,10 +323,12 @@ const EmailPasswordForm: React.FunctionComponent<EmailPasswordFormProps> = (
               decoration="fill"
               size="small"
               type="submit"
-              className="w-full mb-2"
+              className="md:w-48 w-32 font-bold md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
               disabled={loading}
             >
-              {loading ? "..." : "Register"}
+              <p className="font-bold">
+                {loading ? <LoadingOutlined /> : "REGISTER"}
+              </p>
             </Button>
           </div>
         </form>

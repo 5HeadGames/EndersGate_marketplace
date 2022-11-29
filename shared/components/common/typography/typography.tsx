@@ -26,10 +26,7 @@ export const Typography: React.FC<TypographyProps> = ({
     );
   if (type === "subTitle")
     return (
-      <h2
-        className={clsx("text-base", className)}
-        onClick={() => onClick && onClick()}
-      >
+      <h2 className={clsx("", className)} onClick={() => onClick && onClick()}>
         {children || text}
       </h2>
     );

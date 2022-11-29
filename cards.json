@@ -6033,7 +6033,7 @@
       "name": "Blaze Bane",
       "type": "ERC1155",
       "description": "[Beast | Assassin] \"Relentless Pursuit\" Passive: Upon death, blaze bane returns to the battle field at the start of your opponents battle phase with 50% HP & gold cost to 0. This effect occurs once. ",
-      "image": "QmeTvA981w1DwpKrjBsTC7fyZvxGtZ4NShSXA8K7hA41vZ",
+      "image": "https://bafybeidap55m6f7zgdjmsjalo75htsqifvb3g5sirg62ykuzixul7e4dei.ipfs.nftstorage.link",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -6078,7 +6078,7 @@
         },
         "image": {
           "name": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmeTvA981w1DwpKrjBsTC7fyZvxGtZ4NShSXA8K7hA41vZ"
+          "value": "https://bafybeidap55m6f7zgdjmsjalo75htsqifvb3g5sirg62ykuzixul7e4dei.ipfs.nftstorage.link"
         }
       },
       "attributes": [
@@ -6124,7 +6124,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://ipfs.moralis.io:2053/ipfs/QmeTvA981w1DwpKrjBsTC7fyZvxGtZ4NShSXA8K7hA41vZ"
+          "value": "https://bafybeidap55m6f7zgdjmsjalo75htsqifvb3g5sirg62ykuzixul7e4dei.ipfs.nftstorage.link"
         }
       ]
     },

@@ -11,13 +11,16 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import { useForm } from "react-hook-form";
-import { useMoralis, useMoralisFile } from "react-moralis";
+// import { useMoralis, useMoralisFile } from "react-moralis";
 
 import { Button } from "@shared/components/common/button";
 import { Typography } from "@shared/components/common/typography";
 import { Icons } from "@shared/const/Icons";
 import { useModal } from "@shared/hooks/modal";
 import { Input } from "@shared/components/common/form/input";
+import useMagicLink from "@shared/hooks/useMagicLink";
+import { useAppDispatch } from "@redux/store";
+import { useSelector } from "react-redux";
 
 type ButtonsTypes = { logout: boolean; userData: boolean };
 
@@ -29,12 +32,15 @@ const ProfileDataAndActions = () => {
   const [image, setImage] = React.useState<File | null>(null);
   const { Modal, isShow, show, hide } = useModal();
   const { register, handleSubmit } = useForm();
-  const { logout, user, setUserData } = useMoralis();
-  const { saveFile } = useMoralisFile();
+  const { logout } = useMagicLink();
+  const { user } = useSelector((state: any) => state.layout);
+  // const { saveFile } = useMoralisFile();
   const router = useRouter();
-  const profileImage = user?.get("profileImage")
-    ? user.get("profileImage").url()
-    : Icons.logo;
+
+  //user image
+  const profileImage = Icons.logo;
+
+  const dispatch = useAppDispatch();
 
   const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
     setDisabled((prev) => ({ ...prev, [field]: value }));
@@ -42,18 +48,18 @@ const ProfileDataAndActions = () => {
 
   const onSubmit = async (values: any) => {
     const toggleForm = handleDisabled("userData");
-    let moralisFile = null;
-    toggleForm(true);
-    if (image) {
-      moralisFile = await saveFile(image.name, image, {
-        type: "image/png",
-      });
-    }
-    await setUserData(
-      moralisFile
-        ? { profileImage: moralisFile, name: values.name }
-        : { name: values.name }
-    );
+    // let moralisFile = null;
+    // toggleForm(true);
+    // if (image) {
+    //   moralisFile = await saveFile(image.name, image, {
+    //     type: "image/png",
+    //   });
+    // }
+    // // await setUserData(
+    // //   moralisFile
+    // //     ? { profileImage: moralisFile, name: values.name }
+    // //     : { name: values.name }
+    // // );
     toggleForm(false);
     hide();
     router.push("/profile/inventory");
@@ -62,7 +68,7 @@ const ProfileDataAndActions = () => {
   const handleSignOut = async () => {
     const toggleLogout = handleDisabled("logout");
     toggleLogout(true);
-    logout();
+    logout(dispatch);
     toggleLogout(false);
   };
 
@@ -130,7 +136,7 @@ const ProfileDataAndActions = () => {
                     htmlFor="profile_picture"
                     className={clsx(
                       "bg-overlay border border-primary cursor-pointer",
-                      "text-primary px-4 py-2 text-md rounded-md md:ml-4 md:mt-0 mt-4"
+                      "text-primary px-4 py-2 text-md rounded-md md:ml-4 md:mt-0 mt-4",
                     )}
                   >
                     Change Picture
@@ -140,7 +146,7 @@ const ProfileDataAndActions = () => {
                   register={register}
                   name="name"
                   placeholder="Nickname"
-                  defaultValue={user?.get("name")}
+                  defaultValue={user.name}
                 />
                 <Button
                   decoration="fillPrimary"
@@ -156,7 +162,7 @@ const ProfileDataAndActions = () => {
           <div
             className={clsx(
               "p-4 flex flex-col w-full justify-center items-center",
-              "border border-overlay-border rounded-md mb-2"
+              "border border-overlay-border rounded-md mb-2",
             )}
           >
             <img src={profileImage} className="h-16 w-16 rounded-full" alt="" />
@@ -164,7 +170,7 @@ const ProfileDataAndActions = () => {
               type="title"
               className="text-primary text-center flex items-center mt-2"
             >
-              {user?.get("name")}
+              {user.name}
             </Typography>
             <div
               onClick={() => {
@@ -178,7 +184,7 @@ const ProfileDataAndActions = () => {
               type="span"
               className="text-white md:text-xs text-caption"
             >
-              {user?.get("email") || ""}
+              {user.email || ""}
             </Typography>
           </div>
           <div className="flex flex-col gap-2">
@@ -186,9 +192,9 @@ const ProfileDataAndActions = () => {
               return (
                 <Button
                   {...link}
-                  decoration={link.decoration || ("fill" as any)}
+                  decoration={"line-white"}
                   key={"profile-option-" + index}
-                  className="p-3 flex justify-start items-start w-full"
+                  className="p-3 flex justify-start items-start w-full rounded-md text-white hover:text-overlay"
                 />
               );
             })}

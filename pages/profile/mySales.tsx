@@ -1,24 +1,23 @@
 import ProfileLayoutComponent from "@shared/components/Profile/profile";
 import React from "react";
-import { useMoralis } from "react-moralis";
+
 import { useRouter } from "next/router";
 import Sales from "@shared/components/Profile/sales/sales";
+import useMagicLink from "@shared/hooks/useMagicLink";
+import { useSelector } from "react-redux";
+import { useWeb3React } from "@web3-react/core";
 
-const ProfileInventory = () => {
-  const { isAuthenticated } = useMoralis();
+const ProfileSales = () => {
+  const { account } = useWeb3React();
+  const { ethAddress } = useSelector((state: any) => state.layout.user);
   const router = useRouter();
 
   React.useEffect(() => {
-    if (!isAuthenticated) {
+    if (!account && !ethAddress) {
       router.push("/login");
     }
-  }, [isAuthenticated]);
-
-  return (
-    <ProfileLayoutComponent>
-      <Sales></Sales>
-    </ProfileLayoutComponent>
-  );
+  }, [account, ethAddress]);
+  return <Sales />;
 };
 
-export default ProfileInventory;
+export default ProfileSales;

@@ -1,24 +1,23 @@
 import ProfileLayoutComponent from "@shared/components/Profile/profile";
-import {useMoralis} from "react-moralis";
 import React from "react";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
+import useMagicLink from "@shared/hooks/useMagicLink";
+import { useSelector } from "react-redux";
+import { useWeb3React } from "@web3-react/core";
 import AccountSettingsComponent from "@shared/components/Profile/accountSettings/accountSettings";
 
 const ProfileSettings = () => {
-  const {isAuthenticated} = useMoralis();
+  const { account } = useWeb3React();
+  const { ethAddress } = useSelector((state: any) => state.layout.user);
   const router = useRouter();
 
   React.useEffect(() => {
-    console.log(isAuthenticated);
-    if (!isAuthenticated) {
+    if (!account && !ethAddress) {
       router.push("/login");
     }
-  }, [isAuthenticated]);
-  return (
-    <ProfileLayoutComponent>
-      <AccountSettingsComponent />
-    </ProfileLayoutComponent>
-  );
+  }, [account, ethAddress]);
+
+  return <AccountSettingsComponent />;
 };
 
 export default ProfileSettings;
