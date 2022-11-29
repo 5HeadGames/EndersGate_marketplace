@@ -426,7 +426,7 @@ const MarketplaceComponent = () => {
           </div>
           <div className="w-full xl:mt-0 mt-6 flex flex-col pb-10">
             <div>
-              <div className="flex flex-wrap w-full justify-center items-center relative">
+              <div className="flex flex-wrap w-full justify-center items-center relative ">
                 {sales
                   ?.filter((sale, i) =>
                     type !== "packs"

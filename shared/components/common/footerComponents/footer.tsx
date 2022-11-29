@@ -41,7 +41,11 @@ export const Footer = () => {
         ))}
       </div>
       <div className="flex flex-col items-center justify-center">
-        <p className={clsx("px-2 text-xl font-bold text-primary-disabled")}>
+        <p
+          className={clsx(
+            "px-2 text-xl font-bold text-primary-disabled text-center",
+          )}
+        >
           QUALITY BLOCKCHAIN GAMES FOR ALL
         </p>
         <a

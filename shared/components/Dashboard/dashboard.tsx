@@ -270,7 +270,7 @@ const DashboardComponent = () => {
               </div>
             </Dropdown>
           </div>
-          <div className="flex flex-wrap w-full justify-center items-center relative">
+          <div className="flex flex-wrap w-full justify-center items-center relative md:px-40">
             {sales.map((a, id) => {
               return a.nft.toLowerCase() !== pack.toLowerCase() ? (
                 <NFTCard

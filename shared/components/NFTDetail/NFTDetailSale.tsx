@@ -235,7 +235,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
         <div className="min-h-screen w-full flex flex-col xl:px-36 md:px-10 sm:px-6 px-4 pt-10 pb-20">
           <div className="w-full flex xl:flex-row flex-col mt-10 gap-4 justify-center">
             <div className="flex flex-col gap-2">
-              <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
+              <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] sm:min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
                 {!isPack && (
                   <div
                     className="absolute top-2 right-2 z-[2] text-white text-2xl p-1"

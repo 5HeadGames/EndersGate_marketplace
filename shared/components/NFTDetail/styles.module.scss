@@ -25,3 +25,39 @@
   box-shadow: 2px 3px 25px 17px rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.1);
 }
+
+@media (max-width: 500px) {
+  .animatedImage {
+    width: 9rem;
+    height: 16rem;
+  }
+
+  .animatedImage:hover {
+    width: 10rem;
+    height: 17rem;
+  }
+
+  .animatedImageMain {
+    transition: 0.5s;
+    width: 16rem;
+    // border-radius: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .animatedImage {
+    width: 8rem;
+    height: 14rem;
+  }
+
+  .animatedImage:hover {
+    width: 9rem;
+    height: 15rem;
+  }
+
+  .animatedImageMain {
+    transition: 0.5s;
+    width: 14rem;
+    // border-radius: 10px;
+  }
+}
