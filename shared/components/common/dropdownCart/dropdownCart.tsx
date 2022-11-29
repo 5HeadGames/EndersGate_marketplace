@@ -1,63 +1,69 @@
-import { Menu, Transition } from "@headlessui/react";
-import { Fragment } from "react";
-import { DotsHorizontalIcon } from "@heroicons/react/solid";
+import React, { Fragment, useRef } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 import clsx from "clsx";
-import { Typography } from "../typography";
-import { Icons } from "@shared/const/Icons";
-import {
-  CaretDownOutlined,
-  CaretUpOutlined,
-  ShoppingCartOutlined,
-} from "@ant-design/icons";
+import { XCircleIcon, XIcon } from "@heroicons/react/solid";
 
 export const DropdownCart: React.FC<any> = ({
-  classTitle,
-  title,
-  items,
+  // title = '',
+  // isLoading = false,
   children,
+  setSideBar,
+  sidebarOpen = false,
+  initialFocus = null,
 }) => {
+  const [set, setSet] = React.useState(false);
+
   return (
-    <div>
-      <Menu as="div" className="relative inline-block text-left">
-        {({ open }) => {
-          console.log("open", open);
-          return (
-            <>
-              <div className="flex items-center justify-center">
-                <Menu.Button className="inline-flex justify-center w-full font-medium bg-transparent focus:outline-none">
-                  <div
-                    className={clsx(
-                      { ["!opacity-100"]: open || items > 0 },
-                      "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
-                      classTitle,
-                    )}
-                  >
-                    {items > 0 && (
-                      <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary">
-                        {items}
-                      </div>
-                    )}
-                    <ShoppingCartOutlined />
-                  </div>
-                </Menu.Button>
+    <>
+      {/* Sidebar mobile */}
+      <Transition.Root show={sidebarOpen} as={Fragment}>
+        <Dialog
+          as="div"
+          static
+          className="fixed w-screen h-[calc(100vh-56px)] top-[56px] right-0 md:flex z-40 hidden bg-overlay-opacity"
+          open={sidebarOpen}
+          onClose={() => setSideBar(false)}
+          initialFocus={initialFocus}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="transition-opacity ease-linear duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="transition-opacity ease-linear duration-300"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Dialog.Overlay className="fixed top-[56px] inset-0 z-0 right-0  blur-xl w-screen h-[calc(100vh-56px)] bg-overlay-opacity" />
+          </Transition.Child>
+          <Transition.Child
+            as={Fragment}
+            enter="transition ease-in-out duration-300 transform"
+            enterFrom="translate-x-full"
+            enterTo="translate-x-0"
+            leave="transition ease-in-out duration-300 transform"
+            leaveFrom="translate-x-0"
+            leaveTo="translate-x-full"
+          >
+            <div className="relative flex-1 flex items-end flex-col w-min  bg-overlay-opacity overflow-auto">
+              <div className="flex flex-col bg-overlay min-h-[calc(100vh-56px)] h-max shrink-0 p-10 pb-24">
+                <div className="flex justify-end py-2 text-white w-full">
+                  <XIcon
+                    color="white"
+                    className="cursor-pointer"
+                    width={20}
+                    onClick={() => setSideBar(false)}
+                  ></XIcon>
+                </div>
+                <div className="flex flex-col items-center justify-center w-min px-4">
+                  {children}
+                </div>
               </div>
-              <Transition
-                as={Fragment}
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <Menu.Items className="absolute top-0 right-3 z-20 md:mt-7 origin-top-right bg-overlay divide-y shadow-lg rounded-[6px] focus:outline-none">
-                  <div>{children}</div>
-                </Menu.Items>
-              </Transition>
-            </>
-          );
-        }}
-      </Menu>
-    </div>
+            </div>
+          </Transition.Child>
+        </Dialog>
+      </Transition.Root>
+    </>
   );
 };

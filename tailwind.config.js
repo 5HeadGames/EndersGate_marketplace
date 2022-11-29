@@ -24,6 +24,7 @@ module.exports = {
       "primary-opacity": "var(--color-primary-opacity)",
       secondary: "var(--color-secondary)",
       overlay: "var(--color-overlay)",
+      "overlay-opacity": "var(--color-overlay-opacity)",
       ["overlay-2"]: "var(--color-overlay-2)",
       ["overlay-3"]: "var(--color-overlay-3)",
       ["green-button"]: "var(--color-green-button)",
@@ -44,7 +45,6 @@ module.exports = {
       },
       white: "var(--color-white)",
       dark: "var(--color-dark)",
-      transparent: "rgba(0, 0, 0, 0)",
       "transparent-color": {
         gray: {
           200: "var(--transparent-gray-200)",
