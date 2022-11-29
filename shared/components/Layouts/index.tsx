@@ -215,10 +215,14 @@ export default function AppLayout({ children }) {
   };
 
   const handleSignOut = async () => {
-    const toggleLogout = handleDisabled("logout");
-    toggleLogout(true);
-    logout(dispatch);
-    toggleLogout(false);
+    if (providerName == "magic") {
+      const toggleLogout = handleDisabled("logout");
+      toggleLogout(true);
+      logout(dispatch);
+      toggleLogout(false);
+    } else if (providerName == "web3react") {
+      window.location.reload();
+    }
   };
 
   const profileItems = [
@@ -247,7 +251,7 @@ export default function AppLayout({ children }) {
     {
       name: "LOG OUT",
       decoration: "line-primary",
-      onClick: providerName === "magic" ? handleSignOut : undefined,
+      onClick: handleSignOut,
       disabled: disabled.logout,
     },
   ];
