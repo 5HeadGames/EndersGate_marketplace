@@ -50,6 +50,9 @@ contract ClockSaleMultiTokens is
     uint256 public ownerCut;
     uint256 public genesisBlock;
 
+    //All the sales price have to have 6 decimals
+    uint256 public decimalsUSD = 6;
+
     // Map from token ID to their corresponding auction.
     mapping(uint256 => Sale) public sales;
     // Nfts allowed in marketplace
@@ -57,6 +60,7 @@ contract ClockSaleMultiTokens is
 
     // token address to priceFeed address
     mapping(address => address) public priceFeedsByToken;
+    mapping(address => uint256) public decimalsByToken;
 
     // Tokens allowed in the marketplace
     address public wcurrency;
@@ -87,6 +91,7 @@ contract ClockSaleMultiTokens is
         address _feeReceiver,
         address _wcurrency,
         address _priceFeedW,
+        uint256 _decimals,
         uint256 _ownerCut
     ) {
         require(_ownerCut <= 10000, "ClockSale:OWNER_CUT"); //less than 100%
@@ -95,6 +100,7 @@ contract ClockSaleMultiTokens is
         genesisBlock = block.number;
         wcurrency = _wcurrency;
         priceFeedsByToken[_wcurrency] = _priceFeedW;
+        decimalsByToken[_wcurrency] = _decimals;
     }
 
     receive() external payable {
@@ -124,12 +130,15 @@ contract ClockSaleMultiTokens is
         AggregatorV3Interface priceFeed = AggregatorV3Interface(
             priceFeedsByToken[tokenToGet]
         );
-        (, int256 price, , , ) = priceFeed.latestRoundData();
-        // int256 price = 1000000;
-        uint256 amountUSD = _auction.priceUSD * quantity;
-        console.log(amountUSD, _tokenId, amountUSD / uint256(price));
-
-        return amountUSD / uint256(price);
+        // (, int256 price, , , ) = priceFeed.latestRoundData();
+        // uint256 decimals = priceFeed.decimals();
+        int256 price = 84679030;
+        uint256 decimals = 8;
+        return
+            (quantity *
+                (_auction.priceUSD) *
+                10**(decimalsByToken[tokenToGet] + decimals - decimalsUSD)) /
+            uint256(price);
     }
 
     function isOnSale(uint256 _tokenId) external view returns (bool) {
@@ -149,7 +158,7 @@ contract ClockSaleMultiTokens is
     function createSale(
         address _nftAddress,
         uint256 _tokenId,
-        uint256 _priceUSD,
+        uint256 _priceUSD, //consider this has to be with 6 decimals in price
         address[] memory _tokens,
         uint256 _amount,
         uint256 _duration
@@ -256,13 +265,8 @@ contract ClockSaleMultiTokens is
         _cancelSale(_tokenId);
     }
 
-    function setNftAllowed(
-        address nftAddress,
-        address priceFeed,
-        bool allow
-    ) external onlyOwner {
+    function setNftAllowed(address nftAddress, bool allow) external onlyOwner {
         isAllowed[nftAddress] = allow;
-        priceFeedsByToken[nftAddress] = priceFeed;
     }
 
     function stopTrading() external onlyOwner whenNotPaused {
@@ -273,9 +277,13 @@ contract ClockSaleMultiTokens is
         _unpause();
     }
 
-    function addToken(address _token, address priceFeed) external onlyOwner {
-        require(!isTokenAllowed(_token), "CLOCK_ACTION: TOKEN ALREADY ALLOWED");
+    function addToken(
+        address _token,
+        address priceFeed,
+        uint256 decimals
+    ) external onlyOwner {
         priceFeedsByToken[_token] = priceFeed;
+        decimalsByToken[_token] = decimals;
     }
 
     function isTokenAllowed(address _token) public view returns (bool) {
@@ -379,11 +387,7 @@ contract ClockSaleMultiTokens is
         );
     }
 
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal virtual {
+    function _beforeTokenTransfer(address from, address to) internal virtual {
         require(
             address(0) == from || address(0) == to,
             "ClockSale:CANNOT_TRANSFER"

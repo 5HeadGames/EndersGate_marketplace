@@ -1,0 +1,9 @@
+{
+  "endersGate": "0x3963660Def83dF8882DacF18A018cC69F0655B7E",
+  "ipfs": "https://ipfs.moralis.io:2053/ipfs/QmXWojzVzRo2NERK3LtrscCXwJ5CrZ8xbnchTgWnTyLDvw",
+  "packIpfs": "https://ipfs.moralis.io:2053/ipfs/QmQA1DNdx4dwjQEJueSUfHAcYzyuaUs8rQhrjLqgLgYnyj",
+  "pack": "0xE5Ae172FaeDd0D56353236573EC0fE97A608F03f",
+  "library": "0xbce871fA4C85a6b25A502363606C8EEA8aF89fFc",
+  "marketplace": "0x41f8F93036Bed7D5cEa26218B0519fE8130E9187",
+  "marketplaceOwnable": "0x424B8c6555728136f8530D7EBf33172cf83d5B71"
+}

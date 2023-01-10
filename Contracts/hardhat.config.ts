@@ -63,6 +63,15 @@ const config: any = {
       url: `https://api.harmony.one`,
       accounts: [process.env.PRIVATE_KEY],
     },
+    matic: {
+      url: process.env.POLYGON_PROVIDER,
+      accounts: [process.env.PRIVATE_KEY || ""],
+    },
+
+    mumbai: {
+      url: process.env.MUMBAI_PROVIDER,
+      accounts: [process.env.PRIVATE_KEY || ""],
+    },
     // harmony_test: {
     //   url: `https://api.s0.b.hmny.io`,
     //   accounts: [process.env.PRIVATE_KEY],
@@ -108,6 +117,14 @@ const config: any = {
     outDir: "typechain",
     target: "ethers-v5",
   } as any,
+  etherscan: {
+    // Your API key for Etherscan
+    // Obtain one at https://etherscan.io/
+    apiKey: {
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
+      polygon: process.env.POLYGONSCAN_API_KEY,
+    },
+  },
 };
 
 export default config;
