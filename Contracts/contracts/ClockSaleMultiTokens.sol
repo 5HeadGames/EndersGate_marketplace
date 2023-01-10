@@ -1,21 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.11;
 
-import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
+import "hardhat/console.sol";
+
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+
 import "./interfaces/IERC1155Custom.sol";
 
 /// @title Clock auction for non-fungible tokens.
 contract ClockSaleMultiTokens is
-    ERC721,
     Ownable,
     Pausable,
     ERC1155Holder,
@@ -35,7 +36,7 @@ contract ClockSaleMultiTokens is
         address nft;
         uint256 nftId;
         uint256 amount;
-        uint256[] prices;
+        uint256 priceUSD;
         address[] tokens;
         uint256 duration;
         uint256 startedAt;
@@ -54,16 +55,18 @@ contract ClockSaleMultiTokens is
     // Nfts allowed in marketplace
     mapping(address => bool) public isAllowed;
 
+    // token address to priceFeed address
+    mapping(address => address) public priceFeedsByToken;
+
     // Tokens allowed in the marketplace
-    address[] public tokensAllowed;
-    address public wones;
+    address public wcurrency;
 
     event SaleCreated(
         uint256 indexed _auctionId,
         address _nft,
         uint256 _nftId,
         uint256 _amount,
-        uint256[] _prices,
+        uint256 priceUSD,
         address[] _tokens,
         uint256 _duration,
         uint256 _startedAt,
@@ -82,16 +85,16 @@ contract ClockSaleMultiTokens is
 
     constructor(
         address _feeReceiver,
-        address _wones,
-        uint256 _ownerCut,
-        string memory _name,
-        string memory _symbol
-    ) ERC721(_name, _symbol) {
+        address _wcurrency,
+        address _priceFeedW,
+        uint256 _ownerCut
+    ) {
         require(_ownerCut <= 10000, "ClockSale:OWNER_CUT"); //less than 100%
         ownerCut = _ownerCut;
         feeReceiver = _feeReceiver;
         genesisBlock = block.number;
-        wones = _wones;
+        wcurrency = _wcurrency;
+        priceFeedsByToken[_wcurrency] = _priceFeedW;
     }
 
     receive() external payable {
@@ -111,19 +114,22 @@ contract ClockSaleMultiTokens is
         return response;
     }
 
-    function getCurrentPrice(uint256 _tokenId, address tokenToGet)
-        external
-        view
-        returns (uint256)
-    {
+    function getPrice(
+        uint256 _tokenId,
+        address tokenToGet,
+        uint256 quantity
+    ) public view returns (uint256) {
         Sale storage _auction = sales[_tokenId];
         require(_isOnSale(_auction), "ClockSale:INVALID_SALE");
-        for (uint256 i = 0; i < _auction.tokens.length; i++) {
-            if (_auction.tokens[i] == tokenToGet) {
-                return _auction.prices[i];
-            }
-        }
-        return 0;
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(
+            priceFeedsByToken[tokenToGet]
+        );
+        (, int256 price, , , ) = priceFeed.latestRoundData();
+        // int256 price = 1000000;
+        uint256 amountUSD = _auction.priceUSD * quantity;
+        console.log(amountUSD, _tokenId, amountUSD / uint256(price));
+
+        return amountUSD / uint256(price);
     }
 
     function isOnSale(uint256 _tokenId) external view returns (bool) {
@@ -143,7 +149,7 @@ contract ClockSaleMultiTokens is
     function createSale(
         address _nftAddress,
         uint256 _tokenId,
-        uint256[] memory _prices,
+        uint256 _priceUSD,
         address[] memory _tokens,
         uint256 _amount,
         uint256 _duration
@@ -166,7 +172,7 @@ contract ClockSaleMultiTokens is
             _nftAddress,
             _tokenId,
             _amount,
-            _prices,
+            _priceUSD,
             _tokens,
             _duration,
             block.timestamp,
@@ -184,23 +190,30 @@ contract ClockSaleMultiTokens is
         uint256 cost;
         for (uint256 i = 0; i < _auction.tokens.length; i++) {
             if (_auction.tokens[i] == tokenToPay) {
-                cost = _auction.prices[i] * amount;
+                cost = getPrice(_tokenId, tokenToPay, amount);
             }
         }
+
+        require(cost != 0, "ClockSale:TOKEN_NOT_ALLOWED");
+
         address buyer = _msgSender();
         _auction.amount -= amount; //this will underflow if is x < 0
 
         if (_auction.amount == 0) _finalizeSale(_tokenId);
 
-        if (tokenToPay == wones) {
+        if (tokenToPay == wcurrency) {
             require(_isOnSale(_auction), "ClockSale:NOT_AVAILABLE");
-            require(msg.value == cost, "ClockSale:NOT_EXACT_VALUE");
-
+            require(msg.value >= cost, "ClockSale:NOT_ENOUGH_VALUE");
+            console.log("main currency", msg.value);
+            console.log(tokenToPay, feeReceiver);
             uint256 ownerAmount = (cost * ownerCut) / 10000;
             uint256 sellAmount = cost - ownerAmount;
-
-            payable(_auction.seller).sendValue(sellAmount);
-            payable(feeReceiver).sendValue(ownerAmount);
+            address payable seller = payable(_auction.seller);
+            (bool success, ) = seller.call{value: sellAmount}("");
+            require(success, "Transfer failed.");
+            (bool success2, ) = feeReceiver.call{value: ownerAmount}("");
+            require(success2, "Transfer failed.");
+            console.log(cost, ownerCut, address(feeReceiver).balance);
         } else {
             require(
                 isTokenAllowed(tokenToPay),
@@ -211,7 +224,8 @@ contract ClockSaleMultiTokens is
                 "CLOCK_AUCTION: INSUFICIENT BALANCE"
             );
             require(
-                IERC20(_token).allowance(_msgSender(), address(this)) > price,
+                IERC20(tokenToPay).allowance(_msgSender(), address(this)) >
+                    cost,
                 "CLOCK_AUCTION: INSUFICIENT ALLOWANCE"
             );
             require(_isOnSale(_auction), "ClockSale:NOT_AVAILABLE");
@@ -238,12 +252,17 @@ contract ClockSaleMultiTokens is
     function cancelSale(uint256 _tokenId) external {
         Sale storage _auction = sales[_tokenId];
         require(_saleExists(_auction), "ClockSale:NOT_AVAILABLE");
-        require(ownerOf(_tokenId) == _msgSender(), "ClockSale:NOT_OWNER");
+        require(_auction.seller == _msgSender(), "ClockSale:NOT_OWNER");
         _cancelSale(_tokenId);
     }
 
-    function setNftAllowed(address nftAddress, bool allow) external onlyOwner {
+    function setNftAllowed(
+        address nftAddress,
+        address priceFeed,
+        bool allow
+    ) external onlyOwner {
         isAllowed[nftAddress] = allow;
+        priceFeedsByToken[nftAddress] = priceFeed;
     }
 
     function stopTrading() external onlyOwner whenNotPaused {
@@ -254,24 +273,21 @@ contract ClockSaleMultiTokens is
         _unpause();
     }
 
-    function addToken(address _token) external onlyOwner {
+    function addToken(address _token, address priceFeed) external onlyOwner {
         require(!isTokenAllowed(_token), "CLOCK_ACTION: TOKEN ALREADY ALLOWED");
-        tokensAllowed.push(_token);
+        priceFeedsByToken[_token] = priceFeed;
     }
 
-    function isTokenAllowed(address _token) public returns (bool) {
-        for (uint256 i = 0; i < tokensAllowed.length; i++) {
-            if (_token == tokensAllowed[i] || _token == wones) {
-                return true;
-            }
-        }
-        return false;
+    function isTokenAllowed(address _token) public view returns (bool) {
+        return
+            abi.encodePacked(priceFeedsByToken[_token]).length > 0
+                ? true
+                : false;
     }
 
     function _finalizeSale(uint256 tokenId) internal {
         Sale storage _auction = sales[tokenId];
         _auction.status = SaleStatus.Successful;
-        _burn(tokenId);
         emit SaleSuccessful(tokenId);
     }
 
@@ -307,7 +323,6 @@ contract ClockSaleMultiTokens is
 
         uint256 auctionID = tokenIdTracker.current();
         sales[auctionID] = _auction;
-        _mint(_auction.seller, auctionID);
         tokenIdTracker.increment();
 
         emit SaleCreated(
@@ -315,7 +330,7 @@ contract ClockSaleMultiTokens is
             _auction.nft,
             _auction.nftId,
             _auction.amount,
-            _auction.prices,
+            _auction.priceUSD,
             _auction.tokens,
             _auction.duration,
             _auction.startedAt,
@@ -323,14 +338,9 @@ contract ClockSaleMultiTokens is
         );
     }
 
-    function _removeSale(uint256 _tokenId) internal {
-        _burn(_tokenId);
-    }
-
     function _cancelSale(uint256 _tokenId) internal {
         Sale storage _auction = sales[_tokenId];
         _auction.status = SaleStatus.Canceled;
-        _removeSale(_tokenId);
         _transfer(_tokenId, _auction.amount, _auction.seller);
         emit SaleCancelled(_tokenId);
     }
@@ -373,7 +383,7 @@ contract ClockSaleMultiTokens is
         address from,
         address to,
         uint256 tokenId
-    ) internal virtual override(ERC721) {
+    ) internal virtual {
         require(
             address(0) == from || address(0) == to,
             "ClockSale:CANNOT_TRANSFER"
@@ -383,7 +393,7 @@ contract ClockSaleMultiTokens is
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC1155Receiver, ERC721)
+        override(ERC1155Receiver)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
