@@ -488,7 +488,7 @@ export default function AppLayout({ children }) {
                           )}
                         >
                           {nFormatter(Web3.utils.fromWei(item.price, "ether"))}{" "}
-                          ONE{" "}
+                          USD{" "}
                           {/* <span className="!text-sm text-overlay-border">
                                     ($1.5k)
                                   </span> */}

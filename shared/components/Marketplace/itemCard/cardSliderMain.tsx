@@ -101,14 +101,14 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                       <div className="flex flex-col text-md font-medium">
                         <p>Price:</p>
                         <span>
-                          {Web3.utils.fromWei(props.price, "ether")} ONE
+                          {Web3.utils.fromWei(props.price, "ether")} USD
                         </span>
                       </div>
                     </div>
                     <div className="flex flex-col text-md font-medium">
                       <p>Highest Bid:</p>
                       <span>
-                        {Web3.utils.fromWei(props.price, "ether")} ONE
+                        {Web3.utils.fromWei(props.price, "ether")} USD
                       </span>
                     </div>
                   </div>
@@ -187,14 +187,14 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                         <div className="flex flex-col text-[12px] font-medium">
                           <p>Price:</p>
                           <span>
-                            {Web3.utils.fromWei(props.price, "ether")} ONE
+                            {Web3.utils.fromWei(props.price, "ether")} USD
                           </span>
                         </div>
                       </div>
                       <div className="flex flex-col text-[12px] font-medium">
                         <p>Highest Bid:</p>
                         <span>
-                          {Web3.utils.fromWei(props.price, "ether")} ONE
+                          {Web3.utils.fromWei(props.price, "ether")} USD
                         </span>
                       </div>
                     </div>

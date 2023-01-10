@@ -55,7 +55,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     try {
       const tokenId = id;
       const { pack, marketplace } = getAddresses();
-      const packs = getContractCustom("ERC1155", pack, provider);
+      const packs = getContractCustom("EndersPack", pack, provider);
       console.log(sellNFTData);
       // const isApprovedForAll = await packs.methods.isApprovedForAll(
       //   user?.ethAddress,

@@ -2,11 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -19,29 +15,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+
     "paths": {
-      "@shared/*": [
-        "shared/*"
-      ],
-      "@redux/*": [
-        "redux/*"
-      ],
-      "utils/*": [
-        "shared/utils/*"
-      ],
-            "components/*": [
-        "shared/components/*"
-      ]
+      "@shared/*": ["shared/*"],
+      "@redux/*": ["redux/*"],
+      "utils/*": ["shared/utils/*"],
+      "components/*": ["shared/components/*"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "Contracts/typechain",
-    "Contracts/**/*.ts"
-  ],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "exclude": ["node_modules", "Contracts/typechain", "Contracts/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

@@ -41,7 +41,7 @@ const TransactionsBoard: React.FC<any> = ({
     },
     {
       title: "Volume",
-      value: nFormatter(totalVolume).toString() + " ONE",
+      value: nFormatter(totalVolume).toString() + " USD",
       // value2: "$1,57M",
       iconHtml: <LineChartOutlined />,
       css: {

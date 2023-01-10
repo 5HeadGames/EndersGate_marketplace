@@ -179,7 +179,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         parseFloat(
                           Web3.utils.fromWei(sale.price, "ether"),
                         )}{" "}
-                      ONE
+                      USD
                     </span>
                   )}
                 </div>
@@ -436,7 +436,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                     <div className="flex flex-row xl:gap-32 gap-16 w-full">
                       <div className="flex flex-col">
                         <h2 className="md:text-3xl text-xl font-[450] text-white whitespace-nowrap">
-                          {Web3.utils.fromWei(sale.price, "ether")} ONE{" "}
+                          {Web3.utils.fromWei(sale.price, "ether")} USD{" "}
                           {/* <span className="!text-sm text-overlay-border">
                             ($1.5k)
                           </span> */}

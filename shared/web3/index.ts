@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import contracts from "shared/contracts";
-import Moralis from "moralis";
+// import Moralis from "moralis";
 
 export const loginMetamaskWallet = async () => {
   const provider = await (window as any).ethereum;
@@ -18,7 +18,7 @@ export const getContract = (
   factory: keyof typeof contracts,
   address: string,
 ) => {
-  const web3 = getWeb3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER);
+  const web3 = getWeb3(process.env.NEXT_PUBLIC_POLYGON_PROVIDER);
   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 
@@ -26,7 +26,7 @@ export const getContractWebSocket = (
   factory: keyof typeof contracts,
   address: string,
 ) => {
-  const web3 = getWeb3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER_WSS);
+  const web3 = getWeb3(process.env.NEXT_PUBLIC_POLYGON_PROVIDER_WSS);
   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 
@@ -49,7 +49,7 @@ export const getContractCustom = (
 
 export const getBalance = async (address: string) => {
   if (!Web3.utils.isAddress(address)) return "0";
-  const web3 = getWeb3(process.env.NEXT_PUBLIC_HARMONY_PROVIDER);
+  const web3 = getWeb3(process.env.NEXT_PUBLIC_POLYGON_PROVIDER);
   const balance = await web3.eth.getBalance(address);
   return web3.utils
     .fromWei(balance)
@@ -57,12 +57,17 @@ export const getBalance = async (address: string) => {
 };
 
 export const getAddresses = () => {
-  const testAddresses = require("../../Contracts/addresses.harmony_test.json");
-  const addresses = require("../../Contracts/addresses.harmony.json");
+  const testAddresses = require("../../Contracts/addresses.mumbai.json");
+  const addresses = require("../../Contracts/addresses.matic.json");
 
-  return process.env.NEXT_PUBLIC_CHAIN_ID === "1666600000"
-    ? addresses
-    : testAddresses;
+  return process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses;
+};
+
+export const getTokensAllowed = () => {
+  const testAddresses = require("../../Contracts/tokensAllowed.mumbai.json");
+  const addresses = require("../../Contracts/tokensAllowed.matic.json");
+
+  return process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses;
 };
 
 export const approveERC1155 = async ({
@@ -76,7 +81,7 @@ export const approveERC1155 = async ({
   to: string;
   address: string;
 }) => {
-  const erc1155Contract = getContractCustom("ERC1155", address, provider);
+  const erc1155Contract = getContractCustom("EndersPack", address, provider);
   console.log(provider, from, to, address);
   console.log(erc1155Contract);
   return await erc1155Contract.methods.setApprovalForAll(to, true).send({
@@ -116,11 +121,7 @@ export const createEvent = ({
         address: string;
       };
 }) => {
-  const UserEvent = Moralis.Object.extend("UserEvent");
-  const sale = new UserEvent();
-  sale.set("type", type);
-  sale.set("metadata", JSON.stringify(metadata));
-  return sale;
+  return "";
 };
 
 export const loadSale = async function prepare(tokenId: any) {
@@ -132,7 +133,7 @@ export const loadSale = async function prepare(tokenId: any) {
     duration: sale.duration,
     nft: sale.nft,
     nftId: sale.nftId,
-    price: sale.price,
+    price: sale.priceUSD,
     seller: sale.seller,
     startedAt: sale.startedAt,
     status: sale.status,

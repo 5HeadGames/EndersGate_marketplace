@@ -1,10 +1,12 @@
-import ClockSale from './ClockSale.json'
-import ERC1155 from './ERC1155.json'
-import GameItems from './GameItems.json'
+import ClockSale from "./ClockSaleMultitoken.json";
+import EndersPack from "./EndersPack.json";
+import EndersGate from "./EndersGate.json";
+import GameItems from "./GameItems.json";
 
 const contracts = {
   ClockSale,
-  ERC1155,
+  EndersGate,
+  EndersPack,
   GameItems,
-}
-export default contracts
+};
+export default contracts;

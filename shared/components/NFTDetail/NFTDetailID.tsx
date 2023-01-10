@@ -7,7 +7,11 @@ import { useAppDispatch, useAppSelector } from "redux/store";
 import { onSellERC1155, onLoadSales, onGetAssets } from "@redux/actions";
 import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
-import { getAddresses, getContractCustom } from "@shared/web3";
+import {
+  getAddresses,
+  getContractCustom,
+  getTokensAllowed,
+} from "@shared/web3";
 import { Typography } from "../common/typography";
 import { useModal } from "@shared/hooks/modal";
 import { approveERC1155 } from "@shared/web3";
@@ -36,6 +40,8 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
   );
 
+  const [tokensSelected, setTokensSelected] = React.useState([]);
+
   const [flippedCard, setFlippedCard] = React.useState(false);
 
   const [sellNFTData, setSellNFTData] = React.useState({
@@ -47,6 +53,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { Modal, show, hide, isShow } = useModal();
 
   const sellNft = async () => {
+    console.log(NFTs.balanceCards, id);
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
       return alert("You don't have enough tokens to sell");
     }
@@ -60,13 +67,17 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       return alert("You have to put a end date higher than 1 day");
     }
     try {
+      console.log("elmio");
+
       const tokenId = id;
       const { endersGate, marketplace } = getAddresses();
       const endersgateInstance = getContractCustom(
-        "ERC1155",
+        "EndersGate",
         endersGate,
         provider.provider,
       );
+
+      console.log("xd", endersgateInstance);
 
       const isApprovedForAll = await endersgateInstance.methods
         .isApprovedForAll(user, marketplace)
@@ -81,6 +92,8 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         });
       }
       setMessage("Listing your tokens");
+      console.log("que ta pasando");
+
       await dispatch(
         onSellERC1155({
           address: endersGate,
@@ -88,13 +101,14 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
           amount: sellNFTData.amount,
           tokenId: tokenId,
+          tokens: tokensSelected,
           duration: sellNFTData.duration.toString(),
           provider: provider.provider,
-          user: user,
+          // user: user,
         }),
       );
     } catch (err) {
-      console.log({ err });
+      console.log({ err }, "error mamawebo");
     }
 
     dispatch(onLoadSales());
@@ -110,7 +124,11 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     });
   };
 
-  console.log(cards[id]?.typeCard?.toLowerCase());
+  React.useEffect(() => {
+    setTokensSelected(getTokensAllowed().map((item) => item.address));
+  }, []);
+
+  const tokensAllowed = getTokensAllowed();
 
   return (
     <>
@@ -331,7 +349,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       <div className="flex flex-col gap-4 w-full items-center px-8">
                         <div className="flex gap-4 w-full justify-between items-center">
                           <label className="text-primary font-bold whitespace-nowrap">
-                            Price NFT
+                            Price per NFT (USD)
                           </label>
                           <input
                             type="number"
@@ -375,6 +393,53 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                               The amount can't be higher than your balance
                             </Typography>
                           )}
+                        </div>
+                        <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
+                          {tokensAllowed.map((item, index) => {
+                            return (
+                              <div
+                                className={clsx(
+                                  "w-40 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
+                                  {
+                                    "bg-overlay-border border-white":
+                                      tokensSelected.includes(item.address),
+                                  },
+                                  {
+                                    "bg-overlay": !tokensSelected.includes(
+                                      item.address,
+                                    ),
+                                  },
+                                )}
+                                onClick={() => {
+                                  if (tokensSelected.includes(item.address)) {
+                                    setTokensSelected((prev) =>
+                                      prev.filter(
+                                        (itemNew) => item.address !== itemNew,
+                                      ),
+                                    );
+                                  } else {
+                                    setTokensSelected((prev) => {
+                                      const newArray = [];
+                                      prev.forEach((item2) =>
+                                        newArray.push(item2),
+                                      );
+                                      newArray.push(item.address);
+                                      return newArray;
+                                    });
+                                  }
+                                }}
+                              >
+                                <img
+                                  src={item.logo}
+                                  className="w-8 h-8"
+                                  alt=""
+                                />
+                                <h2 className="text-white text-xl font-bold">
+                                  {item.name}
+                                </h2>
+                              </div>
+                            );
+                          })}
                         </div>
                         <div className="flex  gap-4 w-full justify-between items-center">
                           <label className="text-primary font-bold whitespace-nowrap">

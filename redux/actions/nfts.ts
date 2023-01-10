@@ -46,16 +46,16 @@ export const onLoadSales = createAsyncThunk(
       .call();
     console.log(rawSales, "a ver");
     const allSales = rawSales.map((sale: string[], i) => ({
-      index: sale[8],
       id: i,
       seller: sale[0],
       nft: sale[1],
       nftId: sale[2],
       amount: sale[3],
       price: sale[4],
-      duration: sale[5],
-      startedAt: sale[6],
-      status: sale[7],
+      tokens: sale[5],
+      duration: sale[6],
+      startedAt: sale[7],
+      status: sale[8],
     }));
     console.log(allSales, "ALL SALES");
     const created = allSales.filter((sale: Sale) => sale.status === "0");
@@ -78,8 +78,8 @@ export const onGetAssets = createAsyncThunk(
   async function prepare(address: string) {
     try {
       const { endersGate, pack } = getAddresses();
-      const cardsContract = getContract("ERC1155", endersGate);
-      const packsContract = getContract("ERC1155", pack);
+      const cardsContract = getContract("EndersGate", endersGate);
+      const packsContract = getContract("EndersPack", pack);
       const packsIds = [0, 1, 2, 3];
       const cardsIds = Object.values(cards)
         .reduce((acc: any[], cur) => acc.concat(cur), [])
@@ -127,9 +127,10 @@ export const onSellERC1155 = createAsyncThunk(
     startingPrice: number | string;
     amount: number | string;
     duration: string;
+    tokens: string[];
     address: string;
     provider: any;
-    user: any;
+    // user: any;
   }) {
     const {
       from,
@@ -138,40 +139,50 @@ export const onSellERC1155 = createAsyncThunk(
       amount,
       duration,
       address,
+      tokens,
       // user,
       provider,
     } = args;
 
     // const relation = user.relation("events");
+    try {
+      const { marketplace } = getAddresses();
+      console.log(marketplace, "hablale");
 
-    const { marketplace } = getAddresses();
-    const marketplaceContract = getContractCustom(
-      "ClockSale",
-      marketplace,
-      provider,
-    );
-    const { transactionHash } = await marketplaceContract.methods
-      .createSale(address, tokenId, startingPrice, amount, duration)
-      .send({ from: from });
+      const marketplaceContract = getContractCustom(
+        "ClockSale",
+        marketplace,
+        provider,
+      );
+      console.log(marketplaceContract, "hablale");
 
-    const event = createEvent({
-      type: "sell",
-      metadata: {
-        from,
-        tokenId,
-        startingPrice,
-        amount,
-        duration,
-        address,
-        transactionHash,
-      },
-    });
+      const { transactionHash } = await marketplaceContract.methods
+        .createSale(address, tokenId, startingPrice, tokens, amount, duration)
+        .send({ from: from });
 
-    await event.save();
-    // relation.add(event);
-    // await user.save();
+      console.log(transactionHash, "hablale");
 
-    return { from, tokenId, startingPrice, amount, duration, address };
+      // const event = createEvent({
+      //   type: "sell",
+      //   metadata: {
+      //     from,
+      //     tokenId,
+      //     startingPrice,
+      //     amount,
+      //     duration,
+      //     address,
+      //     transactionHash,
+      //   },
+      // });
+
+      // await event.save();
+      // relation.add(event);
+      // await user.save();
+
+      return { from, tokenId, startingPrice, amount, duration, address };
+    } catch (err) {
+      console.log({ err });
+    }
   },
 );
 
@@ -205,7 +216,7 @@ export const onBuyERC1155 = createAsyncThunk(
       metadata: { seller, tokenId, amount, bid, transactionHash },
     });
 
-    await event.save();
+    // await event.save();
     // relation.add(event);
     // await user.save();
 
@@ -239,7 +250,7 @@ export const onCancelSale = createAsyncThunk(
       metadata: { tokenId, from: user, transactionHash },
     });
 
-    await event.save();
+    // await event.save();
     // relation.add(event);
     await user.save();
 
