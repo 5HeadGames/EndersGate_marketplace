@@ -88,14 +88,14 @@ export const CHAINS: {
   // Celo
 };
 
-// export const URLS: { [chainId: number]: string[] } = Object.keys(
-//   CHAINS,
-// ).reduce<{ [chainId: number]: string[] }>((accumulator, chainId) => {
-//   const validURLs: string[] = CHAINS[Number(chainId)].urls;
+export const URLS: { [chainId: number]: string[] } = Object.keys(
+  CHAINS,
+).reduce<{ [chainId: number]: string[] }>((accumulator, chainId) => {
+  const validURLs: string[] = CHAINS[Number(chainId)].urls;
 
-//   if (validURLs.length) {
-//     accumulator[Number(chainId)] = validURLs;
-//   }
+  if (validURLs.length) {
+    accumulator[Number(chainId)] = validURLs;
+  }
 
-//   return accumulator;
-// }, {});
+  return accumulator;
+}, {});
