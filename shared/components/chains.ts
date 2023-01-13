@@ -52,7 +52,6 @@ export function getAddChainParameters(
       nativeCurrency: chainInformation.nativeCurrency,
       rpcUrls: chainInformation.urls,
       blockExplorerUrls: chainInformation.blockExplorerUrls,
-      blockExplorer: chainInformation.blockExplorer,
     };
   } else {
     return chainId;
