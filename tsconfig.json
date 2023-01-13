@@ -12,16 +12,38 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "target": "ES6",
-    "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost", "ES2016.Array.Include"],
+    "lib": [
+      "DOM",
+      "ES6",
+      "DOM.Iterable",
+      "ScriptHost",
+      "ES2016.Array.Include"
+    ],
     "paths": {
-      "@shared/*": ["shared/*"],
-      "@redux/*": ["redux/*"],
-      "utils/*": ["shared/utils/*"],
-      "components/*": ["shared/components/*"]
+      "@shared/*": [
+        "shared/*"
+      ],
+      "@redux/*": [
+        "redux/*"
+      ],
+      "utils/*": [
+        "shared/utils/*"
+      ],
+      "components/*": [
+        "shared/components/*"
+      ]
     }
   },
-  "exclude": ["node_modules", "Contracts/typechain", "Contracts/**/*.ts"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "exclude": [
+    "node_modules",
+    "Contracts/typechain",
+    "Contracts/**/*.ts"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
 }

@@ -1,6 +1,5 @@
-import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import Web3 from "web3";
-import Moralis from "moralis";
 
 import * as actionTypes from "../constants";
 import {
@@ -11,7 +10,6 @@ import {
   getTokensAllowed,
 } from "@shared/web3";
 import cards from "../../cards.json";
-import Address from "@shared/components/Address/Address";
 
 const getCardSold = (successfulSales: Sale[]) => {
   return successfulSales.reduce(
