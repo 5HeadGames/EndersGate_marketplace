@@ -200,7 +200,6 @@ export const onBuyERC1155 = createAsyncThunk(
     const { seller, tokenId, token, amount, bid, provider, user } = args;
     // const user = Moralis.User.current();
     // const relation = user.relation("events");
-
     try {
       const { marketplace } = getAddresses();
       const marketplaceContract = getContractCustom(
@@ -208,13 +207,12 @@ export const onBuyERC1155 = createAsyncThunk(
         marketplace,
         provider,
       );
-
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addresses = getTokensAllowed();
       if (
         token == addresses.filter((item) => item.name == "MATIC")[0].address
       ) {
-        const { transactionHash } = await marketplaceContract.methods
+        await marketplaceContract.methods
           .buy(tokenId, amount, token)
           .send({ from: user, value: bid });
       } else {
@@ -224,7 +222,6 @@ export const onBuyERC1155 = createAsyncThunk(
         const price = await marketplaceContract.methods
           .getPrice(tokenId, token, amount)
           .call();
-
         if (allowance < price) {
           await ERC20.methods
             .increaseAllowance(
@@ -235,7 +232,7 @@ export const onBuyERC1155 = createAsyncThunk(
               from: user,
             });
         }
-        const { transactionHash } = await marketplaceContract.methods
+        await marketplaceContract.methods
           .buy(tokenId, amount, token)
           .send({ from: user });
       }
@@ -245,80 +242,7 @@ export const onBuyERC1155 = createAsyncThunk(
     } catch (err) {
       console.log({ err });
     }
-
     return { seller, tokenId, amount, bid, provider };
-  },
-);
-
-export const onBuyBatchERC1155 = createAsyncThunk(
-  actionTypes.BUY_NFT,
-  async function prepare(args: {
-    // seller: string;
-    tokensId: number[] | string[];
-    token: string;
-    bid: string | number;
-    amounts: string[] | number[];
-    provider: any;
-    user: any;
-  }) {
-    const { tokensId, token, amounts, bid, provider, user } = args;
-    // const user = Moralis.User.current();
-    // const relation = user.relation("events");
-
-    try {
-      const { marketplace, MATICUSD } = getAddresses();
-      const marketplaceContract = getContractCustom(
-        "ClockSale",
-        marketplace,
-        provider,
-      );
-      const ERC20 = getContractCustom("ERC20", token, provider);
-      const addresses = getTokensAllowed();
-      if (
-        token == addresses.filter((item) => item.name == "MATIC")[0].address
-      ) {
-        const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
-        const priceMATIC = await Aggregator.methods.latestAnswer().call();
-        const price = Web3.utils.toWei(
-          (((bid as any) * 10 ** 8) / priceMATIC).toString(),
-          "ether",
-        );
-        const { transactionHash } = await marketplaceContract.methods
-          .buyBatch(tokensId, amounts, token)
-          .send({ from: user, value: price });
-      } else {
-        const allowance = await ERC20.methods
-          .allowance(user, marketplace)
-          .call();
-        let price = 0;
-        amounts.map(async (item, i) => {
-          price += await marketplaceContract.methods
-            .getPrice(tokensId[i], token, item)
-            .call();
-        });
-
-        if (allowance < price) {
-          await ERC20.methods
-            .increaseAllowance(
-              marketplace,
-              "1000000000000000000000000000000000000000000000000",
-            )
-            .send({
-              from: user,
-            });
-        }
-        const { transactionHash } = await marketplaceContract.methods
-          .buyBatch(tokensId, amounts, token)
-          .send({ from: user });
-      }
-      // await event.save();
-      // relation.add(event);
-      // await user.save
-    } catch (err) {
-      console.log({ err });
-    }
-
-    return { tokensId, amounts, bid, provider };
   },
 );
 

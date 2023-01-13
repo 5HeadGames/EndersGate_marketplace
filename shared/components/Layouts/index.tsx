@@ -11,8 +11,6 @@ import { MenuIcon } from "@heroicons/react/outline";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppSelector, useAppDispatch } from "redux/store";
 import {
-  onBuyBatchERC1155,
-  onBuyERC1155,
   onGetAssets,
   onLoadSales,
   onUpdateUser,
@@ -275,22 +273,63 @@ export default function AppLayout({ children }) {
   const buyNFTs = async () => {
     try {
       setMessageBuy(`Processing your purchase`);
-      await dispatch(
-        onBuyBatchERC1155({
-          amounts: cart.map((item) => item.quantity),
-          bid: cart
-            ?.map((item: any, i) =>
-              ((parseInt(item.price) / 10 ** 6) * item.quantity).toString(),
-            )
-            .reduce((item: any, acc: any) => {
-              return findSum(item, acc) as any;
-            }),
-          token: tokenSelected,
-          tokensId: cart.map((item) => item.nftId),
-          provider: provider,
-          user: user,
-        }),
+
+      const { amounts, bid, token, tokensId } = {
+        amounts: cart.map((item) => item.quantity),
+        bid: cart
+          ?.map((item: any, i) =>
+            ((parseInt(item.price) / 10 ** 6) * item.quantity).toString(),
+          )
+          .reduce((item: any, acc: any) => {
+            return findSum(item, acc) as any;
+          }),
+        token: tokenSelected,
+        tokensId: cart.map((item) => item.nftId),
+      };
+      const { marketplace, MATICUSD } = getAddresses();
+      const marketplaceContract = getContractCustom(
+        "ClockSale",
+        marketplace,
+        provider,
       );
+      const ERC20 = getContractCustom("ERC20", token, provider);
+      const addresses = getTokensAllowed();
+      if (
+        token == addresses.filter((item) => item.name == "MATIC")[0].address
+      ) {
+        const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
+        const priceMATIC = await Aggregator.methods.latestAnswer().call();
+        const price = Web3.utils.toWei(
+          (((bid as any) * 10 ** 8) / priceMATIC).toString(),
+          "ether",
+        );
+        await marketplaceContract.methods
+          .buyBatch(tokensId, amounts, token)
+          .send({ from: user, value: price });
+      } else {
+        const allowance = await ERC20.methods
+          .allowance(user, marketplace)
+          .call();
+        let price = 0;
+        amounts.map(async (item, i) => {
+          price += await marketplaceContract.methods
+            .getPrice(tokensId[i], token, item)
+            .call();
+        });
+        if (allowance < price) {
+          await ERC20.methods
+            .increaseAllowance(
+              marketplace,
+              "1000000000000000000000000000000000000000000000000",
+            )
+            .send({
+              from: user,
+            });
+        }
+        const { transactionHash } = await marketplaceContract.methods
+          .buyBatch(tokensId, amounts, token)
+          .send({ from: user });
+      }
       dispatch(removeAll());
     } catch (err) {}
 

@@ -62,10 +62,10 @@ const Login = () => {
   return (
     <div className="max-w-[100vw] h-screen overflow-hidden">
       <div className="max-w-[100vw] overflow-hidden h-[100vh] w-full flex flex-col items-center justify-center gap-10">
-        <div className="absolute h-full max-w-full overflow-hidden">
+        <div className="absolute h-full overflow-hidden w-full flex items-center justify-center">
           <img
             src="/images/community.svg"
-            className={`relative min-w-[1920px] min-h-[101vh] top-0 right-0 left-[-8%] mx-auto opacity-25`}
+            className={`relative xl:min-w-[120vw] min-w-[1920px] min-h-[101vh] w-full top-0 right-0 left-[-8%] mx-auto opacity-25`}
             alt=""
           />
         </div>
