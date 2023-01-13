@@ -64,8 +64,8 @@ export const getAddresses = () => {
 };
 
 export const getTokensAllowed = () => {
-  const testAddresses = require("../../tokensAllowed.mumbai.json");
-  const addresses = require("../../tokensAllowed.matic.json");
+  const testAddresses = require("../../Contracts/tokensAllowed.mumbai.json");
+  const addresses = require("../../Contracts/tokensAllowed.matic.json");
 
   return process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses;
 };
