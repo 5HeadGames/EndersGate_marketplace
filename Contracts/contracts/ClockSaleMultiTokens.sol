@@ -130,10 +130,10 @@ contract ClockSaleMultiTokens is
         AggregatorV3Interface priceFeed = AggregatorV3Interface(
             priceFeedsByToken[tokenToGet]
         );
-        // (, int256 price, , , ) = priceFeed.latestRoundData();
-        // uint256 decimals = priceFeed.decimals();
-        int256 price = 84679030;
-        uint256 decimals = 8;
+        (, int256 price, , , ) = priceFeed.latestRoundData();
+        uint256 decimals = priceFeed.decimals();
+        // int256 price = 84679030;
+        // uint256 decimals = 8;
         return
             (quantity *
                 (_auction.priceUSD) *
@@ -167,6 +167,7 @@ contract ClockSaleMultiTokens is
 
         require(isAllowed[_nftAddress], "ClockSale:INVALID_SALE");
         require(_owns(_nftAddress, _seller, _tokenId), "ClockSale:NOT_OWNER");
+        require(_tokens.length > 0, "You have to accept at least one token");
 
         _escrow(_nftAddress, _seller, _tokenId, _amount);
         for (uint256 i = 0; i < _tokens.length; i++) {
