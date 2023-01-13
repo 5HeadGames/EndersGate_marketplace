@@ -64,7 +64,7 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
               className="absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto opacity-50 min-w-[175%]"
               alt=""
             />
-            <div className="flex flex-col relative">
+            <div className="flex flex-col relative h-full justify-between">
               <div className="w-full flex flex-col text-xs gap-1">
                 <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
                   <span>
@@ -109,22 +109,18 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                   <div className="flex justify-between text-md text-white ">
                     <div className="flex items-center gap-2">
                       <img
-                        src="/icons/HARMONY.svg"
+                        src="/icons/POLYGON.svg"
                         className="h-8 w-8"
                         alt=""
                       />
                       <div className="flex flex-col text-md font-medium">
                         <p>Price:</p>
-                        <span>
-                          {Web3.utils.fromWei(props.price, "ether")} USD
-                        </span>
+                        <span>{parseInt(props.price) / 10 ** 6} USD</span>
                       </div>
                     </div>
                     <div className="flex flex-col text-md font-medium">
                       <p>Highest Bid:</p>
-                      <span>
-                        {Web3.utils.fromWei(props.price, "ether")} USD
-                      </span>
+                      <span>{parseInt(props.price) / 10 ** 6} USD</span>
                     </div>
                   </div>
                 )}
@@ -359,22 +355,18 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                     >
                       <div className="flex items-center gap-2">
                         <img
-                          src="/icons/HARMONY.svg"
+                          src="/icons/POLYGON.svg"
                           className="lg:h-8 lg:w-8 w-6 h-6"
                           alt=""
                         />
                         <div className="flex flex-col lg:text-md text-sm font-medium">
                           <p>Price:</p>
-                          <span>
-                            {Web3.utils.fromWei(props.price, "ether")} USD
-                          </span>
+                          <span>{parseInt(props.price) / 10 ** 6} USD</span>
                         </div>
                       </div>
                       <div className="flex flex-col lg:text-md text-sm font-medium">
                         <p>Highest Bid:</p>
-                        <span>
-                          {Web3.utils.fromWei(props.price, "ether")} USD
-                        </span>
+                        <span>{parseInt(props.price) / 10 ** 6} USD</span>
                       </div>
                     </div>
                   )}

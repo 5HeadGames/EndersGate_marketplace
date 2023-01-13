@@ -94,22 +94,18 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                   <div className="flex justify-between text-md text-white ">
                     <div className="flex items-center gap-2">
                       <img
-                        src="/icons/HARMONY.svg"
+                        src="/icons/POLYGON.svg"
                         className="h-8 w-8"
                         alt=""
                       />
                       <div className="flex flex-col text-md font-medium">
                         <p>Price:</p>
-                        <span>
-                          {Web3.utils.fromWei(props.price, "ether")} USD
-                        </span>
+                        <span>{parseInt(props.price) / 10 ** 6} USD</span>
                       </div>
                     </div>
                     <div className="flex flex-col text-md font-medium">
                       <p>Highest Bid:</p>
-                      <span>
-                        {Web3.utils.fromWei(props.price, "ether")} USD
-                      </span>
+                      <span>{parseInt(props.price) / 10 ** 6} USD</span>
                     </div>
                   </div>
                 )}
@@ -180,22 +176,18 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                     >
                       <div className="flex items-center gap-2">
                         <img
-                          src="/icons/HARMONY.svg"
+                          src="/icons/POLYGON.svg"
                           className="h-8 w-8"
                           alt=""
                         />
                         <div className="flex flex-col text-[12px] font-medium">
                           <p>Price:</p>
-                          <span>
-                            {Web3.utils.fromWei(props.price, "ether")} USD
-                          </span>
+                          <span>{parseInt(props.price) / 10 ** 6} USD</span>
                         </div>
                       </div>
                       <div className="flex flex-col text-[12px] font-medium">
                         <p>Highest Bid:</p>
-                        <span>
-                          {Web3.utils.fromWei(props.price, "ether")} USD
-                        </span>
+                        <span>{parseInt(props.price) / 10 ** 6} USD</span>
                       </div>
                     </div>
                   )}
@@ -216,7 +208,7 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
             </div>
           </Link>
 
-          {props.sale.status == 0 &&
+          {props?.sale?.status == 0 &&
             Math.floor(new Date().getTime() / 1000) <=
               parseInt(props.sale?.duration) +
                 parseInt(props.sale?.startedAt) && (

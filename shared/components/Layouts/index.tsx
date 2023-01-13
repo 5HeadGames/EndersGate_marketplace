@@ -111,7 +111,9 @@ export default function AppLayout({ children }) {
   const { account } = useWeb3React();
   const { logout } = useMagicLink();
   const { ethAddress } = useSelector((state: any) => state.layout.user);
-  const { provider, providerName } = useSelector((state: any) => state.layout);
+  const { provider, providerName, tokenToPay } = useSelector(
+    (state: any) => state.layout,
+  );
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
@@ -203,6 +205,7 @@ export default function AppLayout({ children }) {
               .mul(Web3.utils.toBN(sale.quantity))
               .toString(),
             tokenId: sale.nftId,
+            token: tokenToPay,
             provider: provider,
             user: user,
             nftContract: sale.nft === pack ? pack : endersGate,
@@ -466,7 +469,7 @@ export default function AppLayout({ children }) {
                         <div className="flex gap-2 items-end">
                           <img src={Icons.logo} className="w-8 h-8" alt="" />
                           <img
-                            src="icons/HARMONY.svg"
+                            src="icons/POLYGON.svg"
                             className="w-6 h-6"
                             alt=""
                           />
@@ -487,8 +490,7 @@ export default function AppLayout({ children }) {
                             "text-sm font-[700] uppercase whitespace-nowrap w-24",
                           )}
                         >
-                          {nFormatter(Web3.utils.fromWei(item.price, "ether"))}{" "}
-                          USD{" "}
+                          {nFormatter(parseInt(item.price) / 10 ** 6)} USD{" "}
                           {/* <span className="!text-sm text-overlay-border">
                                     ($1.5k)
                                   </span> */}
@@ -505,8 +507,7 @@ export default function AppLayout({ children }) {
                             "text-sm font-[700] uppercase whitespace-nowrap w-max",
                           )}
                         >
-                          {nFormatter(Web3.utils.fromWei(item.price, "ether"))}{" "}
-                          ONE{" "}
+                          {nFormatter(parseInt(item.price) / 10 ** 6)} USD{" "}
                           {/* <span className="!text-sm text-overlay-border">
                                     ($1.5k)
                                   </span> */}
@@ -539,16 +540,16 @@ export default function AppLayout({ children }) {
               </div>
               <h3 className="text-lg font-[700] text-white">
                 {nFormatter(
-                  Web3.utils.fromWei(
+                  parseInt(
                     cart
                       ?.map((item, i) => item.price)
                       .reduce((item, acc) => {
                         return findSum(item, acc);
                       }),
-                    "ether",
-                  ),
+                  ) /
+                    10 ** 6,
                 )}{" "}
-                ONE{" "}
+                USD{" "}
                 {/* <span className="!text-sm text-overlay-border">
                           ($1.5k)
                         </span> */}

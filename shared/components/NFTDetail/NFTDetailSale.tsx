@@ -13,7 +13,7 @@ import { onBuyERC1155, onLoadSales, onGetAssets } from "@redux/actions";
 import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import { AddressText, Type } from "../common/specialFields/SpecialFields";
-import { getAddresses, loadSale } from "@shared/web3";
+import { getAddresses, getTokensAllowed, loadSale } from "@shared/web3";
 import { Typography } from "../common/typography";
 import packs from "../../packs.json";
 import { TimeConverter } from "../common/unixDateConverter/unixConverter";
@@ -46,6 +46,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   };
 
   const cards: any[] = convertArrayCards();
+
+  const [tokenSelected, setTokenSelected] = React.useState({ address: "" });
 
   const [message, setMessage] = React.useState("");
 
@@ -82,6 +84,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
             .mul(Web3.utils.toBN(buyNFTData))
             .toString(),
           tokenId: id,
+          token: tokenSelected.address,
           provider: provider.provider,
           nftContract: isPack ? pack : endersGate,
           user: user,
@@ -101,7 +104,9 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     Math.floor(new Date().getTime() / 1000) >=
       parseInt(sale?.duration) + parseInt(sale?.startedAt);
 
-  console.log(sale);
+  console.log(sale, "sale 2");
+
+  const tokensAllowed = getTokensAllowed();
 
   return (
     <>
@@ -175,17 +180,42 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   </label>
                   {sale && (
                     <span className="text-white w-24 text-center font-bold text-green-button">
-                      {buyNFTData *
-                        parseFloat(
-                          Web3.utils.fromWei(sale.price, "ether"),
-                        )}{" "}
-                      USD
+                      {(buyNFTData * parseInt(sale.price)) / 10 ** 6} USD
                     </span>
                   )}
                 </div>
+                <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
+                  {tokensAllowed
+                    .filter((item) => sale?.tokens?.includes(item.address))
+                    .map((item, index) => {
+                      return (
+                        <div
+                          className={clsx(
+                            "w-28 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
+                            {
+                              "bg-overlay-border border-white":
+                                tokenSelected?.address == item.address,
+                            },
+                            {
+                              "bg-overlay":
+                                tokenSelected?.address !== item.address,
+                            },
+                          )}
+                          onClick={() => {
+                            setTokenSelected(item);
+                          }}
+                        >
+                          <img src={item.logo} className="w-8 h-8" alt="" />
+                          <h2 className="text-white text-lg font-bold">
+                            {item.name}
+                          </h2>
+                        </div>
+                      );
+                    })}
+                </div>
                 <div className="flex gap-4 items-center justify-center">
                   <img
-                    src="/icons/HARMONY.svg"
+                    src="/icons/POLYGON.svg"
                     className="md:h-10 md:w-10 w-8 h-8"
                     alt=""
                   />
@@ -436,13 +466,13 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                     <div className="flex flex-row xl:gap-32 gap-16 w-full">
                       <div className="flex flex-col">
                         <h2 className="md:text-3xl text-xl font-[450] text-white whitespace-nowrap">
-                          {Web3.utils.fromWei(sale.price, "ether")} USD{" "}
+                          {parseInt(sale.price) / 10 ** 6} USD{" "}
                           {/* <span className="!text-sm text-overlay-border">
                             ($1.5k)
                           </span> */}
                         </h2>
                         <img
-                          src="/icons/HARMONY.svg"
+                          src="/icons/POLYGON.svg"
                           className="md:h-10 md:w-10 w-8 h-8"
                           alt=""
                         />

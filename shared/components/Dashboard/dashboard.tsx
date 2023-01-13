@@ -351,22 +351,18 @@ const DashboardComponent = () => {
                           >
                             <div className="flex items-center gap-2">
                               <img
-                                src="/icons/HARMONY.svg"
+                                src="/icons/POLYGON.svg"
                                 className="h-8 w-8"
                                 alt=""
                               />
                               <div className="flex flex-col text-md font-medium">
                                 <p>Price:</p>
-                                <span>
-                                  {Web3.utils.fromWei(a.price, "ether")} ONE
-                                </span>
+                                <span>{parseInt(a.price) / 10 ** 6} USD</span>
                               </div>
                             </div>
                             <div className="flex flex-col text-md font-medium">
                               <p>Highest Bid:</p>
-                              <span>
-                                {Web3.utils.fromWei(a.price, "ether")} ONE
-                              </span>
+                              <span>{parseInt(a.price) / 10 ** 6} USD</span>
                             </div>
                           </div>
                         )}

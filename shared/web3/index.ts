@@ -127,13 +127,26 @@ export const createEvent = ({
 export const loadSale = async function prepare(tokenId: any) {
   const addresses = getAddresses();
   const marketplace = getContract("ClockSale", addresses.marketplace);
-  const sale = await marketplace.methods.sales(tokenId).call();
+  const sale = (await marketplace.methods.getSales([tokenId]).call()).map(
+    (item) => ({
+      seller: item[0],
+      nft: item[1],
+      nftId: item[2],
+      amount: item[3],
+      price: item[4],
+      tokens: item[5],
+      duration: item[6],
+      startedAt: item[7],
+      status: item[8],
+    }),
+  )[0];
   return {
     amount: sale.amount,
     duration: sale.duration,
     nft: sale.nft,
     nftId: sale.nftId,
-    price: sale.priceUSD,
+    tokens: sale.tokens,
+    price: sale.price,
     seller: sale.seller,
     startedAt: sale.startedAt,
     status: sale.status,

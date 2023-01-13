@@ -24,6 +24,7 @@ import { useWeb3React } from "@web3-react/core";
 import { DropdownActions } from "../common/dropdownActions/dropdownActions";
 import { AddressText } from "../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
+import { CHAINS } from "../chains";
 
 const { marketplace, endersGate } = getAddresses();
 
@@ -40,9 +41,8 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
   );
 
-  const [tokensSelected, setTokensSelected] = React.useState([]);
-
   const [flippedCard, setFlippedCard] = React.useState(false);
+  const [tokensSelected, setTokensSelected] = React.useState([]);
 
   const [sellNFTData, setSellNFTData] = React.useState({
     startingPrice: 0,
@@ -98,7 +98,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         onSellERC1155({
           address: endersGate,
           from: user,
-          startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
+          startingPrice: (sellNFTData.startingPrice * 10 ** 6).toString(),
           amount: sellNFTData.amount,
           tokenId: tokenId,
           tokens: tokensSelected,
@@ -394,12 +394,33 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             </Typography>
                           )}
                         </div>
+
+                        <div className="flex  gap-4 w-full justify-between items-center">
+                          <label className="text-primary font-bold whitespace-nowrap">
+                            End Date
+                          </label>
+                          <input
+                            type="date"
+                            className="bg-overlay text-primary text-center w-30 p-1 font-bold rounded-xl border border-overlay-border"
+                            onChange={(e) => {
+                              const date = new Date(e.target.value + " 00:00");
+                              setSellNFTData((prev: any) => {
+                                return {
+                                  ...prev,
+                                  duration:
+                                    Math.floor(date.getTime() / 1000) -
+                                    Math.floor(new Date().getTime() / 1000),
+                                };
+                              });
+                            }}
+                          />
+                        </div>
                         <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
                           {tokensAllowed.map((item, index) => {
                             return (
                               <div
                                 className={clsx(
-                                  "w-40 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
+                                  "w-28 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
                                   {
                                     "bg-overlay-border border-white":
                                       tokensSelected.includes(item.address),
@@ -434,32 +455,12 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                                   className="w-8 h-8"
                                   alt=""
                                 />
-                                <h2 className="text-white text-xl font-bold">
+                                <h2 className="text-white text-lg font-bold">
                                   {item.name}
                                 </h2>
                               </div>
                             );
                           })}
-                        </div>
-                        <div className="flex  gap-4 w-full justify-between items-center">
-                          <label className="text-primary font-bold whitespace-nowrap">
-                            End Date
-                          </label>
-                          <input
-                            type="date"
-                            className="bg-overlay text-primary text-center w-30 p-1 font-bold rounded-xl border border-overlay-border"
-                            onChange={(e) => {
-                              const date = new Date(e.target.value + " 00:00");
-                              setSellNFTData((prev: any) => {
-                                return {
-                                  ...prev,
-                                  duration:
-                                    Math.floor(date.getTime() / 1000) -
-                                    Math.floor(new Date().getTime() / 1000),
-                                };
-                              });
-                            }}
-                          />
                         </div>
                         <div className="py-6">
                           <div className="text-primary text-[12px] text-center flex flex-col items-center justify-center">
@@ -512,7 +513,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                         Blockchain:
                       </p>
                       <p className="text-primary-disabled  font-[400] text-lg">
-                        Harmony (ONE)
+                        {CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]?.name}
                       </p>
                     </div>
                     <div className="w-full flex justify-between py-2 border-b border-overlay-border px-6">
@@ -545,7 +546,10 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       </p>
                       <a
                         href={
-                          "https://explorer.harmony.one/address/" + endersGate
+                          CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]
+                            ?.blockExplorer +
+                          "/address/" +
+                          endersGate
                         }
                         target="_blank"
                         rel="noreferrer"

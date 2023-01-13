@@ -131,7 +131,7 @@ export const useStats = ({
                       nfts.saleSuccessfull[i].startedAt * 1000,
                     ).valueOf() <
                     timePeriod
-                    ? parseFloat(Web3.utils.fromWei(sale.price))
+                    ? parseInt(sale.price) / 10 ** 6
                     : 0;
                 })
                 ?.reduce((acc, cur) => {

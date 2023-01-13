@@ -57,7 +57,7 @@ export const SliderMain = ({ salesDefault, cards }) => {
         "w-full relative flex items-end justify-end rounded-xl overflow-hidden min-h-[300px]",
       )}
     >
-      {arraySlider.length > 2 ? (
+      {arraySlider.length > 3 ? (
         <>
           <div className="absolute bottom-0 left-0 w-full">
             <div className="flex gap-4 items-end justify-between overflow-hidden relative w-full h-[200px] bg-transparent">
@@ -78,22 +78,26 @@ export const SliderMain = ({ salesDefault, cards }) => {
           <div className={`item-card-${arrayPos[3]}`}>
             <NFTCardSlider
               classes={{ root: `cursor-pointer` }}
-              id={arraySlider[arrayPos[3]].nftId}
-              transactionId={arraySlider[arrayPos[3]].id}
-              seller={arraySlider[arrayPos[3]].seller}
+              id={arraySlider[arrayPos[3]]?.nftId}
+              transactionId={arraySlider[arrayPos[3]]?.id}
+              seller={arraySlider[arrayPos[3]]?.seller}
               icon={
-                cards[arraySlider[arrayPos[3]].nftId].properties.image.value
+                cards[arraySlider[arrayPos[3]]?.nftId]?.properties?.image?.value
               }
               sale={arraySlider[arrayPos[3]]}
               // onTimeChange={onTimeChange}
-              name={cards[arraySlider[arrayPos[3]].nftId].properties.name.value}
+              name={
+                cards[arraySlider[arrayPos[3]]?.nftId]?.properties?.name?.value
+              }
               byId={false}
-              price={arraySlider[arrayPos[3]].price}
+              price={arraySlider[arrayPos[3]]?.price}
             />
           </div>
         </>
-      ) : (
+      ) : arraySlider.length === 0 ? (
         <LoadingOutlined />
+      ) : (
+        ""
       )}
     </div>
   );

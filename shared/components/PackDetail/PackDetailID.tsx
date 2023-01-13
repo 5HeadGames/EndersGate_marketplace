@@ -7,7 +7,11 @@ import { useAppDispatch, useAppSelector } from "redux/store";
 import { onSellERC1155, onLoadSales, onGetAssets } from "@redux/actions";
 import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
-import { getAddresses, getContractCustom } from "@shared/web3";
+import {
+  getAddresses,
+  getContractCustom,
+  getTokensAllowed,
+} from "@shared/web3";
 import { Typography } from "../common/typography";
 import packs from "../../packs.json";
 import { useModal } from "@shared/hooks/modal";
@@ -19,6 +23,7 @@ import Tilt from "react-parallax-tilt";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
 import { AddressText } from "../common/specialFields/SpecialFields";
+import { CHAINS } from "../chains";
 
 const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { account: user, provider } = useWeb3React();
@@ -35,6 +40,8 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     amount: 0,
     duration: 0,
   });
+
+  const [tokensSelected, setTokensSelected] = React.useState([]);
 
   const { Modal, show, hide, isShow } = useModal();
   const { pack } = getAddresses();
@@ -79,9 +86,10 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
           amount: sellNFTData.amount,
           tokenId: tokenId,
+          tokens: tokensSelected,
           duration: sellNFTData.duration.toString(),
           provider: provider.provider,
-          user: user,
+          // user: user,
         }),
       );
     } catch (err) {
@@ -104,6 +112,12 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   React.useEffect(() => {
     console.log("nft data", sellNFTData);
   }, [sellNFTData]);
+
+  React.useEffect(() => {
+    setTokensSelected(getTokensAllowed().map((item) => item.address));
+  }, []);
+
+  const tokensAllowed = getTokensAllowed();
 
   return (
     <>
@@ -328,6 +342,53 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             }}
                           />
                         </div>
+                        <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
+                          {tokensAllowed.map((item, index) => {
+                            return (
+                              <div
+                                className={clsx(
+                                  "w-28 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
+                                  {
+                                    "bg-overlay-border border-white":
+                                      tokensSelected.includes(item.address),
+                                  },
+                                  {
+                                    "bg-overlay": !tokensSelected.includes(
+                                      item.address,
+                                    ),
+                                  },
+                                )}
+                                onClick={() => {
+                                  if (tokensSelected.includes(item.address)) {
+                                    setTokensSelected((prev) =>
+                                      prev.filter(
+                                        (itemNew) => item.address !== itemNew,
+                                      ),
+                                    );
+                                  } else {
+                                    setTokensSelected((prev) => {
+                                      const newArray = [];
+                                      prev.forEach((item2) =>
+                                        newArray.push(item2),
+                                      );
+                                      newArray.push(item.address);
+                                      return newArray;
+                                    });
+                                  }
+                                }}
+                              >
+                                <img
+                                  src={item.logo}
+                                  className="w-8 h-8"
+                                  alt=""
+                                />
+                                <h2 className="text-white text-lg font-bold">
+                                  {item.name}
+                                </h2>
+                              </div>
+                            );
+                          })}
+                        </div>
                         <div className="py-6">
                           <div className="text-primary text-[12px] text-center flex flex-col items-center justify-center">
                             {message ===
@@ -379,7 +440,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                         Blockchain:
                       </p>
                       <p className="text-primary-disabled  font-[400] text-lg">
-                        Harmony (ONE)
+                        {CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID].name}
                       </p>
                     </div>
                     <div className="w-full flex justify-between py-2 border-b border-overlay-border px-6">
@@ -411,7 +472,12 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                         Contract:
                       </p>
                       <a
-                        href={"https://explorer.harmony.one/address/" + pack}
+                        href={
+                          CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]
+                            .blockExplorer +
+                          "/address/" +
+                          pack
+                        }
                         target="_blank"
                         rel="noreferrer"
                         className="text-red-primary font-[400] text-lg flex items-center gap-1"

@@ -181,7 +181,7 @@ const Sales = () => {
                           <td className="py-4 px-4">
                             <div className="flex flex-col items-center pr-2">
                               <h2 className="text-white text-lg font-bold">
-                                {Web3.utils.fromWei(sale.price, "ether")} USD
+                                {parseInt(sale.price) / 10 ** 6} USD
                               </h2>
                             </div>
                           </td>

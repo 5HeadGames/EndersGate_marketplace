@@ -32,6 +32,7 @@ interface BasicChainInformation {
 interface ExtendedChainInformation extends BasicChainInformation {
   nativeCurrency: AddEthereumChainParameter["nativeCurrency"];
   blockExplorerUrls: AddEthereumChainParameter["blockExplorerUrls"];
+  blockExplorer: string;
 }
 
 function isExtendedChainInformation(
@@ -51,6 +52,7 @@ export function getAddChainParameters(
       nativeCurrency: chainInformation.nativeCurrency,
       rpcUrls: chainInformation.urls,
       blockExplorerUrls: chainInformation.blockExplorerUrls,
+      blockExplorer: chainInformation.blockExplorer,
     };
   } else {
     return chainId;
@@ -160,7 +162,8 @@ export const CHAINS: {
     ].filter((url) => url !== ""),
     name: "Polygon Mainnet",
     nativeCurrency: MATIC,
-    blockExplorerUrls: ["https://polygonscan.com"],
+    blockExplorerUrls: ["https://mumbai.polygonscan.com"],
+    blockExplorer: "https://polygonscan.com",
   },
   80001: {
     urls: [
@@ -171,6 +174,7 @@ export const CHAINS: {
     name: "Polygon Mumbai",
     nativeCurrency: MATIC,
     blockExplorerUrls: ["https://mumbai.polygonscan.com"],
+    blockExplorer: "https://mumbai.polygonscan.com",
   },
   // Celo
   42220: {

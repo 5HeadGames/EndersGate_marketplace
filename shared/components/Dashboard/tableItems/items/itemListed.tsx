@@ -1,7 +1,7 @@
-import {Typography} from "@shared/components/common/typography";
+import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
-import {Icons} from "@shared/const/Icons";
+import { Icons } from "@shared/const/Icons";
 import {
   AddressText,
   TransactionText,
@@ -104,7 +104,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
           <td className="py-4">
             <div className="flex flex-col items-end pr-2">
               <Typography className="text-white" type="label">
-                {Web3.utils.fromWei(sale.price, "ether")} ONE
+                {nFormatter(parseInt(sale.price) / 10 ** 6)} ONE
               </Typography>
             </div>
           </td>

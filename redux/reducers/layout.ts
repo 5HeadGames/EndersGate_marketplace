@@ -13,6 +13,7 @@ interface InitialState {
   message: string;
   provider: any;
   providerName: string;
+  tokenToPay: string;
   cart: any[];
 }
 
@@ -27,6 +28,7 @@ const INITIAL_STATE: InitialState = {
   },
   providerName: "",
   provider: undefined,
+  tokenToPay: "",
   cart: [],
 };
 

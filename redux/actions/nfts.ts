@@ -8,6 +8,7 @@ import {
   getContract,
   getContractCustom,
   createEvent,
+  getTokensAllowed,
 } from "@shared/web3";
 import cards from "../../cards.json";
 import Address from "@shared/components/Address/Address";
@@ -191,34 +192,61 @@ export const onBuyERC1155 = createAsyncThunk(
   async function prepare(args: {
     seller: string;
     tokenId: number | string;
+    token: string;
     bid: string | number;
     amount: string | number;
     nftContract: string;
     provider: any;
     user: any;
   }) {
-    const { seller, tokenId, amount, bid, provider, user } = args;
+    const { seller, tokenId, token, amount, bid, provider, user } = args;
     // const user = Moralis.User.current();
     // const relation = user.relation("events");
 
-    const { marketplace } = getAddresses();
-    const marketplaceContract = getContractCustom(
-      "ClockSale",
-      marketplace,
-      provider,
-    );
-    const { transactionHash } = await marketplaceContract.methods
-      .buy(tokenId, amount)
-      .send({ from: user, value: bid });
+    try {
+      const { marketplace } = getAddresses();
+      const marketplaceContract = getContractCustom(
+        "ClockSale",
+        marketplace,
+        provider,
+      );
 
-    const event = createEvent({
-      type: "buy",
-      metadata: { seller, tokenId, amount, bid, transactionHash },
-    });
+      const ERC20 = getContractCustom("ERC20", token, provider);
+      const addresses = getTokensAllowed();
+      if (
+        token == addresses.filter((item) => item.name == "MATIC")[0].address
+      ) {
+        const { transactionHash } = await marketplaceContract.methods
+          .buy(tokenId, amount, token)
+          .send({ from: user, value: bid });
+      } else {
+        const allowance = await ERC20.methods
+          .allowance(user, marketplace)
+          .call();
+        const price = await marketplaceContract.methods
+          .getPrice(tokenId, token, amount)
+          .call();
 
-    // await event.save();
-    // relation.add(event);
-    // await user.save();
+        if (allowance < price) {
+          await ERC20.methods
+            .increaseAllowance(
+              marketplace,
+              "1000000000000000000000000000000000000000000000000",
+            )
+            .send({
+              from: user,
+            });
+        }
+        const { transactionHash } = await marketplaceContract.methods
+          .buy(tokenId, amount, token)
+          .send({ from: user });
+      }
+      // await event.save();
+      // relation.add(event);
+      // await user.save
+    } catch (err) {
+      console.log({ err });
+    }
 
     return { seller, tokenId, amount, bid, provider };
   },
