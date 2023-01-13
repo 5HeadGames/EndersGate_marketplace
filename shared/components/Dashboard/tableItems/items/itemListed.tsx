@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Icons } from "@shared/const/Icons";
 import {
   AddressText,
+  nFormatter,
   TransactionText,
   Type,
 } from "@shared/components/common/specialFields/SpecialFields";
