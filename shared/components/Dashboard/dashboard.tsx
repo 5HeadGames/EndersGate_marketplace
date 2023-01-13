@@ -119,7 +119,7 @@ const DashboardComponent = () => {
               <h2 className="font-bold text-white text-xl w-full text-center">
                 Enders Gate Drops
               </h2>
-              <div className="w-full flex">
+              <div className="w-full flex justify-center">
                 <Swiper
                   slidesPerView={2}
                   onSlideChange={() => console.log("slide change")}
@@ -131,16 +131,17 @@ const DashboardComponent = () => {
                     // prevEl: ".swiper-button-prev",
                   }}
                   initialSlide={0}
-                  // centeredSlides={true}
                   modules={[Zoom, Navigation]}
                   className="mySwiper w-full"
                   spaceBetween={10}
                   breakpoints={{
                     700: {
                       slidesPerView: 2,
+                      centeredSlides: false,
                     },
                     100: {
                       slidesPerView: 1,
+                      centeredSlides: true,
                     },
                   }}
                 >
@@ -277,6 +278,7 @@ const DashboardComponent = () => {
                   classes={{ root: "lg:m-4 m-2 cursor-pointer" }}
                   id={a.nftId}
                   transactionId={a.id}
+                  tokens={a.tokens}
                   seller={a.seller}
                   icon={cards[a.nftId].properties.image.value}
                   name={cards[a.nftId].properties.name.value}

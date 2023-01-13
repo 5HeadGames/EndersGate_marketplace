@@ -191,13 +191,27 @@ contract ClockSaleMultiTokens is
         _addSale(_auction);
     }
 
+    function buyBatch(
+        uint256[] memory tokensId,
+        uint256[] memory amounts,
+        address tokenToPay
+    ) public {
+        require(
+            tokensId.length == amounts.length,
+            "Array Lenght mus be the same of amount and Ids"
+        );
+        for (uint256 i = 0; i < tokensId.length; i++) {
+            buy(tokensId[i], amounts[i], tokenToPay);
+        }
+    }
+
     function buy(
         uint256 _tokenId,
         uint256 amount,
         address tokenToPay
-    ) external payable nonReentrant whenNotPaused {
+    ) public payable nonReentrant whenNotPaused {
         Sale storage _auction = sales[_tokenId];
-        uint256 cost;
+        uint256 cost = 0;
         for (uint256 i = 0; i < _auction.tokens.length; i++) {
             if (_auction.tokens[i] == tokenToPay) {
                 cost = getPrice(_tokenId, tokenToPay, amount);

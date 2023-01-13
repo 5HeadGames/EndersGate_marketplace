@@ -42,6 +42,7 @@ export const nFormatter = (num) => {
 export function findSum(str1, str2) {
   // Before proceeding further, make
   // sure length of str2 is larger.
+  console.log(str1, str2, "sum");
   if (str1.length > str2.length) {
     let t = str1;
     str1 = str2;
@@ -56,8 +57,8 @@ export function findSum(str1, str2) {
     n2 = str2.length;
 
   // Reverse both of Strings
-  str1 = str1.split("").reverse().join("");
-  str2 = str2.split("").reverse().join("");
+  str1 = str1?.split("").reverse().join("");
+  str2 = str2?.split("").reverse().join("");
 
   let carry = 0;
   for (let i = 0; i < n1; i++) {

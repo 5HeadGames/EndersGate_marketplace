@@ -11,6 +11,7 @@ import { MenuIcon } from "@heroicons/react/outline";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppSelector, useAppDispatch } from "redux/store";
 import {
+  onBuyBatchERC1155,
   onBuyERC1155,
   onGetAssets,
   onLoadSales,
@@ -37,6 +38,8 @@ import packs from "../../packs.json";
 import {
   getAddresses,
   getContract,
+  getContractCustom,
+  getTokensAllowed,
   getWeb3,
   loginMetamaskWallet,
 } from "@shared/web3";
@@ -48,6 +51,67 @@ import { DropdownCart } from "../common/dropdownCart/dropdownCart";
 import { convertArrayCards } from "../common/convertCards";
 import Web3 from "web3";
 import { useSelector } from "react-redux";
+
+type ButtonsTypes = { logout: boolean; userData: boolean };
+
+const navItems = [
+  {
+    name: "HOME",
+    link: "/",
+    icon: <AreaChartOutlined />,
+  },
+  { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
+];
+
+export const Message: React.FunctionComponent<{
+  content: string;
+  open: boolean;
+}> = (props) => {
+  const { content, open } = props;
+
+  return (
+    <div
+      className={clsx(
+        `absolute bottom-3.5 left-3.5 bg-purple-300 px-10 py-4 rounded-md`,
+        "ease-out duration-300",
+        open ? "scale-100" : "scale-0",
+      )}
+    >
+      {content}
+    </div>
+  );
+};
+
+export const Logo = () => (
+  <Link href="/">
+    <div className="md:py-0 py-2 flex gap-2 items-center cursor-pointer">
+      <img className="h-6" src={Icons.logo5HG} alt="logo" />
+      <img className="h-6 xl:block hidden" src={Icons.logoenders} alt="logo" />
+      <img
+        className="h-6 block xl:hidden"
+        src={Icons.logoendersmobile}
+        alt="logo"
+      />
+    </div>
+  </Link>
+);
+
+export const NavbarItem = ({ name, link, route }) => {
+  return (
+    <Link href={link}>
+      <a className={clsx("py-2 relative")} href={link}>
+        <div
+          className={clsx(
+            { "opacity-50": link !== route },
+            "gap-2 flex items-center text-white hover:opacity-100",
+          )}
+        >
+          <h3 className={clsx("text-md font-[500]")}>{name}</h3>
+        </div>
+      </a>
+    </Link>
+  );
+};
 
 const styles = {
   content: {
@@ -65,28 +129,13 @@ const styles = {
   // },
 };
 
-type ButtonsTypes = { logout: boolean; userData: boolean };
-
-const navItems = [
-  {
-    name: "HOME",
-    link: "/",
-    icon: <AreaChartOutlined />,
-  },
-  { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
-
-  // {
-  //   link: "/profile/inventory",
-  //   name: "INVENTORY",
-  //   icon: <GoldenFilled />,
-  // },
-];
-
 export default function AppLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [cartOpen, setCartOpen] = React.useState(false);
+  const [tokenSelected, setTokenSelected] = React.useState("");
   const [messageBuy, setMessageBuy] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [priceMatic, setPriceMatic] = React.useState("0");
   const refSidebarMobile = React.useRef(null);
   const refCartMobile = React.useRef(null);
   const [isExecuted, setIsExecuted] = React.useState(false);
@@ -109,12 +158,11 @@ export default function AppLayout({ children }) {
 
   const router = useRouter();
   const { account } = useWeb3React();
-  const { logout } = useMagicLink();
+  const { logout, showWallet } = useMagicLink();
   const { ethAddress } = useSelector((state: any) => state.layout.user);
-  const { provider, providerName, tokenToPay } = useSelector(
-    (state: any) => state.layout,
-  );
+  const { provider, providerName } = useSelector((state: any) => state.layout);
   const dispatch = useAppDispatch();
+  const tokensAllowed = getTokensAllowed();
 
   React.useEffect(() => {
     console.log(account);
@@ -139,13 +187,13 @@ export default function AppLayout({ children }) {
     }
   }, [ethAddress]);
 
-  const { pack, endersGate } = getAddresses();
+  const { pack, endersGate, MATICUSD } = getAddresses();
 
   const chainChangedHandler = async () => {
     // window.location.reload();
     const web3 = await getWeb3();
     const networkId = await web3.eth.net.getId();
-    if (networkId != 1666600000 && networkId != 137) {
+    if (networkId != 137 && networkId != 80001) {
       setNotAvailable({
         message: "Change your network to harmony or polygon mainnet please",
         value: true,
@@ -175,8 +223,8 @@ export default function AppLayout({ children }) {
   }
 
   const initApp = async () => {
-    const addresses = getAddresses();
-    const marketplace = getContract("ClockSale", addresses.marketplace);
+    // const addresses = getAddresses();
+    // const marketplace = getContract("ClockSale", addresses.marketplace);
     await dispatch(onLoadSales());
   };
 
@@ -185,8 +233,40 @@ export default function AppLayout({ children }) {
   }, []);
 
   React.useEffect(() => {
+    console.log(user);
     if (user) dispatch(onGetAssets(user));
   }, [user]);
+
+  React.useEffect(() => {
+    if (cart.length > 0) {
+      getPriceMatic();
+    } else {
+      setPriceMatic("0");
+    }
+  }, [cart]);
+
+  const getPriceMatic = async () => {
+    const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
+    const priceMATIC = await Aggregator.methods.latestAnswer().call();
+    const price = (
+      (parseInt(
+        cart
+          ?.map((item: any, i) =>
+            ((parseInt(item.price) / 10 ** 6) * item.quantity).toString(),
+          )
+          .reduce((item: any, acc: any) => {
+            return findSum(item, acc) as any;
+          }) as any,
+      ) *
+        10 ** 8) /
+      priceMATIC
+    )
+      .toFixed(2)
+      .toString();
+
+    console.log(price);
+    setPriceMatic(price);
+  };
 
   const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
     setDisabled((prev) => ({ ...prev, [field]: value }));
@@ -194,25 +274,24 @@ export default function AppLayout({ children }) {
 
   const buyNFTs = async () => {
     try {
-      cart.forEach(async (sale, i) => {
-        setMessageBuy(`Running ${i + 1} of ${cart.length} transactions`);
-        await dispatch(
-          onBuyERC1155({
-            seller: sale.seller,
-            amount: sale.quantity,
-            bid: Web3.utils
-              .toBN(sale.price)
-              .mul(Web3.utils.toBN(sale.quantity))
-              .toString(),
-            tokenId: sale.nftId,
-            token: tokenToPay,
-            provider: provider,
-            user: user,
-            nftContract: sale.nft === pack ? pack : endersGate,
-          }),
-        );
-        dispatch(removeFromCart({ id: sale.id }));
-      });
+      setMessageBuy(`Processing your purchase`);
+      await dispatch(
+        onBuyBatchERC1155({
+          amounts: cart.map((item) => item.quantity),
+          bid: cart
+            ?.map((item: any, i) =>
+              ((parseInt(item.price) / 10 ** 6) * item.quantity).toString(),
+            )
+            .reduce((item: any, acc: any) => {
+              return findSum(item, acc) as any;
+            }),
+          token: tokenSelected,
+          tokensId: cart.map((item) => item.nftId),
+          provider: provider,
+          user: user,
+        }),
+      );
+      dispatch(removeAll());
     } catch (err) {}
 
     setMessageBuy(``);
@@ -277,10 +356,11 @@ export default function AppLayout({ children }) {
     >
       <nav
         className={clsx(
-          "fixed top-0 z-10",
+          "fixed top-0 z-40",
           "bg-overlay",
-          "w-[100%] px-10 py-2 flex flex-row items-center gap-x-4 shadow-md",
+          "w-[100%] md:px-10 px-4 py-2 flex flex-row items-center gap-x-4 shadow-md",
         )}
+        style={styles.content}
       >
         <div className="w-full gap-2 flex">
           <Logo />
@@ -394,30 +474,53 @@ export default function AppLayout({ children }) {
             />
           )}
         </div>
-        <div
-          className="md:hidden flex"
-          onClick={() => {
-            setSidebarOpen((prev) => !prev);
-          }}
-        >
+        <div className="md:hidden flex gap-3">
+          <div
+            className={clsx(
+              { ["!opacity-100"]: cartOpen || cart.length > 0 },
+              "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
+            )}
+            onClick={() => {
+              setCartOpen(true);
+            }}
+          >
+            {cart.length > 0 && (
+              <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary">
+                {cart.length}
+              </div>
+            )}
+            <ShoppingCartOutlined />
+          </div>
           {!sidebarOpen ? (
             <MenuIcon
               className="h-6 w-6 text-primary cursor-pointer"
               aria-hidden="true"
+              onClick={() => {
+                setSidebarOpen((prev) => !prev);
+              }}
             />
           ) : (
             <XIcon
               className="h-6 w-6 text-primary cursor-pointer"
               aria-hidden="true"
+              onClick={() => {
+                setSidebarOpen((prev) => !prev);
+              }}
             />
           )}
         </div>
       </nav>
+
       <SidebarMobile
         initialFocus={refSidebarMobile}
         setSidebarOpen={setSidebarOpen}
         sidebarOpen={sidebarOpen}
         navItems={navItems}
+        cart={cart}
+        setCartOpen={setCartOpen}
+        cartOpen={cartOpen}
+        providerName={providerName}
+        profileItems={profileItems}
       />
       <DropdownCart
         sidebarOpen={cartOpen}
@@ -426,13 +529,21 @@ export default function AppLayout({ children }) {
         setSideBar={setCartOpen}
       >
         {cart.length ? (
-          <div className="flex flex-col items-center border border-overlay-border rounded-md min-w-[500px] w-max py-2">
+          <div className="flex flex-col items-center border border-overlay-border rounded-md md:min-w-[500px] md:w-max py-2">
             <div className="flex justify-between gap-4 w-full">
               <h2 className="text-xl font-bold text-white py-4 px-4">
                 Your Cart
               </h2>
               <h2 className="text-lg font-bold text-primary-disabled py-4 px-4">
-                {cart.length} Item{cart.length > 1 ? "s" : ""}
+                {cart
+                  .map((item) => item.quantity)
+                  .reduce((acc, red) => acc + red)}{" "}
+                Item
+                {cart
+                  .map((item) => item.quantity)
+                  .reduce((acc, red) => acc + red) > 1
+                  ? "s"
+                  : ""}
               </h2>{" "}
             </div>
             <div className="px-4 py-2 pb-4 gap-2 flex flex-col items-center w-full">
@@ -508,11 +619,9 @@ export default function AppLayout({ children }) {
                           )}
                         >
                           {nFormatter(parseInt(item.price) / 10 ** 6)} USD{" "}
-                          {/* <span className="!text-sm text-overlay-border">
-                                    ($1.5k)
-                                  </span> */}
                         </h3>
                       </div>
+                      <div className="text-lg">x{item.quantity}</div>
                       <div
                         className="rounded-full p-1 w-8 h-8 border border-overlay-border hover:bg-red-primary text-white shrink-0"
                         onClick={() => {
@@ -526,6 +635,42 @@ export default function AppLayout({ children }) {
                 );
               })}
             </div>
+            <div className="flex  gap-4 pb-4 w-full flex-wrap items-center justify-center">
+              {tokensAllowed
+                .filter((tokenAllowed) => {
+                  let intersection = true;
+                  cart.forEach((item) => {
+                    if (!item.tokens.includes(tokenAllowed.address)) {
+                      intersection = false;
+                    }
+                  });
+                  return intersection;
+                })
+                .map((item, index) => {
+                  return (
+                    <div
+                      className={clsx(
+                        "w-20 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
+                        {
+                          "bg-overlay-border border-white":
+                            tokenSelected == item.address,
+                        },
+                        {
+                          "bg-overlay": tokenSelected !== item.address,
+                        },
+                      )}
+                      onClick={() => {
+                        setTokenSelected(item.address);
+                      }}
+                    >
+                      <img src={item.logo} className="w-6 h-6" alt="" />
+                      <h2 className="text-white text-[13px] font-bold">
+                        {item.name}
+                      </h2>
+                    </div>
+                  );
+                })}
+            </div>
             <div className="flex gap-6 justify-between w-full text-md text-xl py-4 px-8 border-y border-overlay-border bg-secondary">
               <div className="flex gap-1 items-center">
                 <img src={Icons.logo} className="w-8 h-8" alt="" />
@@ -538,23 +683,54 @@ export default function AppLayout({ children }) {
                   <span className="text-white font-bold">HG</span> Marketplace:
                 </h3>
               </div>
-              <h3 className="text-lg font-[700] text-white">
-                {nFormatter(
-                  parseInt(
+              <div className="flex flex-col gap items-end">
+                <h3 className="text-[14px] font-[700] text-white">
+                  {parseInt(
                     cart
-                      ?.map((item, i) => item.price)
-                      .reduce((item, acc) => {
-                        return findSum(item, acc);
-                      }),
+                      ?.map((item: any, i) =>
+                        (parseInt(item.price) * item.quantity).toString(),
+                      )
+                      .reduce((item: any, acc: any) => {
+                        return findSum(item, acc) as any;
+                      }) as any,
                   ) /
-                    10 ** 6,
-                )}{" "}
-                USD{" "}
-                {/* <span className="!text-sm text-overlay-border">
+                    10 ** 6}{" "}
+                  USD
+                  {/* <span className="!text-sm text-overlay-border">
                           ($1.5k)
                         </span> */}
-              </h3>
+                </h3>
+                {tokensAllowed
+                  .filter((item) => item.name == "MATIC")
+                  .filter((tokenAllowed) => {
+                    let intersection = true;
+                    cart.forEach((item) => {
+                      if (!item.tokens.includes(tokenAllowed.address)) {
+                        intersection = false;
+                      }
+                    });
+                    return intersection;
+                  }).length > 0 && (
+                  <h3 className="text-[14px] font-[700] text-white">
+                    {priceMatic} MATIC
+                  </h3>
+                )}
+              </div>
             </div>
+            {providerName == "magic" && (
+              <div className="text-[12px] text-white pt-4 font-bold">
+                Don't have crypto? Click{" "}
+                <span
+                  className="text-green-button cursor-pointer"
+                  onClick={() => {
+                    showWallet();
+                  }}
+                >
+                  Here
+                </span>{" "}
+                and buy by using Magic Connect on-ramp
+              </div>
+            )}
             {messageBuy !== "" ? (
               <div className="py-2 text-lg text-white font-bold text-center w-full">
                 {messageBuy}
@@ -599,53 +775,3 @@ export default function AppLayout({ children }) {
     </Layout>
   );
 }
-
-export const Message: React.FunctionComponent<{
-  content: string;
-  open: boolean;
-}> = (props) => {
-  const { content, open } = props;
-
-  return (
-    <div
-      className={clsx(
-        `absolute bottom-3.5 left-3.5 bg-purple-300 px-10 py-4 rounded-md`,
-        "ease-out duration-300",
-        open ? "scale-100" : "scale-0",
-      )}
-    >
-      {content}
-    </div>
-  );
-};
-
-export const Logo = () => (
-  <Link href="/">
-    <div className="md:py-0 py-2 flex gap-2 items-center cursor-pointer">
-      <img className="h-6" src={Icons.logo5HG} alt="logo" />
-      <img className="h-6 xl:block hidden" src={Icons.logoenders} alt="logo" />
-      <img
-        className="h-6 block xl:hidden"
-        src={Icons.logoendersmobile}
-        alt="logo"
-      />
-    </div>
-  </Link>
-);
-
-export const NavbarItem = ({ name, link, route }) => {
-  return (
-    <Link href={link}>
-      <a className={clsx("py-2 relative")} href={link}>
-        <div
-          className={clsx(
-            { "opacity-50": link !== route },
-            "gap-2 flex items-center text-white hover:opacity-100",
-          )}
-        >
-          <h3 className={clsx("text-md font-[500]")}>{name}</h3>
-        </div>
-      </a>
-    </Link>
-  );
-};

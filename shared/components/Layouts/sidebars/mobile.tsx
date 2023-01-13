@@ -14,11 +14,14 @@ import {
   GoldenFilled,
   RightOutlined,
   ShopOutlined,
+  ShoppingCartOutlined,
   TwitterOutlined,
   WalletOutlined,
 } from "@ant-design/icons";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
+import { NavbarItem } from "..";
+import { Dropdown } from "../../common/dropdown/dropdown";
 
 interface LayoutDashboardProps {
   title?: string;
@@ -27,15 +30,25 @@ interface LayoutDashboardProps {
   setSidebarOpen?: any;
   initialFocus?: any;
   navItems?: any;
+  cart: any;
+  setCartOpen: any;
+  cartOpen: any;
+  providerName: string;
+  profileItems: any;
 }
 export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
   // title = '',
   // isLoading = false,
   // children,
+  setCartOpen,
+  cart,
   navItems,
   sidebarOpen = false,
+  cartOpen,
   setSidebarOpen = {},
   initialFocus = null,
+  providerName,
+  profileItems,
 }) => {
   const router = useRouter();
   // const { user } = useMoralis();
@@ -100,6 +113,87 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                       </Fragment>
                     );
                   })}
+                  {user ? (
+                    <>
+                      {/* <div
+                        className={clsx(
+                          "flex items-center px-3 pb-3 text-xl hover:opacity-90 text-base rounded-md  relative text-primary font-[500]",
+                        )}
+                        onClick={() => {
+                          setSidebarOpen(false);
+                          setCartOpen(true);
+                        }}
+                      >
+                        {cart.length > 0 && (
+                          <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary">
+                            {cart.length}
+                          </div>
+                        )}
+                        <span className="opacity-50">MY CART</span>
+                      </div> */}
+
+                      <Dropdown
+                        classTitle={
+                          "text-white opacity-50 hover:opacity-100 font-bold pl-3"
+                        }
+                        title={"MY ACCOUNT"}
+                      >
+                        <div className="flex flex-col items-center px-4 border border-overlay-border rounded-xl">
+                          {profileItems.map((item, index) => {
+                            console.log(
+                              providerName,
+                              item.name === "LOG OUT" &&
+                                providerName === "magic",
+                            );
+                            return (
+                              <>
+                                {item.onClick ? (
+                                  <div
+                                    className={clsx(
+                                      "gap-2 py-2 flex items-center text-white opacity-50 hover:opacity-100 cursor-pointer",
+                                    )}
+                                    onClick={item.onClick}
+                                  >
+                                    <h3 className={clsx("text-md font-bold")}>
+                                      {item.name}
+                                    </h3>
+                                  </div>
+                                ) : (
+                                  <NavbarItem
+                                    key={index}
+                                    name={item.name}
+                                    link={item.link}
+                                    route={router.asPath}
+                                  />
+                                )}
+                              </>
+                            );
+                          })}
+                        </div>
+                      </Dropdown>
+                    </>
+                  ) : (
+                    <Fragment key={"nav-mobile"}>
+                      <Link
+                        href={user ? "/profile" : "/login"}
+                        key={"nav-desktop-"}
+                      >
+                        <p
+                          className={clsx(
+                            "group flex items-center px-3 pb-3 text-xl  hover:opacity-90 text-base rounded-md  relative text-primary font-[500]",
+                            {
+                              "opacity-50": user
+                                ? "/profile"
+                                : "/login" !== router.asPath,
+                            },
+                          )}
+                          onClick={() => setSidebarOpen(false)}
+                        >
+                          {user ? "MY ACCOUNT" : "LOG IN"}
+                        </p>
+                      </Link>
+                    </Fragment>
+                  )}
                 </nav>
               </div>
             </div>

@@ -5,7 +5,7 @@ import Web3 from "web3";
 import { onUpdateUser } from "@redux/actions";
 import { networkConfigs } from "@shared/helpers/networks";
 
-const getMagicConfig = (networkId: number) => {
+const getMagicConfig = (networkId: any) => {
   const network = networkConfigs[networkId];
   return {
     rpcUrl: network["rpc"],
@@ -34,10 +34,12 @@ export default function useMagicLink(networkId: number = 137) {
       ? process.env.NEXT_PUBLIC_MAGIC_KEY
       : "";
 
-    console.log(getMagicConfig(137), "lamama");
+    const chainId = process.env.NEXT_PUBLIC_CHAIN_ID
+      ? process.env.NEXT_PUBLIC_CHAIN_ID
+      : 80001;
 
     const magic: any = new Magic(key, {
-      network: getMagicConfig(137),
+      network: getMagicConfig(chainId),
       locale: "en_US",
       extensions: [new ConnectExtension()],
     });

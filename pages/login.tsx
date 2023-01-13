@@ -65,11 +65,11 @@ const Login = () => {
         <div className="absolute h-full max-w-full overflow-hidden">
           <img
             src="/images/community.svg"
-            className={`relative min-w-[120vw] min-h-[101vh] top-0 right-0 left-[-8%] mx-auto opacity-25`}
+            className={`relative min-w-[1920px] min-h-[101vh] top-0 right-0 left-[-8%] mx-auto opacity-25`}
             alt=""
           />
         </div>
-        <h1 className="font-bold text-white text-3xl relative">
+        <h1 className="font-bold text-white text-3xl relative text-center">
           JOIN TO <span className="text-red-primary font-bold">5</span>
           <span className="text-white font-bold">HEADGAMES</span> MARKETPLACE
         </h1>

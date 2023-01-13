@@ -22,6 +22,12 @@ export const networkConfigs = {
     blockExplorerURl: "https://polygonscan.com/",
     currencySymbol: "MATIC",
   },
+  80001: {
+    name: "Polygon Mumbai",
+    rpc: process.env["NEXT_PUBLIC_POLYGON_RPC"] || publicRpc["polygon"],
+    blockExplorerURl: "https://mumbai.polygonscan.com/",
+    currencySymbol: "MATIC",
+  },
 };
 
 export const getNativeByChain = (chainId) =>

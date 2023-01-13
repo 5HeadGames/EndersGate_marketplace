@@ -18,6 +18,9 @@ import { addCart, removeFromCart } from "@redux/actions";
 import { useRouter } from "next/router";
 import { Input } from "@shared/components/common/form/input";
 import { useForm } from "react-hook-form";
+import { useToasts } from "react-toast-notifications";
+import { getTokensAllowed } from "@shared/web3";
+import Sales from "@shared/components/Profile/sales/sales";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -27,6 +30,7 @@ interface Props
   classes?: Partial<Record<"root", string>>;
   icon?: string;
   id: any;
+  tokens?: any;
   transactionId?: any;
   name?: any;
   balance?: any;
@@ -41,12 +45,13 @@ interface Props
 const NFTCard: React.FunctionComponent<Props> = (props) => {
   const { classes, ...rest } = props;
   const dispatch = useAppDispatch();
-  const { cart } = useSelector((state: any) => state.layout);
+  const { cart, user } = useSelector((state: any) => state.layout);
   const [hoverAll, setHoverAll] = React.useState(false);
   const [hoverBuy, setHoverBuy] = React.useState(false);
   const [quantity, setQuantity] = React.useState(1);
   const router = useRouter();
   const { register, handleSubmit } = useForm();
+  const { addToast } = useToasts();
 
   return (
     <>
@@ -115,12 +120,16 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                       />
                       <div className="flex flex-col text-md font-medium">
                         <p>Price:</p>
-                        <span>{parseInt(props.price) / 10 ** 6} USD</span>
+                        <span>
+                          {Web3.utils.fromWei(props.price, "ether")} MATIC
+                        </span>
                       </div>
                     </div>
                     <div className="flex flex-col text-md font-medium">
                       <p>Highest Bid:</p>
-                      <span>{parseInt(props.price) / 10 ** 6} USD</span>
+                      <span>
+                        {Web3.utils.fromWei(props.price, "ether")} MATIC
+                      </span>
                     </div>
                   </div>
                 )}
@@ -155,10 +164,13 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                 <div className="w-full flex flex-col text-xs gap-1">
                   <div className="w-full lg:text-lg text-md flex justify-between rounded-xl p-2 bg-secondary">
                     <span>
-                      Card #{props.id !== undefined ? props.id : "12345"}
+                      Card #
+                      {props.id !== undefined
+                        ? props.id + "-" + props.transactionId
+                        : "12345"}
                     </span>
-                    {props.balance && <span>x{props.balance}</span>}
-                    {<span>#{props.transactionId}</span>}
+                    {props.sale.amount && <span>x{props.sale.amount}</span>}
+                    {/* {<span>#{props.transactionId}</span>} */}
                   </div>
                 </div>
                 <div className="w-full lg:h-80 h-48 flex justify-center items-center my-6 relative">
@@ -179,11 +191,11 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                           className={clsx(
                             "rounded-full p-2 flex w-10 h-10 items-center justify-center border-overlay-border border cursor-pointer",
                             {
-                              ["gap-1 !w-20 px-1"]:
+                              ["gap-1 !w-20 px-3 text-center"]:
                                 hoverBuy &&
                                 cart.filter((e) => e.id === props.transactionId)
                                   .length == 0 &&
-                                parseInt(props.sale) > 1,
+                                parseInt(props.sale.amount) > 1,
                             },
                             {
                               ["hover:bg-red-500 bg-green-button hover:transition-all transition-all duration-500 hover:duration-500"]:
@@ -204,6 +216,7 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                             .length > 0 ? (
                             hoverBuy ? (
                               <XIcon
+                                className="!w-6"
                                 onClick={(e) => {
                                   e.preventDefault();
                                   if (
@@ -228,6 +241,7 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                               />
                             ) : (
                               <CheckIcon
+                                className="!w-6"
                                 onClick={(e) => {
                                   e.preventDefault();
                                   if (
@@ -255,51 +269,85 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                             <>
                               <PlusIcon
                                 width={"20px"}
+                                className="shrink-0"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  if (
-                                    cart.filter(
-                                      (e) => e.id === props.transactionId,
-                                    ).length > 0
-                                  ) {
-                                    dispatch(
-                                      removeFromCart({
-                                        id: props.transactionId,
-                                      }),
-                                    );
+                                  if (user?.ethAddress) {
+                                    if (
+                                      cart.filter(
+                                        (e) => e.id === props.transactionId,
+                                      ).length > 0
+                                    ) {
+                                      dispatch(
+                                        removeFromCart({
+                                          id: props.transactionId,
+                                        }),
+                                      );
+                                    } else {
+                                      let intersection = getTokensAllowed();
+                                      cart.map((item) => {
+                                        intersection = intersection.filter(
+                                          (element) =>
+                                            item.tokens.includes(
+                                              element.address,
+                                            ),
+                                        );
+                                      });
+                                      if (intersection.length > 0) {
+                                        dispatch(
+                                          addCart({
+                                            ...props.sale,
+                                            quantity: quantity,
+                                          }),
+                                        );
+                                      } else {
+                                        addToast(
+                                          "Please select sales with the same currency",
+                                          { appearance: "error" },
+                                        );
+                                      }
+                                    }
                                   } else {
-                                    dispatch(
-                                      addCart({
-                                        ...props.sale,
-                                        quantity: quantity,
-                                      }),
-                                    );
+                                    router.push("/login");
                                   }
                                 }}
                               />
-                              {hoverBuy && parseInt(props.sale) > 1 && (
-                                <Input
-                                  type="number"
-                                  register={register}
-                                  name="quantity"
-                                  classNameContainer="!border-none ourline-none w-12 text-sm !p-0"
-                                  className="!p-0"
-                                  withoutX
-                                  onClick={(e) => e.preventDefault()}
-                                  max={10}
-                                  min={1}
-                                  value={quantity}
-                                  onChange={(e) => {
-                                    if (
-                                      parseInt(e.target.value) >
-                                      parseInt(props.sale)
-                                    ) {
-                                    } else {
-                                      setQuantity(parseInt(e.target.value));
-                                    }
-                                  }}
-                                ></Input>
-                              )}
+
+                              <Input
+                                type="number"
+                                register={register}
+                                name="quantity"
+                                classNameContainer={clsx(
+                                  "!border-none ourline-none w-8 text-sm !p-0",
+                                )}
+                                className={clsx(
+                                  {
+                                    ["!hidden"]:
+                                      !hoverBuy ||
+                                      parseInt(props.sale.amount) <= 1,
+                                  },
+                                  "!p-0",
+                                )}
+                                withoutX
+                                onClick={(e) => e.preventDefault()}
+                                max={props.sale.amount}
+                                min={1}
+                                defaultValue={quantity}
+                                value={quantity}
+                                onChange={(e) => {
+                                  if (
+                                    parseInt(e.target.value) >
+                                    parseInt(props.sale.amount)
+                                  ) {
+                                    addToast(
+                                      "Your amount exceeds the amount of NFTs of the sale",
+                                      { appearance: "error" },
+                                    );
+                                  } else {
+                                    setQuantity(parseInt(e.target.value));
+                                  }
+                                }}
+                              ></Input>
                             </>
                           )}
                         </div>
@@ -364,9 +412,16 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                           <span>{parseInt(props.price) / 10 ** 6} USD</span>
                         </div>
                       </div>
-                      <div className="flex flex-col lg:text-md text-sm font-medium">
-                        <p>Highest Bid:</p>
-                        <span>{parseInt(props.price) / 10 ** 6} USD</span>
+                      <div className="flex lg:text-md items-center gap-2 text-sm font-medium">
+                        {getTokensAllowed()
+                          .filter((item) => props.tokens.includes(item.address))
+                          .map((item) => (
+                            <img
+                              src={item.logo}
+                              className="w-6 h-6 rounded-full"
+                              alt=""
+                            />
+                          ))}
                       </div>
                     </div>
                   )}

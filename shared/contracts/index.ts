@@ -3,6 +3,7 @@ import EndersPack from "./EndersPack.json";
 import EndersGate from "./EndersGate.json";
 import GameItems from "./GameItems.json";
 import ERC20 from "./ERC20.json";
+import Aggregator from "./AggregatorV3.json";
 
 const contracts = {
   ClockSale,
@@ -10,5 +11,6 @@ const contracts = {
   EndersPack,
   GameItems,
   ERC20,
+  Aggregator,
 };
 export default contracts;
