@@ -286,12 +286,15 @@ export default function AppLayout({ children }) {
         token: tokenSelected,
         tokensId: cart.map((item) => item.nftId),
       };
+
       const { marketplace, MATICUSD } = getAddresses();
       const marketplaceContract = getContractCustom(
         "ClockSale",
         marketplace,
         provider,
       );
+      let price: any = 0;
+
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addresses = getTokensAllowed();
       if (
@@ -299,7 +302,7 @@ export default function AppLayout({ children }) {
       ) {
         const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
-        const price = Web3.utils.toWei(
+        price = Web3.utils.toWei(
           (((bid as any) * 10 ** 8) / priceMATIC).toString(),
           "ether",
         );
@@ -310,13 +313,7 @@ export default function AppLayout({ children }) {
         const allowance = await ERC20.methods
           .allowance(user, marketplace)
           .call();
-        let price = 0;
-        amounts.map(async (item, i) => {
-          price += await marketplaceContract.methods
-            .getPrice(tokensId[i], token, item)
-            .call();
-        });
-        if (allowance < price) {
+        if (allowance < 1000000000000) {
           await ERC20.methods
             .increaseAllowance(
               marketplace,
@@ -329,8 +326,9 @@ export default function AppLayout({ children }) {
         const { transactionHash } = await marketplaceContract.methods
           .buyBatch(tokensId, amounts, token)
           .send({ from: user });
+        // }
+        dispatch(removeAll());
       }
-      dispatch(removeAll());
     } catch (err) {}
 
     setMessageBuy(``);
