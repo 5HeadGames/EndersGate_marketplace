@@ -100,7 +100,7 @@ const Login = () => {
                 className="w-full mb-2 bg-overlay rounded-md  text-white hover:text-overlay"
                 onClick={() => handleLogin()}
               >
-                {loading ? "..." : "Login with Magic Link"}
+                {loading ? "..." : "Login with Email"}
               </Button>
             </>
           )}
