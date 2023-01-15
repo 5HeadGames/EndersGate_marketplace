@@ -46,7 +46,7 @@ export const DropdownCart: React.FC<any> = ({
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <div className="relative flex-1 flex items-end flex-col w-min  bg-overlay-opacity overflow-auto">
+            <div className="relative flex-1 flex items-end flex-col bg-overlay-opacity overflow-auto">
               <div className="flex flex-col bg-overlay min-h-[calc(100vh-56px)] h-max shrink-0 p-10 pb-24">
                 <div className="flex justify-end py-2 text-white w-full">
                   <XIcon
