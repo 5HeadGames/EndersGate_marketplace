@@ -346,7 +346,7 @@ export default function AppLayout({ children }) {
   };
 
   const profileItems = [
-    { name: "PROFILE", link: "/profile", icon: <ShopOutlined /> },
+    { name: "INVENTORY", link: "/profile", icon: <ShopOutlined /> },
     {
       name: "ACTIVITY",
       link: "/profile/activity",
@@ -364,7 +364,7 @@ export default function AppLayout({ children }) {
       icon: <AreaChartOutlined />,
     },
     {
-      name: "SETTINGS",
+      name: "PROFILE",
       link: "/profile/accountSettings",
       icon: <AreaChartOutlined />,
     },

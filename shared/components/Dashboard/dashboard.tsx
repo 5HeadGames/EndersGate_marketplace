@@ -92,14 +92,15 @@ const DashboardComponent = () => {
                   Studio's dedicated NFT marketplace.
                 </p>
                 <div className="flex flex-col gap-1">
-                  <Button
-                    // type="submit"
-                    href={"/marketplace"}
-                    decoration="line-white"
-                    className="rounded-xl bg-overlay text-primary-disabled hover:text-white hover:!bg-overlay-2 transition duration-500 text-[20px] border hover:border-overlay border-overlay-border py-3 px-10"
-                  >
-                    Explore
-                  </Button>
+                  <Link href={"/marketplace"}>
+                    <Button
+                      // type="submit"
+                      decoration="line-white"
+                      className="rounded-xl bg-overlay text-primary-disabled hover:text-white hover:!bg-overlay-2 transition duration-500 text-[20px] border hover:border-overlay border-overlay-border py-3 px-10"
+                    >
+                      Explore
+                    </Button>
+                  </Link>
                   <a
                     href="https://www.endersgate.one/legal#marketplace"
                     className="text-sm text-red-primary"

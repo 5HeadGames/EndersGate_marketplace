@@ -3,8 +3,8 @@ import partnersbg from "/icons/partnersbg.svg";
 
 const Partners = () => {
   const partners = [
-    { logo: "/icons/Harmony.svg", link: "https://harmony.one/" },
     { logo: "/icons/Chainlink.svg", link: "https://chain.link/" },
+    { logo: "/icons/Chainstack.svg", link: "https://chainstack.com/" },
     { logo: "/icons/DappRadar.svg", link: "https://dappradar.com/" },
     { logo: "/icons/Polygon.svg", link: "https://polygon.technology/" },
     { logo: "/icons/XP.Network.svg", link: "https://xp.network/" },
