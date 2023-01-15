@@ -5,6 +5,7 @@ import Activities from "@shared/components/Profile/activities/activities";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
+import ProfileIndexPage from "@shared/components/Profile/index";
 
 const ProfileActivities = () => {
   const { account } = useWeb3React();
@@ -16,7 +17,11 @@ const ProfileActivities = () => {
       router.push("/login");
     }
   }, [account, ethAddress]);
-  return <Activities></Activities>;
+  return (
+    <ProfileIndexPage>
+      <Activities></Activities>
+    </ProfileIndexPage>
+  );
 };
 
 export default ProfileActivities;

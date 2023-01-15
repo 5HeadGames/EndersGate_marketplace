@@ -6,6 +6,7 @@ import Sales from "@shared/components/Profile/sales/sales";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
+import ProfileIndexPage from "@shared/components/Profile/index";
 
 const ProfileSales = () => {
   const { account } = useWeb3React();
@@ -17,7 +18,11 @@ const ProfileSales = () => {
       router.push("/login");
     }
   }, [account, ethAddress]);
-  return <Sales />;
+  return (
+    <ProfileIndexPage>
+      <Sales />
+    </ProfileIndexPage>
+  );
 };
 
 export default ProfileSales;

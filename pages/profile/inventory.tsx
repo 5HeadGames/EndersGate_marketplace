@@ -5,6 +5,7 @@ import Inventory from "@shared/components/Profile/inventory/inventory";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
+import ProfileIndexPage from "@shared/components/Profile/index";
 
 const ProfileInventory = () => {
   const { account } = useWeb3React();
@@ -17,7 +18,11 @@ const ProfileInventory = () => {
     }
   }, [account, ethAddress]);
 
-  return <Inventory />;
+  return (
+    <ProfileIndexPage>
+      <Inventory />
+    </ProfileIndexPage>
+  );
 };
 
 export default ProfileInventory;

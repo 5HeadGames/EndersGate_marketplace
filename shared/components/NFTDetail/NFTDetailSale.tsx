@@ -2,7 +2,9 @@ import React from "react";
 import Web3 from "web3";
 import {
   ExclamationCircleOutlined,
+  LeftCircleFilled,
   LeftOutlined,
+  LeftSquareFilled,
   LinkOutlined,
   LoadingOutlined,
   MenuOutlined,
@@ -262,8 +264,14 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
         )}
       </Modal>
       {id !== undefined && sale !== undefined ? (
-        <div className="min-h-screen w-full flex flex-col xl:px-36 md:px-10 sm:px-6 px-4 pt-10 pb-20">
-          <div className="w-full flex xl:flex-row flex-col mt-10 gap-4 justify-center">
+        <div className="min-h-screen w-full flex flex-col relative xl:px-36 md:px-10 sm:px-6 px-4 pt-20 pb-20">
+          <div
+            className="w-full text-white font-bold cursor-pointer text-2xl"
+            onClick={() => router.back()}
+          >
+            <LeftCircleFilled className="" />
+          </div>
+          <div className="w-full flex xl:flex-row flex-col  gap-4 justify-center">
             <div className="flex flex-col gap-2">
               <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] sm:min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
                 {!isPack && (
@@ -487,12 +495,12 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         >
                           Buy Now
                         </Button>
-                        <Button
+                        {/* <Button
                           decoration="line-white"
                           className="bg-dark md:text-lg text-md md:w-48 w-32 py-[6px] rounded-lg text-white hover:text-overlay border-none"
                         >
                           Make Offer
-                        </Button>
+                        </Button> */}
                       </div>
                     </div>
                     <div className="flex flex-row gap-4 w-full justify-between">

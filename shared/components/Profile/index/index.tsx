@@ -19,7 +19,7 @@ import packs from "../../../packs.json";
 import { Tooltip } from "@mui/material";
 import { Button } from "@shared/components/common/button/button";
 
-const ProfileIndexPage = () => {
+const ProfileIndexPage = ({ children }) => {
   const [balance, setBalance] = React.useState("0");
   const [activities, setActivities] = React.useState<Activity[]>([]);
   const { ethAddress: user } = useSelector((state: any) => state.layout.user);
@@ -95,7 +95,7 @@ const ProfileIndexPage = () => {
           </div>
         </div>
       </div>
-      <Inventory />
+      {children}
     </div>
   );
 };

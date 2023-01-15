@@ -82,13 +82,13 @@ const AccountSettingsComponent = () => {
 
   return (
     <div className="flex w-full items-center justify-center relative">
-      <img
+      {/* <img
         src="/images/settings.png"
         className="absolute w-full h-full top-0 opacity-25"
         alt=""
-      />
+      /> */}
       {user && (
-        <div className="flex flex-col max-w-[1300px] min-h-screen items-center justify-center w-full xl:px-24 md:px-6 pt-28 relative">
+        <div className="flex flex-col max-w-[1300px] items-center justify-center w-full xl:px-24 md:px-6 relative">
           <form
             className={clsx(
               "xl:p-16 md:p-4 sm:p-16 p-4 flex flex-col w-full justify-center items-center",

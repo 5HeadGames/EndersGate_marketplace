@@ -5,6 +5,7 @@ import useMagicLink from "@shared/hooks/useMagicLink";
 import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import AccountSettingsComponent from "@shared/components/Profile/accountSettings/accountSettings";
+import ProfileIndexPage from "@shared/components/Profile/index";
 
 const ProfileSettings = () => {
   const { account } = useWeb3React();
@@ -17,7 +18,11 @@ const ProfileSettings = () => {
     }
   }, [account, ethAddress]);
 
-  return <AccountSettingsComponent />;
+  return (
+    <ProfileIndexPage>
+      <AccountSettingsComponent />
+    </ProfileIndexPage>
+  );
 };
 
 export default ProfileSettings;
