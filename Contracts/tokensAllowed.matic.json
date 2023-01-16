@@ -1,16 +1,16 @@
 [
   {
-    "address": "0xf3cD27813B5ff6ADEA3805DCf181053AC62D6Ec3",
+    "address": "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
     "name": "MATIC",
     "logo": "/images/matic.png"
   },
   {
-    "address": "0x65b5df19756925Fe1a799dd65742185f117ca0d3",
+    "address": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
     "name": "USDC",
     "logo": "/images/usdc.png"
   },
   {
-    "address": "0xf5364E008460Bd7a888ACED6A8C1030274dA5f73",
+    "address": "0x9C9e5fD8bbc25984B178FdCE6117Defa39d2db39",
     "name": "BUSD",
     "logo": "/images/busd.png"
   }

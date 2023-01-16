@@ -9,6 +9,7 @@ import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-waffle";
 import "hardhat-gas-reporter";
+import "@nomiclabs/hardhat-etherscan";
 import "hardhat-contract-sizer";
 dotenvConfig({ path: resolve(__dirname, "./.env") });
 

@@ -4,5 +4,7 @@
   "MATICUSD": "0xd0D5e3DB44DE05E9F294BB0a3bEEaF030DE24Ada",
   "pack": "0x516F333056A89104d0029F13D84A5e28f3ea6C76",
   "packIpfs": "https://ipfs.moralis.io:2053/ipfs/QmQA1DNdx4dwjQEJueSUfHAcYzyuaUs8rQhrjLqgLgYnyj",
-  "library": "0xb128A36c4BF5e2ddBe54BB368518f00C5cA76937"
+  "library": "0xb128A36c4BF5e2ddBe54BB368518f00C5cA76937",
+  "marketplace": "0x296BD57e351efFC1fb8c2CaABF648be7baf449dC",
+  "marketplaceOwnable": "0x1A0bDb3366a03fd735BF8258711077e36b52BB6e"
 }

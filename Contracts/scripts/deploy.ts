@@ -1,6 +1,6 @@
-import {ethers, network} from "hardhat";
+import { ethers, network } from "hardhat";
 import fs from "fs";
-import {ClockSale} from "../typechain/ClockSale";
+import { ClockSale } from "../typechain/ClockSale";
 
 const OWNER_CUT = "400";
 
@@ -30,15 +30,13 @@ async function main() {
     _accounts[0].address,
     OWNER_CUT,
     "EndersClockSale",
-    "ECS"
+    "ECS",
   )) as ClockSale;
 
   console.log("deploy:marketplaceOwnable");
   const marketplaceOwnable = (await SalesOwnableFactory.deploy(
     _accounts[0].address,
     OWNER_CUT,
-    "EndersClockSale",
-    "ECS"
   )) as ClockSale;
 
   console.log("setting allowed: marketplace");
@@ -56,7 +54,7 @@ async function main() {
       marketplaceOwnable: marketplaceOwnable.address,
     },
     null,
-    2
+    2,
   );
   fs.writeFileSync(configFileName, configData);
   console.log("SUCCESS", configData);

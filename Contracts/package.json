@@ -18,7 +18,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@chainlink/contracts": "^0.6.0",
     "@harmony-js/utils": "^0.1.56",
+    "@nomiclabs/hardhat-etherscan": "^3.1.5",
     "@openzeppelin/contracts": "^4.4.1",
     "@reduxjs/toolkit": "^1.7.1",
     "@typechain/ethers-v5": "^10.1.0",

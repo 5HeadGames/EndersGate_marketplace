@@ -415,6 +415,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             }}
                           />
                         </div>
+                        <div className="">Select at least 1</div>
                         <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
                           {tokensAllowed.map((item, index) => {
                             return (

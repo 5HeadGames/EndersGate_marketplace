@@ -64,7 +64,7 @@ contract ClockSaleOwnable is Ownable, Pausable, ERC1155Holder, ReentrancyGuard {
     constructor(address _feeReceiver, uint256 _ownerCut) {
         require(_ownerCut <= 10000, "ClockSale:OWNER_CUT"); //less than 100%
         priceFeed = AggregatorV3Interface(
-            0xdCD81FbbD6c4572A69a534D8b8152c562dA8AbEF
+            0xAB594600376Ec9fD91F8e885dADF0CE036862dE0
         );
         ownerCut = _ownerCut;
         feeReceiver = _feeReceiver;
