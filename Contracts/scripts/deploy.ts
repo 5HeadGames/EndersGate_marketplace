@@ -26,12 +26,7 @@ async function main() {
   ]);
 
   console.log("deploy:marketplace");
-  const marketplace = (await SalesFactory.deploy(
-    _accounts[0].address,
-    OWNER_CUT,
-    "EndersClockSale",
-    "ECS",
-  )) as ClockSale;
+
 
   console.log("deploy:marketplaceOwnable");
   const marketplaceOwnable = (await SalesOwnableFactory.deploy(
@@ -40,8 +35,8 @@ async function main() {
   )) as ClockSale;
 
   console.log("setting allowed: marketplace");
-  await marketplace.setNftAllowed(data.endersGate, true);
-  await marketplace.setNftAllowed(data.pack, true);
+  // await marketplace.setNftAllowed(data.endersGate, true);
+  // await marketplace.setNftAllowed(data.pack, true);
 
   console.log("setting allowed: marketplaceOwnable");
   await marketplaceOwnable.setNftAllowed(data.endersGate, true);
@@ -50,7 +45,7 @@ async function main() {
   const configData = JSON.stringify(
     {
       ...data,
-      marketplace: marketplace.address,
+      // marketplace: marketplace.address,
       marketplaceOwnable: marketplaceOwnable.address,
     },
     null,
