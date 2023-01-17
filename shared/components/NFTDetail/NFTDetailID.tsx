@@ -66,9 +66,10 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     if (sellNFTData.duration <= 3600 * 24) {
       return alert("You have to put a end date higher than 1 day");
     }
+    if (tokensSelected.length == 0) {
+      return alert("You have to put at least one currency to accept");
+    }
     try {
-      console.log("elmio");
-
       const tokenId = id;
       const { endersGate, marketplace } = getAddresses();
       const endersgateInstance = getContractCustom(

@@ -70,7 +70,7 @@ const Login = () => {
           />
         </div>
         <h1 className="font-bold text-white text-3xl relative text-center">
-          JOIN TO <span className="text-red-primary font-bold">5</span>
+          JOIN THE <span className="text-red-primary font-bold">5</span>
           <span className="text-white font-bold">HEADGAMES</span> MARKETPLACE
         </h1>
         <div
