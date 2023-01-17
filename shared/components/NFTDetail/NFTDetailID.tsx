@@ -415,21 +415,23 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             }}
                           />
                         </div>
-                        <div className="">Select at least 1</div>
+                        <div className="text-[11px] w-full text-left text-white font-bold">
+                          Select at least 1 currency you want to accept as a
+                          payment for this listing
+                        </div>
                         <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
                           {tokensAllowed.map((item, index) => {
                             return (
                               <div
                                 className={clsx(
-                                  "w-28 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
+                                  "w-28 text-[14px] flex items-center justify-center border gap-2 rounded-full cursor-pointer p-2",
                                   {
-                                    "bg-overlay-border border-white":
-                                      tokensSelected.includes(item.address),
+                                    "bg-overlay-border border-none":
+                                      !tokensSelected.includes(item.address),
                                   },
                                   {
-                                    "bg-overlay": !tokensSelected.includes(
-                                      item.address,
-                                    ),
+                                    "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
+                                      tokensSelected.includes(item.address),
                                   },
                                 )}
                                 onClick={() => {
@@ -453,10 +455,10 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                               >
                                 <img
                                   src={item.logo}
-                                  className="w-8 h-8"
+                                  className="w-6 h-6"
                                   alt=""
                                 />
-                                <h2 className="text-white text-lg font-bold">
+                                <h2 className="text-white text-md font-bold">
                                   {item.name}
                                 </h2>
                               </div>
