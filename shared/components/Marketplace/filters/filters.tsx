@@ -487,6 +487,47 @@ const FiltersBoard = ({
               </div>
             ),
           )}
+          <h2 className="text-lg font-bold text-white w-full">Rarity</h2>
+
+          {[
+            { text: "Reaction Card", value: "reaction" },
+            { text: "Action Card", value: "action" },
+            { text: "Wood", value: "wood" },
+            { text: "Stone", value: "stone" },
+            { text: "Iron", value: "iron" },
+            { text: "Gold", value: "gold" },
+            { text: "Legendary", value: "legendary" },
+            { text: "Avatar", value: "avatar" },
+          ].map((item, index) => (
+            <div
+              onClick={() => setCardType(item.value)}
+              className={clsx(
+                "flex items-center justify-between  w-full  cursor-pointer",
+                "rounded-md",
+                "text-white text-lg",
+              )}
+            >
+              <p
+                className={clsx(
+                  {
+                    ["text-gray-300"]: item.value !== cardType,
+                  },
+                  {
+                    ["text-white"]: cardType === item.value,
+                  },
+                )}
+              >
+                {item.text}
+              </p>
+              <div
+                className={clsx(
+                  { ["bg-primary"]: cardType === item.value },
+                  { ["bg-gray-400"]: cardType !== item.value },
+                  "rounded-full w-6 h-6 border border-gray-800",
+                )}
+              ></div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
