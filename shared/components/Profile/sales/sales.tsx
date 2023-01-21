@@ -125,7 +125,7 @@ const Sales = () => {
               </thead>
               <tbody>
                 {sales.map((sale, i) => {
-                  const pack = sale.nftId == packsAddress;
+                  const pack = sale.nft == packsAddress;
                   return (
                     <tr
                       className={clsx({
