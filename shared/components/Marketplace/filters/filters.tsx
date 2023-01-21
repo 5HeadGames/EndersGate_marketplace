@@ -1,11 +1,17 @@
 import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
-import { HeartOutlined, HeartFilled } from "@ant-design/icons";
+import {
+  HeartOutlined,
+  HeartFilled,
+  DownOutlined,
+  UpOutlined,
+} from "@ant-design/icons";
 import { CollapseMenu } from "@shared/components/common/collapseMenu/collapseMenu";
 import { SlideButton } from "@shared/components/common/slideButton/slideButton";
 import { InputNumber } from "antd";
 import { Input } from "@shared/components/common/form/input";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
 
 const FiltersBoard = ({
   filters,
@@ -362,15 +368,30 @@ const FiltersBoard = ({
     console.log(filters);
   }, [filters]);
 
+  const [priceCollapsed, setPriceCollapsed] = React.useState(true);
+
   return (
     <div className="xl:w-52 w-full flex flex-col shrink-0">
       <div className="flex rounded-md bg-overlay-2 border border-overlay-border xl:pt-1 xl:px-6 p-4 xl:pb-16 w-full">
         <div className="flex xl:items-center gap-2 xl:flex-col gap-x-16 flex-row flex-wrap justify-center w-full">
           <div className="flex flex-col gap-2 lg:w-full w-48">
-            <h2 className="text-lg font-bold text-red-primary lg:text-left text-center">
-              Price in USD
+            <h2
+              className="text-lg font-bold text-red-primary lg:text-left text-center cursor-pointer flex w-full items-center gap-2"
+              onClick={() => setPriceCollapsed((prev) => !prev)}
+            >
+              Price in USD{" "}
+              {priceCollapsed ? (
+                <ChevronDownIcon className="w-7" />
+              ) : (
+                <ChevronUpIcon className="w-7" />
+              )}
             </h2>
-            <div className="flex gap-4 justify-between">
+            <div
+              className={clsx(
+                { ["hidden"]: !priceCollapsed },
+                "flex gap-4 justify-between",
+              )}
+            >
               <div className="flex flex-col w-1/2">
                 <p className="text-white text-[16px] font-bold">Lowest</p>
                 <div className="rounded-xl flex items-center border border-overlay-border w-full px-1">
@@ -457,8 +478,13 @@ const FiltersBoard = ({
               {["packs"].map((nftType, index) => (
                 <div
                   onClick={() => {
-                    setCardType("all");
-                    setType(nftType);
+                    if (nftType !== type) {
+                      setCardType("all");
+                      setType(nftType);
+                    } else {
+                      setCardType("all");
+                      setType("");
+                    }
                   }}
                   className={clsx(
                     "flex items-center justify-between  w-full  cursor-pointer",
