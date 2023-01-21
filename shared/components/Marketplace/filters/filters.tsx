@@ -4,6 +4,8 @@ import clsx from "clsx";
 import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import { CollapseMenu } from "@shared/components/common/collapseMenu/collapseMenu";
 import { SlideButton } from "@shared/components/common/slideButton/slideButton";
+import { InputNumber } from "antd";
+import { Input } from "@shared/components/common/form/input";
 
 const FiltersBoard = ({
   filters,
@@ -13,6 +15,7 @@ const FiltersBoard = ({
   type,
   setType,
   setPage,
+  setPriceSettings,
 }) => {
   const handleAvatarChange = (checked, value) => {
     if (checked) {
@@ -59,50 +62,8 @@ const FiltersBoard = ({
   };
 
   const filterItems = [
-    // {
-    //   title: "Card Type",
-    //   subItems: [
-    //     {
-    //       title: "Avatar",
-    //       onClick: () =>
-    //         handleAvatarChange(!filters.avatar.includes("avatar"), "avatar"),
-    //       value: "avatar",
-    //       valueBool: filters.avatar.includes("avatar"),
-    //     },
-    //     {
-    //       title: "Guardian",
-    //       onClick: () =>
-    //         handleAvatarChange(
-    //           !filters.avatar.includes("guardian"),
-    //           "guardian",
-    //         ),
-    //       value: "guardian",
-    //       valueBool: filters.avatar.includes("guardian"),
-    //     },
-    //     {
-    //       title: "Action Cards",
-    //       onClick: () =>
-    //         handleAvatarChange(
-    //           !filters.avatar.includes("action_cards"),
-    //           "action_cards",
-    //         ),
-    //       value: "action_cards",
-    //       valueBool: filters.avatar.includes("action_cards"),
-    //     },
-    //     {
-    //       title: "Reaction Cards",
-    //       onClick: () =>
-    //         handleAvatarChange(
-    //           !filters.avatar.includes("reaction_cards"),
-    //           "reaction_cards",
-    //         ),
-    //       value: "reaction_cards",
-    //       valueBool: filters.avatar.includes("reaction_cards"),
-    //     },
-    //   ],
-    // },
     {
-      title: "Role",
+      title: "Guardian Card Class",
       subItems: [
         {
           title: "Fighter",
@@ -152,7 +113,7 @@ const FiltersBoard = ({
       ],
     },
     {
-      title: "Race",
+      title: "Guardian Card Race",
       subItems: [
         {
           title: "Human",
@@ -307,7 +268,7 @@ const FiltersBoard = ({
       ],
     },
     {
-      title: "Elements",
+      title: "Guardian Card Element",
       subItems: [
         {
           title: "Void",
@@ -402,132 +363,221 @@ const FiltersBoard = ({
   }, [filters]);
 
   return (
-    <div className="xl:w-80 w-full flex flex-col shrink-0">
+    <div className="xl:w-52 w-full flex flex-col shrink-0">
       <div className="flex rounded-md bg-overlay-2 border border-overlay-border xl:pt-1 xl:px-6 p-4 xl:pb-16 w-full">
-        <div className="flex xl:items-center gap-2 xl:flex-col gap-x-4 flex-row flex-wrap w-full">
-          <div className="flex flex-col gap-2 w-full">
-            <h2 className="text-lg font-bold text-white">NFT Type</h2>
-            {["trading_cards", "packs"].map((nftType, index) => (
-              <div
-                onClick={() => setType(nftType)}
-                className={clsx(
-                  "flex items-center justify-between  w-full  cursor-pointer",
-                  "rounded-md",
-                  "text-white text-lg",
-                )}
-              >
-                <p
+        <div className="flex xl:items-center gap-2 xl:flex-col gap-x-16 flex-row flex-wrap justify-center w-full">
+          <div className="flex flex-col gap-2 lg:w-full w-48">
+            <h2 className="text-lg font-bold text-red-primary lg:text-left text-center">
+              Price in USD
+            </h2>
+            <div className="flex gap-4 justify-between">
+              <div className="flex flex-col w-1/2">
+                <p className="text-white text-[16px] font-bold">Lowest</p>
+                <div className="rounded-xl flex items-center border border-overlay-border w-full px-1">
+                  <input
+                    type={"number"}
+                    name="min"
+                    className="bg-transparent w-full text-white pl-2 text-[13px] py-1"
+                    defaultValue={0}
+                    onChange={(e) => {
+                      setPriceSettings((prev) => {
+                        return { ...prev, minPrice: e.target.value };
+                      });
+                    }}
+                  />
+                  <p className="w-6 text-[10px] text-overlay-border">USD</p>
+                </div>
+              </div>
+              <div className="flex flex-col w-1/2">
+                <p className="text-white text-[16px] font-bold">Highest</p>
+                <div className="rounded-xl flex items-center border border-overlay-border w-full px-1 ">
+                  <input
+                    type={"number"}
+                    name="max"
+                    className="bg-transparent w-full text-white pl-2 text-[13px] py-1"
+                    defaultValue={0}
+                    onChange={(e) => {
+                      setPriceSettings((prev) => {
+                        return { ...prev, maxPrice: e.target.value };
+                      });
+                    }}
+                  />
+                  <p className="w-6 text-[10px] text-overlay-border">USD</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 lg:w-full w-48">
+            <h2 className="text-lg font-bold text-white lg:text-left text-center">
+              NFT Type
+            </h2>
+            <div className="flex flex-col gap-1 w-full">
+              {[
+                { text: "Reaction Card", value: "reaction" },
+                { text: "Action Cards", value: "action" },
+                { text: "Avatar Cards", value: "avatar" },
+              ].map((item, index) => (
+                <div
+                  onClick={() => {
+                    if (item.value !== cardType) {
+                      setType("trading_cards");
+                      setCardType(item.value);
+                    } else {
+                      setCardType("all");
+                      setType("");
+                    }
+                  }}
                   className={clsx(
-                    {
-                      ["text-gray-300"]: nftType !== type,
-                    },
-                    {
-                      ["text-white"]: type === nftType,
-                    },
+                    "flex items-center justify-between  w-full  cursor-pointer",
+                    "rounded-md",
+                    "text-white text-[15px]",
                   )}
                 >
-                  {nftType === "trading_cards"
-                    ? "Trading cards"
-                    : nftType === "packs"
-                    ? "Packs"
-                    : "Comics"}
-                </p>
+                  <p
+                    className={clsx(
+                      {
+                        ["text-gray-300"]: item.value !== cardType,
+                      },
+                      {
+                        ["text-white"]: cardType === item.value,
+                      },
+                    )}
+                  >
+                    {item.text}
+                  </p>
+                  <div
+                    className={clsx(
+                      { ["bg-primary"]: cardType === item.value },
+                      { ["bg-gray-800"]: cardType !== item.value },
+                      "rounded-full w-6 h-6 border border-gray-800",
+                    )}
+                  ></div>
+                </div>
+              ))}
+              {["packs"].map((nftType, index) => (
                 <div
+                  onClick={() => {
+                    setCardType("all");
+                    setType(nftType);
+                  }}
                   className={clsx(
-                    { ["bg-primary"]: type === nftType },
-                    { ["bg-gray-400"]: type !== nftType },
-                    "rounded-full w-6 h-6 border border-gray-800",
+                    "flex items-center justify-between  w-full  cursor-pointer",
+                    "rounded-md",
+                    "text-white text-[15px]",
                   )}
-                ></div>
-              </div>
-            ))}
+                >
+                  <p
+                    className={clsx(
+                      {
+                        ["text-gray-300"]: nftType !== type,
+                      },
+                      {
+                        ["text-white"]: type === nftType,
+                      },
+                    )}
+                  >
+                    {nftType === "packs" ? "Packs" : "Comics"}
+                  </p>
+                  <div
+                    className={clsx(
+                      { ["bg-primary"]: type === nftType },
+                      { ["bg-gray-800"]: type !== nftType },
+                      "rounded-full w-6 h-6 border border-gray-800",
+                    )}
+                  ></div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 lg:w-full w-48">
+            <h2 className="text-lg font-bold text-white lg:text-left text-center w-full">
+              EG Guardian Card Rarity
+            </h2>
+            <div className="flex flex-col gap-1 w-full">
+              {[
+                { text: "Common (wood)", value: "wood" },
+                { text: "Uncommon (stone)", value: "stone" },
+                { text: "Rare (silver)", value: "iron" },
+                { text: "Epic (gold)", value: "gold" },
+                { text: "Legendary", value: "legendary" },
+              ].map((item, index) => (
+                <div
+                  onClick={() => setCardType(item.value)}
+                  className={clsx(
+                    "flex items-center justify-between  w-full  cursor-pointer",
+                    "rounded-md",
+                    "text-white text-[15px]",
+                  )}
+                >
+                  <p
+                    className={clsx(
+                      {
+                        ["text-gray-300"]: item.value !== cardType,
+                      },
+                      {
+                        ["text-white"]: cardType === item.value,
+                      },
+                    )}
+                  >
+                    {item.text}
+                  </p>
+                  <div
+                    className={clsx(
+                      { ["bg-primary"]: cardType === item.value },
+                      { ["bg-gray-800"]: cardType !== item.value },
+                      "rounded-full w-6 h-6 border border-gray-800",
+                    )}
+                  ></div>
+                </div>
+              ))}
+            </div>
           </div>
           {filterItems.map(
             ({ title, subItems /*, slideButton, value, onClick */ }, index) => (
-              <div className="flex flex-col items-center gap-2 w-full">
-                <h2 className="text-lg font-bold text-white xl:mt-3 w-full">
+              <div className="flex flex-col items-center gap-2 lg:w-full w-48">
+                <h2 className="text-lg font-bold text-white lg:text-left text-center w-full">
                   {title}
                 </h2>
-
-                {subItems.map(
-                  (subItem, indexItem) => {
-                    return (
-                      <div
-                        onClick={subItem.onClick}
-                        className={clsx(
-                          "flex items-center justify-between w-full  cursor-pointer",
-                          "rounded-md",
-                          "text-white text-lg",
-                        )}
-                      >
-                        <p
+                <div className="flex flex-col gap-1 w-full">
+                  {subItems.map(
+                    (subItem, indexItem) => {
+                      return (
+                        <div
+                          onClick={subItem.onClick}
                           className={clsx(
-                            {
-                              ["text-gray-300"]: !subItem.valueBool,
-                            },
-                            {
-                              ["text-white"]: subItem.valueBool,
-                            },
+                            "flex items-center justify-between w-full  cursor-pointer",
+                            "rounded-md",
+                            "text-white text-[15px]",
                           )}
                         >
-                          {subItem.title}
-                        </p>
-                        <div
-                          className={clsx(
-                            { ["bg-primary"]: subItem.valueBool },
-                            { ["bg-gray-400"]: !subItem.valueBool },
-                            "rounded-full w-6 h-6 border border-gray-800",
-                          )}
-                        ></div>
-                      </div>
-                    );
-                  },
-                  // })
-                )}
+                          <p
+                            className={clsx(
+                              {
+                                ["text-gray-300"]: !subItem.valueBool,
+                              },
+                              {
+                                ["text-white"]: subItem.valueBool,
+                              },
+                            )}
+                          >
+                            {subItem.title}
+                          </p>
+                          <div
+                            className={clsx(
+                              { ["bg-primary"]: subItem.valueBool },
+                              { ["bg-gray-800"]: !subItem.valueBool },
+                              "rounded-full w-6 h-6 border border-gray-800",
+                            )}
+                          ></div>
+                        </div>
+                      );
+                    },
+                    // })
+                  )}
+                </div>
               </div>
             ),
           )}
-          <h2 className="text-lg font-bold text-white w-full">Rarity</h2>
-
-          {[
-            { text: "Reaction Card", value: "reaction" },
-            { text: "Action Card", value: "action" },
-            { text: "Wood", value: "wood" },
-            { text: "Stone", value: "stone" },
-            { text: "Iron", value: "iron" },
-            { text: "Gold", value: "gold" },
-            { text: "Legendary", value: "legendary" },
-            { text: "Avatar", value: "avatar" },
-          ].map((item, index) => (
-            <div
-              onClick={() => setCardType(item.value)}
-              className={clsx(
-                "flex items-center justify-between  w-full  cursor-pointer",
-                "rounded-md",
-                "text-white text-lg",
-              )}
-            >
-              <p
-                className={clsx(
-                  {
-                    ["text-gray-300"]: item.value !== cardType,
-                  },
-                  {
-                    ["text-white"]: cardType === item.value,
-                  },
-                )}
-              >
-                {item.text}
-              </p>
-              <div
-                className={clsx(
-                  { ["bg-primary"]: cardType === item.value },
-                  { ["bg-gray-400"]: cardType !== item.value },
-                  "rounded-full w-6 h-6 border border-gray-800",
-                )}
-              ></div>
-            </div>
-          ))}
         </div>
       </div>
     </div>

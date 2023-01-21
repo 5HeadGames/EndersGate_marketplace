@@ -74,8 +74,8 @@ const TransactionsBoard: React.FC<any> = ({
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
-      <div className="w-[900px] rounded-xl border border-overlay-border relative">
-        <p className="absolute top-4 right-6 text-overlay-border text-sm">
+      <div className="xl:max-w-[900px] w-full rounded-xl border border-overlay-border relative">
+        <p className="absolute sm:top-4 top-2 sm:right-6 right-2 text-overlay-border sm:text-sm text-[10px]">
           STATS PANEL
         </p>
         {/* <div className="flex border-b-2 border-overlay-border">
@@ -104,7 +104,7 @@ const TransactionsBoard: React.FC<any> = ({
             );
           })}
         </div> */}
-        <div className="sm:flex sm:flex-row grid grid-cols-4 py-4 px-6 sm:gap-x-16 gap-x-2 md:justify-start items-center justify-center">
+        <div className="flex sm:flex-row flex-col py-4 px-6 sm:gap-x-16 gap-x-2 md:justify-start items-center justify-center">
           <Dropdown
             classTitle={"text-red-primary hover:text-orange-500 text-3xl"}
             title={"Stats"}
@@ -122,19 +122,21 @@ const TransactionsBoard: React.FC<any> = ({
               )}
             </div>
           </Dropdown>
-          {platformItems.map((item, index) => {
-            return (
-              <PlatformMovements
-                icon={item?.icon}
-                iconHtml={item.iconHtml}
-                css={item.css}
-                label={item.title}
-                value={item.value}
-                value2={""}
-                key={"platform-" + index}
-              />
-            );
-          })}
+          <div className="flex flex-wrap sm:gap-x-16 gap-x-8 sm:justify-start justify-center w-full">
+            {platformItems.map((item, index) => {
+              return (
+                <PlatformMovements
+                  icon={item?.icon}
+                  iconHtml={item.iconHtml}
+                  css={item.css}
+                  label={item.title}
+                  value={item.value}
+                  value2={""}
+                  key={"platform-" + index}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,9 @@
 import React from "react";
-import { LeftOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+  LeftCircleFilled,
+  LeftOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Web3 from "web3";
 
@@ -47,6 +51,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { pack } = getAddresses();
 
   const sellNft = async () => {
+    console.log(NFTs.balanceCards, id);
     if (sellNFTData.amount > NFTs.balancePacks[id].balance) {
       return alert("You don't have enough tokens to sell");
     }
@@ -59,31 +64,37 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     if (sellNFTData.duration <= 3600 * 24) {
       return alert("You have to put a end date higher than 1 day");
     }
+    if (tokensSelected.length == 0) {
+      return alert("You have to put at least one currency to accept");
+    }
     try {
       const tokenId = id;
       const { pack, marketplace } = getAddresses();
-      const packs = getContractCustom("EndersPack", pack, provider);
-      console.log(sellNFTData);
-      // const isApprovedForAll = await packs.methods.isApprovedForAll(
-      //   user?.ethAddress,
-      //   marketplace,
-      // );
-      // console.log(isApprovedForAll);
-      // if (isApprovedForAll == false) {
-      setMessage("Allowing us to sell your tokens");
-      await approveERC1155({
-        provider: provider.provider,
-        from: user,
-        to: marketplace,
-        address: pack,
-      });
-      // }
+      const endersgateInstance = getContractCustom(
+        "EndersPack",
+        pack,
+        provider.provider,
+      );
+
+      const isApprovedForAll = await endersgateInstance.methods
+        .isApprovedForAll(user, marketplace)
+        .call();
+      if (isApprovedForAll == false) {
+        setMessage("Allowing us to sell your tokens");
+        await approveERC1155({
+          provider: provider.provider,
+          from: user,
+          to: marketplace,
+          address: pack,
+        });
+      }
       setMessage("Listing your tokens");
+
       await dispatch(
         onSellERC1155({
           address: pack,
           from: user,
-          startingPrice: Web3.utils.toWei(sellNFTData.startingPrice.toString()),
+          startingPrice: (sellNFTData.startingPrice * 10 ** 6).toString(),
           amount: sellNFTData.amount,
           tokenId: tokenId,
           tokens: tokensSelected,
@@ -93,12 +104,11 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         }),
       );
     } catch (err) {
-      console.log({ err });
+      console.log({ err }, "error mamawebo");
     }
 
     dispatch(onLoadSales());
     dispatch(onGetAssets(user));
-
     setMessage(
       "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
     );
@@ -109,6 +119,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       duration: 0,
     });
   };
+
   React.useEffect(() => {
     console.log("nft data", sellNFTData);
   }, [sellNFTData]);
@@ -239,8 +250,17 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         )}
       </Modal>
       {id !== undefined ? (
-        <div className="min-h-screen w-full flex flex-col xl:px-36 md:px-10 sm:px-6 px-4 pt-10 pb-20">
-          <div className="w-full flex xl:flex-row flex-col mt-10 gap-4 justify-center">
+        <div className="min-h-screen w-full flex flex-col xl:px-36 md:px-10 sm:px-6 px-4 pt-20 pb-20">
+          <div
+            className="flex w-full text-lg items-center gap-2 text-white"
+            onClick={() => router.back()}
+          >
+            <div className="flex items-center gap-2 cursor-pointer w-min">
+              <LeftCircleFilled className="w-5 h-5" /> Back
+            </div>
+          </div>
+
+          <div className="w-full flex xl:flex-row flex-col gap-4 justify-center">
             <div className="flex flex-col gap-2">
               <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
                 <img
@@ -342,20 +362,23 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             }}
                           />
                         </div>
+                        <div className="text-[11px] w-full text-left text-white font-bold">
+                          Select at least 1 currency you want to accept as a
+                          payment for this listing
+                        </div>
                         <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
                           {tokensAllowed.map((item, index) => {
                             return (
                               <div
                                 className={clsx(
-                                  "w-28 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
+                                  "w-28 text-[14px] flex items-center justify-center border gap-2 rounded-full cursor-pointer p-2",
                                   {
-                                    "bg-overlay-border border-white":
-                                      tokensSelected.includes(item.address),
+                                    "bg-overlay-border border-none":
+                                      !tokensSelected.includes(item.address),
                                   },
                                   {
-                                    "bg-overlay": !tokensSelected.includes(
-                                      item.address,
-                                    ),
+                                    "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
+                                      tokensSelected.includes(item.address),
                                   },
                                 )}
                                 onClick={() => {
@@ -379,10 +402,10 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                               >
                                 <img
                                   src={item.logo}
-                                  className="w-8 h-8"
+                                  className="w-6 h-6"
                                   alt=""
                                 />
-                                <h2 className="text-white text-lg font-bold">
+                                <h2 className="text-white text-md font-bold">
                                   {item.name}
                                 </h2>
                               </div>

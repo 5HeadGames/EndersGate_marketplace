@@ -28,7 +28,7 @@ const Sales = () => {
   const cards = convertArrayCards();
 
   const [sales, setSales] = React.useState([]);
-  const addresses = getAddresses();
+  const { pack, endersGate } = getAddresses();
 
   const cancelSale = async () => {
     await dispatch(
@@ -36,7 +36,7 @@ const Sales = () => {
         tokenId: cancelId.id,
         provider: provider.provider,
         user: user,
-        nftContract: cancelId.pack ? addresses.pack : addresses.endersGate,
+        nftContract: cancelId.pack ? pack : endersGate,
       }),
     );
     dispatch(onLoadSales());
@@ -125,7 +125,7 @@ const Sales = () => {
               </thead>
               <tbody>
                 {sales.map((sale, i) => {
-                  const pack = sale.nftId === addresses.pack;
+                  const pack = sale.nftId == pack;
                   return (
                     <tr
                       className={clsx({
@@ -202,7 +202,7 @@ const Sales = () => {
                                 onClick={() => {
                                   setCancelId({
                                     id: sale.id,
-                                    pack: sale.nft === addresses.pack,
+                                    pack: sale.nft === pack,
                                   });
                                   show();
                                 }}

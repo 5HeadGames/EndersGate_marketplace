@@ -37,11 +37,15 @@ import { XIcon } from "@heroicons/react/solid";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("recently_listed");
-  const [type, setType] = React.useState("trading_cards");
+  const [type, setType] = React.useState("");
   const [cardType, setCardType] = React.useState("all");
   const [sales, setSales] = React.useState([]);
   const { nfts } = useAppSelector((state) => state);
   const [page, setPage] = React.useState(0);
+  const [priceSettings, setPriceSettings] = React.useState({
+    minPrice: 0,
+    maxPrice: 0,
+  });
   const [search, setSearch] = React.useState<any>("");
   const [openFilters, setOpenFilters] = React.useState(true);
 
@@ -50,6 +54,7 @@ const MarketplaceComponent = () => {
   const [soldSelected, setSoldSelected] = React.useState("trading_cards");
   const { search: searched } = useRouter().query;
   const cards = convertArrayCards();
+  const { endersGate, pack } = getAddresses();
 
   const { transactionsBoard } = useStats({
     nfts,
@@ -66,7 +71,9 @@ const MarketplaceComponent = () => {
   };
 
   React.useEffect(() => {
-    getSales(currentOrder);
+    if (nfts) {
+      getSales(currentOrder);
+    }
   }, [currentOrder, type, nfts]);
 
   React.useEffect(() => {
@@ -79,24 +86,26 @@ const MarketplaceComponent = () => {
     const { endersGate, pack } = getAddresses();
     const cardSalesCreated = [];
     const packSalesCreated = [];
-    nfts.saleCreated.forEach((sale) => {
+    const nftsCreated = [];
+    nfts?.saleCreated?.forEach((sale) => {
+      nftsCreated.push(sale);
       if (sale.nft == endersGate) {
         cardSalesCreated.push(sale);
       } else if (sale.nft == pack) {
         packSalesCreated.push(sale);
       }
     });
-    console.log(currentOrder);
+    console.log(currentOrder, nfts.saleCreated);
     if (currentOrder === "recently_listed") {
       switch (type) {
         case "trading_cards":
-          setSales(cardSalesCreated.reverse());
+          setSales(cardSalesCreated?.reverse());
           break;
         case "packs":
-          setSales(packSalesCreated.reverse());
+          setSales(packSalesCreated?.reverse());
           break;
         default:
-          setSales(nfts.saleCreated.reverse());
+          setSales(nftsCreated?.reverse());
           break;
       }
       // const salesCreated: any[] = [...cardSalesCreated];
@@ -161,6 +170,7 @@ const MarketplaceComponent = () => {
     cardRole: [],
     cardRace: [],
     cardElement: [],
+    packType: [],
   });
 
   const filterCards = (card) => {
@@ -327,9 +337,31 @@ const MarketplaceComponent = () => {
         }
       }
     }
+
     if (search === "") {
       return passed;
     } else if (card?.name.toLowerCase().includes(search.toLowerCase())) {
+      return passed;
+    } else {
+      return false;
+    }
+  };
+
+  const filterPacks = (pack) => {
+    let passed = false;
+    if (filters.packType.length > 0) {
+      if (filters.packType.includes(pack.properties.name.value)) {
+        passed = true;
+      }
+    } else {
+      passed = true;
+    }
+
+    console.log(passed);
+
+    if (search === "") {
+      return passed;
+    } else if (pack?.name.toLowerCase().includes(search.toLowerCase())) {
       return passed;
     } else {
       return false;
@@ -349,6 +381,7 @@ const MarketplaceComponent = () => {
             setColumnSelected={setColumnSelected}
           />
         </div>
+
         <div className="w-full flex justify-between items-center sm:flex-row flex-col gap-10 lg:px-20 px-4">
           <div
             className="flex justify-center items-center cursor-pointer rounded-md border border-overlay-border bg-overlay-2 p-3 text-red-primary hover:text-orange-500"
@@ -422,17 +455,18 @@ const MarketplaceComponent = () => {
               setPage={setPage}
               type={type}
               setType={setType}
+              setPriceSettings={setPriceSettings}
             />
           </div>
           <div className="w-full xl:mt-0 mt-6 flex flex-col pb-10">
             <div>
               <div className="flex flex-wrap w-full justify-center items-center relative ">
                 {sales
-                  ?.filter((sale, i) =>
-                    type !== "packs"
+                  ?.filter((sale, i) => {
+                    return sale.nft !== pack
                       ? filterCards(cards[sale.nftId])
-                      : filterCards(packs[sale.nftId]),
-                  )
+                      : filterPacks(packs[sale.nftId]);
+                  })
                   .filter((sale) => {
                     return (
                       Math.floor(new Date().getTime() / 1000) <=
@@ -442,11 +476,19 @@ const MarketplaceComponent = () => {
                   .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
                   .length > 0 ? (
                   sales
-                    ?.filter((sale, i) =>
-                      type !== "packs"
+                    ?.filter((sale, i) => {
+                      return sale.nft !== pack
                         ? filterCards(cards[sale.nftId])
-                        : filterCards(packs[sale.nftId]),
-                    )
+                        : filterPacks(packs[sale.nftId]);
+                    })
+                    .filter((sale) => {
+                      const price = sale.price / 10 ** 6;
+                      const { minPrice, maxPrice } = priceSettings;
+                      return (
+                        (minPrice == 0 && maxPrice == 0) ||
+                        (minPrice <= price && maxPrice >= price)
+                      );
+                    })
                     .filter((sale) => {
                       return (
                         Math.floor(new Date().getTime() / 1000) <=
@@ -463,12 +505,12 @@ const MarketplaceComponent = () => {
                           transactionId={a.id}
                           seller={a.seller}
                           icon={
-                            type == "packs"
+                            a.nft == pack
                               ? packs[a.nftId]?.properties?.image?.value
                               : cards[a.nftId]?.properties?.image?.value
                           }
                           name={
-                            type == "packs"
+                            a.nft == pack
                               ? packs[a.nftId]?.properties?.name?.value
                               : cards[a.nftId]?.properties?.name?.value
                           }
@@ -486,11 +528,11 @@ const MarketplaceComponent = () => {
                   </div>
                 )}
                 {sales
-                  ?.filter((sale, i) =>
-                    type !== "packs"
+                  ?.filter((sale, i) => {
+                    return sale.nft !== pack
                       ? filterCards(cards[sale.nftId])
-                      : filterCards(packs[sale.nftId]),
-                  )
+                      : filterPacks(packs[sale.nftId]);
+                  })
                   .filter((sale) => {
                     return (
                       Math.floor(new Date().getTime() / 1000) <=
@@ -520,11 +562,11 @@ const MarketplaceComponent = () => {
                           page <
                           Math.floor(
                             (sales
-                              .filter((sale, i) =>
-                                type !== "packs"
+                              .filter((sale, i) => {
+                                return sale.nft !== pack
                                   ? filterCards(cards[sale.nftId])
-                                  : filterCards(packs[sale.nftId]),
-                              )
+                                  : filterPacks(packs[sale.nftId]);
+                              })
                               .filter((sale) => {
                                 return (
                                   Math.floor(new Date().getTime() / 1000) <=

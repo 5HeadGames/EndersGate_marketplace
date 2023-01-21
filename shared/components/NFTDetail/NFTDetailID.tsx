@@ -1,5 +1,10 @@
 import React from "react";
-import { LeftOutlined, LoadingOutlined, SwapOutlined } from "@ant-design/icons";
+import {
+  LeftCircleFilled,
+  LeftOutlined,
+  LoadingOutlined,
+  SwapOutlined,
+} from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Web3 from "web3";
 
@@ -265,8 +270,16 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       </Modal>
 
       {id !== undefined ? (
-        <div className="min-h-screen w-full flex flex-col xl:px-36 md:px-10 sm:px-6 px-4 pt-10 pb-20">
-          <div className="w-full flex xl:flex-row flex-col mt-10 gap-4 justify-center">
+        <div className="min-h-screen w-full flex flex-col xl:px-36 md:px-10 sm:px-6 px-4 pt-20 pb-20">
+          <div
+            className="flex w-full text-lg items-center gap-2 text-white"
+            onClick={() => router.back()}
+          >
+            <div className="flex items-center gap-2 cursor-pointer w-min">
+              <LeftCircleFilled className="w-5 h-5" /> Back
+            </div>
+          </div>
+          <div className="w-full flex xl:flex-row flex-col  gap-4 justify-center">
             <div className="flex flex-col gap-2">
               <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
                 <div
