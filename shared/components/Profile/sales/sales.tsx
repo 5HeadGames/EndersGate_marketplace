@@ -61,7 +61,7 @@ const Sales = () => {
   }, [nfts, user]);
 
   return (
-    <div className="flex flex-col w-full min-h-screen pt-28 gap-4 md:px-20 px-8">
+    <div className="flex flex-col w-full min-h-screen gap-4 md:px-20 px-8">
       <div className="flex w-full items-center">
         <h1 className="text-white text-4xl font-bold text-center w-full">
           My Sales
@@ -117,7 +117,7 @@ const Sales = () => {
               <thead className="text-white font-bold">
                 <th className="text-center px-10">NFT</th>
                 <th className="text-center px-10">SALE ID</th>
-                <th className="text-center px-10">ROLE</th>
+                {/* <th className="text-center px-10"></th> */}
                 <th className="text-center px-10">PRICE</th>
                 <th className="text-center px-10">AMOUNT</th>
                 <th className="text-center px-10"></th>
@@ -166,7 +166,7 @@ const Sales = () => {
                               </h2>
                             </div>
                           </td>
-                          <td className="py-4 px-4">
+                          {/* <td className="py-4 px-4">
                             <div className="flex flex-col items-center">
                               <h2 className="text-white text-lg font-bold">
                                 {cards[sale.nftId]?.properties.role?.value
@@ -177,7 +177,7 @@ const Sales = () => {
                                   : ""}
                               </h2>
                             </div>
-                          </td>
+                          </td> */}
                           <td className="py-4 px-4">
                             <div className="flex flex-col items-center pr-2">
                               <h2 className="text-white text-lg font-bold">

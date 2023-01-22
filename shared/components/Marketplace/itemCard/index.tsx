@@ -414,9 +414,9 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                       </div>
                       <div className="flex lg:text-md items-center gap-2 text-sm font-medium">
                         {getTokensAllowed()
-                          .filter((item) =>
-                            props?.tokens?.includes(item.address),
-                          )
+                          .filter((item) => {
+                            return props?.tokens?.includes(item.address);
+                          })
                           .map((item) => (
                             <img
                               src={item.logo}

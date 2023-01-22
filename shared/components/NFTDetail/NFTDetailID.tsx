@@ -276,7 +276,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
             onClick={() => router.back()}
           >
             <div className="flex items-center gap-2 cursor-pointer w-min">
-              <LeftCircleFilled className="w-5 h-5" /> Back
+              <LeftCircleFilled className="w-8 h-8" />
             </div>
           </div>
           <div className="w-full flex xl:flex-row flex-col  gap-4 justify-center">

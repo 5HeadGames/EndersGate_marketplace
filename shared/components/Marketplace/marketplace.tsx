@@ -167,20 +167,23 @@ const MarketplaceComponent = () => {
 
   const [filters, setFilters] = React.useState({
     avatar: [],
+    cardRarity: [],
     cardRole: [],
     cardRace: [],
     cardElement: [],
-    packType: [],
+    packRarity: [],
   });
 
   const filterCards = (card) => {
     let passed = false;
+    console.log(card);
     if (cardType === "all") {
       if (
         filters.avatar.length === 0 &&
         filters.cardRace.length === 0 &&
         filters.cardRole.length === 0 &&
-        filters.cardElement.length === 0
+        filters.cardElement.length === 0 &&
+        type === ""
       ) {
         passed = true;
       }
@@ -261,7 +264,8 @@ const MarketplaceComponent = () => {
           filters.avatar.length === 0 &&
           filters.cardRace.length === 0 &&
           filters.cardRole.length === 0 &&
-          filters.cardElement.length === 0
+          filters.cardElement.length === 0 &&
+          type === ""
         ) {
           passed = true;
         }
@@ -337,6 +341,19 @@ const MarketplaceComponent = () => {
         }
       }
     }
+    if (type === "guardian_cards" && card?.properties?.isGuardian?.value) {
+      if (filters.cardRarity.length === 0) {
+        passed = true;
+      } else {
+        if (filters.cardRarity?.includes(card?.typeCard.toLowerCase())) {
+          passed = true;
+        } else {
+          return false;
+        }
+      }
+    } else if (type === "guardian_cards") {
+      return false;
+    }
 
     if (search === "") {
       return passed;
@@ -349,8 +366,13 @@ const MarketplaceComponent = () => {
 
   const filterPacks = (pack) => {
     let passed = false;
-    if (filters.packType.length > 0) {
-      if (filters.packType.includes(pack.properties.name.value)) {
+    if (type === "guardian_cards" || type === "trading_cards") {
+      return false;
+    }
+    if (filters.packRarity.length > 0) {
+      if (
+        filters.packRarity.includes(pack.properties.name.value.toLowerCase())
+      ) {
         passed = true;
       }
     } else {
@@ -504,6 +526,7 @@ const MarketplaceComponent = () => {
                           id={a.nftId}
                           transactionId={a.id}
                           seller={a.seller}
+                          tokens={a.tokens}
                           icon={
                             a.nft == pack
                               ? packs[a.nftId]?.properties?.image?.value

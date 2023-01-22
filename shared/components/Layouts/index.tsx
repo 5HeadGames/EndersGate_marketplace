@@ -49,6 +49,7 @@ import { DropdownCart } from "../common/dropdownCart/dropdownCart";
 import { convertArrayCards } from "../common/convertCards";
 import Web3 from "web3";
 import { useSelector } from "react-redux";
+import { useToasts } from "react-toast-notifications";
 
 type ButtonsTypes = { logout: boolean; userData: boolean };
 
@@ -153,6 +154,8 @@ export default function AppLayout({ children }) {
   const cards = convertArrayCards();
 
   const [user, setUser] = React.useState<any>();
+
+  const { addToast } = useToasts();
 
   const router = useRouter();
   const { account } = useWeb3React();
@@ -271,8 +274,13 @@ export default function AppLayout({ children }) {
   };
 
   const buyNFTs = async () => {
+    if (tokenSelected == "") {
+      addToast("Please Select a Payment Method", { appearance: "error" });
+      return;
+    }
+    console.log(tokenSelected, "token to pay");
     try {
-      setMessageBuy(`Processing your purchase`);
+      setMessageBuy(`Processing your purchase...`);
 
       const { amounts, bid, token, tokensId } = {
         amounts: cart.map((item) => item.quantity),
@@ -284,7 +292,7 @@ export default function AppLayout({ children }) {
             return findSum(item, acc) as any;
           }),
         token: tokenSelected,
-        tokensId: cart.map((item) => item.nftId),
+        tokensId: cart.map((item) => item.id),
       };
 
       const { marketplace, MATICUSD } = getAddresses();
@@ -298,7 +306,8 @@ export default function AppLayout({ children }) {
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addresses = getTokensAllowed();
       if (
-        token == addresses.filter((item) => item.name == "MATIC")[0].address
+        tokenSelected ==
+        addresses.filter((item) => item.name == "MATIC")[0].address
       ) {
         const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
@@ -314,6 +323,12 @@ export default function AppLayout({ children }) {
           .allowance(user, marketplace)
           .call();
         if (allowance < 1000000000000) {
+          setMessageBuy(
+            `Increasing the allowance of ${
+              tokensAllowed.filter((item) => item.address == tokenSelected)[0]
+                .name
+            } 1/2`,
+          );
           await ERC20.methods
             .increaseAllowance(
               marketplace,
@@ -322,10 +337,17 @@ export default function AppLayout({ children }) {
             .send({
               from: user,
             });
+          setMessageBuy("Buying your NFT(s) 2/2");
+          await marketplaceContract.methods
+            .buyBatch(tokensId, amounts, tokenSelected)
+            .send({ from: user });
+        } else {
+          setMessageBuy("Buying your NFT(s)");
+          await marketplaceContract.methods
+            .buyBatch(tokensId, amounts, tokenSelected)
+            .send({ from: user });
         }
-        const { transactionHash } = await marketplaceContract.methods
-          .buyBatch(tokensId, amounts, token)
-          .send({ from: user });
+
         // }
         dispatch(removeAll());
       }
@@ -606,7 +628,9 @@ export default function AppLayout({ children }) {
                       </div>
                       <div className="flex flex-col gap-1">
                         <h3 className={clsx("text-md font-[700] uppercase")}>
-                          {cards[item.nftId]?.properties?.name?.value}
+                          {item.nft == pack
+                            ? packs[item.nftId]?.properties?.name?.value
+                            : cards[item.nftId]?.properties?.name?.value}
                         </h3>
                         <span
                           className="text-[12px] text-gray-500 font-medium"
@@ -688,12 +712,14 @@ export default function AppLayout({ children }) {
                     <div
                       className={clsx(
                         "w-20 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
+
                         {
-                          "bg-overlay-border border-white":
-                            tokenSelected == item.address,
+                          "bg-overlay-border border-none":
+                            tokenSelected !== item.address,
                         },
                         {
-                          "bg-overlay": tokenSelected !== item.address,
+                          "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
+                            tokenSelected == item.address,
                         },
                       )}
                       onClick={() => {

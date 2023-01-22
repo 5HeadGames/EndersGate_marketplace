@@ -54,6 +54,8 @@ const FiltersBoard = ({
       arr.splice(index, 1);
       setFilters({ ...filters, cardRole: arr });
     }
+    ResetPacks();
+    ResetAvatars();
   };
 
   const handleElementChange = (checked, value) => {
@@ -65,6 +67,40 @@ const FiltersBoard = ({
       arr.splice(index, 1);
       setFilters({ ...filters, cardElement: arr });
     }
+    ResetPacks();
+    ResetAvatars();
+  };
+
+  const handleRarityChange = (checked, value) => {
+    if (checked) {
+      setFilters({
+        ...filters,
+        cardRarity: [...filters.cardRarity, value],
+      });
+    } else {
+      let arr = [...filters.cardRarity];
+      const index = arr.findIndex((item) => item === value);
+      arr.splice(index, 1);
+      setFilters({ ...filters, cardRarity: arr });
+    }
+    ResetPacks();
+    ResetAvatars();
+  };
+
+  const handlePackRarityChange = (checked, value) => {
+    if (checked) {
+      setFilters({
+        ...filters,
+        packRarity: [...filters.packRarity, value],
+      });
+    } else {
+      let arr = [...filters.packRarity];
+      const index = arr.findIndex((item) => item === value);
+      arr.splice(index, 1);
+      setFilters({ ...filters, packRarity: arr });
+    }
+    ResetGuardians();
+    ResetAvatars();
   };
 
   const filterItems = [
@@ -230,13 +266,7 @@ const FiltersBoard = ({
           value: "monster",
           valueBool: filters.cardRace.includes("monster"),
         },
-        {
-          title: "Monster",
-          onClick: () =>
-            handleRaceChange(!filters.cardRace.includes("monster"), "monster"),
-          value: "monster",
-          valueBool: filters.cardRace.includes("monster"),
-        },
+
         {
           title: "Ascended",
           onClick: () =>
@@ -360,19 +390,45 @@ const FiltersBoard = ({
     // },
   ];
 
-  const Reset = () => {
-    setFilters();
+  const ResetAvatars = () => {
+    setFilters((filters) => {
+      return {
+        ...filters,
+        avatar: [],
+      };
+    });
+  };
+
+  const ResetGuardians = () => {
+    setFilters((filters) => {
+      return {
+        ...filters,
+        cardRarity: [],
+        cardRole: [],
+        cardRace: [],
+        cardElement: [],
+      };
+    });
+  };
+
+  const ResetPacks = () => {
+    setFilters((filters) => {
+      return {
+        ...filters,
+        packRarity: [],
+      };
+    });
   };
 
   React.useEffect(() => {
-    console.log(filters);
+    console.log(filters, "filters");
   }, [filters]);
 
   const [priceCollapsed, setPriceCollapsed] = React.useState(true);
 
   return (
     <div className="xl:w-52 w-full flex flex-col shrink-0">
-      <div className="flex rounded-md bg-overlay-2 border border-overlay-border xl:pt-1 xl:px-6 p-4 xl:pb-16 w-full">
+      <div className="flex rounded-md bg-overlay-2 border border-overlay-border xl:pt-4 xl:px-6 p-4 xl:pb-16 w-full">
         <div className="flex xl:items-center gap-2 xl:flex-col gap-x-16 flex-row flex-wrap justify-center w-full">
           <div className="flex flex-col gap-2 lg:w-full w-48">
             <h2
@@ -433,48 +489,6 @@ const FiltersBoard = ({
               NFT Type
             </h2>
             <div className="flex flex-col gap-1 w-full">
-              {[
-                { text: "Reaction Card", value: "reaction" },
-                { text: "Action Cards", value: "action" },
-                { text: "Avatar Cards", value: "avatar" },
-              ].map((item, index) => (
-                <div
-                  onClick={() => {
-                    if (item.value !== cardType) {
-                      setType("trading_cards");
-                      setCardType(item.value);
-                    } else {
-                      setCardType("all");
-                      setType("");
-                    }
-                  }}
-                  className={clsx(
-                    "flex items-center justify-between  w-full  cursor-pointer",
-                    "rounded-md",
-                    "text-white text-[15px]",
-                  )}
-                >
-                  <p
-                    className={clsx(
-                      {
-                        ["text-gray-300"]: item.value !== cardType,
-                      },
-                      {
-                        ["text-white"]: cardType === item.value,
-                      },
-                    )}
-                  >
-                    {item.text}
-                  </p>
-                  <div
-                    className={clsx(
-                      { ["bg-primary"]: cardType === item.value },
-                      { ["bg-gray-800"]: cardType !== item.value },
-                      "rounded-full w-6 h-6 border border-gray-800",
-                    )}
-                  ></div>
-                </div>
-              ))}
               {["packs"].map((nftType, index) => (
                 <div
                   onClick={() => {
@@ -485,6 +499,8 @@ const FiltersBoard = ({
                       setCardType("all");
                       setType("");
                     }
+                    ResetGuardians();
+                    ResetAvatars();
                   }}
                   className={clsx(
                     "flex items-center justify-between  w-full  cursor-pointer",
@@ -513,22 +529,23 @@ const FiltersBoard = ({
                   ></div>
                 </div>
               ))}
-            </div>
-          </div>
-          <div className="flex flex-col gap-2 lg:w-full w-48">
-            <h2 className="text-lg font-bold text-white lg:text-left text-center w-full">
-              EG Guardian Card Rarity
-            </h2>
-            <div className="flex flex-col gap-1 w-full">
               {[
-                { text: "Common (wood)", value: "wood" },
-                { text: "Uncommon (stone)", value: "stone" },
-                { text: "Rare (silver)", value: "iron" },
-                { text: "Epic (gold)", value: "gold" },
-                { text: "Legendary", value: "legendary" },
+                { text: "Reaction Card", value: "reaction" },
+                { text: "Action Cards", value: "action" },
+                { text: "Avatar Cards", value: "avatar" },
               ].map((item, index) => (
                 <div
-                  onClick={() => setCardType(item.value)}
+                  onClick={() => {
+                    if (item.value !== cardType) {
+                      setType("trading_cards");
+                      setCardType(item.value);
+                    } else {
+                      setCardType("all");
+                      setType("");
+                    }
+                    ResetGuardians();
+                    ResetPacks();
+                  }}
                   className={clsx(
                     "flex items-center justify-between  w-full  cursor-pointer",
                     "rounded-md",
@@ -551,6 +568,108 @@ const FiltersBoard = ({
                     className={clsx(
                       { ["bg-primary"]: cardType === item.value },
                       { ["bg-gray-800"]: cardType !== item.value },
+                      "rounded-full w-6 h-6 border border-gray-800",
+                    )}
+                  ></div>
+                </div>
+              ))}
+              {[{ text: "Guardian Cards", value: "guardian_cards" }].map(
+                (item, index) => (
+                  <div
+                    onClick={() => {
+                      if (item.value !== type) {
+                        setType("guardian_cards");
+                        setCardType("all");
+                      } else {
+                        setCardType("all");
+                        setType("");
+                      }
+                      ResetPacks();
+                      ResetAvatars();
+                    }}
+                    className={clsx(
+                      "flex items-center justify-between  w-full  cursor-pointer",
+                      "rounded-md",
+                      "text-white text-[15px]",
+                    )}
+                  >
+                    <p
+                      className={clsx(
+                        {
+                          ["text-gray-300"]: item.value !== type,
+                        },
+                        {
+                          ["text-white"]: type === item.value,
+                        },
+                      )}
+                    >
+                      {item.text}
+                    </p>
+                    <div
+                      className={clsx(
+                        { ["bg-primary"]: type === item.value },
+                        { ["bg-gray-800"]: type !== item.value },
+                        "rounded-full w-6 h-6 border border-gray-800",
+                      )}
+                    ></div>
+                  </div>
+                ),
+              )}
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 lg:w-full w-48">
+            <h2 className="text-lg font-bold text-white lg:text-left text-center w-full">
+              EG Guardian Card Rarity
+            </h2>
+            <div className="flex flex-col gap-1 w-full">
+              {[
+                { text: "Common (wood)", value: "wood" },
+                { text: "Uncommon (stone)", value: "stone" },
+                { text: "Rare (silver)", value: "iron" },
+                { text: "Epic (gold)", value: "gold" },
+                { text: "Legendary", value: "legendary" },
+              ].map((item, index) => (
+                <div
+                  onClick={() => {
+                    handleRarityChange(
+                      !filters.cardRarity.includes(item.value),
+                      item.value,
+                    );
+                    setCardType("all");
+                    setType("guardian_cards");
+                    ResetPacks();
+                    ResetAvatars();
+                  }}
+                  className={clsx(
+                    "flex items-center justify-between  w-full  cursor-pointer",
+                    "rounded-md",
+                    "text-white text-[15px]",
+                  )}
+                >
+                  <p
+                    className={clsx(
+                      {
+                        ["text-gray-300"]: !filters.cardRarity.includes(
+                          item.value,
+                        ),
+                      },
+                      {
+                        ["text-white"]: filters.cardRarity.includes(item.value),
+                      },
+                    )}
+                  >
+                    {item.text}
+                  </p>
+                  <div
+                    className={clsx(
+                      {
+                        ["bg-primary"]: filters.cardRarity.includes(item.value),
+                      },
+                      {
+                        ["bg-gray-800"]: !filters.cardRarity.includes(
+                          item.value,
+                        ),
+                      },
                       "rounded-full w-6 h-6 border border-gray-800",
                     )}
                   ></div>
@@ -604,6 +723,62 @@ const FiltersBoard = ({
               </div>
             ),
           )}
+          <div className="flex flex-col gap-2 lg:w-full w-48">
+            <h2 className="text-lg font-bold text-white lg:text-left text-center w-full">
+              EG Pack Rarity
+            </h2>
+            <div className="flex flex-col gap-1 w-full">
+              {[
+                { text: "Common", value: "common pack" },
+                { text: "Rare", value: "rare pack" },
+                { text: "Epic", value: "epic pack" },
+                { text: "Legendary", value: "legendary pack" },
+              ].map((item, index) => (
+                <div
+                  onClick={() => {
+                    handlePackRarityChange(
+                      !filters.packRarity.includes(item.value),
+                      item.value,
+                    );
+                    setType("packs");
+                  }}
+                  className={clsx(
+                    "flex items-center justify-between  w-full  cursor-pointer",
+                    "rounded-md",
+                    "text-white text-[15px]",
+                  )}
+                >
+                  <p
+                    className={clsx(
+                      {
+                        ["text-gray-300"]: !filters.packRarity.includes(
+                          item.value,
+                        ),
+                      },
+                      {
+                        ["text-white"]: filters.packRarity.includes(item.value),
+                      },
+                    )}
+                  >
+                    {item.text}
+                  </p>
+                  <div
+                    className={clsx(
+                      {
+                        ["bg-primary"]: filters.packRarity.includes(item.value),
+                      },
+                      {
+                        ["bg-gray-800"]: !filters.packRarity.includes(
+                          item.value,
+                        ),
+                      },
+                      "rounded-full w-6 h-6 border border-gray-800",
+                    )}
+                  ></div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

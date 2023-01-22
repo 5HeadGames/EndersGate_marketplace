@@ -5,12 +5,12 @@
     "logo": "/images/matic.png"
   },
   {
-    "address": "0x65b5df19756925Fe1a799dd65742185f117ca0d3",
+    "address": "0x36c9600994524E46068b0F64407ea509218EfFD8",
     "name": "USDC",
     "logo": "/images/usdc.png"
   },
   {
-    "address": "0xf5364E008460Bd7a888ACED6A8C1030274dA5f73",
+    "address": "0xBD3045b233bd07a15c8c782ec8702fb5D7Eef163",
     "name": "BUSD",
     "logo": "/images/busd.png"
   }
