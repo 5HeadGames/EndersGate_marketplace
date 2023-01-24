@@ -198,7 +198,7 @@ contract ClockSaleMultiTokens is
     ) public {
         require(
             tokensId.length == amounts.length,
-            "Array Lenght mus be the same of amount and Ids"
+            "Array Length must be the same of amount and Ids"
         );
         for (uint256 i = 0; i < tokensId.length; i++) {
             buy(tokensId[i], amounts[i], tokenToPay);
@@ -290,6 +290,24 @@ contract ClockSaleMultiTokens is
 
     function restartTrading() external onlyOwner whenPaused {
         _unpause();
+    }
+
+    function updateSalePrice(uint256 saleId, uint256 newPrice)
+        external
+        onlyOwner
+    {
+        Sale storage _auction = sales[saleId];
+        require(_saleExists(_auction), "ClockSale:NOT_AVAILABLE");
+        _auction.priceUSD = newPrice;
+    }
+
+    function updateSaleReceiver(uint256 saleId, address receiver)
+        external
+        onlyOwner
+    {
+        Sale storage _auction = sales[saleId];
+        require(_saleExists(_auction), "ClockSale:NOT_AVAILABLE");
+        _auction.seller = receiver;
     }
 
     function addToken(
