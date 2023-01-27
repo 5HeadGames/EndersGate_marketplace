@@ -382,7 +382,7 @@ describe("[ClockSaleXD]", function () {
       const receipt = await (
         await marketplace
           .connect(buyer)
-          .buy(sales[1], amount, feeReceiver.address, { value: cost })
+          .buyBatch([sales[1]], [amount], feeReceiver.address, { value: cost })
       ).wait();
       const log = getLogs(marketplace.interface, receipt).find(
         ({ name }) => name === "BuySuccessful",

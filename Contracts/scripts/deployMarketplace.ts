@@ -36,6 +36,9 @@ async function main() {
   console.log("deploy:marketplaceOwnable");
   const marketplaceOwnable = (await SalesOwnableFactory.deploy(
     _accounts[0].address,
+    "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+    "0xAB594600376Ec9fD91F8e885dADF0CE036862dE0",
+    18,
     OWNER_CUT,
   )) as ClockSaleOwnable;
 
