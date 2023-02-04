@@ -701,7 +701,11 @@ export default function AppLayout({ children }) {
                 .filter((tokenAllowed) => {
                   let intersection = true;
                   cart.forEach((item) => {
-                    if (!item.tokens.includes(tokenAllowed.address)) {
+                    if (
+                      !item.tokens
+                        .map((item) => item.toLowerCase())
+                        .includes(tokenAllowed.address.toLowerCase())
+                    ) {
                       intersection = false;
                     }
                   });
