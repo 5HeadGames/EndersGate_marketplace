@@ -288,9 +288,11 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                                       cart.map((item) => {
                                         intersection = intersection.filter(
                                           (element) =>
-                                            item.tokens.includes(
-                                              element.address,
-                                            ),
+                                            item.tokens
+                                              .map((item) => item.toLowerCase())
+                                              .includes(
+                                                element.address.toLowerCase(),
+                                              ),
                                         );
                                       });
                                       if (intersection.length > 0) {
@@ -415,7 +417,9 @@ const NFTCard: React.FunctionComponent<Props> = (props) => {
                       <div className="flex lg:text-md items-center gap-2 text-sm font-medium">
                         {getTokensAllowed()
                           .filter((item) => {
-                            return props?.tokens?.includes(item.address);
+                            return props?.tokens
+                              .map((token) => token.toLowerCase())
+                              ?.includes(item.address.toLowerCase());
                           })
                           .map((item) => (
                             <img

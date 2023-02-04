@@ -109,9 +109,19 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     Math.floor(new Date().getTime() / 1000) >=
       parseInt(sale?.duration) + parseInt(sale?.startedAt);
 
-  console.log(sale, "sale 2");
-
   const tokensAllowed = getTokensAllowed();
+
+  console.log(
+    tokensAllowed
+      .map((item) => {
+        return item?.address?.toLowerCase();
+      })
+      .filter((item) =>
+        sale?.tokens.map((item) => item.toLowerCase())?.includes(item),
+      ),
+    sale?.tokens,
+    "xd",
+  );
 
   return (
     <>
@@ -191,7 +201,11 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
                   {tokensAllowed
-                    .filter((item) => sale?.tokens?.includes(item.address))
+                    .filter((item) =>
+                      sale?.tokens
+                        .map((item) => item.toLowerCase())
+                        ?.includes(item.address.toLowerCase()),
+                    )
                     .map((item, index) => {
                       return (
                         <div
@@ -617,14 +631,12 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                           Contract:
                         </p>
                         <a
-                          href={
+                          href={`${
                             CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]
-                              ?.blockExplorer +
-                            "/address/" +
-                            !isPack
-                              ? endersGateAddress
-                              : packAddress
-                          }
+                              ?.blockExplorer
+                          }/address/${
+                            !isPack ? endersGateAddress : packAddress
+                          }`}
                           target="_blank"
                           rel="noreferrer"
                           className="text-red-primary font-[400] text-lg flex items-center gap-1"
