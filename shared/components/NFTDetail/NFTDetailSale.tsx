@@ -56,8 +56,6 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const { pack: packAddress, endersGate: endersGateAddress } = getAddresses();
 
-  console.log(packAddress, endersGateAddress);
-
   React.useEffect(() => {
     if (id) {
       getSale();
