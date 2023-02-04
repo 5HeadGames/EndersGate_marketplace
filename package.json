@@ -10,7 +10,7 @@
     "@emotion/styled": "^11.10.5",
     "@ethersproject/experimental": "^5.7.0",
     "@harmony-js/core": "^0.1.57",
-    "@headlessui/react": "^1.4.2",
+    "@headlessui/react": "^1.7.9",
     "@heroicons/react": "^1.0.5",
     "@magic-ext/connect": "^3.0.0",
     "@material-ui/core": "^4.12.4",
