@@ -29,6 +29,7 @@ import { useWeb3React } from "@web3-react/core";
 import { DropdownActions } from "../common/dropdownActions/dropdownActions";
 import ReactCardFlip from "react-card-flip";
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
+import { CHAINS } from "../chains";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const { account: user, provider } = useWeb3React();
@@ -52,6 +53,10 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const [tokenSelected, setTokenSelected] = React.useState({ address: "" });
 
   const [message, setMessage] = React.useState("");
+
+  const { pack: packAddress, endersGate: endersGateAddress } = getAddresses();
+
+  console.log(packAddress, endersGateAddress);
 
   React.useEffect(() => {
     if (id) {
@@ -590,7 +595,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                           Blockchain:
                         </p>
                         <p className="text-primary-disabled  font-[400] text-lg">
-                          Harmony (ONE)
+                          {CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]?.name}
                         </p>
                       </div>
                       <div className="w-full flex justify-between py-2 border-b border-overlay-border px-6">
@@ -615,13 +620,20 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         </p>
                         <a
                           href={
-                            "https://explorer.harmony.one/address/" + sale.nft
+                            CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]
+                              ?.blockExplorer +
+                            "/address/" +
+                            !isPack
+                              ? endersGateAddress
+                              : packAddress
                           }
                           target="_blank"
                           rel="noreferrer"
                           className="text-red-primary font-[400] text-lg flex items-center gap-1"
                         >
-                          <AddressText text={sale.nft}></AddressText>{" "}
+                          <AddressText
+                            text={!isPack ? endersGateAddress : packAddress}
+                          ></AddressText>{" "}
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
