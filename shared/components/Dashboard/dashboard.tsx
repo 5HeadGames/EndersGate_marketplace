@@ -157,17 +157,23 @@ const DashboardComponent = () => {
                           description:
                             "Enjoy +230 Unique hand drawn playing cards.",
                           image: "/images/gen0_pack.png",
+                          link: "https://www.endersgate.gg/shop",
                         },
-                        {
-                          name: "EG NFT Comics",
-                          description:
-                            "Collect the lore & enjoy original stories.",
-                          image: "/images/comic_pack.png",
-                        },
-                      ]?.map(({ name, description, image }: any) => {
+                        // {
+                        //   name: "EG NFT Comics",
+                        //   description:
+                        //     "Collect the lore & enjoy original stories.",
+                        //   image: "/images/comic_pack.png",
+                        // },
+                      ]?.map(({ name, description, image, link }: any) => {
                         return (
                           // <SwiperSlide>
-                          <div className="flex flex-col items-center justify-center h-[400px] sm:max-w-[350px] overflow-hidden shrink-0">
+                          <a
+                            href={link}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex flex-col items-center justify-center h-[400px] sm:max-w-[350px] overflow-hidden shrink-0"
+                          >
                             {/* <div className="px-4"> */}
                             <div className="bg-secondary rounded-xl border border-overlay-border h-[390px] sm:max-w-[350px] flex items-end overflow-hidden w-full">
                               <img
@@ -195,7 +201,7 @@ const DashboardComponent = () => {
                               </div>
                               {/* </div> */}
                             </div>
-                          </div>
+                          </a>
                           // </SwiperSlide>
                         );
                       })}
@@ -207,16 +213,23 @@ const DashboardComponent = () => {
                       description:
                         "Enjoy +230 Unique hand drawn playing cards.",
                       image: "/images/gen0_pack.png",
+                      link: "https://www.endersgate.gg/shop",
                     },
-                    {
-                      name: "EG NFT Comics",
-                      description: "Collect the lore & enjoy original stories.",
-                      image: "/images/comic_pack.png",
-                    },
-                  ]?.map(({ name, description, image }: any) => {
+                    // {
+                    //   name: "EG NFT Comics",
+                    //   description: "Collect the lore & enjoy original stories.",
+                    //   image: "/images/comic_pack.png",
+                    //   link: "https://www.endersgate.gg/shop",
+                    // },
+                  ]?.map(({ name, description, image, link }: any) => {
                     return (
                       <SwiperSlide className="xl:hidden flex">
-                        <div className="flex flex-col items-center justify-center h-[450px] max-w-[400px] overflow-hidden">
+                        <a
+                          href={link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex flex-col items-center justify-center h-[450px] max-w-[400px] overflow-hidden"
+                        >
                           <div className="bg-secondary rounded-xl border border-overlay-border h-[440px] max-w-[400px] flex items-end overflow-hidden w-full">
                             <img
                               src={image}
@@ -242,7 +255,7 @@ const DashboardComponent = () => {
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </a>
                       </SwiperSlide>
                     );
                   })}
