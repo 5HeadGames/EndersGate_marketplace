@@ -8,5 +8,10 @@
   "marketplace": "0x7b4F40365C17eEb666952306295bae11F9ac4fdF",
   "marketplaceOwnable": "0x2d000eBA5fc8AD0f428cE84ed50E65c746AB99cB",
   "usdc": "0x36c9600994524E46068b0F64407ea509218EfFD8",
-  "busd": "0xBD3045b233bd07a15c8c782ec8702fb5D7Eef163"
+  "busd": "0xBD3045b233bd07a15c8c782ec8702fb5D7Eef163",
+  "common_pack": "0x10425C0Fcf77bb6f2579793A07b3B0E065c643cB",
+  "rare_pack": "0xa8360d6aa3ee8ac0396253bd87853dddaeb08d1a",
+  "epic_pack": "0x62cb65043a0e8ea480c041f58743f323fac146fc",
+  "legendary_pack": "0xca501cd8676d3e09b40590475c44a59cb73fa473",
+  "exchange": ""
 }

@@ -386,6 +386,11 @@ export default function AppLayout({ children }) {
       icon: <AreaChartOutlined />,
     },
     {
+      name: "SWAP",
+      link: "/profile/swap",
+      icon: <AreaChartOutlined />,
+    },
+    {
       name: "PROFILE",
       link: "/profile/accountSettings",
       icon: <AreaChartOutlined />,

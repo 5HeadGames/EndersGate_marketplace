@@ -118,6 +118,59 @@ export const onGetAssets = createAsyncThunk(
   },
 );
 
+export const onExchangeERC721to1155 = createAsyncThunk(
+  actionTypes.EXCHANGE_NFT,
+  async function prepare(args: {
+    from: string;
+    nfts: string[];
+    provider: any;
+    // user: any;
+  }) {
+    const {
+      from,
+      nfts,
+      // user,
+      provider,
+    } = args;
+
+    // const relation = user.relation("events");
+    try {
+      const { exchange } = getAddresses();
+
+      const marketplaceContract = getContractCustom(
+        "ExchangeERC1155",
+        exchange,
+        provider,
+      );
+
+      const { transactionHash } = await marketplaceContract.methods
+        .exchangeAllERC1155(nfts)
+        .send({ from: from });
+
+      // const event = createEvent({
+      //   type: "sell",
+      //   metadata: {
+      //     from,
+      //     tokenId,
+      //     startingPrice,
+      //     amount,
+      //     duration,
+      //     address,
+      //     transactionHash,
+      //   },
+      // });
+
+      // await event.save();
+      // relation.add(event);
+      // await user.save();
+
+      return { from, nfts };
+    } catch (err) {
+      console.log({ err });
+    }
+  },
+);
+
 export const onSellERC1155 = createAsyncThunk(
   actionTypes.SELL_NFT,
   async function prepare(args: {
@@ -146,20 +199,16 @@ export const onSellERC1155 = createAsyncThunk(
     // const relation = user.relation("events");
     try {
       const { marketplace } = getAddresses();
-      console.log(marketplace, "hablale");
 
       const marketplaceContract = getContractCustom(
         "ClockSale",
         marketplace,
         provider,
       );
-      console.log(marketplaceContract, "hablale");
 
       const { transactionHash } = await marketplaceContract.methods
         .createSale(address, tokenId, startingPrice, tokens, amount, duration)
         .send({ from: from });
-
-      console.log(transactionHash, "hablale");
 
       // const event = createEvent({
       //   type: "sell",
