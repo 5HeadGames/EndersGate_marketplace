@@ -117,7 +117,7 @@ const SwapComponent = () => {
   return (
     <div className="flex flex-col w-full 2xl:px-36 px-24">
       <Modal isShow={isShow} withoutX>
-        <div className="flex flex-col items-center bg-secondary rounded-xl border border-overlay-border w-auto relative w-[500px]">
+        <div className="flex flex-col items-center bg-secondary rounded-xl border border-overlay-border w-full relative max-w-[500px]">
           <div className="flex items-center justify-center border-b border-overlay-border w-full py-4 px-4 relative">
             <h2 className="font-bold text-primary text-center text-3xl">
               Swap
