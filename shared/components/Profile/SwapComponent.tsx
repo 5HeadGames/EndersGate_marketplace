@@ -11,6 +11,7 @@ import { getAddresses, getContractCustom } from "@shared/web3";
 import Web3 from "web3";
 import { onExchangeERC721to1155 } from "@redux/actions";
 import { useToasts } from "react-toast-notifications";
+import { Icons } from "@shared/const/Icons";
 
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
@@ -230,21 +231,32 @@ const SwapComponent = () => {
         </Button>
       </div>
       <div className="flex items-center justify-center gap-4 min-h-[calc(75vh)] border border-overlay-border bg-overlay rounded-xl p-4 overflow-auto">
-        <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center justify-center gap-4">
-          {passPacks.map((item) => {
-            return (
-              <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
-                <img src={item.image} className="w-full" alt="" />
-                <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
-                  {item.name}
-                </h2>
-                <p className="text-md text-primary-disabled Raleway">
-                  QUANTITY: {balance[item.nameKey]}
-                </p>
-              </div>
-            );
-          })}
-        </div>
+        {Object.keys(balance)
+          ?.map((item) => balance[item])
+          ?.reduce((acc, num) => parseInt(acc) + parseInt(num)) > 0 ? (
+          <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center justify-center gap-4">
+            {passPacks.map((item) => {
+              return (
+                <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
+                  <img src={item.image} className="w-full" alt="" />
+                  <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
+                    {item.name}
+                  </h2>
+                  <p className="text-md text-primary-disabled Raleway">
+                    QUANTITY: {balance[item.nameKey]}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2 h-full w-full items-center justify-center">
+            <img src={Icons.logoCard} className="w-20" alt="" />
+            <h2 className="text-xl text-primary-disabled text-center">
+              You don't have any Pass NFT
+            </h2>
+          </div>
+        )}
       </div>
     </div>
   );
