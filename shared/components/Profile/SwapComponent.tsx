@@ -1,7 +1,7 @@
 import { Button } from "@shared/components/common/button";
 
 import React from "react";
-import { SearchOutlined } from "@ant-design/icons";
+import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 
 import { useWeb3React } from "@web3-react/core";
 import { XIcon } from "@heroicons/react/solid";
@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "@shared/hooks/modal";
 import { getAddresses, getContractCustom } from "@shared/web3";
 import Web3 from "web3";
+import { onExchangeERC721to1155 } from "@redux/actions";
+import { useToasts } from "react-toast-notifications";
 
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
@@ -17,11 +19,13 @@ const navItems = [
 
 const SwapComponent = () => {
   const { account: user, provider } = useWeb3React();
-  const { ethAddress } = useSelector((state: any) => state.layout.user);
 
   const dispatch = useDispatch();
   const { Modal, show, hide, isShow } = useModal();
-  const { common_pack, rare_pack, epic_pack, legendary_pack } = getAddresses();
+  const { common_pack, rare_pack, epic_pack, legendary_pack, exchange } =
+    getAddresses();
+
+  const { addToast } = useToasts();
 
   const passPacks = [
     {
@@ -57,6 +61,8 @@ const SwapComponent = () => {
     "Legendary Pack": 0,
   });
   const [search, setSearch] = React.useState("");
+
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (user) {
@@ -94,59 +100,89 @@ const SwapComponent = () => {
     setBalance(balance);
   };
 
-  const exchangeAll = () => {
-    // try{
-    //  const isApprovedForAll = await endersgateInstance.methods
-    //     .isApprovedForAll(user, marketplace)
-    //     .call();
-    //       await dispatch(
-    //     onSellERC1155({
-    //       address: endersGate,
-    //       from: user,
-    //       startingPrice: (sellNFTData.startingPrice * 10 ** 6).toString(),
-    //       amount: sellNFTData.amount,
-    //       tokenId: tokenId,
-    //       tokens: tokensSelected,
-    //       duration: sellNFTData.duration.toString(),
-    //       provider: provider.provider,
-    //       // user: user,
-    //     }),}catch(){
-    //     }
+  const exchangeAll = async () => {
+    setLoading(true);
+    try {
+      passPacks
+        .filter((item) => balance[item.nameKey] > 0)
+        .forEach(async (item) => {
+          const pack = await getContractCustom(
+            "ERC721Seadrop",
+            item.address,
+            provider.provider,
+          );
+          const isApproved = await pack.methods.isApprovalForAll(
+            user,
+            exchange,
+          );
+          if (!isApproved) {
+            await pack.methods.setApprovalForAll(exchange, true);
+          }
+        });
+      await dispatch(
+        onExchangeERC721to1155({
+          from: user,
+          nfts: passPacks
+            .filter((item) => balance[item.nameKey] > 0)
+            .map((item) => item.address),
+          provider: provider.provider,
+        }),
+      );
+      addToast("Your NFTs have been exchanged succesfully!", {
+        appearance: "success",
+      });
+      handleSetBalance();
+    } catch (error) {
+      console.log(error);
+      addToast("Ups! Error exchanging your tokens, please try again", {
+        appearance: "error",
+      });
+    }
+    hide();
+    setLoading(false);
   };
 
   return (
     <div className="flex flex-col w-full 2xl:px-36 px-24">
       <Modal isShow={isShow} withoutX>
-        <div className="flex flex-col items-center bg-secondary rounded-xl border border-overlay-border w-full relative max-w-[500px]">
+        <div className="flex flex-col items-center bg-secondary rounded-xl border border-overlay-border w-full relative md:max-w-[500px] md:min-w-[500px] max-w-[350px] min-w-[350px]">
           <div className="flex items-center justify-center border-b border-overlay-border w-full py-4 px-4 relative">
             <h2 className="font-bold text-primary text-center text-3xl">
               Swap
             </h2>
-            <XIcon
-              onClick={() => hide()}
-              className="absolute right-4 top-0 bottom-0 my-auto text-primary-disabled text-xl w-6 cursor-pointer"
-            ></XIcon>
+            {!loading && (
+              <XIcon
+                onClick={() => hide()}
+                className="absolute right-4 top-0 bottom-0 my-auto text-primary-disabled text-xl w-6 cursor-pointer"
+              ></XIcon>
+            )}
           </div>
-          <div className="flex flex-col gap-4 px-4 w-full items-center justify-center pb-4 pt-2 border-b border-overlay-border">
-            <h3 className="text-xl text-white text-left w-full font-bold Raleway">
-              Swap your ERC721 NFTs for ERC1155
-            </h3>
-            <p className="text-sm text-primary-disabled text-justify">
-              <span className="text-white"> Note:</span> You will need to
-              complete two transactions in order to list your tokens on our
-              platform. The first transaction is to grant us permission to list
-              your tokens, and the second transaction is to actually list the
-              tokens. If you have already granted us permission, you will only
-              need to complete the second transaction.
-            </p>
-          </div>
+          {!loading ? (
+            <div className="flex flex-col gap-4 px-4 w-full items-center justify-center pb-4 pt-2 border-b border-overlay-border">
+              <h3 className="text-xl text-white text-left w-full font-bold Raleway">
+                Swap your ERC721 NFTs for ERC1155
+              </h3>
+              <p className="text-sm text-primary-disabled text-justify">
+                <span className="text-white"> Note:</span> You will need to
+                complete two transactions in order to list your tokens on our
+                platform. The first transaction is to grant us permission to
+                list your tokens, and the second transaction is to actually list
+                the tokens. If you have already granted us permission, you will
+                only need to complete the second transaction.
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center min-h-[200px] border-b border-overlay-border w-full">
+              <LoadingOutlined className="text-2xl text-white" />
+            </div>
+          )}
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4">
             <Button
               className="px-2 py-1 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md"
               onClick={() => {
                 exchangeAll();
-                hide();
               }}
+              disabled={loading}
             >
               Confirm Swap
             </Button>
@@ -181,7 +217,7 @@ const SwapComponent = () => {
         <div className="text-primary-disabled font-bold Raleway">
           {Object.keys(balance)
             ?.map((item) => balance[item])
-            ?.reduce((acc, num) => acc + num)}{" "}
+            ?.reduce((acc, num) => parseInt(acc) + parseInt(num))}{" "}
           ERC721 Items
         </div>
         <Button
