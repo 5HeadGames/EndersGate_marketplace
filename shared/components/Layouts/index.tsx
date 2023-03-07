@@ -234,7 +234,6 @@ export default function AppLayout({ children }) {
   }, []);
 
   React.useEffect(() => {
-    console.log(user);
     if (user) dispatch(onGetAssets(user));
   }, [user]);
 

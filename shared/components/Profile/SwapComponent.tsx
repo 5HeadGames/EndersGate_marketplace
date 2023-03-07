@@ -9,7 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "@shared/hooks/modal";
 import { getAddresses, getContractCustom } from "@shared/web3";
 import Web3 from "web3";
-import { onExchangeERC721to1155 } from "@redux/actions";
+import {
+  onApproveERC1155,
+  onExchangeERC721to1155,
+  onGetAssets,
+} from "@redux/actions";
 import { useToasts } from "react-toast-notifications";
 import { Icons } from "@shared/const/Icons";
 
@@ -83,43 +87,51 @@ const SwapComponent = () => {
         ? process.env["NEXT_PUBLIC_POLYGON_RPC"]
         : "http://localhost:8585",
     );
-    passPacks.forEach(async (item) => {
+
+    for (let i = 0; i < passPacks.length; i++) {
+      const item = passPacks[i];
       const pack = await getContractCustom(
         "ERC721Seadrop",
         item.address,
         web3.currentProvider,
       );
-      console.log(
-        await pack.methods.balanceOf(user).call(),
-        user,
-        pack,
-        "balance",
-      );
-      balance[item.nameKey] = await pack.methods.balanceOf(user).call();
-    });
 
+      const balancePass = await pack.methods.balanceOf(user).call();
+      console.log(balancePass);
+      balance[item.nameKey] = balancePass;
+    }
+    console.log("executing balance", user, balance);
     setBalance(balance);
   };
 
   const exchangeAll = async () => {
     setLoading(true);
     try {
-      passPacks
-        .filter((item) => balance[item.nameKey] > 0)
-        .forEach(async (item) => {
-          const pack = await getContractCustom(
-            "ERC721Seadrop",
-            item.address,
-            provider.provider,
+      const packsToExchange = passPacks.filter(
+        (item) => balance[item.nameKey] > 0,
+      );
+
+      for (let i = 0; i < packsToExchange.length; i++) {
+        const item = packsToExchange[i];
+        const pack = await getContractCustom(
+          "ERC721Seadrop",
+          item.address,
+          provider.provider,
+        );
+        const isApproved = await pack.methods
+          .isApprovedForAll(user, exchange)
+          .call();
+        console.log(isApproved, "APROVAO");
+        if (isApproved == false) {
+          await dispatch(
+            onApproveERC1155({
+              from: user,
+              pack: item.address,
+              provider: provider.provider,
+            }),
           );
-          const isApproved = await pack.methods.isApprovalForAll(
-            user,
-            exchange,
-          );
-          if (!isApproved) {
-            await pack.methods.setApprovalForAll(exchange, true);
-          }
-        });
+        }
+      }
       await dispatch(
         onExchangeERC721to1155({
           from: user,
@@ -129,6 +141,7 @@ const SwapComponent = () => {
           provider: provider.provider,
         }),
       );
+      dispatch(onGetAssets(user));
       addToast("Your NFTs have been exchanged succesfully!", {
         appearance: "success",
       });
@@ -165,11 +178,15 @@ const SwapComponent = () => {
               </h3>
               <p className="text-sm text-primary-disabled text-justify">
                 <span className="text-white"> Note:</span> You will need to
-                complete two transactions in order to list your tokens on our
-                platform. The first transaction is to grant us permission to
-                list your tokens, and the second transaction is to actually list
-                the tokens. If you have already granted us permission, you will
-                only need to complete the second transaction.
+                complete{" "}
+                {Object.keys(balance)
+                  ?.map((item) => balance[item])
+                  ?.filter((item) => item > 0).length + 1}{" "}
+                transactions in order to list your tokens on our platform. The
+                first transaction is to grant us permission to list your tokens,
+                and the second transaction is to actually list the tokens. If
+                you have already granted us permission, you will only need to
+                complete the second transaction.
               </p>
             </div>
           ) : (
@@ -217,8 +234,12 @@ const SwapComponent = () => {
       <div className="flex md:flex-row flex-col md:items-end md:justify-start justify-center gap-4 mb-2 pl-4">
         <div className="text-primary-disabled font-bold Raleway">
           {Object.keys(balance)
-            ?.map((item) => balance[item])
-            ?.reduce((acc, num) => parseInt(acc) + parseInt(num))}{" "}
+            ?.map((item) => {
+              return balance[item];
+            })
+            ?.reduce((acc, num) => {
+              return acc + num;
+            })}{" "}
           ERC721 Items
         </div>
         <Button

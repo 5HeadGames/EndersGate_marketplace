@@ -171,6 +171,59 @@ export const onExchangeERC721to1155 = createAsyncThunk(
   },
 );
 
+export const onApproveERC1155 = createAsyncThunk(
+  actionTypes.EXCHANGE_NFT,
+  async function prepare(args: {
+    from: string;
+    pack: string;
+
+    provider: any;
+    // user: any;
+  }) {
+    const {
+      from,
+      pack,
+      // user,
+      provider,
+    } = args;
+
+    const { exchange } = getAddresses();
+    // const relation = user.relation("events");
+    try {
+      const marketplaceContract = getContractCustom(
+        "ERC721Seadrop",
+        pack,
+        provider,
+      );
+
+      const { transactionHash } = await marketplaceContract.methods
+        .setApprovalForAll(exchange, true)
+        .send({ from: from });
+
+      // const event = createEvent({
+      //   type: "sell",
+      //   metadata: {
+      //     from,
+      //     tokenId,
+      //     startingPrice,
+      //     amount,
+      //     duration,
+      //     address,
+      //     transactionHash,
+      //   },
+      // });
+
+      // await event.save();
+      // relation.add(event);
+      // await user.save();
+
+      return { from, exchange, pack };
+    } catch (err) {
+      console.log({ err });
+    }
+  },
+);
+
 export const onSellERC1155 = createAsyncThunk(
   actionTypes.SELL_NFT,
   async function prepare(args: {

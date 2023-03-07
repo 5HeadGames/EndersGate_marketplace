@@ -60,21 +60,12 @@ export const getAddresses = () => {
   const testAddresses = require("../../Contracts/addresses.mumbai.json");
   const addresses = require("../../Contracts/addresses.matic.json");
 
-  console.log(
-    process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses,
-    "contracts",
-  );
-
   return process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses;
 };
 
 export const getTokensAllowed = () => {
   const testAddresses = require("../../Contracts/tokensAllowed.mumbai.json");
   const addresses = require("../../Contracts/tokensAllowed.matic.json");
-
-  console.log(
-    process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses,
-  );
 
   return process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses;
 };
