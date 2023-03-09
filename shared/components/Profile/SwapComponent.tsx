@@ -1,7 +1,12 @@
 import { Button } from "@shared/components/common/button";
 
 import React from "react";
-import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+  ArrowRightOutlined,
+  CheckOutlined,
+  LoadingOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 
 import { useWeb3React } from "@web3-react/core";
 import { XIcon } from "@heroicons/react/solid";
@@ -68,6 +73,7 @@ const SwapComponent = () => {
   const [search, setSearch] = React.useState("");
 
   const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
 
   React.useEffect(() => {
     if (user) {
@@ -97,10 +103,8 @@ const SwapComponent = () => {
       );
 
       const balancePass = await pack.methods.balanceOf(user).call();
-      console.log(balancePass);
       balance[item.nameKey] = balancePass;
     }
-    console.log("executing balance", user, balance);
     setBalance(balance);
   };
 
@@ -121,18 +125,21 @@ const SwapComponent = () => {
         const isApproved = await pack.methods
           .isApprovedForAll(user, exchange)
           .call();
-        console.log(isApproved, "APROVAO");
         if (isApproved == false) {
-          await dispatch(
+          const res: any = await dispatch(
             onApproveERC1155({
               from: user,
               pack: item.address,
               provider: provider.provider,
             }),
           );
+          if (res?.payload?.err) {
+            throw new Error(res?.payload.err.message);
+          }
         }
       }
-      await dispatch(
+
+      const res: any = await dispatch(
         onExchangeERC721to1155({
           from: user,
           nfts: passPacks
@@ -141,19 +148,31 @@ const SwapComponent = () => {
           provider: provider.provider,
         }),
       );
+      console.log(res?.payload.err, "res");
+      if (res?.payload?.err) {
+        throw new Error(res?.payload.err.message);
+      }
+
+      setSuccess(true);
       dispatch(onGetAssets(user));
       addToast("Your NFTs have been exchanged succesfully!", {
         appearance: "success",
       });
       handleSetBalance();
+      setTimeout(() => {
+        hide();
+        setLoading(false);
+        setSuccess(false);
+      }, 1500);
     } catch (error) {
       console.log(error);
       addToast("Ups! Error exchanging your tokens, please try again", {
         appearance: "error",
       });
+      hide();
+      setLoading(false);
+      setSuccess(false);
     }
-    hide();
-    setLoading(false);
   };
 
   return (
@@ -171,29 +190,45 @@ const SwapComponent = () => {
               ></XIcon>
             )}
           </div>
-          {!loading ? (
-            <div className="flex flex-col gap-4 px-4 w-full items-center justify-center pb-4 pt-2 border-b border-overlay-border">
-              <h3 className="text-xl text-white text-left w-full font-bold Raleway">
-                Swap your ERC721 NFTs for ERC1155
-              </h3>
-              <p className="text-sm text-primary-disabled text-justify">
-                <span className="text-white"> Note:</span> You will need to
-                complete{" "}
-                {Object.keys(balance)
-                  ?.map((item) => balance[item])
-                  ?.filter((item) => item > 0).length + 1}{" "}
-                transactions in order to list your tokens on our platform. The
-                first transaction is to grant us permission to list your tokens,
-                and the second transaction is to actually list the tokens. If
-                you have already granted us permission, you will only need to
-                complete the second transaction.
-              </p>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center min-h-[200px] border-b border-overlay-border w-full">
-              <LoadingOutlined className="text-2xl text-white" />
-            </div>
-          )}
+          <div className="flex flex-col gap-4 px-4 w-full items-center justify-center pb-4 pt-2 ">
+            <h3 className="text-xl text-white text-left w-full font-bold Raleway">
+              Swap your ERC721 NFTs for ERC1155
+            </h3>
+            <p className="text-sm text-primary-disabled text-justify">
+              <span className="text-white"> Note:</span> You will need to
+              complete{" "}
+              {Object.keys(balance)
+                ?.map((item) => balance[item])
+                ?.filter((item) => item > 0).length + 1}{" "}
+              transactions in order to list your tokens on our platform. The
+              first transaction is to grant us permission to list your tokens,
+              and the second transaction is to actually list the tokens. If you
+              have already granted us permission, you will only need to complete
+              the second transaction.
+            </p>
+          </div>
+
+          <div className="flex gap-2 items-center justify-center py-2 border-y border-overlay-border relative">
+            {loading && (
+              <div className="flex flex-col items-center justify-center absolute top-0 bottom-0 left-0 right-0 m-auto w-full bg-[#00000088]">
+                <div className="flex flex-col  items-center justify-center h-auto bg-overlay border border-overlay-border p-4 rounded-xl">
+                  <h2 className="text-white text-xl text-center font-bold ">
+                    Swap {success ? "completed" : "in progress..."}
+                  </h2>
+                  <div className="w-full flex items-center justify-center py-2">
+                    {!success ? (
+                      <LoadingOutlined className="text-4xl text-white" />
+                    ) : (
+                      <CheckOutlined className="text-4xl text-green-button" />
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+            <img src="/images/CommonPass.png" className="w-1/3 flex" alt="" />
+            <ArrowRightOutlined className="text-xl text-white" />
+            <img src="/images/0.png" className="w-1/3 flex" alt="" />
+          </div>
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4">
             <Button
               className="px-2 py-1 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md"
@@ -235,7 +270,7 @@ const SwapComponent = () => {
         <div className="text-primary-disabled font-bold Raleway">
           {Object.keys(balance)
             ?.map((item) => {
-              return balance[item];
+              return parseInt(balance[item]);
             })
             ?.reduce((acc, num) => {
               return acc + num;

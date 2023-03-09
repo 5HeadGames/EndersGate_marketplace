@@ -167,6 +167,7 @@ export const onExchangeERC721to1155 = createAsyncThunk(
       return { from, nfts };
     } catch (err) {
       console.log({ err });
+      return { err };
     }
   },
 );
@@ -219,6 +220,7 @@ export const onApproveERC1155 = createAsyncThunk(
 
       return { from, exchange, pack };
     } catch (err) {
+      return { err };
       console.log({ err });
     }
   },
