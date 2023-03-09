@@ -44,24 +44,24 @@ const SwapComponent = () => {
       image: "/images/CommonPass.png",
       address: common_pack,
     },
-    {
-      name: "Gen 0 Rare Pass",
-      nameKey: "Rare Pack",
-      image: "/images/RarePass.png",
-      address: rare_pack,
-    },
-    {
-      name: "Gen 0 Epic Pass",
-      nameKey: "Epic Pack",
-      image: "/images/EpicPass.png",
-      address: epic_pack,
-    },
-    {
-      name: "Gen 0 Legendary Pass",
-      nameKey: "Legendary Pack",
-      image: "/images/LegendaryPass.png",
-      address: legendary_pack,
-    },
+    // {
+    //   name: "Gen 0 Rare Pass",
+    //   nameKey: "Rare Pack",
+    //   image: "/images/RarePass.png",
+    //   address: rare_pack,
+    // },
+    // {
+    //   name: "Gen 0 Epic Pass",
+    //   nameKey: "Epic Pack",
+    //   image: "/images/EpicPass.png",
+    //   address: epic_pack,
+    // },
+    // {
+    //   name: "Gen 0 Legendary Pass",
+    //   nameKey: "Legendary Pack",
+    //   image: "/images/LegendaryPass.png",
+    //   address: legendary_pack,
+    // },
   ];
 
   const [balance, setBalance] = React.useState({
