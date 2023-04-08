@@ -19,31 +19,16 @@
       "ES6",
       "DOM.Iterable",
       "ScriptHost",
-      "ES2016.Array.Include"
+      "ES2016.Array.Include",
+      "ES2021.String"
     ],
     "paths": {
-      "@shared/*": [
-        "shared/*"
-      ],
-      "@redux/*": [
-        "redux/*"
-      ],
-      "utils/*": [
-        "shared/utils/*"
-      ],
-      "components/*": [
-        "shared/components/*"
-      ]
+      "@shared/*": ["shared/*"],
+      "@redux/*": ["redux/*"],
+      "utils/*": ["shared/utils/*"],
+      "components/*": ["shared/components/*"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "Contracts/typechain",
-    "Contracts/**/*.ts"
-  ],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "exclude": ["node_modules", "Contracts/typechain", "Contracts/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

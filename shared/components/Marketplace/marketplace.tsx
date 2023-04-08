@@ -34,6 +34,7 @@ import { JoinTheCommunity } from "../common/footerComponents/joinTheCommunity";
 import { GetStarted } from "../common/footerComponents/getStarted";
 import Partners from "../common/footerComponents/partners";
 import { XIcon } from "@heroicons/react/solid";
+import { OpenseaApiService } from "@shared/api/opensea/openseaServices";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("recently_listed");
@@ -84,9 +85,68 @@ const MarketplaceComponent = () => {
 
   const getSales = async (currentOrder: string) => {
     const { endersGate, pack } = getAddresses();
-    const cardSalesCreated = [];
-    const packSalesCreated = [];
-    const nftsCreated = [];
+    console.log(
+      cards
+        .filter((card) => card.properties?.id)
+        .map((card) => card?.properties?.id?.value),
+      packs.map((card) => card.properties.id.value),
+      "packs & cards",
+    );
+    const [cardsOpensea, packsOpensea] = await Promise.all([
+      OpenseaApiService.getCardsOpensea(),
+      OpenseaApiService.getPacksOpensea(),
+    ]);
+
+    const cardSalesCreated = cardsOpensea.data.listings
+      .filter((i) => i.chain == "matic")
+      .map((i, id) => {
+        return {
+          id: id + 1 + nfts?.saleCreated?.length,
+          duration:
+            parseInt(i.protocol_data.parameters.endTime) -
+            parseInt(i.protocol_data.parameters.startTime),
+          nft: i.protocol_data.parameters.offer[0].token,
+          nftId: parseInt(
+            i.protocol_data.parameters.offer[0].identifierOrCriteria,
+          ),
+          price:
+            i.price.current.decimals == 18
+              ? Web3.utils.fromWei(i.price.current.value, "ether")
+              : i.price.current.value / i.price.current.decimals,
+          currency: i.price.current.currency,
+          seller: i.protocol_data.parameters.offerer,
+          startedAt: i.protocol_data.parameters.startTime,
+          status: "0",
+          type: "opensea",
+        };
+      });
+    const packSalesCreated = packsOpensea.data.listings
+      .filter((i) => i.chain == "matic")
+      .map((i, id) => {
+        return {
+          id: id + 1 + nfts?.saleCreated?.length,
+          duration:
+            parseInt(i.protocol_data.parameters.endTime) -
+            parseInt(i.protocol_data.parameters.startTime),
+          nft: i.protocol_data.parameters.offer[0].token,
+          nftId: parseInt(
+            i.protocol_data.parameters.offer[0].identifierOrCriteria,
+          ),
+          price:
+            i.price.current.decimals == 18
+              ? Web3.utils.fromWei(i.price.current.value, "ether")
+              : i.price.current.value / i.price.current.decimals,
+          currency: i.price.current.currency,
+          seller: i.protocol_data.parameters.offerer,
+          startedAt: i.protocol_data.parameters.startTime,
+          status: "0",
+          type: "opensea",
+        };
+      });
+    const nftsCreated = [...cardSalesCreated, ...packSalesCreated];
+
+    console.log(packSalesCreated, cardSalesCreated, nftsCreated);
+
     nfts?.saleCreated?.forEach((sale) => {
       nftsCreated.push(sale);
       if (sale.nft == endersGate) {
@@ -95,7 +155,7 @@ const MarketplaceComponent = () => {
         packSalesCreated.push(sale);
       }
     });
-    console.log(currentOrder, nfts.saleCreated);
+
     if (currentOrder === "recently_listed") {
       switch (type) {
         case "trading_cards":
@@ -176,7 +236,6 @@ const MarketplaceComponent = () => {
 
   const filterCards = (card) => {
     let passed = false;
-    console.log(card);
     if (cardType === "all") {
       if (
         filters.avatar.length === 0 &&
@@ -379,8 +438,6 @@ const MarketplaceComponent = () => {
       passed = true;
     }
 
-    console.log(passed);
-
     if (search === "") {
       return passed;
     } else if (pack?.name.toLowerCase().includes(search.toLowerCase())) {
@@ -541,6 +598,7 @@ const MarketplaceComponent = () => {
                           price={a.price}
                           type={type}
                           sale={a}
+                          {...a}
                         />
                       );
                     })

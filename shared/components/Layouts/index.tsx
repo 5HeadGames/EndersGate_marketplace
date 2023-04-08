@@ -166,7 +166,6 @@ export default function AppLayout({ children }) {
   const tokensAllowed = getTokensAllowed();
 
   React.useEffect(() => {
-    console.log(account);
     if (account) {
       dispatch(
         onUpdateUser({
@@ -180,7 +179,6 @@ export default function AppLayout({ children }) {
   }, [account]);
 
   React.useEffect(() => {
-    console.log(ethAddress, "accounts");
     if (ethAddress) {
       setUser(ethAddress);
     } else {
@@ -264,7 +262,6 @@ export default function AppLayout({ children }) {
       .toFixed(2)
       .toString();
 
-    console.log(price);
     setPriceMatic(price);
   };
 
@@ -277,7 +274,6 @@ export default function AppLayout({ children }) {
       addToast("Please Select a Payment Method", { appearance: "error" });
       return;
     }
-    console.log(tokenSelected, "token to pay");
     try {
       setMessageBuy(`Processing your purchase...`);
 
@@ -402,8 +398,6 @@ export default function AppLayout({ children }) {
     },
   ];
 
-  console.log(cart);
-
   return (
     <Layout
       style={{
@@ -498,10 +492,6 @@ export default function AppLayout({ children }) {
               >
                 <div className="flex flex-col items-center px-4 border border-overlay-border rounded-xl">
                   {profileItems.map((item, index) => {
-                    console.log(
-                      providerName,
-                      item.name === "LOG OUT" && providerName === "magic",
-                    );
                     return (
                       <>
                         {item.onClick ? (
