@@ -124,7 +124,7 @@ const MarketplaceComponent = () => {
       .filter((i) => i.chain == "matic")
       .map((i, id) => {
         return {
-          id: id + 1 + nfts?.saleCreated?.length,
+          id: id + 1 + cardSalesCreated.length + nfts?.saleCreated?.length,
           duration:
             parseInt(i.protocol_data.parameters.endTime) -
             parseInt(i.protocol_data.parameters.startTime),
@@ -156,16 +156,30 @@ const MarketplaceComponent = () => {
       }
     });
 
+    console.log(nftsCreated);
+
     if (currentOrder === "recently_listed") {
       switch (type) {
         case "trading_cards":
-          setSales(cardSalesCreated?.reverse());
+          setSales(
+            cardSalesCreated?.sort(
+              (a, b) => parseFloat(b.startedAt) - parseFloat(a.startedAt),
+            ),
+          );
           break;
         case "packs":
-          setSales(packSalesCreated?.reverse());
+          setSales(
+            packSalesCreated?.sort(
+              (a, b) => parseFloat(b.startedAt) - parseFloat(a.startedAt),
+            ),
+          );
           break;
         default:
-          setSales(nftsCreated?.reverse());
+          setSales(
+            nftsCreated?.sort(
+              (a, b) => parseFloat(b.startedAt) - parseFloat(a.startedAt),
+            ),
+          );
           break;
       }
       // const salesCreated: any[] = [...cardSalesCreated];
@@ -173,13 +187,26 @@ const MarketplaceComponent = () => {
     } else if (currentOrder === "older_listed") {
       switch (type) {
         case "trading_cards":
-          setSales(cardSalesCreated);
+          // setSales(cardSalesCreated);
+          setSales(
+            cardSalesCreated.sort(
+              (a, b) => parseFloat(a.startedAt) - parseFloat(b.startedAt),
+            ),
+          );
           break;
         case "packs":
-          setSales(packSalesCreated);
+          setSales(
+            packSalesCreated.sort(
+              (a, b) => parseFloat(a.startedAt) - parseFloat(b.startedAt),
+            ),
+          );
           break;
         default:
-          setSales(nfts.saleCreated);
+          setSales(
+            nftsCreated.sort(
+              (a, b) => parseFloat(a.startedAt) - parseFloat(b.startedAt),
+            ),
+          );
           break;
       }
     } else if (currentOrder === "lowest_price") {
@@ -199,7 +226,11 @@ const MarketplaceComponent = () => {
           );
           break;
         default:
-          setSales(nfts.saleCreated);
+          setSales(
+            nftsCreated.sort(
+              (a, b) => parseFloat(a.price) - parseFloat(b.price),
+            ),
+          );
           break;
       }
     } else if (currentOrder === "highest_price") {
@@ -219,7 +250,11 @@ const MarketplaceComponent = () => {
           );
           break;
         default:
-          setSales(nfts.saleCreated);
+          setSales(
+            nftsCreated.sort(
+              (a, b) => parseFloat(b.price) - parseFloat(a.price),
+            ),
+          );
           break;
       }
     }
