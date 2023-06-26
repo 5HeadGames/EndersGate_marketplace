@@ -43,7 +43,6 @@ export default function useMagicLink(networkId: number = 137) {
       locale: "en_US",
       extensions: [new ConnectExtension()],
     });
-    console.log(magic);
     setMagic(magic);
     setProvider(magic.rpcProvider);
     setWeb3(new Web3(magic.rpcProvider));

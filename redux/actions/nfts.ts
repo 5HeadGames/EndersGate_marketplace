@@ -147,23 +147,6 @@ export const onExchangeERC721to1155 = createAsyncThunk(
         .exchangeAllERC1155(nfts)
         .send({ from: from });
 
-      // const event = createEvent({
-      //   type: "sell",
-      //   metadata: {
-      //     from,
-      //     tokenId,
-      //     startingPrice,
-      //     amount,
-      //     duration,
-      //     address,
-      //     transactionHash,
-      //   },
-      // });
-
-      // await event.save();
-      // relation.add(event);
-      // await user.save();
-
       return { from, nfts };
     } catch (err) {
       console.log({ err });

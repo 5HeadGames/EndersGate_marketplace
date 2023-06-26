@@ -1,23 +1,15 @@
-import { Button } from "@shared/components/common/button";
 import { Typography } from "@shared/components/common/typography";
 import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
 import React from "react";
 import { useAppSelector } from "redux/store";
-import {
-  AppstoreOutlined,
-  LoadingOutlined,
-  SearchOutlined,
-  UnorderedListOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import Styles from "./styles.module.scss";
 import NFTCard from "@shared/components/Marketplace/itemCard";
 import { getBalance } from "@shared/web3";
-
 import Link from "next/link";
 import { Images } from "@shared/const/Images";
 import { convertArrayCards } from "@shared/components/common/convertCards";
-import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
 import { Dropdown } from "@shared/components/common/dropdown/dropdown";
 import { XIcon } from "@heroicons/react/solid";

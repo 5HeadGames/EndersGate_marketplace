@@ -6,6 +6,7 @@ import ERC20 from "./ERC20.json";
 import Aggregator from "./AggregatorV3.json";
 import ExchangeERC1155 from "./ExchangeERC1155.json";
 import ERC721Seadrop from "./ERC721SeaDrop.json";
+import Shop from "./ClockSaleOwnable.json";
 
 const contracts = {
   ClockSale,
@@ -16,5 +17,6 @@ const contracts = {
   Aggregator,
   ExchangeERC1155,
   ERC721Seadrop,
+  Shop,
 };
 export default contracts;

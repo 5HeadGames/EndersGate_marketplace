@@ -36,6 +36,15 @@ export const addCart = createAction(
   },
 );
 
+export const editCart = createAction(
+  actionTypes.EDIT_CART,
+  function prepare(cart: any) {
+    return {
+      payload: cart,
+    };
+  },
+);
+
 export const removeFromCart = createAction(
   actionTypes.REMOVE_FROM_CART,
   function prepare(item: any) {
