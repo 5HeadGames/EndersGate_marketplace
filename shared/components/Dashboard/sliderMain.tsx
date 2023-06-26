@@ -8,8 +8,6 @@ export const SliderMain = ({ salesDefault, cards }) => {
   const [arraySlider, setArraySlider] = React.useState([]);
   const [arrayPos, setArrayPos] = React.useState([0, 1, 2, 3]);
 
-  // const [onTimeChange, setOnTimeChange] = React.useState(false);
-
   const timeoutRef = React.useRef(null);
 
   function resetTimeout() {
@@ -21,12 +19,9 @@ export const SliderMain = ({ salesDefault, cards }) => {
   }, [salesDefault]);
 
   React.useEffect(() => {
-    console.log("test");
     if (timeoutRef.current) {
       resetTimeout();
     }
-    // setOnTimeChange(false);
-    // setOnTimeChange(true);
     timeoutRef.current = new timer(() => {
       switch (arrayPos[2]) {
         case 0:
@@ -53,7 +48,7 @@ export const SliderMain = ({ salesDefault, cards }) => {
   return (
     <div
       className={clsx(
-        { ["items-center justify-center text-xl"]: arraySlider.length < 2 },
+        { "items-center justify-center text-xl": arraySlider.length < 2 },
         "w-full relative flex items-end justify-end rounded-xl overflow-hidden min-h-[300px]",
       )}
     >
@@ -85,7 +80,6 @@ export const SliderMain = ({ salesDefault, cards }) => {
                 cards[arraySlider[arrayPos[3]]?.nftId]?.properties?.image?.value
               }
               sale={arraySlider[arrayPos[3]]}
-              // onTimeChange={onTimeChange}
               name={
                 cards[arraySlider[arrayPos[3]]?.nftId]?.properties?.name?.value
               }
@@ -116,10 +110,10 @@ const ItemCardSlider = ({
     <div className={clsx("bottom-0 absolute", `item-${arrayPos[id]}`)}>
       <div
         className={clsx(
-          { ["item-0-width"]: arrayPos[id] == 0 },
-          { ["item-1-width"]: arrayPos[id] == 1 },
-          { ["item-2-width"]: arrayPos[id] == 2 },
-          { ["item-3-width"]: arrayPos[id] == 3 },
+          { "item-0-width": arrayPos[id] === 0 },
+          { "item-1-width": arrayPos[id] === 1 },
+          { "item-2-width": arrayPos[id] === 2 },
+          { "item-3-width": arrayPos[id] === 3 },
           "rounded-xl flex flex-col text-gray-100 cursor-pointer relative overflow-hidden border border-gray-500",
         )}
         onClick={() => {

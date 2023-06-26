@@ -186,7 +186,7 @@ export default function AppLayout({ children }) {
     }
   }, [ethAddress]);
 
-  const { pack, endersGate, MATICUSD } = getAddresses();
+  const { pack, MATICUSD } = getAddresses();
 
   const chainChangedHandler = async () => {
     // window.location.reload();

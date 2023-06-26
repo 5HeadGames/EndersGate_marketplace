@@ -24,7 +24,7 @@ const INITIAL_STATE: InitialState = {
     ethAddress: "",
     email: "",
     wallet: ConnectionType.INJECTED,
-    networkId: null,
+    networkId: process.env.NEXT_PUBLIC_CHAIN_ID,
   },
   providerName: "",
   provider: undefined,
@@ -48,6 +48,9 @@ export const layoutReducer = createReducer(INITIAL_STATE, (builder) => {
     })
     .addCase(actions.addCart, (state: typeof INITIAL_STATE, action) => {
       state.cart.push(action.payload);
+    })
+    .addCase(actions.editCart, (state: typeof INITIAL_STATE, action) => {
+      state.cart[action.payload.id] = action.payload.item;
     })
     .addCase(actions.removeFromCart, (state: typeof INITIAL_STATE, action) => {
       state.cart = state.cart.filter((item) => item.id !== action.payload.id);

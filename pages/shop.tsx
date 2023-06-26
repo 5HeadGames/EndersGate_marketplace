@@ -16,9 +16,12 @@ import { useCartModal } from "@shared/components/common/cartModal";
 import { useToasts } from "react-toast-notifications";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { getContractCustom, getTokensAllowed } from "@shared/web3";
-import { addCart, removeAll, removeFromCart } from "@redux/actions";
-// import polygon from "../../assets/POLYGON.svg";
+import {
+  getAddresses,
+  getContractCustom,
+  getTokensAllowed,
+} from "@shared/web3";
+import { addCart, editCart, removeAll, removeFromCart } from "@redux/actions";
 
 const Shop = () => {
   const [web3, setWeb3] = useState(null);
@@ -26,15 +29,12 @@ const Shop = () => {
     ethAddress: account,
     provider,
     providerName,
-  } = useSelector((state: any) => state.blockchain.user);
+  } = useSelector((state: any) => state.layout.user);
   const [contract, setContract] = useState(null);
   const [sales, setSales] = useState([]);
   const [counters, setCounters] = useState([1, 1, 1, 1]);
   const [isLoading, setIsLoading] = useState(false);
-  const [packLoading, setPackLoading] = React.useState(null);
-  const [saleSelected, setSaleSelected] = useState();
   const router = useRouter();
-  const [buyNFTData, setBuyNFTData] = React.useState({ id: 0, amount: 0 });
   const [priceMatic, setPriceMatic] = React.useState("0");
   const [tokenSelected, setTokenSelected] = React.useState("");
   const [messageBuy, setMessageBuy] = React.useState("");
@@ -44,19 +44,14 @@ const Shop = () => {
 
   const { Modal, show, isShow, hide } = useCartModal();
 
-  const { showWallet } = useMagicLink();
+  const { networkId } = useSelector((state: any) => state.layout.user);
+  const { cart } = useSelector((state: any) => state.layout);
 
-  const {
-    network,
-    addresses: { shop: shopAddress, MATICUSD },
-    networkName,
-    cart,
-  } = useSelector((state: any) => state.blockchain);
+  const { shop: shopAddress, MATICUSD } = getAddresses();
 
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    console.log(MATICUSD, "aggregator");
     if (cart.length > 0) {
       getPriceMatic();
     } else {
@@ -71,7 +66,7 @@ const Shop = () => {
   const packs = [
     {
       name: "Common Pack",
-      imagePack: "./assets/packs/common1080.png",
+      imagePack: "./images/2.png",
       quantity: "8000",
       price: "25 USD in MATIC Token",
       imageCoin: "./assets/shop/coins1.png",
@@ -79,7 +74,7 @@ const Shop = () => {
     },
     {
       name: "Rare Pack",
-      imagePack: "./assets/packs/rare1080.png",
+      imagePack: "./images/1.png",
       quantity: "6000",
       price: "50 USD in MATIC Token",
       imageCoin: "./assets/shop/coins2.png",
@@ -87,7 +82,7 @@ const Shop = () => {
     },
     {
       name: "Epic Pack",
-      imagePack: "./assets/packs/epic1080.png",
+      imagePack: "./images/2.png",
       quantity: "4000",
       price: "100 USD in MATIC Token",
       imageCoin: "./assets/shop/coins3.png",
@@ -95,7 +90,7 @@ const Shop = () => {
     },
     {
       name: "Legendary Pack",
-      imagePack: "./assets/packs/legendary1080.png",
+      imagePack: "./images/3.png",
       quantity: "2000",
       price: "200 USD in MATIC Token",
       imageCoin: "./assets/shop/coins4.png",
@@ -106,8 +101,10 @@ const Shop = () => {
   const updateSales = async () => {
     setIsLoading(true);
     try {
+      console.log(shopAddress, networkConfigs[networkId].rpc, "a");
+
       // Use web3 to get the user's accounts.
-      const web3 = new Web3(networkConfigs[network].rpc);
+      const web3 = new Web3(networkConfigs[networkId].rpc);
       const shop = getContractCustom("Shop", shopAddress, web3.currentProvider);
       const lastSale = Number(await shop.methods.tokenIdTracker().call());
       const rawSales = await shop.methods
@@ -154,10 +151,11 @@ const Shop = () => {
   };
 
   React.useEffect(() => {
-    // if (provider) {
-    updateSales();
-    // }
-  }, []);
+    if (networkId) {
+      updateSales();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [networkId]);
 
   const getPriceMatic = async () => {
     console.log(MATICUSD, "aggregator");
@@ -288,7 +286,7 @@ const Shop = () => {
         <div className="flex items-center justify-center relative w-screen h-screen overflow-hidden pt-28 relative">
           <div className="absolute left-0 right-0 mx-auto top-0 z-0 flex w-full bgPackContainer">
             <img
-              src="./assets/inventory/background.png"
+              src="./images/background.png"
               className="sm:block hidden w-screen h-screen"
               alt=""
             />
@@ -400,15 +398,15 @@ const Shop = () => {
           />
 
           <img
-            src="./assets/inventory/background.png"
+            src="./images/shop_background.png"
             className="flex absolute z-0 w-full h-full"
             alt=""
           />
-          <div className="relative border-b border-secondary Poppins text-white text-4xl text-center font-black py-12 w-full">
+          <div className="relative border-b border-white Poppins text-white text-4xl text-center font-black py-12 pt-24 w-full">
             NFT SHOP
           </div>
 
-          <div className="flex xl:flex-row flex-col w-full xl:justify-between xl:items-end items-center relative w-full pt-6">
+          <div className="flex xl:flex-row flex-col xl:justify-between xl:items-end items-center relative w-full pt-6">
             <div className="flex w-full items-center justify-center gap-2">
               <div className="relative md:w-64 sm:w-40 w-24">
                 <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
@@ -417,7 +415,7 @@ const Shop = () => {
                   </h2>
                 </div>
                 <img
-                  src="./assets/inventory/bgGold.png"
+                  src="./images/bgGold.png"
                   className="cursor-pointer"
                   alt=""
                 />
@@ -429,7 +427,7 @@ const Shop = () => {
                   </h2>
                 </div>
                 <img
-                  src="./assets/inventory/bgNonSelected.png"
+                  src="./images/bgNonSelected.png"
                   className="cursor-pointer"
                   alt=""
                 />
@@ -442,7 +440,7 @@ const Shop = () => {
                   </h2>
                 </div>
                 <img
-                  src="./assets/inventory/bgNonSelected.png"
+                  src="./images/bgNonSelected.png"
                   className="cursor-pointer"
                   alt=""
                 />
@@ -455,7 +453,7 @@ const Shop = () => {
                 }}
               >
                 <img
-                  src="./assets/inventory/bgGold.png"
+                  src="./images/bgGold.png"
                   className="cursor-pointer absolute w-full h-full"
                   alt=""
                 />
@@ -488,22 +486,13 @@ const Shop = () => {
               {sales.length > 0 ? (
                 sales.map((sale, index) => {
                   return (
-                    <div className="relative packShopContainer shadow-white">
+                    <div className="relative shadow-white">
                       <img
-                        src="./assets/shop/box_pack.png"
+                        src="./images/box_pack.png"
                         className="absolute w-full h-full"
                         alt=""
                       />
-                      <div
-                        className={clsx(
-                          { ["hidden"]: packLoading !== sale.id },
-                          "absolute w-full h-full flex items-center justify-center bg-dark opacity-50 text-white z-50 text-3xl",
-                        )}
-                      >
-                        <LoadingOutlined></LoadingOutlined>
-                      </div>
-
-                      <div className="flex flex-col items-center justify-center h-full py-2">
+                      <div className="flex flex-col items-center justify-center h-full py-6 px-4">
                         <div
                           className="relative flex items-center justify-center"
                           style={{
@@ -684,7 +673,7 @@ const Shop = () => {
                   );
                 })
               ) : (
-                <div className="ringBearer text-white py-40 w-full text-center z-50">
+                <div className="text-white text-xl py-40 w-full text-center relative">
                   There are not packs to buy now
                 </div>
               )}

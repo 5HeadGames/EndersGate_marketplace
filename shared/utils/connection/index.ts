@@ -26,14 +26,14 @@ const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
       actions,
       options: {
         rpc: {
-          "166660000": process.env.NEXT_PUBLIC_HARMONY_PROVIDER,
+          "80001": process.env.NEXT_PUBLIC_POLYGON_PROVIDER,
         },
       },
     }),
 );
 
 export const walletConnectConnection: Connection = {
-  connector: walletConnect,
+  connector: walletConnect as any,
   hooks: walletConnectHooks,
   type: ConnectionType.WALLET_CONNECT,
 };
@@ -43,7 +43,7 @@ const [metaMask, metamaskHooks] = initializeConnector<MetaMask>(
 );
 
 export const metamaskConnection: Connection = {
-  connector: metaMask,
+  connector: metaMask as any,
   hooks: metamaskHooks,
   type: ConnectionType.INJECTED,
 };
@@ -53,12 +53,12 @@ const [gnosisSafe, gnosisSafeHooks] = initializeConnector<GnosisSafe>(
 );
 
 export const gnosisSafeConnection: Connection = {
-  connector: gnosisSafe,
+  connector: gnosisSafe as any,
   hooks: gnosisSafeHooks,
   type: ConnectionType.GNOSIS_SAFE,
 };
 
-const [coinbaseWallet, coinbaseHooks] = initializeConnector<Connector>(
+const [coinbaseWallet, coinbaseHooks] = initializeConnector<any>(
   (actions: any) =>
     new CoinbaseWallet({
       actions,
@@ -79,13 +79,13 @@ export const [network, networkHooks] = initializeConnector<Network>(
     new Network({
       actions,
       urlMap: {
-        "166660000": process.env.NEXT_PUBLIC_HARMONY_PROVIDER,
+        "80001": "",
       },
     }),
 );
 
 export const networkConnection: Connection = {
-  connector: network,
+  connector: network as any,
   hooks: networkHooks,
   type: ConnectionType.NETWORK,
 };

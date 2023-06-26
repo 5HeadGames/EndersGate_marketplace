@@ -8,7 +8,7 @@ import React, { useCallback, useState, Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 export const useCartModal = () => {
-  const { providerName } = useSelector((state: any) => state.blockchain.user);
+  const { providerName } = useSelector((state: any) => state.layout.user);
 
   const [tokenSelected, setTokenSelected] = React.useState("");
 
@@ -41,7 +41,6 @@ export const useCartModal = () => {
       buy,
       isShow,
     }) => {
-      console.log(priceMatic, "MAMAÑEMA");
       return (
         <Transition.Root show={isShow} as={Fragment}>
           <Dialog
