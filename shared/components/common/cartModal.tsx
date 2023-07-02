@@ -10,8 +10,6 @@ import { Dialog, Transition } from "@headlessui/react";
 export const useCartModal = () => {
   const { providerName } = useSelector((state: any) => state.layout.user);
 
-  const [tokenSelected, setTokenSelected] = React.useState("");
-
   const { showWallet } = useMagicLink();
 
   const dispatch = useDispatch();
@@ -46,7 +44,7 @@ export const useCartModal = () => {
           <Dialog
             as="div"
             static
-            className="fixed inset-0 overflow-y-auto bg-overlay blur-sm"
+            className="fixed inset-0 overflow-y-auto"
             style={{
               zIndex: 15000,
             }}
@@ -54,7 +52,7 @@ export const useCartModal = () => {
             open={isShow}
             onClose={hide}
           >
-            <div className="flex items-center justify-center pb-20 pt-4 min-h-screen text-center sm:block sm:p-0 bg-overlay">
+            <div className="flex items-center justify-center pb-20 pt-4 min-h-screen text-center sm:block sm:p-0 bg-overlay-2">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -84,7 +82,7 @@ export const useCartModal = () => {
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
                 <div className="inline-block align-bottom text-left rounded-20 shadow-md transform transition-all sm:align-middle w-max sm:max-w-6xl">
-                  <div className="flex flex-col gap-4 bg-gray-900 p-4 rounded-xl border border-transparent-color-gray-200 relative shadow-inner mt-24">
+                  <div className="flex flex-col gap-4  bg-overlay p-4 rounded-xl border border-transparent-color-gray-200 relative shadow-inner mt-24">
                     <div className="text-white absolute top-2 right-2">
                       <XIcon
                         onClick={hide}
@@ -138,7 +136,7 @@ export const useCartModal = () => {
                                   },
                                   {
                                     "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
-                                      tokenSelected == item.address,
+                                      tokenSelected === item.address,
                                   },
                                 )}
                                 onClick={() => {
@@ -157,7 +155,7 @@ export const useCartModal = () => {
                             );
                           })}
                         </div>
-                        <div className="flex gap-6 justify-between w-full text-md text-xl py-2 px-8 border-y border-transparent-color-gray-200 bg-transparent md:w-3/4">
+                        <div className="flex gap-6 justify-between w-full text-md text-xl py-2 px-8 border-y border-transparent-color-gray-200 bg-transparent w-full">
                           <div className="flex gap-1 items-center">
                             <h3 className="text-sm  text-white font-[700]">
                               Total price:

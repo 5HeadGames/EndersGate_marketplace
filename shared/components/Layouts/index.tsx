@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
 import { Layout } from "antd";
 import useMagicLink from "@shared/hooks/useMagicLink";
@@ -50,6 +50,8 @@ import { convertArrayCards } from "../common/convertCards";
 import Web3 from "web3";
 import { useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
+import { WALLETS } from "@shared/utils/connection/utils";
+import useFullscreenStatus from "../common/onFullScreen";
 
 type ButtonsTypes = { logout: boolean; userData: boolean };
 
@@ -60,6 +62,8 @@ const navItems = [
     icon: <AreaChartOutlined />,
   },
   { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
+  { name: "COMICS", link: "/comics", icon: <ShopOutlined /> },
+  { name: "SHOP", link: "/shop", icon: <ShopOutlined /> },
 ];
 
 export const Message: React.FunctionComponent<{
@@ -133,7 +137,6 @@ export default function AppLayout({ children }) {
   const [cartOpen, setCartOpen] = React.useState(false);
   const [tokenSelected, setTokenSelected] = React.useState("");
   const [messageBuy, setMessageBuy] = React.useState("");
-  const [loading, setLoading] = React.useState(false);
   const [priceMatic, setPriceMatic] = React.useState("0");
   const refSidebarMobile = React.useRef(null);
   const refCartMobile = React.useRef(null);
@@ -142,14 +145,13 @@ export default function AppLayout({ children }) {
     message: "",
     value: false,
   });
+  const [relogin, setRelogin] = React.useState(false);
+
   const [disabled, setDisabled] = React.useState<ButtonsTypes>({
     logout: false,
     userData: false,
   });
   const [search, setSearch] = React.useState("");
-  const { blur, message, cart } = useAppSelector((state) => ({
-    ...state.layout,
-  }));
 
   const cards = convertArrayCards();
 
@@ -159,11 +161,25 @@ export default function AppLayout({ children }) {
 
   const router = useRouter();
   const { account } = useWeb3React();
-  const { logout, showWallet } = useMagicLink();
+  const { logout, login, showWallet } = useMagicLink();
   const { ethAddress } = useSelector((state: any) => state.layout.user);
-  const { provider, providerName } = useSelector((state: any) => state.layout);
+  const { provider, providerName, cart, message } = useSelector(
+    (state: any) => state.layout,
+  );
   const dispatch = useAppDispatch();
   const tokensAllowed = getTokensAllowed();
+
+  const maximizableElement = useRef(null);
+
+  let isFullscreen;
+
+  try {
+    [isFullscreen] = useFullscreenStatus(maximizableElement);
+  } catch (e) {
+    addToast(
+      "Fullscreen is unsupported by this browser, please try another browser.",
+    );
+  }
 
   React.useEffect(() => {
     if (account) {
@@ -188,22 +204,46 @@ export default function AppLayout({ children }) {
 
   const { pack, MATICUSD } = getAddresses();
 
-  const chainChangedHandler = async () => {
-    // window.location.reload();
-    const web3 = await getWeb3();
-    const networkId = await web3.eth.net.getId();
-    if (networkId != 137 && networkId != 80001) {
-      setNotAvailable({
-        message: "Change your network to harmony or polygon mainnet please",
-        value: true,
-      });
-    } else {
-      setNotAvailable({
-        message: "",
-        value: false,
-      });
+  const chainChangedHandler = async () => {};
+
+  React.useEffect(() => {
+    if (relogin) {
+      dispatch(
+        onUpdateUser({
+          ethAddress: user,
+          email: "",
+          provider: provider?.provider,
+          providerName: "web3react",
+        }),
+      );
     }
-  };
+  }, [user, relogin]);
+
+  React.useEffect(() => {
+    const typeOfConnection = localStorage.getItem("typeOfConnection");
+    const savedLoginTime = localStorage.getItem("loginTime");
+    const currentTime = new Date().getTime();
+    const TWELVE_HOURS = 12 * 60 * 60 * 1000;
+    if (
+      typeOfConnection &&
+      savedLoginTime &&
+      currentTime - parseInt(savedLoginTime) <= TWELVE_HOURS
+    ) {
+      WALLETS.forEach(async (wallet) => {
+        console.log(wallet);
+        if (wallet.title == typeOfConnection) {
+          await wallet.connection.connector.activate();
+          setRelogin(true);
+        }
+      });
+      if (typeOfConnection == "magic") {
+        login(dispatch);
+      }
+    } else {
+      localStorage.removeItem("typeOfConnection");
+      localStorage.removeItem("loginTime");
+    }
+  }, []);
 
   const accountChangedHandler = async (newAccount: any) => {
     const web3 = await loginMetamaskWallet();
@@ -398,22 +438,19 @@ export default function AppLayout({ children }) {
     },
   ];
 
+  console.log(isFullscreen, "isfull");
+
   return (
     <Layout
       style={{
         height: "100vh",
         // overflow: "auto",
-        ...(blur
-          ? {
-              filter: "blur(8px)",
-              "-webkit-filter": "blur(8px)",
-            }
-          : {}),
       }}
     >
       <nav
         className={clsx(
-          "fixed top-0 z-40",
+          "fixed top-0 z-[100]",
+          { "!hidden": isFullscreen },
           "bg-overlay",
           "w-[100%] md:px-10 px-4 py-2 flex flex-row items-center gap-x-4 shadow-md",
         )}
@@ -830,7 +867,7 @@ export default function AppLayout({ children }) {
             {children}
             <Message content={message} open={Boolean(message)} />
           </div>
-          <Footer />
+          {!router.asPath.includes("/comics") && <Footer />}
         </>
       )}
     </Layout>

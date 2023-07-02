@@ -11,53 +11,45 @@ import {
 import { networkConfigs } from "@shared/components/helpers/networks";
 
 import { XIcon } from "@heroicons/react/solid";
-import useMagicLink from "@shared/hooks/useMagicLink";
 import { useCartModal } from "@shared/components/common/cartModal";
 import { useToasts } from "react-toast-notifications";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import {
   getAddresses,
   getContractCustom,
   getTokensAllowed,
 } from "@shared/web3";
-import { addCart, editCart, removeAll, removeFromCart } from "@redux/actions";
+import {
+  addCartShop,
+  editCart,
+  removeAll,
+  removeFromCart,
+} from "@redux/actions";
 
 const Shop = () => {
-  const [web3, setWeb3] = useState(null);
-  const {
-    ethAddress: account,
-    provider,
-    providerName,
-  } = useSelector((state: any) => state.layout.user);
+  const { ethAddress: account, provider } = useSelector(
+    (state: any) => state.layout.user,
+  );
   const [contract, setContract] = useState(null);
   const [sales, setSales] = useState([]);
   const [counters, setCounters] = useState([1, 1, 1, 1]);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const [priceMatic, setPriceMatic] = React.useState("0");
   const [tokenSelected, setTokenSelected] = React.useState("");
   const [messageBuy, setMessageBuy] = React.useState("");
   const { addToast } = useToasts();
+  const [priceMatic, setPriceMatic] = React.useState("0");
 
   const tokensAllowed = getTokensAllowed();
 
   const { Modal, show, isShow, hide } = useCartModal();
 
   const { networkId } = useSelector((state: any) => state.layout.user);
-  const { cart } = useSelector((state: any) => state.layout);
+  const { cartShop } = useSelector((state: any) => state.layout);
 
   const { shop: shopAddress, MATICUSD } = getAddresses();
 
   const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    if (cart.length > 0) {
-      getPriceMatic();
-    } else {
-      setPriceMatic("0");
-    }
-  }, [cart]);
 
   React.useEffect(() => {
     setTokenSelected(tokensAllowed[0].address);
@@ -66,7 +58,7 @@ const Shop = () => {
   const packs = [
     {
       name: "Common Pack",
-      imagePack: "./images/2.png",
+      imagePack: "./images/0.png",
       quantity: "8000",
       price: "25 USD in MATIC Token",
       imageCoin: "./assets/shop/coins1.png",
@@ -138,7 +130,6 @@ const Shop = () => {
       setCounters(created.map(() => 1));
       console.log(created);
       // Update State
-      setWeb3(web3);
       setContract(contract);
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -157,27 +148,6 @@ const Shop = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networkId]);
 
-  const getPriceMatic = async () => {
-    console.log(MATICUSD, "aggregator");
-    const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
-    const priceMATIC = await Aggregator.methods.latestAnswer().call();
-    console.log(priceMATIC, "price");
-    const price =
-      (parseFloat(
-        cart
-          ?.map((item, i) => {
-            return (parseInt(item.priceUSD) / 10 ** 6) * item.quantity;
-          })
-          .reduce((item, acc) => {
-            return item + acc;
-          }),
-      ) *
-        10 ** 8) /
-      priceMATIC;
-
-    setPriceMatic((price + price * 0.05).toFixed(2).toString());
-  };
-
   const buyPacks = async () => {
     const shop = await getContractCustom("Shop", shopAddress, provider);
 
@@ -191,8 +161,8 @@ const Shop = () => {
       setMessageBuy(`Processing your purchase...`);
 
       const { amounts, bid, token, tokensId } = {
-        amounts: cart.map((item) => item.quantity),
-        bid: cart
+        amounts: cartShop.map((item) => item.quantity),
+        bid: cartShop
           ?.map((item, i) =>
             ((parseInt(item.priceUSD) / 10 ** 6) * item.quantity).toString(),
           )
@@ -200,7 +170,7 @@ const Shop = () => {
             return findSum(item, acc);
           }),
         token: tokenSelected,
-        tokensId: cart.map((item) => item.id),
+        tokensId: cartShop.map((item) => item.id),
       };
 
       let price = "0";
@@ -214,7 +184,7 @@ const Shop = () => {
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
         const preprice =
           (parseFloat(
-            cart
+            cartShop
               ?.map((item, i) => {
                 return (parseInt(item.priceUSD) / 10 ** 6) * item.quantity;
               })
@@ -229,16 +199,13 @@ const Shop = () => {
           (preprice + preprice * 0.05).toString(),
           "ether",
         );
-        console.log(price, "price");
         await shop.methods
           .buyBatch(tokensId, amounts, token)
           .send({ from: account, value: price });
       } else {
-        console.log("in", account, shopAddress);
         const allowance = await ERC20.methods
           .allowance(account, shopAddress)
           .call();
-        console.log("in", allowance);
 
         if (allowance < 1000000000000) {
           setMessageBuy(
@@ -278,15 +245,43 @@ const Shop = () => {
     dispatch(removeAll());
   };
 
-  console.log(cart);
+  const getPriceMatic = async () => {
+    console.log(MATICUSD, "aggregator");
+    const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
+    const priceMATIC = await Aggregator.methods.latestAnswer().call();
+    console.log(priceMATIC, "price");
+    const price =
+      (parseFloat(
+        cartShop
+          ?.map((item, i) => {
+            return (parseInt(item.priceUSD) / 10 ** 6) * item.quantity;
+          })
+          .reduce((item, acc) => {
+            return item + acc;
+          }),
+      ) *
+        10 ** 8) /
+      priceMATIC;
+
+    setPriceMatic((price + price * 0.05).toFixed(2).toString());
+  };
+
+  React.useEffect(() => {
+    console.log(MATICUSD, "aggregator");
+    if (cartShop.length > 0) {
+      getPriceMatic();
+    } else {
+      setPriceMatic("0");
+    }
+  }, [cartShop]);
 
   return (
     <>
       {isLoading && (
-        <div className="flex items-center justify-center relative w-screen h-screen overflow-hidden pt-28 relative">
+        <div className="flex items-center justify-center relative w-full h-screen overflow-hidden pt-28">
           <div className="absolute left-0 right-0 mx-auto top-0 z-0 flex w-full bgPackContainer">
             <img
-              src="./images/background.png"
+              src="/images/shop_background.png"
               className="sm:block hidden w-screen h-screen"
               alt=""
             />
@@ -303,20 +298,21 @@ const Shop = () => {
         >
           <Modal
             isShow={isShow}
-            cart={cart}
+            cart={cartShop}
             removeAll={removeAll}
             messageBuy={messageBuy}
             withoutX
             tokensAllowed={tokensAllowed}
             setTokenSelected={setTokenSelected}
             tokenSelected={tokenSelected}
+            priceMatic={priceMatic}
             buy={buyPacks}
             isMatic
-            itemsCart={cart.map((item, index) => {
+            itemsCart={cartShop.map((item, index) => {
               return (
                 <div
                   className={clsx(
-                    "gap-2 py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-transparent-color-gray-200 rounded-xl",
+                    "py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-transparent-color-gray-200 rounded-xl",
                   )}
                   // onClick={item.onClick}
                 >
@@ -324,7 +320,7 @@ const Shop = () => {
                     <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
                       <img
                         src={packs[item.nftId]?.imagePack}
-                        className={`absolute bottom-0 top-0 left-[-40%] right-0 m-auto min-w-[175%]`}
+                        className={`absolute top-[-40%] left-[-40%] right-0 m-auto min-w-[175%]`}
                         alt=""
                       />
                     </div>
@@ -362,9 +358,6 @@ const Shop = () => {
                         )}
                       >
                         {nFormatter(parseInt(item.priceUSD) / 10 ** 6)} USD{" "}
-                        {/* <span className="!text-sm text-transparent-color-gray-200">
-                                    ($1.5k)
-                                  </span> */}
                       </h3>
                     </div>
                     <input
@@ -380,7 +373,6 @@ const Shop = () => {
                             item: { ...item, quantity: e.target.value },
                           }),
                         );
-                        getPriceMatic();
                       }}
                     ></input>
                     <div
@@ -398,7 +390,7 @@ const Shop = () => {
           />
 
           <img
-            src="./images/shop_background.png"
+            src="/images/shop_background.png"
             className="flex absolute z-0 w-full h-full"
             alt=""
           />
@@ -458,13 +450,13 @@ const Shop = () => {
                   alt=""
                 />
 
-                {cart.length > 0 && (
+                {cartShop.length > 0 && (
                   <div className="p-1 rounded-full flex items-center justify-center absolute top-1 left-1 bg-primary-disabled min-w-4 min-h-4 z-10">
                     <p
                       className="flex items-center justify-center w-4 h-4"
                       style={{ fontSize: "10px" }}
                     >
-                      {cart
+                      {cartShop
                         .map((item) => parseInt(item.quantity))
                         .reduce((acc, red) => acc + red)}
                     </p>
@@ -617,14 +609,14 @@ const Shop = () => {
                               onClick={() => {
                                 if (account) {
                                   console.log(
-                                    cart,
+                                    cartShop,
                                     sale,
-                                    cart
+                                    cartShop
                                       .map((item) => {
                                         return item.id;
                                       })
                                       .includes(sale.id),
-                                    cart
+                                    cartShop
                                       .map((item) => {
                                         return item.id;
                                       })
@@ -632,7 +624,7 @@ const Shop = () => {
                                     "cart",
                                   );
                                   if (
-                                    cart
+                                    cartShop
                                       .map((item) => {
                                         return item.id;
                                       })
@@ -644,7 +636,7 @@ const Shop = () => {
                                           ...sale,
                                           quantity: counters[index],
                                         },
-                                        id: cart
+                                        id: cartShop
                                           .map((item) => {
                                             return item.id;
                                           })
@@ -653,7 +645,7 @@ const Shop = () => {
                                     );
                                   } else {
                                     dispatch(
-                                      addCart({
+                                      addCartShop({
                                         ...sale,
                                         quantity: counters[index],
                                       }),
@@ -687,12 +679,12 @@ const Shop = () => {
             }}
           >
             <div className="relative flex items-center justify-center p-2">
-              {cart.length > 0 && (
+              {cartShop.length > 0 && (
                 <p
                   className="px-1 rounded-full flex items-center justify-center absolute top-2 left-2 bg-primary w-2 h-2"
                   style={{ fontSize: "10px" }}
                 >
-                  {cart
+                  {cartShop
                     .map((item) => parseInt(item.quantity))
                     .reduce((acc, red) => acc + red)}
                 </p>

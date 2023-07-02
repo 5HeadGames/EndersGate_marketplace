@@ -55,3 +55,61 @@ export const removeFromCart = createAction(
 );
 
 export const removeAll = createAction(actionTypes.REMOVE_ALL);
+
+export const addCartShop = createAction(
+  actionTypes.ADD_CART_SHOP,
+  function prepare(cart: any) {
+    return {
+      payload: cart,
+    };
+  },
+);
+
+export const editCartShop = createAction(
+  actionTypes.EDIT_CART_SHOP,
+  function prepare(cart: any) {
+    return {
+      payload: cart,
+    };
+  },
+);
+
+export const removeFromCartShop = createAction(
+  actionTypes.REMOVE_FROM_CART_SHOP,
+  function prepare(item: any) {
+    return {
+      payload: item,
+    };
+  },
+);
+
+export const removeAllShop = createAction(actionTypes.REMOVE_ALL_SHOP);
+
+export const addCartComics = createAction(
+  actionTypes.ADD_CART_COMICS,
+  function prepare(cart: any) {
+    return {
+      payload: cart,
+    };
+  },
+);
+
+export const editCartComics = createAction(
+  actionTypes.EDIT_CART_COMICS,
+  function prepare(cart: any) {
+    return {
+      payload: cart,
+    };
+  },
+);
+
+export const removeFromCartComics = createAction(
+  actionTypes.REMOVE_FROM_CART_COMICS,
+  function prepare(item: any) {
+    return {
+      payload: item,
+    };
+  },
+);
+
+export const removeAllComics = createAction(actionTypes.REMOVE_ALL_COMICS);

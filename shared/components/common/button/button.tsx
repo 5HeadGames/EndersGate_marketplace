@@ -13,7 +13,12 @@ export interface ButtonProps {
   fill?: boolean;
   labelProps?: string;
   href?: string;
-  decoration?: "fill" | "line-white" | "line-primary" | "fillPrimary";
+  decoration?:
+    | "fill"
+    | "line-white"
+    | "line-primary"
+    | "fillPrimary"
+    | "greenLine";
   social?: "facebook" | "google";
   icon?: any;
   className?: string;

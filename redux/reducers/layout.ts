@@ -12,9 +12,13 @@ interface InitialState {
   blur: boolean;
   message: string;
   provider: any;
+  providerEth: any;
+  networkEth: any;
   providerName: string;
   tokenToPay: string;
   cart: any[];
+  cartComics: any[];
+  cartShop: any[];
 }
 
 const INITIAL_STATE: InitialState = {
@@ -27,9 +31,13 @@ const INITIAL_STATE: InitialState = {
     networkId: process.env.NEXT_PUBLIC_CHAIN_ID,
   },
   providerName: "",
+  providerEth: process.env.NEXT_PUBLIC_PROVIDER_ETH,
+  networkEth: process.env.NEXT_PUBLIC_CHAIN_ID_ETH,
   provider: undefined,
   tokenToPay: "",
   cart: [],
+  cartComics: [],
+  cartShop: [],
 };
 
 export const layoutReducer = createReducer(INITIAL_STATE, (builder) => {
@@ -57,5 +65,39 @@ export const layoutReducer = createReducer(INITIAL_STATE, (builder) => {
     })
     .addCase(actions.removeAll, (state: typeof INITIAL_STATE) => {
       state.cart = [];
+    })
+    .addCase(actions.addCartComics, (state: typeof INITIAL_STATE, action) => {
+      state.cartComics.push(action.payload);
+    })
+    .addCase(actions.editCartComics, (state: typeof INITIAL_STATE, action) => {
+      state.cartComics[action.payload.id] = action.payload.item;
+    })
+    .addCase(
+      actions.removeFromCartComics,
+      (state: typeof INITIAL_STATE, action) => {
+        state.cartComics = state.cartComics.filter(
+          (item) => item.id !== action.payload.id,
+        );
+      },
+    )
+    .addCase(actions.removeAllComics, (state: typeof INITIAL_STATE) => {
+      state.cartComics = [];
+    })
+    .addCase(actions.addCartShop, (state: typeof INITIAL_STATE, action) => {
+      state.cartShop.push(action.payload);
+    })
+    .addCase(actions.editCartShop, (state: typeof INITIAL_STATE, action) => {
+      state.cartShop[action.payload.id] = action.payload.item;
+    })
+    .addCase(
+      actions.removeFromCartShop,
+      (state: typeof INITIAL_STATE, action) => {
+        state.cartShop = state.cartShop.filter(
+          (item) => item.id !== action.payload.id,
+        );
+      },
+    )
+    .addCase(actions.removeAllShop, (state: typeof INITIAL_STATE) => {
+      state.cartShop = [];
     });
 });

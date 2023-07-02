@@ -1,0 +1,17 @@
+[
+  {
+    "address": "0xf3cD27813B5ff6ADEA3805DCf181053AC62D6Ec3",
+    "name": "ETH",
+    "logo": "/icons/eth.png"
+  },
+  {
+    "address": "0x746c00e6305Ac5C01cb3e84e61b67fb2AD7DCeF3",
+    "name": "USDC",
+    "logo": "/images/usdc.png"
+  },
+  {
+    "address": "0x4C086B2E76e61418a9cBf2Af7Ae9d6d96fD6cD83",
+    "name": "BUSD",
+    "logo": "/images/busd.png"
+  }
+]

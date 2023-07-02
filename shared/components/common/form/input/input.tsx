@@ -93,7 +93,6 @@ export const Input: React.FC<
               {
                 "text-alert-error ": error,
               },
-              { "px-4": !leftImg && !rightImg },
               { "pl-21 md:pl-36 pr-4": InputSelect },
               { "pl-14 pr-4": leftImg },
               { "pr-8 pl-4": rightImg },

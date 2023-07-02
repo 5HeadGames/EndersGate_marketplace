@@ -7,8 +7,10 @@ import Aggregator from "./AggregatorV3.json";
 import ExchangeERC1155 from "./ExchangeERC1155.json";
 import ERC721Seadrop from "./ERC721SeaDrop.json";
 import Shop from "./ClockSaleOwnable.json";
+import Comics from "./Comics.json";
 
 const contracts = {
+  Comics,
   ClockSale,
   EndersGate,
   EndersPack,

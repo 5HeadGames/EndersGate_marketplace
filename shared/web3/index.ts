@@ -63,9 +63,23 @@ export const getAddresses = () => {
   return process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses;
 };
 
+export const getAddressesEth = () => {
+  const testAddresses = require("../../Contracts/addresses.sepolia.json");
+  const addresses = require("../../Contracts/addresses.ethereum.json");
+
+  return process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses;
+};
+
 export const getTokensAllowed = () => {
   const testAddresses = require("../../Contracts/tokensAllowed.mumbai.json");
   const addresses = require("../../Contracts/tokensAllowed.matic.json");
+
+  return process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses;
+};
+
+export const getTokensAllowedEth = () => {
+  const testAddresses = require("../../Contracts/tokensAllowed.sepolia.json");
+  const addresses = require("../../Contracts/tokensAllowed.ethereum.json");
 
   return process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses;
 };
@@ -104,6 +118,17 @@ export const approveERC1155 = async ({
 //      from,
 //    });
 //  };
+
+export const switchChain = async (network) => {
+  await (window as any).ethereum.request({
+    method: "wallet_switchEthereumChain",
+    params: [
+      {
+        chainId: "0x" + parseInt(network).toString(16),
+      },
+    ],
+  });
+};
 
 export const createEvent = ({
   type,
