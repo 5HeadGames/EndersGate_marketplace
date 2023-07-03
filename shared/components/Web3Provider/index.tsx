@@ -49,7 +49,7 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <Web3ReactProvider connectors={connectors} key={key}>
+    <Web3ReactProvider connectors={connectors as any} key={key}>
       {children}
     </Web3ReactProvider>
   );
