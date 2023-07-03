@@ -83,54 +83,110 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
   const [isAtLeast1078px] = useMediaQuery("(min-width: 840px)");
   return (
     <div className="sliders-container">
-      <Modal isShow={isShow}>
+      <Modal isShow={isShow} withoutX>
         <div
-          style={{ width: "90vw", maxWidth: "800px" }}
-          className="relative bg-gray-900 flex flex-col items-center gap-4 jusify-center rounded-2xl py-16 px-8 border border-white text-white overflow-auto"
+          style={{ width: "90vw", maxWidth: "350px" }}
+          className="relative bg-overlay flex flex-col items-center gap-4 jusify-center shadow-2xl rounded-2xl mt-16"
         >
-          <div className="absolute top-2 right-4 flex justify-end w-full py-2">
-            {" "}
+          <img
+            src="/images/modalBg.png"
+            className="w-full opacity-25 absolute top-0"
+            alt=""
+          />
+          <img
+            src="/images/modalImages.png"
+            className="w-[275px] absolute top-[-100px]"
+            alt=""
+          />
+          <div className="absolute h-full w-full rounded-2xl bg-gradient-to-b from-transparent to-overlay px-2 from-0% to-50% "></div>
+          <div className="absolute top-2 right-2 flex justify-end w-full py-2">
             <XIcon
-              className="text-white w-6 cursor-poointer"
+              className="text-white w-5 cursor-pointer p-[2px] rounded-full bg-overlay border border-white"
               onClick={() => {
                 hide();
               }}
-            />{" "}
+            />
           </div>
-          <h2 className="text-white text-center font-bold text-xl text-red-alert">
-            Read Now by Minting and Receive a Printed Copy{" "}
-          </h2>{" "}
-          <p className="text-center text-white text-lg">
-            To proceed and access the comic book, you will need to mint it as an
-            NFT. By minting the comic book NFT, you can obtain exclusive
-            ownership of the digital version and unlock additional benefits.
-            Additionally, as a special offer (available for shipping within the
-            USA only), you will have the opportunity to receive a physical
-            printed copy delivered directly to your doorstep.
-          </p>
-          {nftModal.balance > 0 ? (
+
+          <div className="h-32 w-full"></div>
+
+          <div className="flex flex-col items-center justify-center relative rounded-full px-2">
+            <h2 className="text-white text-center font-bold text-2xl text-red-alert">
+              Comic Book - Mint the NFT, Get a Free Physical Copy!{" "}
+            </h2>{" "}
+            <p className="text-center text-white text-lg py-4">
+              Own an exclusive limited edition comic book! Mint the NFT now to
+              claim your digital version and unlock amazing benefits. Plus,
+              enjoy free global shipping and receive a physical printed copy
+              delivered right to your doorstep!
+            </p>
+            {/* <p className="text-green-button text-xl font-black pt-1">
+              445/500 Left!
+            </p> */}
+            {nftModal.balance > 0 ? (
+              <Button
+                decoration="greenLine"
+                className="px-8 py-3 mb-2 rounded-full text-white relative border-none flex items-center justify-center w-full"
+                onClick={() => {
+                  router.push("/comics/" + nftModal.nameComic);
+                }}
+              >
+                <img
+                  src="/images/buttonBg.png"
+                  className="absolute top-0 left-0 h-full w-full"
+                  alt=""
+                />
+                <p className="font-[900] text-white text-lg relative">
+                  Read Now!
+                </p>
+              </Button>
+            ) : (
+              <Button
+                decoration="greenLine"
+                className="px-8 py-3 mb-2 rounded-full text-white relative border-none flex items-center justify-center w-full"
+                onClick={() => {
+                  dispatch(addCartComics({ ...nftModal, quantity: 1 }));
+                  getPriceMatic();
+                  showCart();
+                }}
+              >
+                <img
+                  src="/images/buttonBg.png"
+                  className="absolute top-0 left-0 h-full w-full"
+                  alt=""
+                />
+                <p className="font-[900] text-white text-lg relative">
+                  Get Yours Now!
+                </p>
+              </Button>
+            )}
             <Button
               decoration="greenLine"
-              className="px-8 py-2 mb-2 rounded-md text-green-button border border-green-button hover:border-none hover:text-overlay hover:bg-green-button"
+              className="px-8 py-3 mb-2 rounded-full text-white relative border-none flex items-center justify-center w-48"
               onClick={() => {
-                router.push("/comics/" + nftModal.nameComic);
-              }}
-            >
-              Read Now!
-            </Button>
-          ) : (
-            <Button
-              decoration="greenLine"
-              className="px-8 py-2 mb-2 rounded-md text-green-button border border-green-button hover:border-none hover:text-overlay hover:bg-green-button"
-              onClick={() => {
-                dispatch(addCartComics({ ...nftModal, quantity: 1 }));
-                getPriceMatic();
+                let alreadyIncluded = false;
+                cartComics.forEach((item) => {
+                  if (item.id == nftModal.id) {
+                    alreadyIncluded = true;
+                  }
+                });
+                if (!alreadyIncluded) {
+                  dispatch(addCartComics({ ...nftModal, quantity: 1 }));
+                  getPriceMatic();
+                }
                 showCart();
               }}
             >
-              Buy
+              <img
+                src="/images/buttonYellowBg.png"
+                className="absolute top-0 left-0 h-full w-full"
+                alt=""
+              />
+              <p className="font-bold text-white text-lg relative">
+                Learn More
+              </p>
             </Button>
-          )}
+          </div>
         </div>
       </Modal>
       {isAtLeast1078px ? (

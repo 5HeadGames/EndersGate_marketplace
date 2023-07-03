@@ -87,7 +87,7 @@ function Comics() {
           ?.map((item, i) => {
             return (parseInt(priceUSD) / 10 ** 6) * item.quantity;
           })
-          .reduce((item, acc) => {
+          ?.reduce((item, acc) => {
             return item + acc;
           }),
       ) *
@@ -192,7 +192,7 @@ function Comics() {
           (preprice + preprice * 0.000005).toFixed(10).toString(),
           "ether",
         );
-        console.log("MATIC 2", ids, amounts, token);
+        console.log("MATIC 2", ids, amounts, token, account);
 
         await comics.methods
           .buyBatch(account, ids, amounts, token)

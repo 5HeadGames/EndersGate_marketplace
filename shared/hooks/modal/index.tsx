@@ -19,12 +19,12 @@ export const useModal = () => {
         <Dialog
           as="div"
           static
-          className="fixed inset-0 overflow-y-auto bg-overlay z-10"
+          className="fixed inset-0 overflow-y-auto bg-[#000000bb] z-10"
           initialFocus={cancelButtonRef}
           open={isShow}
           onClose={hide}
         >
-          <div className="flex items-center justify-center pb-20 pt-4 min-h-screen text-center sm:block sm:p-0 bg-overlay">
+          <div className="flex items-center justify-center pb-20 pt-4 min-h-screen text-center sm:block sm:p-0 ">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
