@@ -94,7 +94,7 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
             alt=""
           />
           <img
-            src="/images/modalImages.png"
+            src="/images/modalImages.svg"
             className="w-[275px] absolute top-[-100px]"
             alt=""
           />
