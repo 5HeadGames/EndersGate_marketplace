@@ -155,8 +155,6 @@ export default function AppLayout({ children }) {
 
   const cards = convertArrayCards();
 
-  const [user, setUser] = React.useState<any>();
-
   const { addToast } = useToasts();
 
   const router = useRouter();
@@ -181,59 +179,46 @@ export default function AppLayout({ children }) {
     );
   }
 
-  React.useEffect(() => {
-    if (account) {
-      dispatch(
-        onUpdateUser({
-          ethAddress: account,
-          email: "",
-          provider: provider,
-          providerName: "web3react",
-        }),
-      );
-    }
-  }, [account]);
-
-  React.useEffect(() => {
-    if (ethAddress) {
-      setUser(ethAddress);
-    } else {
-      setUser("");
-    }
-  }, [ethAddress]);
-
   const { pack, MATICUSD } = getAddresses();
 
   const chainChangedHandler = async () => {};
 
   React.useEffect(() => {
     if (relogin) {
+      console.log("Relogin");
       dispatch(
         onUpdateUser({
-          ethAddress: user,
+          ethAddress: account,
           email: "",
           provider: provider?.provider,
           providerName: "web3react",
         }),
       );
     }
-  }, [user, relogin]);
+  }, [account, relogin]);
 
   React.useEffect(() => {
     const typeOfConnection = localStorage.getItem("typeOfConnection");
     const savedLoginTime = localStorage.getItem("loginTime");
     const currentTime = new Date().getTime();
     const TWELVE_HOURS = 12 * 60 * 60 * 1000;
+    console.log(
+      typeOfConnection,
+      savedLoginTime,
+      currentTime,
+      currentTime - parseInt(savedLoginTime) <= TWELVE_HOURS,
+      "COÑOELAMADRE",
+    );
     if (
       typeOfConnection &&
       savedLoginTime &&
       currentTime - parseInt(savedLoginTime) <= TWELVE_HOURS
     ) {
       WALLETS.forEach(async (wallet) => {
-        console.log(wallet);
         if (wallet.title == typeOfConnection) {
           await wallet.connection.connector.activate();
           setRelogin(true);
+          console.log("a");
         }
       });
       if (typeOfConnection == "magic") {
@@ -272,8 +257,10 @@ export default function AppLayout({ children }) {
   }, []);
 
   React.useEffect(() => {
-    if (user) dispatch(onGetAssets(user));
-  }, [user]);
+    if (ethAddress) dispatch(onGetAssets(ethAddress));
+  }, [ethAddress]);
+
+  console.log(ethAddress, "A", account);
 
   React.useEffect(() => {
     if (cart.length > 0) {
@@ -352,10 +339,10 @@ export default function AppLayout({ children }) {
         );
         await marketplaceContract.methods
           .buyBatch(tokensId, amounts, token)
-          .send({ from: user, value: price });
+          .send({ from: ethAddress, value: price });
       } else {
         const allowance = await ERC20.methods
-          .allowance(user, marketplace)
+          .allowance(ethAddress, marketplace)
           .call();
         if (allowance < 1000000000000) {
           setMessageBuy(
@@ -370,17 +357,17 @@ export default function AppLayout({ children }) {
               "1000000000000000000000000000000000000000000000000",
             )
             .send({
-              from: user,
+              from: ethAddress,
             });
           setMessageBuy("Buying your NFT(s) 2/2");
           await marketplaceContract.methods
             .buyBatch(tokensId, amounts, tokenSelected)
-            .send({ from: user });
+            .send({ from: ethAddress });
         } else {
           setMessageBuy("Buying your NFT(s)");
           await marketplaceContract.methods
             .buyBatch(tokensId, amounts, tokenSelected)
-            .send({ from: user });
+            .send({ from: ethAddress });
         }
 
         // }
@@ -504,7 +491,7 @@ export default function AppLayout({ children }) {
               </>
             );
           })}
-          {user ? (
+          {ethAddress ? (
             <>
               <div
                 className={clsx(
@@ -558,8 +545,12 @@ export default function AppLayout({ children }) {
             </>
           ) : (
             <NavbarItem
-              name={user ? "MY ACCOUNT" : "LOG IN"}
-              link={user ? "/profile" : "/login"}
+              name={ethAddress ? "MY ACCOUNT" : "LOG IN"}
+              link={
+                ethAddress
+                  ? "/profile"
+                  : `/login${`?redirect=true&redirectAddress=${router.asPath}`}`
+              }
               route={router.asPath}
             />
           )}

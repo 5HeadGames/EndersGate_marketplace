@@ -5,7 +5,6 @@ import React from "react";
 import { useAppSelector } from "redux/store";
 import { SearchOutlined } from "@ant-design/icons";
 import Styles from "./styles.module.scss";
-import NFTCard from "@shared/components/Marketplace/itemCard";
 import { getBalance } from "@shared/web3";
 import Link from "next/link";
 import { Images } from "@shared/const/Images";
@@ -13,6 +12,7 @@ import { convertArrayCards } from "@shared/components/common/convertCards";
 import { useWeb3React } from "@web3-react/core";
 import { Dropdown } from "@shared/components/common/dropdown/dropdown";
 import { XIcon } from "@heroicons/react/solid";
+import { CardInventory } from "@shared/components/Profile/inventory/cards/itemCard/index";
 
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
@@ -150,12 +150,14 @@ const Inventory = () => {
               )
               .map((card) => {
                 return (
-                  <NFTCard
+                  <CardInventory
                     key={card.id}
                     id={card.id}
                     icon={cards[card.id]?.properties?.image?.value}
                     name={cards[card.id]?.properties?.name?.value}
                     balance={card.balance}
+                    type={cards[card.id].typeCard}
+                    card={true}
                     byId
                   />
                 );
@@ -173,62 +175,15 @@ const Inventory = () => {
               .filter((pack) => parseInt(pack.quantity) > 0)
               .map((pack, index) => {
                 return (
-                  <Link href={`/PackDetailID/${pack.id}`}>
-                    <div
-                      className={clsx(
-                        "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 m-4 cursor-pointer",
-                        Styles.cardHover,
-                      )}
-                    >
-                      <img
-                        src={pack.image}
-                        className="absolute top-[-40%] bottom-0 left-[-5%] right-0 margin-auto opacity-50 min-w-[110%]"
-                        alt=""
-                      />
-                      <div className="flex flex-col items-center relative">
-                        <div className="w-full flex flex-col items-center text-xs gap-1">
-                          <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
-                            <span>
-                              Pack #{pack.id !== undefined ? pack.id : "12345"}
-                            </span>
-                            <span>
-                              x
-                              {nfts.balancePacks[pack.id].balance
-                                ? nfts.balancePacks[pack.id].balance
-                                : ""}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="w-full h-72 flex justify-center items-center my-6">
-                          <img
-                            src={pack.image || Icons.logo}
-                            className={pack.image ? "h-64" : "h-24"}
-                          />
-                        </div>
-                        <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
-                          <div className="flex text-lg font-bold text-left py-2 ">
-                            <div className="w-40 relative">
-                              <img
-                                src={Icons.logoCard}
-                                className="w-40 absolute top-[-60px]"
-                                alt=""
-                              />
-                            </div>
-                            <div className="w-full flex flex-col justify-center">
-                              <span className="uppercase text-white text-lg">
-                                {pack.name || "Enders Gate"}
-                              </span>
-                            </div>
-                            <img
-                              src={Icons.logo}
-                              className="w-10 h-10"
-                              alt=""
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
+                  <CardInventory
+                    key={pack.id}
+                    id={pack.id}
+                    icon={pack.image}
+                    name={pack.name}
+                    balance={nfts.balancePacks[pack.id].balance}
+                    card={false}
+                    byId
+                  />
                 );
               })
           ) : (

@@ -85,78 +85,72 @@ const MarketplaceComponent = () => {
 
   const getSales = async (currentOrder: string) => {
     const { endersGate, pack } = getAddresses();
-    console.log(
-      cards
-        .filter((card) => card.properties?.id)
-        .map((card) => card?.properties?.id?.value),
-      packs.map((card) => card.properties.id.value),
-      "packs & cards",
-    );
-    const [cardsOpensea, packsOpensea] = await Promise.all([
-      OpenseaApiService.getCardsOpensea(),
-      OpenseaApiService.getPacksOpensea(),
-    ]);
-
-    const cardSalesCreated = cardsOpensea.data.listings
-      .filter((i) => i.chain == "matic")
-      .map((i, id) => {
-        return {
-          id: id + 1 + nfts?.saleCreated?.length,
-          duration:
-            parseInt(i.protocol_data.parameters.endTime) -
-            parseInt(i.protocol_data.parameters.startTime),
-          nft: i.protocol_data.parameters.offer[0].token,
-          nftId: parseInt(
-            i.protocol_data.parameters.offer[0].identifierOrCriteria,
-          ),
-          price:
-            i.price.current.decimals == 18
-              ? Web3.utils.fromWei(i.price.current.value, "ether")
-              : i.price.current.value / i.price.current.decimals,
-          currency: i.price.current.currency,
-          seller: i.protocol_data.parameters.offerer,
-          startedAt: i.protocol_data.parameters.startTime,
-          status: "0",
-          type: "opensea",
-        };
+    let cardSalesCreated: any = [],
+      packSalesCreated: any = [],
+      nftsCreated: any = [];
+    try {
+      const [cardsOpensea, packsOpensea] = await Promise.all([
+        OpenseaApiService.getCardsOpensea(),
+        OpenseaApiService.getPacksOpensea(),
+      ]);
+      cardSalesCreated = cardsOpensea.data.listings
+        .filter((i) => i.chain == "matic")
+        .map((i, id) => {
+          return {
+            id: id + 1 + nfts?.saleCreated?.length,
+            duration:
+              parseInt(i.protocol_data.parameters.endTime) -
+              parseInt(i.protocol_data.parameters.startTime),
+            nft: i.protocol_data.parameters.offer[0].token,
+            nftId: parseInt(
+              i.protocol_data.parameters.offer[0].identifierOrCriteria,
+            ),
+            price:
+              i.price.current.decimals == 18
+                ? Web3.utils.fromWei(i.price.current.value, "ether")
+                : i.price.current.value / i.price.current.decimals,
+            currency: i.price.current.currency,
+            seller: i.protocol_data.parameters.offerer,
+            startedAt: i.protocol_data.parameters.startTime,
+            status: "0",
+            type: "opensea",
+          };
+        });
+      packSalesCreated = packsOpensea.data.listings
+        .filter((i) => i.chain == "matic")
+        .map((i, id) => {
+          return {
+            id: id + 1 + cardSalesCreated.length + nfts?.saleCreated?.length,
+            duration:
+              parseInt(i.protocol_data.parameters.endTime) -
+              parseInt(i.protocol_data.parameters.startTime),
+            nft: i.protocol_data.parameters.offer[0].token,
+            nftId: parseInt(
+              i.protocol_data.parameters.offer[0].identifierOrCriteria,
+            ),
+            price:
+              i.price.current.decimals == 18
+                ? Web3.utils.fromWei(i.price.current.value, "ether")
+                : i.price.current.value / i.price.current.decimals,
+            currency: i.price.current.currency,
+            seller: i.protocol_data.parameters.offerer,
+            startedAt: i.protocol_data.parameters.startTime,
+            status: "0",
+            type: "opensea",
+          };
+        });
+      nftsCreated = [...cardSalesCreated, ...packSalesCreated];
+      nfts?.saleCreated?.forEach((sale) => {
+        nftsCreated.push(sale);
+        if (sale.nft == endersGate) {
+          cardSalesCreated.push(sale);
+        } else if (sale.nft == pack) {
+          packSalesCreated.push(sale);
+        }
       });
-    const packSalesCreated = packsOpensea.data.listings
-      .filter((i) => i.chain == "matic")
-      .map((i, id) => {
-        return {
-          id: id + 1 + cardSalesCreated.length + nfts?.saleCreated?.length,
-          duration:
-            parseInt(i.protocol_data.parameters.endTime) -
-            parseInt(i.protocol_data.parameters.startTime),
-          nft: i.protocol_data.parameters.offer[0].token,
-          nftId: parseInt(
-            i.protocol_data.parameters.offer[0].identifierOrCriteria,
-          ),
-          price:
-            i.price.current.decimals == 18
-              ? Web3.utils.fromWei(i.price.current.value, "ether")
-              : i.price.current.value / i.price.current.decimals,
-          currency: i.price.current.currency,
-          seller: i.protocol_data.parameters.offerer,
-          startedAt: i.protocol_data.parameters.startTime,
-          status: "0",
-          type: "opensea",
-        };
-      });
-    const nftsCreated = [...cardSalesCreated, ...packSalesCreated];
-
-    console.log(packSalesCreated, cardSalesCreated, nftsCreated);
-
-    nfts?.saleCreated?.forEach((sale) => {
-      nftsCreated.push(sale);
-      if (sale.nft == endersGate) {
-        cardSalesCreated.push(sale);
-      } else if (sale.nft == pack) {
-        packSalesCreated.push(sale);
-      }
-    });
-
-    console.log(nftsCreated);
+    } catch (e) {
+      console.log(e);
+    }
 
     if (currentOrder === "recently_listed") {
       switch (type) {

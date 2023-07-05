@@ -15,6 +15,8 @@ import { WALLETS } from "@shared/utils/connection/utils";
 import { LoadingOutlined } from "@ant-design/icons";
 import { onUpdateUser } from "@redux/actions";
 import { useWeb3React } from "@web3-react/core";
+import { switchChain } from "@shared/web3";
+import { useSelector } from "react-redux";
 
 type Values = {
   email?: string;
@@ -29,12 +31,24 @@ const Login = () => {
     store.getState()["networks"].networkId,
   );
 
+  const { networkId } = useSelector((state: any) => state.layout.user);
+
+  const { account, provider } = useWeb3React();
+
+  const { query } = useRouter();
+
   const router = useRouter();
   const dispatch = useAppDispatch();
   const handleLogin = async () => {
     setLoading(true);
     try {
       await login(dispatch);
+      localStorage.setItem("typeOfConnection", "magic");
+      localStorage.setItem("loginTime", new Date().getTime().toString());
+      const queryAddress: any = query.redirectAddress?.toString();
+      if (query.redirect === "true" && query.redirectAddress != null) {
+        router.push(queryAddress !== undefined ? queryAddress : "/");
+      }
       router.push("/");
     } catch (err) {
       console.log({ err });
@@ -47,12 +61,32 @@ const Login = () => {
     if (isAuthenticated) router.push("/");
   }, [isAuthenticated]);
 
-  const handleConnection = async (connection) => {
+  const handleConnection = async (connection: any, title: any) => {
     setLoading(true);
     try {
       await connection.connector.activate();
+      localStorage.setItem("typeOfConnection", title);
+      localStorage.setItem("loginTime", new Date().getTime().toString());
 
-      router.push("/");
+      const typeOfConnection = localStorage.getItem("typeOfConnection");
+      const savedLoginTime = localStorage.getItem("loginTime");
+      console.log(savedLoginTime, typeOfConnection, "xddd");
+
+      const queryAddress: any = query?.redirectAddress?.toString();
+
+      await switchChain(networkId);
+      dispatch(
+        onUpdateUser({
+          ethAddress: account,
+          email: "",
+          provider: provider?.provider,
+          providerName: "web3react",
+          // ownsBattlePass: balance > 0,
+        }),
+      );
+      if (query.redirect === "true" && query.redirectAddress != null) {
+        router.push(queryAddress !== undefined ? queryAddress : "/");
+      }
     } catch (err) {
       console.log({ err });
     }
@@ -88,7 +122,7 @@ const Login = () => {
                   decoration="line-white"
                   size="medium"
                   className="w-full mb-2 bg-overlay rounded-md  text-white hover:text-overlay"
-                  onClick={() => handleConnection(k.connection)}
+                  onClick={() => handleConnection(k.connection, k.title)}
                 >
                   {loading ? "..." : "Login with " + k.title}
                 </Button>
