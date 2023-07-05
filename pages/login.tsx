@@ -13,7 +13,7 @@ import clsx from "clsx";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { WALLETS } from "@shared/utils/connection/utils";
 import { LoadingOutlined } from "@ant-design/icons";
-import { onUpdateUser } from "@redux/actions";
+import { onGetAssets, onUpdateUser } from "@redux/actions";
 import { useWeb3React } from "@web3-react/core";
 import { switchChain } from "@shared/web3";
 import { useSelector } from "react-redux";
@@ -68,29 +68,28 @@ const Login = () => {
       localStorage.setItem("typeOfConnection", title);
       localStorage.setItem("loginTime", new Date().getTime().toString());
 
-      const typeOfConnection = localStorage.getItem("typeOfConnection");
-      const savedLoginTime = localStorage.getItem("loginTime");
-      console.log(savedLoginTime, typeOfConnection, "xddd");
-
       const queryAddress: any = query?.redirectAddress?.toString();
 
-      await switchChain(networkId);
-      dispatch(
-        onUpdateUser({
-          ethAddress: account,
-          email: "",
-          provider: provider?.provider,
-          providerName: "web3react",
-          // ownsBattlePass: balance > 0,
-        }),
-      );
-      if (query.redirect === "true" && query.redirectAddress != null) {
-        router.push(queryAddress !== undefined ? queryAddress : "/");
-      }
+      setTimeout(async () => {
+        dispatch(
+          onUpdateUser({
+            ethAddress: account,
+            email: "",
+            provider: provider?.provider,
+            providerName: "web3react",
+          }),
+        );
+        dispatch(onGetAssets(account));
+        await switchChain(networkId);
+        if (query.redirect === "true" && query.redirectAddress != null) {
+          router.push(queryAddress !== undefined ? queryAddress : "/");
+        }
+        setLoading(false);
+      }, 3000);
     } catch (err) {
       console.log({ err });
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

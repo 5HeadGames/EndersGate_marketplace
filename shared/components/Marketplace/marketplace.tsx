@@ -140,17 +140,18 @@ const MarketplaceComponent = () => {
           };
         });
       nftsCreated = [...cardSalesCreated, ...packSalesCreated];
-      nfts?.saleCreated?.forEach((sale) => {
-        nftsCreated.push(sale);
-        if (sale.nft == endersGate) {
-          cardSalesCreated.push(sale);
-        } else if (sale.nft == pack) {
-          packSalesCreated.push(sale);
-        }
-      });
     } catch (e) {
       console.log(e);
     }
+
+    nfts?.saleCreated?.forEach((sale) => {
+      nftsCreated.push(sale);
+      if (sale.nft == endersGate) {
+        cardSalesCreated.push(sale);
+      } else if (sale.nft == pack) {
+        packSalesCreated.push(sale);
+      }
+    });
 
     if (currentOrder === "recently_listed") {
       switch (type) {

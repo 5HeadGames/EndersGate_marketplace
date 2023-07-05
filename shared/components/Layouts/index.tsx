@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useRef } from "react";
 import Link from "next/link";
 import { Layout } from "antd";
@@ -181,11 +182,12 @@ export default function AppLayout({ children }) {
 
   const { pack, MATICUSD } = getAddresses();
 
+  console.log(router);
+
   const chainChangedHandler = async () => {};
 
   React.useEffect(() => {
     if (relogin) {
-      console.log("Relogin");
       dispatch(
         onUpdateUser({
           ethAddress: account,
@@ -194,6 +196,7 @@ export default function AppLayout({ children }) {
           providerName: "web3react",
         }),
       );
+      dispatch(onGetAssets(account));
     }
   }, [account, relogin]);
 
@@ -202,13 +205,6 @@ export default function AppLayout({ children }) {
     const savedLoginTime = localStorage.getItem("loginTime");
     const currentTime = new Date().getTime();
     const TWELVE_HOURS = 12 * 60 * 60 * 1000;
-    console.log(
-      typeOfConnection,
-      savedLoginTime,
-      currentTime,
-      currentTime - parseInt(savedLoginTime) <= TWELVE_HOURS,
-      "COÑOELAMADRE",
-    );
     if (
       typeOfConnection &&
       savedLoginTime &&
@@ -218,7 +214,6 @@ export default function AppLayout({ children }) {
         if (wallet.title == typeOfConnection) {
           await wallet.connection.connector.activate();
           setRelogin(true);
-          console.log("a");
         }
       });
       if (typeOfConnection == "magic") {
@@ -230,37 +225,27 @@ export default function AppLayout({ children }) {
     }
   }, []);
 
-  const accountChangedHandler = async (newAccount: any) => {
-    const web3 = await loginMetamaskWallet();
-    await dispatch(onGetAssets((window as any).ethereum.selectedAddress));
-    // if (user !== null) {
-    // }
-  };
-  if (
-    typeof window !== "undefined" &&
-    (window as any).ethereum?.isConnected() &&
-    !isExecuted
-  ) {
-    (window as any).ethereum.on("accountsChanged", accountChangedHandler);
-    (window as any).ethereum.on("chainChanged", chainChangedHandler);
-    setIsExecuted(true);
-  }
+  const accountChangedHandler = async () => {};
+
+  React.useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      (window as any).ethereum?.isConnected() &&
+      !isExecuted
+    ) {
+      (window as any).ethereum.on("accountsChanged", accountChangedHandler);
+      (window as any).ethereum.on("chainChanged", chainChangedHandler);
+      setIsExecuted(true);
+    }
+  }, []);
 
   const initApp = async () => {
-    // const addresses = getAddresses();
-    // const marketplace = getContract("ClockSale", addresses.marketplace);
     await dispatch(onLoadSales());
   };
 
   React.useEffect(() => {
     initApp();
   }, []);
-
-  React.useEffect(() => {
-    if (ethAddress) dispatch(onGetAssets(ethAddress));
-  }, [ethAddress]);
-
-  console.log(ethAddress, "A", account);
 
   React.useEffect(() => {
     if (cart.length > 0) {
@@ -385,8 +370,17 @@ export default function AppLayout({ children }) {
       logout(dispatch);
       toggleLogout(false);
     } else if (providerName == "web3react") {
-      window.location.reload();
+      dispatch(
+        onUpdateUser({
+          ethAddress: "",
+          email: "",
+          provider: "",
+          providerName: "",
+        }),
+      );
     }
+    localStorage.removeItem("typeOfConnection");
+    localStorage.removeItem("loginTime");
   };
 
   const profileItems = [
@@ -549,7 +543,9 @@ export default function AppLayout({ children }) {
               link={
                 ethAddress
                   ? "/profile"
-                  : `/login${`?redirect=true&redirectAddress=${router.asPath}`}`
+                  : router.pathname !== "/login"
+                  ? `/login${`?redirect=true&redirectAddress=${router.pathname}`}`
+                  : router.asPath
               }
               route={router.asPath}
             />

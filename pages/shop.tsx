@@ -18,10 +18,12 @@ import {
   getAddresses,
   getContractCustom,
   getTokensAllowed,
+  switchChain,
 } from "@shared/web3";
 import {
   addCartShop,
   editCart,
+  editCartShop,
   removeAll,
   removeFromCart,
 } from "@redux/actions";
@@ -93,8 +95,6 @@ const Shop = () => {
   const updateSales = async () => {
     setIsLoading(true);
     try {
-      console.log(shopAddress, networkConfigs[networkId].rpc, "a");
-
       // Use web3 to get the user's accounts.
       const web3 = new Web3(networkConfigs[networkId].rpc);
       const shop = getContractCustom("Shop", shopAddress, web3.currentProvider);
@@ -143,19 +143,23 @@ const Shop = () => {
 
   React.useEffect(() => {
     if (networkId) {
+      switchChain(networkId);
       updateSales();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networkId]);
 
   const buyPacks = async () => {
-    const shop = await getContractCustom("Shop", shopAddress, provider);
-
-    if (tokenSelected == "") {
-      addToast("Please Select a Payment Method", { appearance: "error" });
-      return;
-    }
     try {
+      await switchChain(networkId);
+
+      const shop = await getContractCustom("Shop", shopAddress, provider);
+
+      if (tokenSelected == "") {
+        addToast("Please Select a Payment Method", { appearance: "error" });
+        return;
+      }
+
       console.log(tokenSelected, "token to pay");
 
       setMessageBuy(`Processing your purchase...`);
@@ -608,21 +612,6 @@ const Shop = () => {
                               className="text-xl text-white cursor-pointer"
                               onClick={() => {
                                 if (account) {
-                                  console.log(
-                                    cartShop,
-                                    sale,
-                                    cartShop
-                                      .map((item) => {
-                                        return item.id;
-                                      })
-                                      .includes(sale.id),
-                                    cartShop
-                                      .map((item) => {
-                                        return item.id;
-                                      })
-                                      .indexOf(sale.id),
-                                    "cart",
-                                  );
                                   if (
                                     cartShop
                                       .map((item) => {
@@ -631,7 +620,7 @@ const Shop = () => {
                                       .includes(sale.id)
                                   ) {
                                     dispatch(
-                                      editCart({
+                                      editCartShop({
                                         item: {
                                           ...sale,
                                           quantity: counters[index],

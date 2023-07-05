@@ -81,19 +81,21 @@ function Comics() {
   };
 
   const getPriceMatic = async () => {
-    const price =
-      (parseFloat(
-        cartComics
-          ?.map((item, i) => {
-            return (parseInt(priceUSD) / 10 ** 6) * item.quantity;
-          })
-          ?.reduce((item, acc) => {
-            return item + acc;
-          }),
-      ) *
-        10 ** 8) /
-      parseInt(basePriceMATIC);
-    setPriceMatic((price + price * 0.000005).toFixed(8).toString());
+    try {
+      const price =
+        (parseFloat(
+          cartComics
+            ?.map((item, i) => {
+              return (parseInt(priceUSD) / 10 ** 6) * item.quantity;
+            })
+            ?.reduce((item, acc) => {
+              return item + acc;
+            }),
+        ) *
+          10 ** 8) /
+        parseInt(basePriceMATIC);
+      setPriceMatic((price + price * 0.000005).toFixed(8).toString());
+    } catch (e) {}
   };
 
   React.useEffect(() => {
@@ -138,8 +140,6 @@ function Comics() {
         amounts: cartComics.map((item) => item.quantity.toString()),
         token: tokenSelected,
       };
-
-      console.log("procesing");
 
       let price = "0";
       const ERC20 = getContractCustom("ERC20", token, providerEth);
