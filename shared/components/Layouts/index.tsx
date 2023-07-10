@@ -407,6 +407,11 @@ export default function AppLayout({ children }) {
       icon: <AreaChartOutlined />,
     },
     {
+      name: "MY PACKS",
+      link: "/packs",
+      icon: <AreaChartOutlined />,
+    },
+    {
       name: "PROFILE",
       link: "/profile/accountSettings",
       icon: <AreaChartOutlined />,
