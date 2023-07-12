@@ -77,7 +77,6 @@ function Comics() {
     const priceMATIC = await Aggregator.methods.latestAnswer().call();
     setBasePriceMatic(priceMATIC);
     setPriceUSD(priceUSD.priceUSD);
-    console.log(priceMATIC, priceUSD.priceUSD);
   };
 
   const getPriceMatic = async () => {
@@ -101,10 +100,6 @@ function Comics() {
   React.useEffect(() => {
     getPriceUSD();
   }, [comicsAddress, providerEth]);
-
-  React.useEffect(() => {
-    console.log(basePriceMATIC, "price ETH");
-  }, [priceMatic]);
 
   React.useEffect(() => {
     if (account) {
@@ -153,59 +148,33 @@ function Comics() {
           MATICUSD,
           providerEth,
         );
-        console.log("MATIC1");
 
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
         const preprice =
           (parseFloat(
             cartComics
               ?.map((item, i) => {
-                console.log(item.priceUSD, item.quantity, "precio");
                 return (parseInt(item.priceUSD) / 10 ** 6) * item.quantity;
               })
               .reduce((item, acc) => {
-                console.log(item, acc, "reducer");
                 return item + acc;
               }),
           ) *
             10 ** 8) /
           priceMATIC;
 
-        console.log(
-          preprice,
-          parseFloat(
-            cartComics
-              ?.map((item, i) => {
-                console.log(item.priceUSD, item.quantity, "precio");
-                return (parseInt(item.priceUSD) / 10 ** 6) * item.quantity;
-              })
-              .reduce((item, acc) => {
-                return item + acc;
-              }),
-          ) *
-            10 ** 8,
-          priceMATIC,
-          "XD",
-        );
-
         price = Web3.utils.toWei(
           (preprice + preprice * 0.000005).toFixed(10).toString(),
           "ether",
         );
-        console.log("MATIC 2", ids, amounts, token, account);
 
         await comics.methods
           .buyBatch(account, ids, amounts, token)
           .send({ from: account, value: price });
-
-        console.log("MATIC 3");
       } else {
-        console.log("in token", account, comicsAddress, ERC20);
-
         const allowance = await ERC20.methods
           .allowance(account, comicsAddress)
           .call();
-        console.log("in", allowance);
 
         if (allowance < 1000000000000) {
           setMessageBuy(
@@ -214,7 +183,6 @@ function Comics() {
                 .name
             } 1/2`,
           );
-          console.log("increasing");
           await ERC20.methods
             .increaseAllowance(
               comicsAddress,
@@ -272,11 +240,10 @@ function Comics() {
         priceMatic={priceMatic}
         isMatic={false}
         itemsCart={cartComics.map((item, index) => {
-          console.log(item.priceUSD, comic);
           return (
             <div
               className={
-                "gap-2 py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-transparent-color-gray-200 rounded-xl"
+                "py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-transparent-color-gray-200 rounded-xl"
               }
               onClick={item.onClick}
             >
@@ -318,7 +285,6 @@ function Comics() {
                   min={1}
                   className="text-lg px-2 text-white w-12 bg-transparent rounded-xl border border-overlay-overlay"
                   onChange={(e) => {
-                    console.log(e.target.value);
                     dispatch(
                       editCartComics({
                         id: index,

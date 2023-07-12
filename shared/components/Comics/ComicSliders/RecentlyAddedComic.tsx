@@ -314,7 +314,6 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
                             className="shrink-0 w-6 text-white"
                             onClick={(e) => {
                               e.preventDefault();
-                              console.log(account, i);
                               if (account) {
                                 dispatch(
                                   addCartComics({

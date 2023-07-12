@@ -128,7 +128,6 @@ const Shop = () => {
         });
       setSales(created);
       setCounters(created.map(() => 1));
-      console.log(created);
       // Update State
       setContract(contract);
     } catch (error) {
@@ -159,8 +158,6 @@ const Shop = () => {
         addToast("Please Select a Payment Method", { appearance: "error" });
         return;
       }
-
-      console.log(tokenSelected, "token to pay");
 
       setMessageBuy(`Processing your purchase...`);
 
@@ -198,7 +195,6 @@ const Shop = () => {
           ) *
             10 ** 8) /
           priceMATIC;
-        console.log(preprice, "preprice");
         price = Web3.utils.toWei(
           (preprice + preprice * 0.05).toString(),
           "ether",
@@ -250,10 +246,8 @@ const Shop = () => {
   };
 
   const getPriceMatic = async () => {
-    console.log(MATICUSD, "aggregator");
     const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
     const priceMATIC = await Aggregator.methods.latestAnswer().call();
-    console.log(priceMATIC, "price");
     const price =
       (parseFloat(
         cartShop
@@ -271,7 +265,6 @@ const Shop = () => {
   };
 
   React.useEffect(() => {
-    console.log(MATICUSD, "aggregator");
     if (cartShop.length > 0) {
       getPriceMatic();
     } else {
@@ -315,6 +308,7 @@ const Shop = () => {
             itemsCart={cartShop.map((item, index) => {
               return (
                 <div
+                  key={"pack-shop-" + item.nftId}
                   className={clsx(
                     "py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-transparent-color-gray-200 rounded-xl",
                   )}
@@ -370,7 +364,6 @@ const Shop = () => {
                       min={1}
                       className="text-lg px-2 text-white w-12 bg-transparent rounded-xl border border-overlay-overlay"
                       onChange={(e) => {
-                        console.log(e.target.value);
                         dispatch(
                           editCart({
                             id: index,

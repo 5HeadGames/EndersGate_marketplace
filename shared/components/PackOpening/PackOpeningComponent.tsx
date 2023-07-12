@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { PackOpening } from "./PackOpeningDesktop";
 import { PackOpeningMobile } from "./PackOpeningMobile";
 import { TransactionText } from "../common/specialFields/SpecialFields";
@@ -31,7 +31,7 @@ export const PackOpeningComponent: React.FC<any> = ({
 
   const cards = convertArrayCards();
 
-  const { Modal, show, isShow, hide } = useModal();
+  const { Modal, show, isShow } = useModal();
 
   const openPack = async (index: any, id: any) => {
     setIsLoadingPack(true);
@@ -70,7 +70,7 @@ export const PackOpeningComponent: React.FC<any> = ({
       setCardToOpen((prev) => {
         const newArray: any[] = [];
         prev.forEach((a, id) => {
-          if (index == id) {
+          if (index === id) {
             newArray.push(true);
           } else {
             newArray.push(false);
@@ -79,8 +79,6 @@ export const PackOpeningComponent: React.FC<any> = ({
         return newArray;
       });
       setTimeout(() => {
-        let number = Math.floor(Math.random() * (3 - 0) + 0);
-        // setVideoPlaying(number);
         setVideoPlaying(3);
         setCardToOpen(new Array(5).fill(false));
         setVideo(true);
@@ -95,6 +93,7 @@ export const PackOpeningComponent: React.FC<any> = ({
       setIsLoadingPack(false);
     }
   };
+
   const endPackOpening = () => {
     setVideoPlaying(3);
   };
@@ -119,7 +118,7 @@ export const PackOpeningComponent: React.FC<any> = ({
         ></audio>
       )}
       {openingPack && (
-        <div className="absolute top-0 flex items-center justify-center left-0 w-full h-full z-50 openingPack">
+        <div className="fixed top-0 flex items-center justify-center left-0 w-full h-full z-50 openingPack">
           <p className="loading text-3xl text-white font-bold">
             Opening your pack
           </p>
@@ -129,16 +128,11 @@ export const PackOpeningComponent: React.FC<any> = ({
         <PackOpening
           cards={cards}
           updateBalance={updateBalance}
-          packContract={packContract}
-          backgroundSound={backgroundSound}
-          setBackgroundSound={setBackgroundSound}
           arrayPacks={arrayPacks}
           account={account}
           openPack={openPack}
           cardsPack={cardsPack}
-          endPackOpening={endPackOpening}
           animating={animating}
-          refAudioLoop={refAudioLoop}
           setNoAudio={setVideo}
           video={video}
           isLoading={isLoadingPack}
@@ -203,7 +197,7 @@ export const PackOpeningComponent: React.FC<any> = ({
                   return (
                     <div
                       className="flex justify-between items-center gap-2 py-4 px-2 border-y border-white historyItem"
-                      key={card?.id}
+                      key={"history" + card.txHash + card?.id}
                     >
                       <img
                         src={cards[card?.id]?.properties?.image?.value}

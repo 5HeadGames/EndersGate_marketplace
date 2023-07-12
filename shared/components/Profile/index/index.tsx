@@ -67,7 +67,6 @@ const ProfileIndexPage = ({ children }) => {
 
 export const Activity = ({ date, type, metadata, pack }) => {
   const cards = convertArrayCards();
-  console.log("metadata", metadata);
   return (
     <a
       href={`https://explorer.harmony.one/tx/${metadata.transactionHash}`}

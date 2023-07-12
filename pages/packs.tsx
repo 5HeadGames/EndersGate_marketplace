@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Web3 from "web3";
 import { getAddresses, getContractCustom } from "@shared/web3";
 import { PackOpeningComponent } from "@shared/components/PackOpening/PackOpeningComponent";
+import { onGetAssets } from "@redux/actions";
 
 const Packs = () => {
   const [contract, setContract] = useState(null);
   const [NFTContract, setNFTContract] = useState(null);
-  const [packs, setPacks] = useState([]);
   const [history, setHistory] = useState([]);
+  const [packs, setPacks] = useState([]);
+  const nfts = useSelector((state: any) => state.nfts);
+  const dispatch = useDispatch();
 
   const { endersGate, pack } = getAddresses();
 
@@ -55,35 +58,20 @@ const Packs = () => {
     setNFTContract(endersGateContract);
   }, []);
 
-  React.useEffect(() => {
-    if (ethAddress && contract) {
-      updateBalance();
-    }
-  }, [contract]);
-
-  const updateBalance = async () => {
-    const balanceOf = await contract.methods
-      .balanceOfBatch(
-        [ethAddress, ethAddress, ethAddress, ethAddress],
-        [0, 1, 2, 3],
-      )
-      .call();
-    console.log(balanceOf, pack, contract);
-    const arrayPacks = [];
-    for (let i = 0; i < balanceOf[0]; i++) {
-      arrayPacks.push({ id: 0 });
-    }
-    for (let i = 0; i < balanceOf[1]; i++) {
-      arrayPacks.push({ id: 1 });
-    }
-    for (let i = 0; i < balanceOf[2]; i++) {
-      arrayPacks.push({ id: 2 });
-    }
-    for (let i = 0; i < balanceOf[3]; i++) {
-      arrayPacks.push({ id: 3 });
-    }
-    setPacks(arrayPacks);
+  const updateBalance = () => {
+    dispatch(onGetAssets(ethAddress));
   };
+
+  React.useEffect(() => {
+    const arrayPacks = [];
+    nfts.balancePacks.forEach((pack) => {
+      for (let i = 0; i < pack.balance; i++) {
+        arrayPacks.push({ id: pack.id });
+      }
+    });
+    console.log(arrayPacks);
+    setPacks(arrayPacks);
+  }, [nfts]);
 
   return (
     <div className="mt-14">

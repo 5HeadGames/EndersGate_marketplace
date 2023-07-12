@@ -16,8 +16,6 @@ const ComicButtons = ({ priceUSD, getPriceMatic, balance, showCart }) => {
     ),
   };
 
-  console.log(priceUSD);
-
   const renderElements = (value) => {
     return map[value];
   };

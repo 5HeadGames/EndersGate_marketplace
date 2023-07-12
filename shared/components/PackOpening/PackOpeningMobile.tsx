@@ -33,7 +33,6 @@ export const PackOpeningMobile: React.FC<any> = ({
   React.useEffect(() => {
     if (arrayPacks) {
       const array = new Array(arrayPacks.length).fill(false);
-      console.log(array);
       if (array) {
         setCardToOpen(array);
       }

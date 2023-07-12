@@ -14,6 +14,16 @@ const AnimatedPackCard = (props: any) => {
     setIsFlipped(!isFlipped);
   };
 
+  const cardsBacks = {
+    reaction: "./images/ACTION_REACTION_CARD_BACK.png",
+    action: "./images/ACTION_REACTION_CARD_BACK.png",
+    wood: "./images/bert_kurtback.png",
+    stone: "./images/CardStoneBack.png",
+    iron: "./images/cardsilver.png",
+    gold: "./images/CardBack.png",
+    legendary: "./images/redback.png",
+  };
+
   return (
     <div
       className="AnimatedCardPackBack"
@@ -32,19 +42,8 @@ const AnimatedPackCard = (props: any) => {
           <img
             height={props.height}
             className="AnimatedCardPackBack"
-            src={
-              props.cardType == "reaction" || props.cardType == "action"
-                ? "./images/ACTION_REACTION_CARD_BACK.png"
-                : props.cardType == "wood"
-                ? "./images/bert_kurtback.png"
-                : props.cardType == "stone"
-                ? "./images/CardStoneBack.png"
-                : props.cardType == "iron"
-                ? "./images/cardsilver.png"
-                : props.cardType == "gold"
-                ? "./images/CardBack.png"
-                : "./images/redback.png"
-            }
+            src={cardsBacks[props.cardType]}
+            alt="card back"
           />
         </div>
         <div className="card-block card-back">
@@ -58,7 +57,7 @@ const AnimatedPackCard = (props: any) => {
             }}
             {...mouseHandlers}
           >
-            <img className="PackCard" src={props.cardFront} />
+            <img className="PackCard" src={props.cardFront} alt="card front" />
           </animated.div>
         </div>
       </div>

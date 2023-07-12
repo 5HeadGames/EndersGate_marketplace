@@ -1,23 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import clsx from "clsx";
 import React from "react";
 import AnimatedPackCard from "./AnimatedPackCard";
 
-export const PackOpening: React.FC<any> = ({
+export const PackOpening = ({
   cards,
-  refAudioLoop,
   setNoAudio,
   arrayPacks,
-  packContract,
   updateBalance,
-  account,
   animating,
-  endPackOpening,
   openPack,
   cardsPack,
   isLoading,
   videoPlaying,
-  backgroundSound,
-  setBackgroundSound,
   setVideoPlaying,
   cardToOpen,
   startFlashing,
@@ -25,9 +20,8 @@ export const PackOpening: React.FC<any> = ({
   startFlashingPack,
   setStartFlashingPack,
   video,
-  packAnimation,
   show,
-}) => {
+}: any) => {
   const vidRef1 = React.useRef<any>(null);
   const vidRef2 = React.useRef<any>(null);
   const vidRef3 = React.useRef<any>(null);
@@ -36,14 +30,14 @@ export const PackOpening: React.FC<any> = ({
   React.useEffect(() => {
     const audio: any = document.getElementsByClassName("videoPack");
     if (audio) {
-      for (let it = 0; it < audio.length; it++) {
-        audio[it].volume = 0.3;
+      for (const element of audio) {
+        element.volume = 0.3;
       }
     }
   }, [video]);
 
   React.useEffect(() => {
-    if (startFlashing == true) {
+    if (startFlashing === true) {
       setTimeout(() => {
         setStartFlashing(false);
       }, 4000);
@@ -51,7 +45,7 @@ export const PackOpening: React.FC<any> = ({
   }, [startFlashing]);
 
   React.useEffect(() => {
-    if (startFlashingPack == true) {
+    if (startFlashingPack === true) {
       setTimeout(() => {
         setStartFlashingPack(false);
       }, 2000);
@@ -69,7 +63,6 @@ export const PackOpening: React.FC<any> = ({
   };
 
   React.useEffect(() => {
-    // if (videoPlaying !== 3) {
     handlePlayVideo();
   }, [video, videoPlaying]);
 
@@ -82,7 +75,7 @@ export const PackOpening: React.FC<any> = ({
     >
       <div
         className={clsx(
-          { ["hidden"]: video },
+          { hidden: video },
           "md:absolute flex md:gap-40 gap-10 justify-center items-center md:top-10 md:mt-0 mt-6 md:h-12 h-8 left-0 right-0 m-auto text-center",
         )}
       >
@@ -158,23 +151,19 @@ export const PackOpening: React.FC<any> = ({
                   )}
                   onWheel={(e) => {
                     e.preventDefault();
-                    var container = document.getElementById("container");
-                    var containerScrollPosition =
+                    let container = document.getElementById("container");
+                    let containerScrollPosition =
                       document?.getElementById("container")?.scrollLeft;
                     container?.scrollTo({
                       top: 0,
-                      left:
-                        (containerScrollPosition !== undefined
-                          ? containerScrollPosition
-                          : 0) + e.deltaY,
-                      // behaviour: 'smooth' //if you want smooth scrolling
+                      left: (containerScrollPosition ?? 0) + e.deltaY,
                     });
                   }}
                 >
                   {arrayPacks.map((pack: any, index: number) => {
                     return (
                       <img
-                        key={index}
+                        key={"pack" + pack.id + index}
                         src={`./videos/packVideos/${pack.id}.png`}
                         className={clsx(
                           animating
@@ -222,8 +211,8 @@ export const PackOpening: React.FC<any> = ({
 
           <div
             className={clsx(
-              { ["hidden"]: videoPlaying !== 3 },
-              "absolute bottom-0 right-0 m-10 cursor-pointer titleNext font-bold",
+              { hidden: videoPlaying !== 3 },
+              "absolute bottom-0 right-0 m-10 mb-20 cursor-pointer titleNext font-bold",
             )}
             onClick={() => {
               setStartFlashingPack(true);
@@ -231,13 +220,6 @@ export const PackOpening: React.FC<any> = ({
                 setVideoPlaying(-1);
                 setNoAudio(false);
                 updateBalance();
-                // console.log(vidRef1?.current);
-                // if (vidRef1 && vidRef2 && vidRef3 && vidRef4) {
-                //   vidRef1.current.currentTime = 0;
-                //   vidRef2.current.currentTime = 0;
-                //   vidRef3.current.currentTime = 0;
-                //   vidRef4.current.currentTime = 0;
-                // }
               }, 1100);
             }}
           >

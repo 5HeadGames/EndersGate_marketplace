@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { DropdownCart } from "../common/dropdownCart/dropdownCart";
 import { useAppDispatch } from "redux/store";
 import { removeAll } from "redux/actions";
@@ -34,9 +35,9 @@ export const Cart = ({
   const { addToast } = useToasts();
   const dispatch = useAppDispatch();
   const tokensAllowed = getTokensAllowed();
-  const { logout, login, showWallet } = useMagicLink();
+  const { showWallet } = useMagicLink();
   const { ethAddress } = useSelector((state: any) => state.layout.user);
-  const { provider, providerName, cart, message } = useSelector(
+  const { provider, providerName, cart } = useSelector(
     (state: any) => state.layout,
   );
   const [priceMatic, setPriceMatic] = React.useState("0");
@@ -78,7 +79,7 @@ export const Cart = ({
   };
 
   const buyNFTs = async () => {
-    if (tokenSelected == "") {
+    if (tokenSelected === "") {
       addToast("Please Select a Payment Method", { appearance: "error" });
       return;
     }
@@ -108,13 +109,13 @@ export const Cart = ({
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addresses = getTokensAllowed();
       if (
-        tokenSelected ==
-        addresses.filter((item) => item.name == "MATIC")[0].address
+        tokenSelected ===
+        addresses.filter((item) => item.name === "MATIC")[0].address
       ) {
         const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
         price = Web3.utils.toWei(
-          (((bid as any) * 10 ** 8) / priceMATIC).toString(),
+          ((bid * 10 ** 8) / priceMATIC).toString(),
           "ether",
         );
         await marketplaceContract.methods
@@ -127,7 +128,7 @@ export const Cart = ({
         if (allowance < 1000000000000) {
           setMessageBuy(
             `Increasing the allowance of ${
-              tokensAllowed.filter((item) => item.address == tokenSelected)[0]
+              tokensAllowed.filter((item) => item.address === tokenSelected)[0]
                 .name
             } 1/2`,
           );
@@ -186,9 +187,9 @@ export const Cart = ({
             {cart.map((item, index) => {
               return (
                 <div
-                  key={item.nftId}
+                  key={"item-cart-" + item.nft + item.nftId}
                   className={clsx(
-                    "gap-2 py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-overlay-border rounded-md",
+                    "py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-overlay-border rounded-md",
                   )}
                   // onClick={item.onClick}
                 >
@@ -196,7 +197,7 @@ export const Cart = ({
                     <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
                       <img
                         src={
-                          item.nft == pack
+                          item.nft === pack
                             ? packs[item.nftId]?.properties?.image?.value
                             : cards[item.nftId]?.properties.image?.value
                         }
@@ -206,7 +207,7 @@ export const Cart = ({
                     </div>
                     <div className="flex flex-col gap-1">
                       <h3 className={clsx("text-md font-[700] uppercase")}>
-                        {item.nft == pack
+                        {item.nft === pack
                           ? packs[item.nftId]?.properties?.name?.value
                           : cards[item.nftId]?.properties?.name?.value}
                       </h3>
@@ -292,6 +293,7 @@ export const Cart = ({
               .map((item, index) => {
                 return (
                   <div
+                    key={tokenSelected + item.name}
                     className={clsx(
                       "w-20 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
 
@@ -301,7 +303,7 @@ export const Cart = ({
                       },
                       {
                         "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
-                          tokenSelected == item.address,
+                          tokenSelected === item.address,
                       },
                     )}
                     onClick={() => {
@@ -337,7 +339,7 @@ export const Cart = ({
                     )
                     .reduce((item: any, acc: any) => {
                       return findSum(item, acc) as any;
-                    }) as any,
+                    }),
                 ) /
                   10 ** 6}{" "}
                 USD
@@ -346,7 +348,7 @@ export const Cart = ({
                         </span> */}
               </h3>
               {tokensAllowed
-                .filter((item) => item.name == "MATIC")
+                .filter((item) => item.name === "MATIC")
                 .filter((tokenAllowed) => {
                   let intersection = true;
                   cart.forEach((item) => {
@@ -362,7 +364,7 @@ export const Cart = ({
               )}
             </div>
           </div>
-          {providerName == "magic" && (
+          {providerName === "magic" && (
             <div className="text-[12px] text-white pt-4 font-bold">
               Don't have crypto? Click{" "}
               <span

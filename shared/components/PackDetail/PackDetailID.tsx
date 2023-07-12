@@ -104,7 +104,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         }),
       );
     } catch (err) {
-      console.log({ err }, "error mamawebo");
+      console.log({ err });
     }
 
     dispatch(onLoadSales());
@@ -119,10 +119,6 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       duration: 0,
     });
   };
-
-  React.useEffect(() => {
-    console.log("nft data", sellNFTData);
-  }, [sellNFTData]);
 
   React.useEffect(() => {
     setTokensSelected(getTokensAllowed().map((item) => item.address));
