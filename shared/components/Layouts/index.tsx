@@ -381,7 +381,7 @@ export default function AppLayout({ children }) {
                 ethAddress
                   ? "/profile"
                   : router.pathname !== "/login"
-                  ? `/login?redirect=true&redirectAddress=${router.pathname}}`
+                  ? `/login?redirect=true&redirectAddress=${router.pathname}`
                   : router.asPath
               }
               route={router.asPath}
