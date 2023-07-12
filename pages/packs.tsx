@@ -86,7 +86,7 @@ const Packs = () => {
   };
 
   return (
-    <>
+    <div className="mt-14">
       <PackOpeningComponent
         updateBalance={updateBalance}
         arrayPacks={packs}
@@ -96,7 +96,7 @@ const Packs = () => {
         history={history}
         setHistory={setHistory}
       />
-    </>
+    </div>
   );
 };
 

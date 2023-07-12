@@ -35,7 +35,6 @@ export const PackOpening: React.FC<any> = ({
 
   React.useEffect(() => {
     const audio: any = document.getElementsByClassName("videoPack");
-    console.log(audio, "a");
     if (audio) {
       for (let it = 0; it < audio.length; it++) {
         audio[it].volume = 0.3;
@@ -77,14 +76,14 @@ export const PackOpening: React.FC<any> = ({
   return (
     <div
       className={clsx(
-        "w-screen min-h-screen relative overflow-hidden md:block hidden",
+        "w-full min-h-screen relative overflow-hidden md:block hidden",
       )}
       style={{ backgroundColor: "#111" }}
     >
       <div
         className={clsx(
           { ["hidden"]: video },
-          "md:absolute flex md:gap-40 gap-10 justify-center items-center md:top-10 md:mt-0 mt-6 md:h-12 h-8 left-0 right-0 m-auto text-center z-50",
+          "md:absolute flex md:gap-40 gap-10 justify-center items-center md:top-10 md:mt-0 mt-6 md:h-12 h-8 left-0 right-0 m-auto text-center",
         )}
       >
         <img
@@ -93,6 +92,7 @@ export const PackOpening: React.FC<any> = ({
           //   setCardPack(0);
           // }}
           src="./videos/packVideos/mypacks.png"
+          alt="my packs title"
         />
         <img
           className={clsx("titlePacks", "h-full cursor-pointer z-50")}
@@ -100,6 +100,7 @@ export const PackOpening: React.FC<any> = ({
             show();
           }}
           src="./videos/packVideos/historyDesktop.png"
+          alt="history title"
         />
       </div>
       <div className="absolute left-0 right-0 mx-auto z-0 flex items-center justify-center w-full  bgPackContainer">
@@ -111,7 +112,7 @@ export const PackOpening: React.FC<any> = ({
           />
         )}
       </div>
-      <div className="absolute top-0 left-0 right-0 mx-auto z-40 flex items-center justify-center w-full h-full bgPackContainer">
+      <div className="absolute top-0 left-0 right-0 mx-auto flex items-center justify-center w-full h-full bgPackContainer">
         {!video && (
           <img
             src="./videos/packVideos/borderDesktop.png"
@@ -122,7 +123,7 @@ export const PackOpening: React.FC<any> = ({
       </div>
       <div
         className={clsx(
-          "w-full h-full flex md:items-center md:justify-center relative z-40",
+          "w-full min-h-screen flex md:items-center md:justify-center relative",
         )}
       >
         {/* {cardPack === 0 ? ( */}
@@ -130,60 +131,6 @@ export const PackOpening: React.FC<any> = ({
           {video ? (
             <>
               <div className="w-full h-full md:block hidden">
-                <video
-                  ref={vidRef1}
-                  className={clsx(
-                    { ["hidden"]: videoPlaying !== 0 },
-                    "h-full absolute z-20 videoPack",
-                  )}
-                  // controls
-                  src={`./videos/packVideos/card_${
-                    packAnimation + 1
-                  }_yellow.mp4`}
-                  muted={videoPlaying !== 0}
-                  onLoad={() => {
-                    console.log("terminó_yellow");
-                  }}
-                  onEnded={
-                    videoPlaying === 0 ? () => endPackOpening() : undefined
-                  }
-                ></video>
-
-                <video
-                  ref={vidRef2}
-                  className={clsx(
-                    { ["hidden"]: videoPlaying !== 1 },
-                    "h-full absolute z-20 videoPack",
-                  )}
-                  // controls
-                  muted={videoPlaying !== 1}
-                  src={`./videos/packVideos/card_${
-                    packAnimation + 1
-                  }_purple.mp4`}
-                  onEnded={
-                    videoPlaying === 1 ? () => endPackOpening() : undefined
-                  }
-                ></video>
-
-                <video
-                  ref={vidRef3}
-                  className={clsx(
-                    { ["hidden"]: videoPlaying !== 2 },
-                    "h-full absolute z-20 videoPack",
-                  )}
-                  // controls
-                  muted={videoPlaying !== 2}
-                  src={`./videos/packVideos/card_${
-                    packAnimation + 1
-                  }_green.mp4`}
-                  onLoad={() => {
-                    console.log("terminó_green");
-                  }}
-                  onEnded={
-                    videoPlaying === 2 ? () => endPackOpening() : undefined
-                  }
-                ></video>
-
                 <video
                   ref={vidRef4}
                   className={clsx(
@@ -200,7 +147,7 @@ export const PackOpening: React.FC<any> = ({
             <>
               <div
                 className={clsx(
-                  "flex items-center z-40 justify-start relative containerPacks maxWscreen",
+                  "flex items-center justify-start relative containerPacks maxWscreen",
                 )}
               >
                 <div
@@ -254,7 +201,9 @@ export const PackOpening: React.FC<any> = ({
           ) : (
             <>
               <div className="flex items-center justify-center">
-                <h2 className="textEmptyPacks">You don't have packs to open</h2>
+                <h2 className="text-red-600 font-bold text-2xl">
+                  You don't have packs to open
+                </h2>
               </div>
             </>
           )}
@@ -274,7 +223,7 @@ export const PackOpening: React.FC<any> = ({
           <div
             className={clsx(
               { ["hidden"]: videoPlaying !== 3 },
-              "absolute bottom-0 right-0 m-10 z-40 cursor-pointer titleNext",
+              "absolute bottom-0 right-0 m-10 cursor-pointer titleNext font-bold",
             )}
             onClick={() => {
               setStartFlashingPack(true);

@@ -77,7 +77,7 @@ export const PackOpeningMobile: React.FC<any> = ({
     >
       <div className="flex flex-col h-1/4 relative">
         <img
-          src="./assets/packVideos/backMobileFrameTop.png"
+          src="./videos/packVideos/backMobileFrameTop.png"
           alt=""
           className="z-20 absolute top-0 left-0 w-full h-full flex"
         />
@@ -91,14 +91,14 @@ export const PackOpeningMobile: React.FC<any> = ({
             // onClick={() => {
             //   setCardPack(0);
             // }}
-            src="./assets/packVideos/mypacks.png"
+            src="./videos/packVideos/mypacks.png"
           />
           <img
             className={clsx("titlePacks", "h-full cursor-pointer z-50")}
             onClick={() => {
               show();
             }}
-            src="./assets/packVideos/historyDesktop.png"
+            src="./videos/packVideos/historyDesktop.png"
           />
         </div>
         <div
@@ -118,7 +118,7 @@ export const PackOpeningMobile: React.FC<any> = ({
                   return (
                     <img
                       key={index}
-                      src={`./assets/packVideos/${pack.id}.png`}
+                      src={`./videos/packVideos/${pack.id}.png`}
                       className={clsx(
                         animating
                           ? cardToOpen[index] && "packMobileDisappear"
@@ -167,7 +167,7 @@ export const PackOpeningMobile: React.FC<any> = ({
 
       <div className="w-full h-3/4 relative">
         <img
-          src="./assets/packVideos/mobilePackFrame.png"
+          src="./videos/packVideos/mobilePackFrame.png"
           alt=""
           className="z-40 absolute top-0 left-0 w-full h-full flex"
         />
@@ -226,7 +226,7 @@ export const PackOpeningMobile: React.FC<any> = ({
                 )}
                 // controls
                 muted
-                src={`./assets/packVideos/card_${
+                src={`./videos/packVideos/card_${
                   packAnimation + 1
                 }_purple720x1280.mp4`}
                 onEnded={
@@ -242,7 +242,7 @@ export const PackOpeningMobile: React.FC<any> = ({
                 )}
                 // controls
                 muted
-                src={`./assets/packVideos/card_${
+                src={`./videos/packVideos/card_${
                   packAnimation + 1
                 }_green720x1280.mp4`}
                 onEnded={
@@ -258,7 +258,7 @@ export const PackOpeningMobile: React.FC<any> = ({
                 )}
                 // controls
                 muted
-                src={`./assets/packVideos/card_${
+                src={`./videos/packVideos/card_${
                   packAnimation + 1
                 }_yellow720x1280.mp4`}
                 onEnded={
@@ -273,7 +273,7 @@ export const PackOpeningMobile: React.FC<any> = ({
                   "w-screen mobileVideo",
                 )}
                 // controls
-                src="./assets/packVideos/portal_glow_720x1280.mp4"
+                src="./videos/packVideos/portal_glow_720x1280.mp4"
               ></video>
             </div>
           </>

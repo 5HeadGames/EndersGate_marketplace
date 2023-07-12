@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 import "shared/styles/global-tailwind.css";
 import "shared/styles/index.scss";
 import "shared/styles/style.scss";
+import "shared/styles/packs.scss";
 import Layout from "shared/components/Layouts";
 import { store } from "redux/store";
 import { Provider } from "react-redux";

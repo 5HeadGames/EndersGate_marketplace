@@ -111,7 +111,7 @@ export const PackOpeningComponent: React.FC<any> = ({
       {!video && (
         <audio
           className="hidden"
-          src="./assets/packVideos/40s_Loop_final.wav"
+          src="./videos/packVideos/40s_Loop_final.wav"
           autoPlay
           id="bgAudio"
           loop
@@ -120,7 +120,7 @@ export const PackOpeningComponent: React.FC<any> = ({
       )}
       {openingPack && (
         <div className="absolute top-0 flex items-center justify-center left-0 w-full h-full z-50 openingPack">
-          <p className="loading text-3xl text-white ringBearer">
+          <p className="loading text-3xl text-white font-bold">
             Opening your pack
           </p>
         </div>
@@ -201,7 +201,10 @@ export const PackOpeningComponent: React.FC<any> = ({
               >
                 {history.map((card: any) => {
                   return (
-                    <div className="flex justify-between items-center gap-2 py-4 px-2 border-y border-white historyItem">
+                    <div
+                      className="flex justify-between items-center gap-2 py-4 px-2 border-y border-white historyItem"
+                      key={card?.id}
+                    >
                       <img
                         src={cards[card?.id]?.properties?.image?.value}
                         className="h-32"
@@ -236,7 +239,7 @@ export const PackOpeningComponent: React.FC<any> = ({
             </div>
           ) : (
             <div
-              className="flex items-center justify-center textHistory text-red-600 w-full px-10"
+              className="flex items-center justify-center font-bold text-red-600 w-full px-10"
               style={{ height: "60vh", width: "60vw" }}
             >
               You don't have history pack

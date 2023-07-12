@@ -19,7 +19,7 @@ export const useModal = () => {
         <Dialog
           as="div"
           static
-          className="fixed inset-0 overflow-y-auto bg-[#000000bb] z-10"
+          className="fixed inset-0 overflow-y-auto bg-[#000000bb] z-50"
           initialFocus={cancelButtonRef}
           open={isShow}
           onClose={hide}

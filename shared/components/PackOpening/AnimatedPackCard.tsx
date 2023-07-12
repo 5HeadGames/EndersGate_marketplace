@@ -34,16 +34,16 @@ const AnimatedPackCard = (props: any) => {
             className="AnimatedCardPackBack"
             src={
               props.cardType == "reaction" || props.cardType == "action"
-                ? "./assets/ACTION_REACTION_CARD_BACK.png"
+                ? "./images/ACTION_REACTION_CARD_BACK.png"
                 : props.cardType == "wood"
-                ? "./assets/bert_kurtback.png"
+                ? "./images/bert_kurtback.png"
                 : props.cardType == "stone"
-                ? "./assets/CardStoneBack.png"
+                ? "./images/CardStoneBack.png"
                 : props.cardType == "iron"
-                ? "./assets/cardsilver.png"
+                ? "./images/cardsilver.png"
                 : props.cardType == "gold"
-                ? "./assets/CardBack.png"
-                : "./assets/redback.png"
+                ? "./images/CardBack.png"
+                : "./images/redback.png"
             }
           />
         </div>

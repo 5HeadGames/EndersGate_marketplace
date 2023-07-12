@@ -12,3 +12,16 @@ export function getName(connector: any) {
   if (connector instanceof GnosisSafe) return "Gnosis Safe";
   return "Unknown";
 }
+
+export const authStillValid = () => {
+  const typeOfConnection = localStorage.getItem("typeOfConnection");
+  const savedLoginTime = localStorage.getItem("loginTime");
+  const currentTime = new Date().getTime();
+  const TWELVE_HOURS = 12 * 60 * 60 * 1000;
+
+  return (
+    typeOfConnection &&
+    savedLoginTime &&
+    currentTime - parseInt(savedLoginTime) <= TWELVE_HOURS
+  );
+};
