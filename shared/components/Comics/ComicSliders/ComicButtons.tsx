@@ -1,9 +1,9 @@
 import React from "react";
-import { Flex, Text, Button } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import RecentlyAddedComic from "./RecentlyAddedComic";
 
 const ComicButtons = ({ priceUSD, getPriceMatic, balance, showCart }) => {
-  const [element, setElement] = React.useState("recentlyAddedComic");
+  const [element] = React.useState("recentlyAddedComic");
 
   const map = {
     recentlyAddedComic: (

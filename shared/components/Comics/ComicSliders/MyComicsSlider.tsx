@@ -54,7 +54,7 @@ function MyComics({ balance }) {
           {comicDetails.filter((comic) => {
             let valid = false;
             balance.forEach((balance) => {
-              if (balance.balance > 0 && balance.id == comic.id) {
+              if (balance.balance > 0 && balance.id === comic.id) {
                 valid = true;
               }
             });
@@ -65,7 +65,7 @@ function MyComics({ balance }) {
                 .filter((comic) => {
                   let valid = false;
                   balance.forEach((balance) => {
-                    if (balance.balance > 0 && balance.id == comic.id) {
+                    if (balance.balance > 0 && balance.id === comic.id) {
                       valid = true;
                     }
                   });

@@ -1,13 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
-// import ShopABI from "../contracts/ClockAuction.json";
 import { LoadingOutlined, ShopOutlined } from "@ant-design/icons";
 import clsx from "clsx";
 import Web3 from "web3";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  findSum,
-  nFormatter,
-} from "@shared/components/common/specialFields/SpecialFields";
+import { nFormatter } from "@shared/components/common/specialFields/SpecialFields";
 import { networkConfigs } from "@shared/components/helpers/networks";
 
 import { XIcon } from "@heroicons/react/solid";
@@ -154,22 +151,15 @@ const Shop = () => {
 
       const shop = await getContractCustom("Shop", shopAddress, provider);
 
-      if (tokenSelected == "") {
+      if (tokenSelected === "") {
         addToast("Please Select a Payment Method", { appearance: "error" });
         return;
       }
 
       setMessageBuy(`Processing your purchase...`);
 
-      const { amounts, bid, token, tokensId } = {
+      const { amounts, token, tokensId } = {
         amounts: cartShop.map((item) => item.quantity),
-        bid: cartShop
-          ?.map((item, i) =>
-            ((parseInt(item.priceUSD) / 10 ** 6) * item.quantity).toString(),
-          )
-          .reduce((item, acc) => {
-            return findSum(item, acc);
-          }),
         token: tokenSelected,
         tokensId: cartShop.map((item) => item.id),
       };
@@ -178,8 +168,8 @@ const Shop = () => {
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addressesAllowed = getTokensAllowed();
       if (
-        tokenSelected ==
-        addressesAllowed.filter((item) => item.name == "MATIC")[0].address
+        tokenSelected ===
+        addressesAllowed.filter((item) => item.name === "MATIC")[0].address
       ) {
         const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
@@ -210,7 +200,7 @@ const Shop = () => {
         if (allowance < 1000000000000) {
           setMessageBuy(
             `Increasing the allowance of ${
-              tokensAllowed.filter((item) => item.address == tokenSelected)[0]
+              tokensAllowed.filter((item) => item.address === tokenSelected)[0]
                 .name
             } 1/2`,
           );

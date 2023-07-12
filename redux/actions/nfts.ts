@@ -295,7 +295,7 @@ export const onBuyERC1155 = createAsyncThunk(
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addresses = getTokensAllowed();
       if (
-        token == addresses.filter((item) => item.name == "MATIC")[0].address
+        token === addresses.filter((item) => item.name === "MATIC")[0].address
       ) {
         await marketplaceContract.methods
           .buy(tokenId, amount, token)

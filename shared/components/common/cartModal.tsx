@@ -164,7 +164,7 @@ export const useCartModal = () => {
                           <div className="flex flex-col gap items-end">
                             {tokensAllowed.filter(
                               (item: any) =>
-                                item.name == "MATIC" || item.name == "ETH",
+                                item.name === "MATIC" || item.name === "ETH",
                             ).length > 0 && (
                               <h3
                                 className="text-sm font-[700] text-white flex gap-1 items-center justify-center"
@@ -221,7 +221,7 @@ export const useCartModal = () => {
                             Checkout
                           </div>
                         </div>
-                        {providerName == "magic" && (
+                        {providerName === "magic" && (
                           <div
                             className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
                             onClick={() => {

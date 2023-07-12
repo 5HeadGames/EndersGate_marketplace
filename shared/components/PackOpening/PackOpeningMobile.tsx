@@ -40,7 +40,7 @@ export const PackOpeningMobile: React.FC<any> = ({
   }, [arrayPacks]);
 
   React.useEffect(() => {
-    if (startFlashing == true) {
+    if (startFlashing === true) {
       setTimeout(() => {
         setStartFlashing(false);
       }, 4000);
@@ -48,7 +48,7 @@ export const PackOpeningMobile: React.FC<any> = ({
   }, [startFlashing]);
 
   React.useEffect(() => {
-    if (startFlashingPack == true) {
+    if (startFlashingPack === true) {
       setTimeout(() => {
         setStartFlashingPack(false);
       }, 2000);

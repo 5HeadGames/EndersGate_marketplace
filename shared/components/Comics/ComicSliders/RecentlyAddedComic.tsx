@@ -166,7 +166,7 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
               onClick={() => {
                 let alreadyIncluded = false;
                 cartComics.forEach((item) => {
-                  if (item.id == nftModal.id) {
+                  if (item.id === nftModal.id) {
                     alreadyIncluded = true;
                   }
                 });
@@ -205,219 +205,220 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
           </Flex>
           <Slider {...settings}>
             {issues.map((i: any, id) => {
-              return i.name ? (
-                <Flex className="relative">
-                  <Flex className="box-shadow relative w-auto">
-                    <div
-                      onMouseOver={() =>
-                        setHoverBuy((prev) => {
-                          const array = [];
-                          prev.forEach((i, idPrev) => {
-                            if (id == idPrev) {
-                              array.push(true);
-                            } else {
-                              array.push(i);
-                            }
-                          });
-                          return array;
-                        })
-                      }
-                      onMouseLeave={() =>
-                        setHoverBuy((prev) => {
-                          const array = [];
-                          prev.forEach((i, idPrev) => {
-                            if (id == idPrev) {
-                              array.push(false);
-                            } else {
-                              array.push(i);
-                            }
-                          });
-                          return array;
-                        })
-                      }
-                      style={{ zIndex: 1000 }}
-                      className={clsx(
-                        "rounded-full p-2 flex w-10 h-10 items-center justify-center border-overlay-border border cursor-pointer absolute top-4 right-10",
-                        {
-                          ["gap-1 w-20 px-3 text-center"]: hoverBuy[id],
-                        },
-                        {
-                          "hover:bg-red-500 bg-green-button hover:transition-all transition-all duration-500 hover:duration-500":
-                            cartComics.filter((e) => e.name == i.name).length >
-                            0,
-                        },
-                        {
-                          "bg-overlay hover:bg-overlay-2 hover:transition-all transition-all duration-500 hover:duration-500":
-                            cartComics.filter((e) => e.name == i.name).length ==
-                            0,
-                        },
-                      )}
-                      onClick={(e) => {
-                        e.preventDefault();
-                      }}
-                    >
-                      {cartComics.filter((e) => e.name == i.name).length > 0 ? (
-                        hoverBuy[id] ? (
-                          <XIcon
-                            className="!w-6 text-white"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if (
-                                cartComics.filter((e) => e.name == i.name)
-                                  .length > 0
-                              ) {
-                                dispatch(
-                                  removeFromCartComics({
-                                    id: i.id,
-                                  }),
-                                );
+              return (
+                i.name && (
+                  <Flex className="relative">
+                    <Flex className="box-shadow relative w-auto">
+                      <div
+                        onMouseOver={() =>
+                          setHoverBuy((prev) => {
+                            const array = [];
+                            prev.forEach((i, idPrev) => {
+                              if (id === idPrev) {
+                                array.push(true);
                               } else {
-                                dispatch(
-                                  addCartComics({
-                                    ...i,
-                                    priceUSD: priceUSD,
-                                    quantity: issues[id].quantity,
-                                  }),
-                                );
+                                array.push(i);
                               }
-                            }}
-                          />
-                        ) : (
-                          <CheckIcon
-                            className="!w-6 text-white"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if (
-                                cartComics.filter((e) => e.name == i.name)
-                                  .length > 0
-                              ) {
-                                dispatch(
-                                  removeFromCartComics({
-                                    id: i.transactionId,
-                                  }),
-                                );
-                              } else {
-                                dispatch(
-                                  addCartComics({
-                                    ...i,
-                                    priceUSD: priceUSD,
-                                    quantity: issues[id].quantity,
-                                  }),
-                                );
-                              }
-                            }}
-                          />
-                        )
-                      ) : (
-                        <>
-                          <PlusIcon
-                            className="shrink-0 w-6 text-white"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if (account) {
-                                dispatch(
-                                  addCartComics({
-                                    ...i,
-                                    priceUSD: priceUSD,
-                                    quantity: issues[id].quantity,
-                                  }),
-                                );
-                              } else {
-                                router.push(
-                                  "/login?redirect=true&redirectAddress=/comics",
-                                );
-                              }
-                            }}
-                          />
-
-                          <Input
-                            type="number"
-                            name="quantity"
-                            register={register}
-                            classNameContainer={clsx(
-                              "border-none outline-none bg-transparent text-white w-10 text-sm p-0",
-                            )}
-                            className={clsx(
-                              {
-                                hidden:
-                                  !hoverBuy[id] || parseInt(i.amount) <= 1,
-                              },
-                              "p-0 bg-transparent",
-                            )}
-                            withoutX
-                            onClick={(e) => e.preventDefault()}
-                            min={1}
-                            defaultValue={issues[id].quantity}
-                            value={issues[id].quantity}
-                            onChange={(e) => {
-                              if (
-                                parseInt(e.target.value) > parseInt(i.amount)
-                              ) {
-                                addToast(
-                                  "Your amount exceeds the amount of NFTs of the sale",
-                                  { appearance: "error" },
-                                );
-                              } else {
-                                setIssues((prev) => {
-                                  const array = [];
-                                  prev.forEach((a, idPrev) => {
-                                    array.push({
-                                      ...a,
-                                      quantity:
-                                        id == idPrev
-                                          ? parseInt(e.target.value)
-                                          : a.quantity,
-                                    });
-                                  });
-                                  return array;
-                                });
-                              }
-                            }}
-                          ></Input>
-                        </>
-                      )}
-                    </div>
-                    <Image
-                      className="images-width cursor-pointer shade-on-hover relative"
-                      fontWeight="500"
-                      ml={2}
-                      mt={2}
-                      mr={2}
-                      src={i.photo}
-                      onClick={() => {
-                        let valid = false;
-                        balance.forEach(
-                          (balance: { balance: number; id: any }) => {
-                            if (balance.balance > 0 && balance.id == i.id) {
-                              valid = true;
-                            }
-                          },
-                        );
-                        if (valid) {
-                          setNftModal({
-                            ...i,
-                            priceUSD: priceUSD,
-                            quantity: 1,
-                            balance: 1,
-                          });
-                        } else {
-                          setNftModal({
-                            ...i,
-                            priceUSD: priceUSD,
-                            quantity: issues[id].quantity,
-                            balance: 0,
-                          });
+                            });
+                            return array;
+                          })
                         }
-                        show();
-                      }}
-                    ></Image>
+                        onMouseLeave={() =>
+                          setHoverBuy((prev) => {
+                            const array = [];
+                            prev.forEach((i, idPrev) => {
+                              if (id === idPrev) {
+                                array.push(false);
+                              } else {
+                                array.push(i);
+                              }
+                            });
+                            return array;
+                          })
+                        }
+                        style={{ zIndex: 1000 }}
+                        className={clsx(
+                          "rounded-full p-2 flex w-10 h-10 items-center justify-center border-overlay-border border cursor-pointer absolute top-4 right-10",
+                          {
+                            "gap-1 w-20 px-3 text-center": hoverBuy[id],
+                          },
+                          {
+                            "hover:bg-red-500 bg-green-button hover:transition-all transition-all duration-500 hover:duration-500":
+                              cartComics.filter((e) => e.name === i.name)
+                                .length > 0,
+                          },
+                          {
+                            "bg-overlay hover:bg-overlay-2 hover:transition-all transition-all duration-500 hover:duration-500":
+                              cartComics.filter((e) => e.name === i.name)
+                                .length === 0,
+                          },
+                        )}
+                        onClick={(e) => {
+                          e.preventDefault();
+                        }}
+                      >
+                        {cartComics.filter((e) => e.name === i.name).length >
+                        0 ? (
+                          hoverBuy[id] ? (
+                            <XIcon
+                              className="!w-6 text-white"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (
+                                  cartComics.filter((e) => e.name === i.name)
+                                    .length > 0
+                                ) {
+                                  dispatch(
+                                    removeFromCartComics({
+                                      id: i.id,
+                                    }),
+                                  );
+                                } else {
+                                  dispatch(
+                                    addCartComics({
+                                      ...i,
+                                      priceUSD: priceUSD,
+                                      quantity: issues[id].quantity,
+                                    }),
+                                  );
+                                }
+                              }}
+                            />
+                          ) : (
+                            <CheckIcon
+                              className="!w-6 text-white"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (
+                                  cartComics.filter((e) => e.name === i.name)
+                                    .length > 0
+                                ) {
+                                  dispatch(
+                                    removeFromCartComics({
+                                      id: i.transactionId,
+                                    }),
+                                  );
+                                } else {
+                                  dispatch(
+                                    addCartComics({
+                                      ...i,
+                                      priceUSD: priceUSD,
+                                      quantity: issues[id].quantity,
+                                    }),
+                                  );
+                                }
+                              }}
+                            />
+                          )
+                        ) : (
+                          <>
+                            <PlusIcon
+                              className="shrink-0 w-6 text-white"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (account) {
+                                  dispatch(
+                                    addCartComics({
+                                      ...i,
+                                      priceUSD: priceUSD,
+                                      quantity: issues[id].quantity,
+                                    }),
+                                  );
+                                } else {
+                                  router.push(
+                                    "/login?redirect=true&redirectAddress=/comics",
+                                  );
+                                }
+                              }}
+                            />
+
+                            <Input
+                              type="number"
+                              name="quantity"
+                              register={register}
+                              classNameContainer={clsx(
+                                "border-none outline-none bg-transparent text-white w-10 text-sm p-0",
+                              )}
+                              className={clsx(
+                                {
+                                  hidden:
+                                    !hoverBuy[id] || parseInt(i.amount) <= 1,
+                                },
+                                "p-0 bg-transparent",
+                              )}
+                              withoutX
+                              onClick={(e) => e.preventDefault()}
+                              min={1}
+                              defaultValue={issues[id].quantity}
+                              value={issues[id].quantity}
+                              onChange={(e) => {
+                                if (
+                                  parseInt(e.target.value) > parseInt(i.amount)
+                                ) {
+                                  addToast(
+                                    "Your amount exceeds the amount of NFTs of the sale",
+                                    { appearance: "error" },
+                                  );
+                                } else {
+                                  setIssues((prev) => {
+                                    const array = [];
+                                    prev.forEach((a, idPrev) => {
+                                      array.push({
+                                        ...a,
+                                        quantity:
+                                          id === idPrev
+                                            ? parseInt(e.target.value)
+                                            : a.quantity,
+                                      });
+                                    });
+                                    return array;
+                                  });
+                                }
+                              }}
+                            ></Input>
+                          </>
+                        )}
+                      </div>
+                      <Image
+                        className="images-width cursor-pointer shade-on-hover relative"
+                        fontWeight="500"
+                        ml={2}
+                        mt={2}
+                        mr={2}
+                        src={i.photo}
+                        onClick={() => {
+                          let valid = false;
+                          balance.forEach(
+                            (balance: { balance: number; id: any }) => {
+                              if (balance.balance > 0 && balance.id === i.id) {
+                                valid = true;
+                              }
+                            },
+                          );
+                          if (valid) {
+                            setNftModal({
+                              ...i,
+                              priceUSD: priceUSD,
+                              quantity: 1,
+                              balance: 1,
+                            });
+                          } else {
+                            setNftModal({
+                              ...i,
+                              priceUSD: priceUSD,
+                              quantity: issues[id].quantity,
+                              balance: 0,
+                            });
+                          }
+                          show();
+                        }}
+                      ></Image>
+                    </Flex>
+                    <Text className="endersgate-issues-text" color="#FFFFFF">
+                      {i.name}
+                    </Text>
                   </Flex>
-                  <Text className="endersgate-issues-text" color="#FFFFFF">
-                    {i.name}
-                  </Text>
-                </Flex>
-              ) : (
-                <Flex></Flex>
+                )
               );
             })}
           </Slider>

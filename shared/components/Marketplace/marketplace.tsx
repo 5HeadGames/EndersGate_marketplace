@@ -94,7 +94,7 @@ const MarketplaceComponent = () => {
         OpenseaApiService.getPacksOpensea(),
       ]);
       cardSalesCreated = cardsOpensea.data.listings
-        .filter((i) => i.chain == "matic")
+        .filter((i) => i.chain === "matic")
         .map((i, id) => {
           return {
             id: id + 1 + nfts?.saleCreated?.length,
@@ -106,7 +106,7 @@ const MarketplaceComponent = () => {
               i.protocol_data.parameters.offer[0].identifierOrCriteria,
             ),
             price:
-              i.price.current.decimals == 18
+              i.price.current.decimals === 18
                 ? Web3.utils.fromWei(i.price.current.value, "ether")
                 : i.price.current.value / i.price.current.decimals,
             currency: i.price.current.currency,
@@ -117,7 +117,7 @@ const MarketplaceComponent = () => {
           };
         });
       packSalesCreated = packsOpensea.data.listings
-        .filter((i) => i.chain == "matic")
+        .filter((i) => i.chain === "matic")
         .map((i, id) => {
           return {
             id: id + 1 + cardSalesCreated.length + nfts?.saleCreated?.length,
@@ -129,7 +129,7 @@ const MarketplaceComponent = () => {
               i.protocol_data.parameters.offer[0].identifierOrCriteria,
             ),
             price:
-              i.price.current.decimals == 18
+              i.price.current.decimals === 18
                 ? Web3.utils.fromWei(i.price.current.value, "ether")
                 : i.price.current.value / i.price.current.decimals,
             currency: i.price.current.currency,
@@ -146,9 +146,9 @@ const MarketplaceComponent = () => {
 
     nfts?.saleCreated?.forEach((sale) => {
       nftsCreated.push(sale);
-      if (sale.nft == endersGate) {
+      if (sale.nft === endersGate) {
         cardSalesCreated.push(sale);
-      } else if (sale.nft == pack) {
+      } else if (sale.nft === pack) {
         packSalesCreated.push(sale);
       }
     });
@@ -326,14 +326,14 @@ const MarketplaceComponent = () => {
           }
         }
         if (filters.avatar?.includes("reaction cards")) {
-          if (card.typeCard == "reaction") {
+          if (card.typeCard === "reaction") {
             passed = true;
           } else {
             return false;
           }
         }
         if (filters.avatar?.includes("action cards")) {
-          if (card.typeCard == "action") {
+          if (card.typeCard === "action") {
             passed = true;
           } else {
             return false;
@@ -407,14 +407,14 @@ const MarketplaceComponent = () => {
             }
           }
           if (filters.avatar?.includes("reaction cards")) {
-            if (card.typeCard == "reaction") {
+            if (card.typeCard === "reaction") {
               passed = true;
             } else {
               return false;
             }
           }
           if (filters.avatar?.includes("action cards")) {
-            if (card.typeCard == "reaction") {
+            if (card.typeCard === "reaction") {
               passed = true;
             } else {
               return false;
@@ -594,7 +594,7 @@ const MarketplaceComponent = () => {
                       const price = sale.price / 10 ** 6;
                       const { minPrice, maxPrice } = priceSettings;
                       return (
-                        (minPrice == 0 && maxPrice == 0) ||
+                        (minPrice === 0 && maxPrice === 0) ||
                         (minPrice <= price && maxPrice >= price)
                       );
                     })
@@ -615,12 +615,12 @@ const MarketplaceComponent = () => {
                           seller={a.seller}
                           tokens={a.tokens}
                           icon={
-                            a.nft == pack
+                            a.nft === pack
                               ? packs[a.nftId]?.properties?.image?.value
                               : cards[a.nftId]?.properties?.image?.value
                           }
                           name={
-                            a.nft == pack
+                            a.nft === pack
                               ? packs[a.nftId]?.properties?.name?.value
                               : cards[a.nftId]?.properties?.name?.value
                           }

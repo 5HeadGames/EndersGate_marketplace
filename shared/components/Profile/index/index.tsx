@@ -21,7 +21,7 @@ const ProfileIndexPage = ({ children }) => {
 
   React.useEffect(() => {
     if (!account && !user && !authStillValid()) {
-      router.push("/login");
+      router.push("/login?redirect=true&redirectAddress=/inventory");
     }
   }, [account, user]);
 
@@ -47,7 +47,7 @@ const ProfileIndexPage = ({ children }) => {
             <h2 className="text-white font-bold md:text-2xl text-lg">
               {"EG Enthusiast"}
             </h2>
-            {providerName == "magic" && (
+            {providerName === "magic" && (
               <Button
                 type="submit"
                 decoration="line-white"

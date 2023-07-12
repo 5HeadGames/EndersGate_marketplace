@@ -122,9 +122,9 @@ const Inventory = () => {
           "flex mb-10 justify-center",
           {
             [`${Styles.gray} flex-col items-center gap-6 h-72`]:
-              (inventoryCards.length == 0 &&
+              (inventoryCards.length === 0 &&
                 columnSelected === "Trading Cards") ||
-              (inventoryPacks.length == 0 && columnSelected === "Packs"),
+              (inventoryPacks.length === 0 && columnSelected === "Packs"),
           },
           {
             ["gap-2 flex-wrap gap-6"]:
