@@ -73,7 +73,7 @@ const Login = () => {
           router.push(queryAddress !== undefined ? queryAddress : "/");
         }
         setLoading(false);
-      }, 3000);
+      }, 5000);
     } catch (err) {
       console.log({ err });
       setLoading(false);
