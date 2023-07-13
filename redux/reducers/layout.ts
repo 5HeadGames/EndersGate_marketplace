@@ -10,6 +10,7 @@ interface InitialState {
     networkId: any;
   };
   blur: boolean;
+  isLogged: boolean;
   message: string;
   provider: any;
   providerEth: any;
@@ -30,6 +31,7 @@ const INITIAL_STATE: InitialState = {
     wallet: ConnectionType.INJECTED,
     networkId: process.env.NEXT_PUBLIC_CHAIN_ID,
   },
+  isLogged: false,
   providerName: "",
   providerEth: process.env.NEXT_PUBLIC_PROVIDER_ETH,
   networkEth: process.env.NEXT_PUBLIC_CHAIN_ID_ETH,
@@ -53,6 +55,9 @@ export const layoutReducer = createReducer(INITIAL_STATE, (builder) => {
       state.user.ethAddress = action.payload.ethAddress;
       state.provider = action.payload.provider;
       state.providerName = action.payload.providerName;
+    })
+    .addCase(actions.onLogged, (state: typeof INITIAL_STATE, action) => {
+      state.isLogged = action.payload.isLogged;
     })
     .addCase(actions.addCart, (state: typeof INITIAL_STATE, action) => {
       state.cart.push(action.payload);

@@ -8,7 +8,7 @@ import clsx from "clsx";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { WALLETS } from "@shared/utils/connection/utils";
 import { LoadingOutlined } from "@ant-design/icons";
-import { onGetAssets, onUpdateUser } from "@redux/actions";
+import { onGetAssets, onLogged, onUpdateUser } from "@redux/actions";
 import { useWeb3React } from "@web3-react/core";
 import { switchChain } from "@shared/web3";
 import { useSelector } from "react-redux";
@@ -21,12 +21,11 @@ const Login = () => {
 
   const { networkId } = useSelector((state: any) => state.layout.user);
 
-  const { account, provider } = useWeb3React();
-
   const { query } = useRouter();
 
   const router = useRouter();
   const dispatch = useAppDispatch();
+
   const handleLogin = async () => {
     setLoading(true);
     try {
@@ -55,19 +54,11 @@ const Login = () => {
       await connection.connector.activate();
       localStorage.setItem("typeOfConnection", title);
       localStorage.setItem("loginTime", new Date().getTime().toString());
+      dispatch(onLogged({ isLogged: true }));
 
       const queryAddress: any = query?.redirectAddress?.toString();
 
       setTimeout(async () => {
-        dispatch(
-          onUpdateUser({
-            ethAddress: account,
-            email: "",
-            provider: provider?.provider,
-            providerName: "web3react",
-          }),
-        );
-        dispatch(onGetAssets(account));
         await switchChain(networkId);
         if (query.redirect === "true" && query.redirectAddress != null) {
           router.push(queryAddress !== undefined ? queryAddress : "/");

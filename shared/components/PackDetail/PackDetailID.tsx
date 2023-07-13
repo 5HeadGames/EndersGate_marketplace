@@ -51,7 +51,6 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { pack } = getAddresses();
 
   const sellNft = async () => {
-    console.log(NFTs.balanceCards, id);
     if (sellNFTData.amount > NFTs.balancePacks[id]?.balance) {
       return alert("You don't have enough tokens to sell");
     }

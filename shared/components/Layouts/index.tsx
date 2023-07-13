@@ -124,6 +124,7 @@ export default function AppLayout({ children }) {
   const { account } = useWeb3React();
   const { logout, login } = useMagicLink();
   const { ethAddress } = useSelector((state: any) => state.layout.user);
+  const { isLogged } = useSelector((state: any) => state.layout);
   const { provider, providerName, cart } = useSelector(
     (state: any) => state.layout,
   );
@@ -142,7 +143,7 @@ export default function AppLayout({ children }) {
   }
 
   React.useEffect(() => {
-    if (relogin) {
+    if (relogin || isLogged) {
       dispatch(
         onUpdateUser({
           ethAddress: account,
@@ -153,7 +154,7 @@ export default function AppLayout({ children }) {
       );
       dispatch(onGetAssets(account));
     }
-  }, [account, relogin]);
+  }, [account, relogin, isLogged]);
 
   React.useEffect(() => {
     const typeOfConnection = localStorage.getItem("typeOfConnection");

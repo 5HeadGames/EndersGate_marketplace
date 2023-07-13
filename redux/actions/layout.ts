@@ -28,6 +28,15 @@ export const onUpdateUser = createAction(
   },
 );
 
+export const onLogged = createAction(
+  actionTypes.UPDATE_LOGGED_STATE,
+  function prepare({ isLogged }: any) {
+    return {
+      payload: { isLogged },
+    };
+  },
+);
+
 export const addCart = createAction(
   actionTypes.ADD_CART,
   function prepare(cart: any) {

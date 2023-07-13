@@ -3,6 +3,7 @@ export const LOGIN_USER = "login_user";
 export const LOGOUT = "logout";
 export const UPDATE_USER = "update_user";
 export const UPDATE_USER_INTERN = "update_user_intern";
+export const UPDATE_LOGGED_STATE = "update_logged_state";
 export const UPDATE_USER_CREDENTIALS = "update_user_credentials";
 
 export const BLUR_LAYOUT = "blur_layout";
