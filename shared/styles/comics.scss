@@ -1,0 +1,426 @@
+/* //////////////////////
+//////NFT SHOP CSS//////
+///////////////////////*/
+
+.nav-bg {
+  background-color: #000000 !important;
+  opacity: 1 !important;
+}
+
+.content-background {
+  background-size: 100%;
+  -webkit-background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+.align-item-center {
+  align-items: center;
+}
+
+.main-container-md {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1950px;
+}
+
+/* //////////////////////////////// */
+.body-bg-color {
+  background-color: black;
+}
+
+.nav-main-bg {
+  background-color: black;
+}
+
+.header-bg-color {
+  background-color: black !important;
+}
+
+.text-shadow {
+  text-shadow: -3px 3px 2px #000, 3px 3px 2px #000, 3px -3px 0 #000,
+    -3px -3px 0 #000;
+}
+
+.text-shadow-comic-button-nft-pack {
+  text-shadow: -3px 0px 1px #000, -3px -2px 2px #000, 0px -2px 0 #000,
+    -1px 1px 0 #000, 1px 2px 0 #000, 3px 1px 0 #000;
+}
+
+.text-shadow-comic-button-avatar-cards {
+  text-shadow: -3px 0px 1px #000, -3px -2px 2px #000, 0px -2px 0 #000,
+    -1px 1px 0 #000, 1px 2px 0 #000, 3px 1px 0 #000;
+}
+
+.text-shadow-comic-button-eg-comics {
+  text-shadow: -3px 0px 1px #000, -3px -2px 2px #000, 0px -2px 0 #000,
+    -1px 1px 0 #000, 1px 2px 0 #000, 3px 1px 0 #000;
+}
+
+.text-shadow-comic-comics-heading {
+  text-shadow: -3px 0px 1px #000, -3px -2px 2px #000, 0px -2px 0 #000,
+    -1px 1px 0 #000, 1px 2px 0 #000, 3px 1px 0 #000;
+}
+
+.text-shadow-comic-comics-text {
+  text-shadow: -3px 0px 1px #000, -3px -2px 2px #000, 0px -2px 0 #000,
+    -1px 1px 0 #000, 1px 2px 0 #000, 3px 1px 0 #000;
+}
+
+.color {
+  color: rgb(255, 255, 255);
+}
+
+.sliders-container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 1500px;
+  margin-bottom: 60px;
+}
+
+@media only screen and (max-width: 1450px) {
+  .sliders-container {
+    max-width: 1050px;
+  }
+}
+
+.slick-prev:before {
+  content: "" !important;
+}
+.slick-next:before {
+  content: "" !important;
+}
+
+.slick-prev {
+  left: -58px !important;
+  top: 47% !important;
+}
+
+.slick-next {
+  right: -25px !important;
+  top: 47% !important;
+}
+
+@media only screen and (max-width: 1450px) {
+  .slick-next {
+    right: -52px !important;
+  }
+}
+
+@media only screen and (max-width: 1145px) {
+  .slick-next {
+    right: -15px !important;
+  }
+  .slick-prev {
+    left: -40px !important;
+  }
+}
+
+/* ///////////Slick Dots ///////////*/
+.slick-dots {
+  bottom: 64px !important;
+}
+
+.slick-dots li {
+  width: 30px !important;
+}
+
+.slick-dots li button:before {
+  font-size: 65px !important;
+  content: "-" !important;
+  color: white !important;
+}
+
+@media only screen and (max-width: 600px) {
+  .slick-dots {
+    bottom: 37px !important;
+  }
+}
+
+/* ////////////////Images of slider/////////// */
+
+.images-width {
+  width: 90%;
+  box-shadow: 4px 1px 10px rgba(0, 0, 0, 0.8), -4px -1px 10px rgba(0, 0, 0, 0.8),
+    0px 7px 10px rgba(0, 0, 0, 0.8), 0px -2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.recently-slider-image {
+  box-shadow: 4px 1px 10px rgba(0, 0, 0, 0.8), -4px -1px 10px rgba(0, 0, 0, 0.8),
+    0px 7px 10px rgba(0, 0, 0, 0.8), 0px -2px 10px rgba(0, 0, 0, 0.8);
+}
+
+@media only screen and (max-width: 1080px) {
+  .images-width {
+    width: 80%;
+  }
+  .sliders-container {
+    max-width: 900px !important;
+  }
+  .slick-prev {
+    left: -100px !important;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .sliders-container {
+    max-width: 800px !important;
+  }
+  .slick-prev {
+    left: -65px !important;
+  }
+  .images-width {
+    width: 85%;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .sliders-container {
+    max-width: 700px !important;
+  }
+  .slick-prev {
+    left: -65px !important;
+  }
+}
+
+.added-comic-slider {
+  margin-left: 40px;
+}
+
+.endersgate-issues-text {
+  font-size: 25px;
+  position: relative;
+  bottom: 45px;
+  text-shadow: -3px 0px 1px #000, -3px -2px 2px #000, 0px -2px 0 #000,
+    -1px 1px 0 #000, 1px 2px 0 #000, 3px 1px 0 #000;
+}
+
+.recently-slider-image {
+  width: 85% !important;
+}
+
+@media only screen and (max-width: 1440px) {
+  .endersgate-issues-text {
+    font-size: 19px !important;
+    bottom: 35px;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .endersgate-issues-text {
+    font-size: 14px !important;
+    bottom: 25px;
+  }
+  .slick-next {
+    right: -36px !important;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .endersgate-issues-text {
+    font-size: 14px !important;
+    bottom: 25px;
+  }
+  .sliders-container {
+    margin-bottom: 30px;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .endersgate-issues-text {
+    font-size: 20px !important;
+    bottom: 38px;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  .endersgate-issues-text {
+    font-size: 20px !important;
+    bottom: 38px;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .endersgate-issues-text {
+    font-size: 18px !important;
+    bottom: 38px;
+  }
+}
+
+.human-vs-orges-text {
+  text-shadow: -3px 0px 1px #000, -3px -2px 2px #000, 0px -2px 0 #000,
+    -1px 1px 0 #000, 1px 2px 0 #000, 3px 1px 0 #000;
+}
+
+/* ///////Comic Series sliders stylings////// */
+.images-width-comic-series {
+  width: 92%;
+  box-shadow: 4px 1px 10px rgba(0, 0, 0, 0.8), -4px -1px 10px rgba(0, 0, 0, 0.8),
+    0px 7px 10px rgba(0, 0, 0, 0.8), 0px -2px 10px rgba(0, 0, 0, 0.8);
+}
+
+@media only screen and (max-width: 1440px) {
+  .images-width-comic-series {
+    width: 92%;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .images-width-comic-series {
+    width: 88%;
+  }
+  .human-vs-orges-text {
+    font-size: 18px;
+    margin-left: 20px;
+    bottom: 35px;
+  }
+}
+
+@media only screen and (max-width: 840px) {
+  .images-width-comic-series {
+    width: 83%;
+  }
+}
+
+/* on hover shade of images */
+.images-width:hover {
+  filter: brightness(150%);
+  box-shadow: 4px 1px 10px rgba(0, 0, 0, 0.8), -4px -1px 10px rgba(0, 0, 0, 0.8),
+    0px 7px 10px rgba(0, 0, 0, 0.8), 0px -2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.recently-slider-image:hover {
+  filter: brightness(150%);
+}
+
+.images-width-comic-series:hover {
+  filter: brightness(150%);
+}
+
+/* ///////Characters Responsiveness////////*/
+.footer-character {
+  width: 38%;
+  height: 139%;
+}
+
+@media only screen and (max-width: 1440px) {
+  .footer-character {
+    width: 48%;
+    height: 125% !important;
+  }
+}
+
+@media only screen and (max-width: 1130px) {
+  .footer-character {
+    width: 51% !important;
+    height: 119% !important;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .footer-character {
+    width: 56% !important;
+    height: 123% !important;
+  }
+}
+
+@media only screen and (max-width: 820px) {
+  .footer-character {
+    width: 70% !important;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .footer-character {
+    width: 64% !important;
+  }
+}
+
+@media only screen and (max-width: 620px) {
+  .footer-character {
+    width: 75% !important;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .footer-character {
+    width: 85% !important;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  .footer-character {
+    width: 93% !important;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .footer-character {
+    width: 100% !important;
+    height: 108% !important;
+  }
+}
+
+.cross-logo {
+  z-index: 10 !important;
+}
+
+.opacity {
+  opacity: 1 !important;
+}
+
+.full-page-slider .slick-next {
+  right: 40px !important;
+  margin-right: 52px !important;
+  z-index: 10;
+}
+
+.full-page-slider .slick-prev {
+  left: 55px !important;
+  margin-right: 52px !important;
+  z-index: 10;
+}
+
+.slider-progress {
+  appearance: auto !important;
+  width: 100% !important;
+  padding-inline-end: 0% !important;
+}
+
+input:focus {
+  z-index: 1;
+  border-color: none !important;
+  box-shadow: none !important;
+}
+
+.main-div-slider {
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 85px);
+  align-items: center;
+  margin-right: 0.2rem;
+}
+
+@media only screen and (max-width: 364px) {
+  .ful-page-slider-images {
+    margin-top: 50px !important;
+  }
+}
+@media only screen and (max-width: 334px) {
+  .ful-page-slider-images {
+    margin-top: 10px !important;
+  }
+}
+
+.slider-navigation {
+  opacity: 0 !important;
+}
+
+.slider-navigation:hover {
+  opacity: 0.8 !important;
+}
+
+.z-index {
+  z-index: 200 !important;
+}

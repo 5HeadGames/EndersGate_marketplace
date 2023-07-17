@@ -15,7 +15,7 @@ const Footer = () => {
             bottom="0"
             left="0"
             zIndex="10"
-            className="footer-character"
+            className="footer-character sm:flex hidden"
           ></Image>
           {/* </Flex> */}
 
@@ -178,7 +178,7 @@ const Footer = () => {
             position="absolute"
             bottom="0"
             right="0"
-            className="footer-character"
+            className="footer-character sm:flex hidden"
             zIndex="10"
           ></Image>
         </Flex>

@@ -104,42 +104,6 @@ function MyComics({ balance }) {
                   mt={2}
                 ></Image>
               </Flex>
-              <Flex>
-                <Image
-                  className="images-width-comic-series"
-                  src={"/images/comicSeriesOtherCards.png"}
-                  ml={2}
-                  mr={2}
-                  mt={2}
-                ></Image>
-              </Flex>
-              <Flex>
-                <Image
-                  className="images-width-comic-series"
-                  src={"/images/comicSeriesOtherCards.png"}
-                  ml={2}
-                  mr={2}
-                  mt={2}
-                ></Image>
-              </Flex>
-              <Flex>
-                <Image
-                  className="images-width-comic-series"
-                  src={"/images/comicSeriesOtherCards.png"}
-                  ml={2}
-                  mr={2}
-                  mt={2}
-                ></Image>
-              </Flex>
-              <Flex>
-                <Image
-                  className="images-width-comic-series"
-                  src={"/images/comicSeriesOtherCards.png"}
-                  ml={2}
-                  mr={2}
-                  mt={2}
-                ></Image>
-              </Flex>
             </Slider>
           ) : (
             <div className="w-full py-24 flex items-center justify-center">

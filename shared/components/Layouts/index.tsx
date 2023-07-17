@@ -61,11 +61,15 @@ export const Message: React.FunctionComponent<{
 
 export const Logo = () => (
   <Link href="/">
-    <div className="md:py-0 py-2 flex gap-2 items-center cursor-pointer">
+    <div className="md:py-0 py-2 flex gap-2 items-center cursor-pointer max-w-1/2">
       <img className="h-6" src={Icons.logo5HG} alt="logo" />
-      <img className="h-6 xl:block hidden" src={Icons.logoenders} alt="logo" />
       <img
-        className="h-6 block xl:hidden"
+        className="max-h-6 2xl:block hidden"
+        src={Icons.logoenders}
+        alt="logo"
+      />
+      <img
+        className="h-6 md:block hidden 2xl:hidden"
         src={Icons.logoendersmobile}
         alt="logo"
       />
@@ -310,7 +314,7 @@ export default function AppLayout({ children }) {
             </div>
           </div>
         </div>
-        <div className="md:flex hidden gap-4 shrink-0 items-center">
+        <div className="lg:flex hidden gap-4 shrink-0 items-center">
           {navItems.map((item, index) => {
             return (
               <>
@@ -389,7 +393,7 @@ export default function AppLayout({ children }) {
             />
           )}
         </div>
-        <div className="md:hidden flex gap-3">
+        <div className="lg:hidden flex gap-3">
           <div
             className={clsx(
               { "!opacity-100": cartOpen || cart.length > 0 },

@@ -24,11 +24,16 @@ import {
   getTokensAllowedEth,
   switchChain,
 } from "@shared/web3";
-import { useCartModal } from "../common/cartModal";
 import { nFormatter } from "../common/specialFields/SpecialFields";
+import { useModalAddressUser } from "./Modals/ModalAdddressUser";
+import { Modals } from "./Modals";
+import { useCartComicsModal } from "./Modals/ModalCartComics";
 
 function Comics() {
-  const { Modal, show, isShow, hide } = useCartModal();
+  const { Modal, show, hide } = useCartComicsModal();
+  const { ModalAddress, show: showAddress } = useModalAddressUser({
+    onSubmit: () => {},
+  });
 
   const { ethAddress: account } = useSelector(
     (state: any) => state.layout.user,
@@ -227,89 +232,17 @@ function Comics() {
       flexDir="column"
       className="body-bg-color nft-main-container"
     >
-      <Modal
-        isShow={isShow}
-        cart={cartComics}
-        removeAll={removeAllComics}
-        messageBuy={messageBuy}
-        tokensAllowed={tokensAllowed}
-        withoutX
-        tokenSelected={tokenSelected}
-        setTokenSelected={setTokenSelected}
-        buy={buyComics}
-        priceMatic={priceMatic}
-        isMatic={false}
-        itemsCart={cartComics.map((item, index) => {
-          return (
-            <div
-              className={
-                "py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-transparent-color-gray-200 rounded-xl"
-              }
-              onClick={item.onClick}
-            >
-              <div className="flex items-center justify-start gap-2 w-full">
-                <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
-                  <img
-                    src={comic[item.id - 1]?.comic_banner}
-                    className={`absolute bottom-0 top-0 left-[-40%] right-0 m-auto min-w-[175%]`}
-                    alt=""
-                  />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <h3 className={"text-md font-[700] uppercase"}>
-                    {comic[item.id - 1]?.name}
-                  </h3>
-
-                  <div className="flex gap-2 items-end">
-                    <img src={"icons/logo.png"} className="w-8 h-8" alt="" />
-                    <img src="icons/POLYGON.svg" className="w-6 h-6" alt="" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-2 shrink-0">
-                <div className="flex flex-col !shrink-0">
-                  <h3 className={"text-sm font-[700] whitespace-nowrap w-24"}>
-                    Price:
-                  </h3>
-                  <h3
-                    className={clsx(
-                      "text-sm font-[700] uppercase whitespace-nowrap w-24",
-                    )}
-                  >
-                    {nFormatter(parseInt(item.priceUSD) / 10 ** 6)} USD{" "}
-                  </h3>
-                </div>
-                <input
-                  defaultValue={item.quantity}
-                  type="number"
-                  min={1}
-                  className="text-lg px-2 text-white w-12 bg-transparent rounded-xl border border-overlay-overlay"
-                  onChange={(e) => {
-                    dispatch(
-                      editCartComics({
-                        id: index,
-                        item: {
-                          ...item,
-                          quantity: e.target.value,
-                          priceUSD: priceUSD,
-                        },
-                      }),
-                    );
-                    getPriceMatic();
-                  }}
-                ></input>
-                <div
-                  className="rounded-full p-1 w-8 h-8 border border-transparent-color-gray-200 hover:bg-red-primary text-white shrink-0 cursor-pointer"
-                  onClick={() => {
-                    dispatch(removeFromCartComics({ id: item.id }));
-                  }}
-                >
-                  <XIcon></XIcon>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+      <Modals
+        {...{
+          priceUSD,
+          priceMatic,
+          setComicsOwned,
+          ModalAddress,
+          getPriceMatic,
+          Modal,
+          hide,
+          show,
+        }}
       />
       <NftMainBanner />
       <ComicButtons
@@ -327,7 +260,7 @@ function Comics() {
         right={9}
         flexDir="column"
         className="fixed rounded-xl border border-overlay-border bg-overlay p-4 items-center justify-center cursor-pointer"
-        onClick={() => show()}
+        onClick={() => showAddress()}
       >
         <ShopOutlined className="text-2xl flex items-center text-white justify-center relative" />
       </Flex>
