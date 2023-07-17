@@ -67,8 +67,6 @@ export const CardInventory = (props) => {
     }
     setLoading(true);
 
-    console.log(props, nftSendData, "DATA");
-
     try {
       if (!props.card) {
         await PacksContract.methods
@@ -98,7 +96,7 @@ export const CardInventory = (props) => {
       setLoading(false);
       alert("Your token was succesfully transfered");
     } catch (err) {
-      console.log({ err, pack, endersGate }, "transfer");
+      console.log({ err });
       alert("Your token couldn't be transfered");
     }
     getAssets();

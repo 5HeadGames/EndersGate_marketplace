@@ -20,7 +20,7 @@ export default function useFullscreenStatus(elRef) {
   );
 
   const setFullscreen = () => {
-    if (elRef.current == null) return;
+    if (elRef.current === null) return;
 
     elRef.current
       .requestFullscreen()

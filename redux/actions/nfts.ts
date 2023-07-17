@@ -43,7 +43,6 @@ export const onLoadSales = createAsyncThunk(
     const rawSales = await marketplace.methods
       .getSales(new Array(lastSale).fill(0).map((a, i) => i))
       .call();
-    console.log(rawSales, "a ver");
     const allSales = rawSales.map((sale: string[], i) => ({
       id: i,
       seller: sale[0],
@@ -56,7 +55,6 @@ export const onLoadSales = createAsyncThunk(
       startedAt: sale[7],
       status: sale[8],
     }));
-    console.log(allSales, "ALL SALES");
     const created = allSales.filter((sale: Sale) => sale.status === "0");
     const successful = allSales.filter((sale: Sale) => sale.status === "1");
     const dailyVolume = getDailyVolume(successful);
@@ -297,7 +295,7 @@ export const onBuyERC1155 = createAsyncThunk(
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addresses = getTokensAllowed();
       if (
-        token == addresses.filter((item) => item.name == "MATIC")[0].address
+        token === addresses.filter((item) => item.name === "MATIC")[0].address
       ) {
         await marketplaceContract.methods
           .buy(tokenId, amount, token)

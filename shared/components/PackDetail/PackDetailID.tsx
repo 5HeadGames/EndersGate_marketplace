@@ -51,7 +51,6 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { pack } = getAddresses();
 
   const sellNft = async () => {
-    console.log(NFTs.balanceCards, id);
     if (sellNFTData.amount > NFTs.balancePacks[id]?.balance) {
       return alert("You don't have enough tokens to sell");
     }
@@ -64,7 +63,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     if (sellNFTData.duration <= 3600 * 24) {
       return alert("You have to put a end date higher than 1 day");
     }
-    if (tokensSelected.length == 0) {
+    if (tokensSelected.length === 0) {
       return alert("You have to put at least one currency to accept");
     }
     try {
@@ -79,7 +78,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       const isApprovedForAll = await endersgateInstance.methods
         .isApprovedForAll(user, marketplace)
         .call();
-      if (isApprovedForAll == false) {
+      if (isApprovedForAll === false) {
         setMessage("Allowing us to sell your tokens");
         await approveERC1155({
           provider: provider.provider,
@@ -104,7 +103,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         }),
       );
     } catch (err) {
-      console.log({ err }, "error mamawebo");
+      console.log({ err });
     }
 
     dispatch(onLoadSales());
@@ -119,10 +118,6 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       duration: 0,
     });
   };
-
-  React.useEffect(() => {
-    console.log("nft data", sellNFTData);
-  }, [sellNFTData]);
 
   React.useEffect(() => {
     setTokensSelected(getTokensAllowed().map((item) => item.address));

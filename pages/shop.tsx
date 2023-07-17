@@ -1,13 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from "react";
-// import ShopABI from "../contracts/ClockAuction.json";
 import { LoadingOutlined, ShopOutlined } from "@ant-design/icons";
 import clsx from "clsx";
 import Web3 from "web3";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  findSum,
-  nFormatter,
-} from "@shared/components/common/specialFields/SpecialFields";
+import { nFormatter } from "@shared/components/common/specialFields/SpecialFields";
 import { networkConfigs } from "@shared/components/helpers/networks";
 
 import { XIcon } from "@heroicons/react/solid";
@@ -128,7 +125,6 @@ const Shop = () => {
         });
       setSales(created);
       setCounters(created.map(() => 1));
-      console.log(created);
       // Update State
       setContract(contract);
     } catch (error) {
@@ -155,24 +151,15 @@ const Shop = () => {
 
       const shop = await getContractCustom("Shop", shopAddress, provider);
 
-      if (tokenSelected == "") {
+      if (tokenSelected === "") {
         addToast("Please Select a Payment Method", { appearance: "error" });
         return;
       }
 
-      console.log(tokenSelected, "token to pay");
-
       setMessageBuy(`Processing your purchase...`);
 
-      const { amounts, bid, token, tokensId } = {
+      const { amounts, token, tokensId } = {
         amounts: cartShop.map((item) => item.quantity),
-        bid: cartShop
-          ?.map((item, i) =>
-            ((parseInt(item.priceUSD) / 10 ** 6) * item.quantity).toString(),
-          )
-          .reduce((item, acc) => {
-            return findSum(item, acc);
-          }),
         token: tokenSelected,
         tokensId: cartShop.map((item) => item.id),
       };
@@ -181,8 +168,8 @@ const Shop = () => {
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addressesAllowed = getTokensAllowed();
       if (
-        tokenSelected ==
-        addressesAllowed.filter((item) => item.name == "MATIC")[0].address
+        tokenSelected ===
+        addressesAllowed.filter((item) => item.name === "MATIC")[0].address
       ) {
         const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
@@ -198,7 +185,6 @@ const Shop = () => {
           ) *
             10 ** 8) /
           priceMATIC;
-        console.log(preprice, "preprice");
         price = Web3.utils.toWei(
           (preprice + preprice * 0.05).toString(),
           "ether",
@@ -214,7 +200,7 @@ const Shop = () => {
         if (allowance < 1000000000000) {
           setMessageBuy(
             `Increasing the allowance of ${
-              tokensAllowed.filter((item) => item.address == tokenSelected)[0]
+              tokensAllowed.filter((item) => item.address === tokenSelected)[0]
                 .name
             } 1/2`,
           );
@@ -250,10 +236,8 @@ const Shop = () => {
   };
 
   const getPriceMatic = async () => {
-    console.log(MATICUSD, "aggregator");
     const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
     const priceMATIC = await Aggregator.methods.latestAnswer().call();
-    console.log(priceMATIC, "price");
     const price =
       (parseFloat(
         cartShop
@@ -271,7 +255,6 @@ const Shop = () => {
   };
 
   React.useEffect(() => {
-    console.log(MATICUSD, "aggregator");
     if (cartShop.length > 0) {
       getPriceMatic();
     } else {
@@ -315,6 +298,7 @@ const Shop = () => {
             itemsCart={cartShop.map((item, index) => {
               return (
                 <div
+                  key={"pack-shop-" + item.nftId}
                   className={clsx(
                     "py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-transparent-color-gray-200 rounded-xl",
                   )}
@@ -370,7 +354,6 @@ const Shop = () => {
                       min={1}
                       className="text-lg px-2 text-white w-12 bg-transparent rounded-xl border border-overlay-overlay"
                       onChange={(e) => {
-                        console.log(e.target.value);
                         dispatch(
                           editCart({
                             id: index,

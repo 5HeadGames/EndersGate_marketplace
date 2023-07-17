@@ -69,9 +69,7 @@ function ComicSliderDetails() {
 
   const accountUpdate = async () => {
     setLoading(true);
-    console.log("USE EFFECT");
     if (account == "") {
-      console.log("NO ACCOUNT");
       return router.push("/login");
     } else {
       await getComicID();
@@ -203,9 +201,6 @@ function ComicSliderDetails() {
   const counter = useRef(0);
   const imageLoaded = () => {
     counter.current += 1;
-    // console.log()
-    console.log(counter.current);
-
     if (counter.current >= imageArrayLength) {
       setLoading(false);
     }
@@ -243,18 +238,6 @@ function ComicSliderDetails() {
     // setPageViewSliderGoToFirstSlider();
   };
 
-  // const browseCounter = useRef(0);
-  // const BrowseImageLoaded = () => {
-
-  //   browseCounter.current += 1;
-  //   // console.log()
-  //   // console.log(counter.current);
-
-  //   if (browseCounter.current >= imageArrayLength) {
-  //     setBrowseSliderLoading(false);
-
-  //   }
-  // }
   const handleClickShowBrowseSlide = (event) => {
     // 👇️ toggle shown state
     setIsShown((current) => !current);

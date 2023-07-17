@@ -54,7 +54,7 @@ function MyComics({ balance }) {
           {comicDetails.filter((comic) => {
             let valid = false;
             balance.forEach((balance) => {
-              if (balance.balance > 0 && balance.id == comic.id) {
+              if (balance.balance > 0 && balance.id === comic.id) {
                 valid = true;
               }
             });
@@ -65,7 +65,7 @@ function MyComics({ balance }) {
                 .filter((comic) => {
                   let valid = false;
                   balance.forEach((balance) => {
-                    if (balance.balance > 0 && balance.id == comic.id) {
+                    if (balance.balance > 0 && balance.id === comic.id) {
                       valid = true;
                     }
                   });
@@ -95,42 +95,6 @@ function MyComics({ balance }) {
                   </Flex>
                 ))}
 
-              <Flex>
-                <Image
-                  className="images-width-comic-series"
-                  src={"/images/comicSeriesOtherCards.png"}
-                  ml={2}
-                  mr={2}
-                  mt={2}
-                ></Image>
-              </Flex>
-              <Flex>
-                <Image
-                  className="images-width-comic-series"
-                  src={"/images/comicSeriesOtherCards.png"}
-                  ml={2}
-                  mr={2}
-                  mt={2}
-                ></Image>
-              </Flex>
-              <Flex>
-                <Image
-                  className="images-width-comic-series"
-                  src={"/images/comicSeriesOtherCards.png"}
-                  ml={2}
-                  mr={2}
-                  mt={2}
-                ></Image>
-              </Flex>
-              <Flex>
-                <Image
-                  className="images-width-comic-series"
-                  src={"/images/comicSeriesOtherCards.png"}
-                  ml={2}
-                  mr={2}
-                  mt={2}
-                ></Image>
-              </Flex>
               <Flex>
                 <Image
                   className="images-width-comic-series"

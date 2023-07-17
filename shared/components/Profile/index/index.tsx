@@ -1,64 +1,29 @@
-import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import { useRouter } from "next/router";
-import clsx from "clsx";
 import { Icons } from "@shared/const/Icons";
-import { CopyOutlined, LoginOutlined, SelectOutlined } from "@ant-design/icons";
-import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
-import { useToasts } from "react-toast-notifications";
-import Styles from "./styles.module.scss";
-import Link from "next/link";
-import { getBalance } from "@shared/web3";
+import { LoginOutlined } from "@ant-design/icons";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import Web3 from "web3";
 import { useSelector } from "react-redux";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
-import Inventory from "../inventory/inventory";
 import packs from "../../../packs.json";
 import { Tooltip } from "@mui/material";
 import { Button } from "@shared/components/common/button/button";
+import { authStillValid } from "@shared/components/utils";
 
 const ProfileIndexPage = ({ children }) => {
-  const [balance, setBalance] = React.useState("0");
-  const [activities, setActivities] = React.useState<Activity[]>([]);
   const { ethAddress: user } = useSelector((state: any) => state.layout.user);
   const { providerName } = useSelector((state: any) => state.layout);
   const { showWallet } = useMagicLink();
-
-  console.log(user);
-
-  const loadEvents = async () => {
-    // const relation = user.relation("events");
-    // const query = relation.query();
-    // const activities = await query.find({});
-    // setActivities(
-    //   activities
-    //     .map((act) => ({
-    //       createdAt: act.get("createdAt"),
-    //       type: act.get("type"),
-    //       metadata: JSON.parse(act.get("metadata")),
-    //     }))
-    //     .sort((a, b) => {
-    //       return (
-    //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    //       );
-    //     })
-    //     .slice(0, activities.length > 5 ? 5 : activities.length)
-    // );
-  };
+  const { account } = useWeb3React();
+  const router = useRouter();
 
   React.useEffect(() => {
-    handleSetBalance();
-    loadEvents();
-  }, [user]);
-
-  const handleSetBalance = async () => {
-    const balance = await getBalance(user);
-    setBalance(balance);
-  };
-
-  const { addToast } = useToasts();
+    if (!account && !user && !authStillValid()) {
+      router.push("/login?redirect=true&redirectAddress=/inventory");
+    }
+  }, [account, user]);
 
   const profileImage = Icons.logo;
 
@@ -82,7 +47,7 @@ const ProfileIndexPage = ({ children }) => {
             <h2 className="text-white font-bold md:text-2xl text-lg">
               {"EG Enthusiast"}
             </h2>
-            {providerName == "magic" && (
+            {providerName === "magic" && (
               <Button
                 type="submit"
                 decoration="line-white"
@@ -102,7 +67,6 @@ const ProfileIndexPage = ({ children }) => {
 
 export const Activity = ({ date, type, metadata, pack }) => {
   const cards = convertArrayCards();
-  console.log("metadata", metadata);
   return (
     <a
       href={`https://explorer.harmony.one/tx/${metadata.transactionHash}`}
