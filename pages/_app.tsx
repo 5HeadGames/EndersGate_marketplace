@@ -14,6 +14,7 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { Toaster } from "react-hot-toast";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import { GooglePlaceAPIContext } from "@shared/context/loadGooglePlaceApi";
 
 const { ToastProvider } = require("react-toast-notifications"); //it throws ts error
 

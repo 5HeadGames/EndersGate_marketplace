@@ -20,6 +20,7 @@ import {
   switchChain,
 } from "@shared/web3";
 import { nFormatter } from "../../common/specialFields/SpecialFields";
+import { getDatabase, ref, set } from "firebase/database";
 
 export const Modals = ({
   priceUSD,
@@ -29,7 +30,11 @@ export const Modals = ({
   getPriceMatic,
   Modal,
   hide,
-  show,
+  preBuy,
+  setPreBuy,
+  dataAddress,
+  showAddress,
+  isShow,
 }) => {
   const { ethAddress: account } = useSelector(
     (state: any) => state.layout.user,
@@ -45,6 +50,8 @@ export const Modals = ({
   );
 
   const { comics: comicsAddress, MATICUSD } = getAddressesEth();
+
+  const db = getDatabase();
 
   const dispatch = useDispatch();
 
@@ -68,23 +75,21 @@ export const Modals = ({
   const buyComics = async () => {
     await switchChain(networkEth);
     const comics = getContractCustom("Comics", comicsAddress, provider);
-    if (tokenSelected == "") {
+    if (tokenSelected === "") {
       return;
     }
     try {
       setMessageBuy(`Processing your purchase...`);
-
       const { ids, amounts, token } = {
         ids: cartComics.map((item) => item.id),
         amounts: cartComics.map((item) => item.quantity.toString()),
         token: tokenSelected,
       };
-
       let price = "0";
       const ERC20 = getContractCustom("ERC20", token, providerEth);
       const addressesAllowed = getTokensAllowed();
       if (
-        tokenSelected ==
+        tokenSelected ===
         addressesAllowed.filter((item) => item.name == "MATIC")[0].address
       ) {
         const Aggregator = getContractCustom(
@@ -107,8 +112,14 @@ export const Modals = ({
             10 ** 8) /
           priceMATIC;
 
+        const priceContract = await comics.methods
+          .getPrice(tokenSelected, cartComics[0].id, cartComics[0].quantity)
+          .call();
+
+        console.log(priceMATIC, preprice, priceContract);
+
         price = Web3.utils.toWei(
-          (preprice + preprice * 0.000005).toFixed(10).toString(),
+          (preprice + preprice * 0.00005).toFixed(10).toString(),
           "ether",
         );
 
@@ -147,17 +158,21 @@ export const Modals = ({
 
             .send({ from: account });
         }
-
-        // }
       }
+      set(ref(db, "comics/" + account), dataAddress);
     } catch (error) {
       console.log(error);
     }
     setMessageBuy(``);
+    setPreBuy(true);
     await getComicsNFTs();
     hide();
     dispatch(removeAllComics());
   };
+
+  React.useEffect(() => {
+    setTokenSelected(tokensAllowed[0].address);
+  }, [tokensAllowed]);
 
   return (
     <>
@@ -170,7 +185,18 @@ export const Modals = ({
         withoutX
         tokenSelected={tokenSelected}
         setTokenSelected={setTokenSelected}
-        buy={buyComics}
+        isShow={isShow}
+        onClose={() => {
+          setPreBuy(true);
+        }}
+        buy={
+          preBuy
+            ? () => {
+                showAddress();
+                hide();
+              }
+            : buyComics
+        }
         priceMatic={priceMatic}
         isMatic={false}
         itemsCart={cartComics.map((item, index) => {

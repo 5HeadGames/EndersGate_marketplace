@@ -36,6 +36,7 @@ export const useCartComicsModal = () => {
       tokensAllowed,
       tokenSelected,
       setTokenSelected,
+      isShow,
       buy,
     }) => {
       return (
@@ -51,7 +52,7 @@ export const useCartComicsModal = () => {
             open={isShow}
             onClose={hide}
           >
-            <div className="flex items-center justify-center pb-20 pt-4 min-h-screen text-center sm:block sm:p-0 bg-overlay-2">
+            <div className="flex items-center justify-center pb-20 pt-4 min-h-screen text-center sm:block sm:p-0 bg-[#000000bb]">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -257,5 +258,5 @@ export const useCartComicsModal = () => {
     [],
   );
 
-  return { Modal, hide, show };
+  return { Modal, isShow, hide, show };
 };

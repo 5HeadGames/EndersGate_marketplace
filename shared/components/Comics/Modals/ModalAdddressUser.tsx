@@ -3,28 +3,29 @@ import { Image } from "@chakra-ui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { useForm } from "react-hook-form";
 import { InputModal } from "@shared/components/common/form/inputModal";
-import { getDatabase } from "firebase/database";
-import { getAuth } from "firebase/auth";
 import { useModal } from "@shared/hooks/modal";
+import GooglePlaceAPI from "@shared/components/common/google-place-api";
 
-export const useModalAddressUser = ({ onSubmit }) => {
+export const useModalAddressUser = ({ onSubmit, onClose }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const { Modal, isShow, hide, show } = useModal();
   const {
     register,
     handleSubmit,
-    formState: { isValid },
+    formState: { isValid, errors },
+    setValue,
+    setError,
+    watch,
+    clearErrors,
   } = useForm();
 
-  const auth = getAuth();
-
-  const db = getDatabase();
+  console.log(errors, "errors");
 
   const handleSubmitModal = (data: any) => {
     setIsLoading(true);
     console.log(data);
     try {
-      onSubmit();
+      onSubmit(data);
     } catch (error) {
       console.log(error);
     }
@@ -32,7 +33,7 @@ export const useModalAddressUser = ({ onSubmit }) => {
   };
 
   const ModalAddress = (
-    <Modal isShow={isShow} NoClose withoutX>
+    <Modal isShow={isShow} onClose={onClose} withoutX>
       <div
         style={{ width: "90vw", maxWidth: "500px" }}
         className="relative bg-overlay flex flex-col items-center gap-4 jusify-center shadow-2xl rounded-2xl mt-16"
@@ -55,6 +56,7 @@ export const useModalAddressUser = ({ onSubmit }) => {
             className="text-white w-5 cursor-pointer p-[2px] rounded-full bg-overlay border border-white"
             onClick={() => {
               hide();
+              onClose();
             }}
           />
         </div>
@@ -82,6 +84,13 @@ export const useModalAddressUser = ({ onSubmit }) => {
               name="name"
               register={register}
               labelVisible
+              error={errors.name}
+              rules={{
+                required: {
+                  value: true,
+                  message: "You have to put your name",
+                },
+              }}
             ></InputModal>
             <InputModal
               type="email"
@@ -90,15 +99,30 @@ export const useModalAddressUser = ({ onSubmit }) => {
               name="email"
               register={register}
               labelVisible
+              error={errors.email}
+              rules={{
+                required: {
+                  value: true,
+                  message: "You have to put your email address",
+                },
+              }}
             ></InputModal>
-            <InputModal
-              type="address"
-              title="Address"
-              placeholder="Your Address"
-              name="address"
-              register={register}
-              labelVisible
-            ></InputModal>
+            <GooglePlaceAPI
+              errors={errors.address}
+              tokenGoogleAPI={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
+              {...{
+                register,
+                rules: {
+                  required: { value: true, message: "This field is required" },
+                },
+                setValue,
+                watch: watch("address"),
+                className: "",
+                setError,
+                clearErrors,
+              }}
+            ></GooglePlaceAPI>
+
             <InputModal
               type="text"
               title="Delivery Instructions (optional)"
@@ -106,6 +130,7 @@ export const useModalAddressUser = ({ onSubmit }) => {
               name="message"
               register={register}
               labelVisible
+              error={errors.message}
             ></InputModal>
           </div>
           <button

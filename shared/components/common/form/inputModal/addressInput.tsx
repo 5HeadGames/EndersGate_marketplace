@@ -3,16 +3,14 @@ import clsx from "clsx";
 import styles from "./input.module.scss";
 import { Typography } from "../../typography";
 import { XIcon } from "@heroicons/react/solid";
-import { InfoCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
 
-export const InputModal: React.FC<
+export const AddressInputModal: React.FC<
   any & React.InputHTMLAttributes<HTMLInputElement>
 > = ({
-  id,
   name,
   title,
   isFill,
-  register,
+  ref,
   rules,
   rightImg,
   leftImg,
@@ -35,7 +33,6 @@ export const InputModal: React.FC<
   //@typescript-eslint/no-unused-vars
 
   const [showLabel, setShowLabel] = React.useState(false);
-  const registerAux = register && register(name, rules);
 
   return (
     <div className={clsx("relative flex flex-col w-full", className)}>
@@ -67,7 +64,7 @@ export const InputModal: React.FC<
                   : setShowLabel(true);
               }
             }}
-            id={id}
+            id={name}
             name={name}
             placeholder={customPlaceholder || title}
             autoComplete="off"
@@ -92,20 +89,14 @@ export const InputModal: React.FC<
               },
               classNameContainer,
             )}
-            ref={registerAux ? registerAux.ref : undefined}
+            ref={ref}
             onChange={(e) => {
-              registerAux && registerAux.onChange(e); // method from hook form register
               onChangeCustom && onChangeCustom(e); // your method
               e.target.value === "" ? setShowLabel(false) : setShowLabel(true);
             }}
             // ref={register ? register(rules) : () => ({})}
             {...props}
           />
-          {error && (
-            <p className="text-alert-error text-[12px] flex items-center gap-1 pt-2 font-bold">
-              <InfoCircleOutlined /> {error.message}
-            </p>
-          )}
         </div>
       </div>
     </div>

@@ -13,7 +13,7 @@ export const useModal = () => {
     setIsShow(state || true);
   };
 
-  const Modal = useCallback(({ children, isShow, withoutX }) => {
+  const Modal = useCallback(({ children, isShow, withoutX, onClose }) => {
     return (
       <Transition.Root show={isShow} as={Fragment}>
         <Dialog
@@ -22,7 +22,10 @@ export const useModal = () => {
           className="fixed inset-0 overflow-y-auto bg-[#000000bb] z-50"
           initialFocus={cancelButtonRef}
           open={isShow}
-          onClose={hide}
+          onClose={() => {
+            hide();
+            onClose();
+          }}
         >
           <div className="flex items-center justify-center pb-20 pt-4 min-h-screen text-center sm:block sm:p-0 ">
             <Transition.Child
@@ -60,7 +63,10 @@ export const useModal = () => {
                       <button
                         type="button"
                         className="bg-gray-4 rounded-md text-gray-400 hover:text-gray-500 focus:outline-none mr-4"
-                        onClick={() => hide()}
+                        onClick={() => {
+                          hide();
+                          onClose();
+                        }}
                       >
                         <span className="sr-only">Close</span>
                         <XIcon
