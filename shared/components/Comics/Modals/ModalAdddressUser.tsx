@@ -20,10 +20,6 @@ export const useModalAddressUser = ({ onSubmit }) => {
 
   const db = getDatabase();
 
-  React.useEffect(() => {
-    show();
-  }, []);
-
   const handleSubmitModal = (data: any) => {
     setIsLoading(true);
     console.log(data);

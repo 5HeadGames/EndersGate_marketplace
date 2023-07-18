@@ -612,7 +612,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           </div>
         </div>
       ) : (
-        <div className="h-screen w-screen bg-overlay flex items-center justify-center text-3xl text-primary">
+        <div className="h-screen w-full bg-overlay flex items-center justify-center text-3xl text-primary">
           <LoadingOutlined />
         </div>
       )}
