@@ -16,6 +16,7 @@ import { addCartComics, removeFromCartComics } from "@redux/actions";
 import { Input } from "@shared/components/common/form/input";
 import { useModal } from "@shared/hooks/modal";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 
 function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
   const settings = {
@@ -171,32 +172,6 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
                 </p>
               </Button>
             )}
-            <Button
-              decoration="greenLine"
-              className="px-8 py-3 mb-2 rounded-full text-white relative border-none flex items-center justify-center w-48"
-              onClick={() => {
-                let alreadyIncluded = false;
-                cartComics.forEach((item) => {
-                  if (item.id === nftModal.id) {
-                    alreadyIncluded = true;
-                  }
-                });
-                if (!alreadyIncluded) {
-                  dispatch(addCartComics({ ...nftModal, quantity: 1 }));
-                  getPriceMatic();
-                }
-                showCart();
-              }}
-            >
-              <img
-                src="/images/buttonYellowBg.png"
-                className="absolute top-0 left-0 h-full w-full"
-                alt=""
-              />
-              <p className="font-bold text-white text-lg relative">
-                Learn More
-              </p>
-            </Button>
           </div>
         </div>
       </Modal>
@@ -417,13 +392,20 @@ const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
                 onClick={(e) => {
                   e.preventDefault();
                   if (account) {
-                    dispatch(
-                      addCartComics({
-                        ...i,
-                        priceUSD: priceUSD,
-                        quantity: issues[id].quantity,
-                      }),
-                    );
+                    if (issues[id].quantity > 0) {
+                      dispatch(
+                        addCartComics({
+                          ...i,
+                          priceUSD: priceUSD,
+                          quantity: issues[id].quantity,
+                        }),
+                      );
+                      toast.success("Your items has been added successfully");
+                    } else {
+                      toast.error(
+                        "You can't add 0 items to the cart, please try again with a different quantity",
+                      );
+                    }
                   } else {
                     router.push("/login?redirect=true&redirectAddress=/comics");
                   }
@@ -563,13 +545,20 @@ const SliderItemMobile = ({
                 onClick={(e) => {
                   e.preventDefault();
                   if (account) {
-                    dispatch(
-                      addCartComics({
-                        ...i,
-                        priceUSD: priceUSD,
-                        quantity: issues[id].quantity,
-                      }),
-                    );
+                    if (issues[id].quantity > 0) {
+                      dispatch(
+                        addCartComics({
+                          ...i,
+                          priceUSD: priceUSD,
+                          quantity: issues[id].quantity,
+                        }),
+                      );
+                      toast.success("Your items has been added successfully");
+                    } else {
+                      toast.error(
+                        "You can't add 0 items to the cart, please try again with a different quantity",
+                      );
+                    }
                   } else {
                     router.push("/login?redirect=true&redirectAddress=/comics");
                   }

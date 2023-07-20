@@ -17,11 +17,9 @@ function Comics() {
   const [dataAddress, setDataAddress] = React.useState(true);
 
   const handleSubmitAddressModal = (data: any) => {
-    console.log(data);
     setPreBuy(false);
     setDataAddress(data);
     show();
-    hideAddress();
   };
 
   const {
@@ -32,6 +30,7 @@ function Comics() {
     onSubmit: handleSubmitAddressModal,
     onClose: () => {
       hide();
+      hideAddress();
       setPreBuy(true);
     },
   });
@@ -159,10 +158,15 @@ function Comics() {
         bottom={6}
         right={9}
         flexDir="column"
-        className="fixed rounded-xl border border-overlay-border bg-overlay p-4 items-center justify-center cursor-pointer"
+        className="fixed rounded-xl border border-overlay-border bg-green-button p-4 items-center justify-center cursor-pointer"
         onClick={show}
       >
-        <ShopOutlined className="text-2xl flex items-center text-white justify-center relative" />
+        {cartComics.length > 0 && (
+          <div className="rounded-full px-[8px] py-[2px] absolute flex items-center justify-center top-[-10px] text-[11px] text-overlay bg-white left-[-10px] border border-overlay">
+            {cartComics.length}
+          </div>
+        )}
+        <ShopOutlined className="text-2xl flex items-center text-overlay justify-center relative" />
       </Flex>
     </Flex>
   );

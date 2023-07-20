@@ -75,7 +75,7 @@ function MyComics({ balance }) {
                   <Flex key={Math.random().toString()}>
                     <Link href={`/comics/${item.name}`}>
                       <Image
-                        className="images-width-comic-series"
+                        className="images-width-comic-series cursor-pointer"
                         src={item.comic_banner}
                         ml={2}
                         mr={2}
@@ -96,23 +96,23 @@ function MyComics({ balance }) {
                 ))}
 
               <Flex>
-                <Image
+                {/* <Image
                   className="images-width-comic-series"
                   src={"/images/comicSeriesOtherCards.png"}
                   ml={2}
                   mr={2}
                   mt={2}
-                ></Image>
+                ></Image> */}
               </Flex>
 
               <Flex>
-                <Image
+                {/* <Image
                   className="images-width-comic-series"
                   src={"/images/comicSeriesOtherCards.png"}
                   ml={2}
                   mr={2}
                   mt={2}
-                ></Image>
+                ></Image> */}
               </Flex>
             </Slider>
           ) : (
@@ -191,67 +191,31 @@ function MobileView() {
             </Flex>
           ))}
           <Flex>
-            <Image
+            {/* <Image
               className="images-width-comic-series"
               src={"/images/comicSeriesOtherCards.png"}
               ml={2}
               mr={2}
               mt={2}
-            ></Image>
+            ></Image> */}
           </Flex>
           <Flex>
-            <Image
+            {/* <Image
               className="images-width-comic-series"
               src={"/images/comicSeriesOtherCards.png"}
               ml={2}
               mr={2}
               mt={2}
-            ></Image>
+            ></Image> */}
           </Flex>
           <Flex>
-            <Image
+            {/* <Image
               className="images-width-comic-series"
               src={"/images/comicSeriesOtherCards.png"}
               ml={2}
               mr={2}
               mt={2}
-            ></Image>
-          </Flex>
-          <Flex>
-            <Image
-              className="images-width-comic-series"
-              src={"/images/comicSeriesOtherCards.png"}
-              ml={2}
-              mr={2}
-              mt={2}
-            ></Image>
-          </Flex>
-          <Flex>
-            <Image
-              className="images-width-comic-series"
-              src={"/images/comicSeriesOtherCards.png"}
-              ml={2}
-              mr={2}
-              mt={2}
-            ></Image>
-          </Flex>
-          <Flex>
-            <Image
-              className="images-width-comic-series"
-              src={"/images/comicSeriesOtherCards.png"}
-              ml={2}
-              mr={2}
-              mt={2}
-            ></Image>
-          </Flex>
-          <Flex>
-            <Image
-              className="images-width-comic-series"
-              src={"/images/comicSeriesOtherCards.png"}
-              ml={2}
-              mr={2}
-              mt={2}
-            ></Image>
+            ></Image> */}
           </Flex>
         </Slider>
       </div>

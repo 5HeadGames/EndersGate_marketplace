@@ -23,7 +23,6 @@ export const useModalAddressUser = ({ onSubmit, onClose }) => {
 
   const handleSubmitModal = (data: any) => {
     setIsLoading(true);
-    console.log(data);
     try {
       onSubmit(data);
     } catch (error) {

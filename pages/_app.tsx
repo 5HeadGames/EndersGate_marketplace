@@ -66,7 +66,7 @@ const MyApp = ({ Component, pageProps }: AppProps & { Component: any }) => {
             <Web3Provider>
               <Layout>
                 <Component {...pageProps} />
-                <Toaster />
+                <Toaster containerClassName="!z-[100000000]" />
               </Layout>
             </Web3Provider>
           </ToastProvider>

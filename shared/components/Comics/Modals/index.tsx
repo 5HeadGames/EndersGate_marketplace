@@ -21,6 +21,7 @@ import {
 } from "@shared/web3";
 import { nFormatter } from "../../common/specialFields/SpecialFields";
 import { getDatabase, ref, set } from "firebase/database";
+import { toast } from "react-hot-toast";
 
 export const Modals = ({
   priceUSD,
@@ -160,14 +161,15 @@ export const Modals = ({
         }
       }
       set(ref(db, "comics/" + account), dataAddress);
+      setPreBuy(true);
+      await getComicsNFTs();
+      hide();
+      dispatch(removeAllComics());
     } catch (error) {
       console.log(error);
+      toast.error(error.message);
     }
     setMessageBuy(``);
-    setPreBuy(true);
-    await getComicsNFTs();
-    hide();
-    dispatch(removeAllComics());
   };
 
   React.useEffect(() => {
