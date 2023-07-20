@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Slider from "react-slick";
 import comicDetails from "../../../comics.json";
 import {
@@ -40,7 +40,6 @@ function ComicSliderDetails() {
       "Fullscreen is unsupported by this browser, please try another browser.",
     );
   }
-  // const [data, setData] = useState(null);
 
   const [scale, setScale] = useState(1);
   const [offsetY, setOffsetY] = useState(0);
@@ -88,10 +87,6 @@ function ComicSliderDetails() {
   const [sliderImage, setSliderImage] = useState(
     comicImage?.pages_pannels?.filter((page) => page.isPannal === false),
   );
-
-  // const zoomImagecondition = comicImage.pages_pannels.filter(
-  //   (page) => page.isPannal === false,
-  // );
 
   const imageArrayLength = sliderImage?.length;
 
@@ -450,9 +445,6 @@ function ComicSliderDetails() {
             </>
           ) : (
             <>
-              {/* <div style={{display: browseSliderLoading ? "block" : "none", color: 'white', height: '100vh', justifyContent: 'center', alignItems: 'center'}}>
-            <img src={Gif} className='loading-gif' />
-    </div> */}
               {isShown && (
                 <Slider
                   {...browseSlidermobile}
