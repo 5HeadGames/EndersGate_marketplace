@@ -73,7 +73,7 @@ function MyComics({ balance }) {
                 })
                 .map((item) => (
                   <Flex key={Math.random().toString()}>
-                    <Link href={`/comics/${item.name}`}>
+                    <Link href={`/comics/${item.nameLink}`}>
                       <Image
                         className="images-width-comic-series cursor-pointer"
                         src={item.comic_banner}
@@ -169,7 +169,7 @@ function MobileView() {
         <Slider {...settings}>
           {comicDetails.map((item) => (
             <Flex key={Math.random().toString()}>
-              <Link href={`/comics/${item.name}`}>
+              <Link href={`/comics/${item.nameLink}`}>
                 <Image
                   className="images-width-comic-series"
                   src={item.comic_banner}

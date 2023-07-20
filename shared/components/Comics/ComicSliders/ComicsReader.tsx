@@ -87,13 +87,15 @@ export default function Reader({ images }) {
     <div className="mt-16">
       <PhotoSlider
         toolbarRender={toolbarRender}
-        images={images.map((item, index) => ({
-          src: item,
-          key: index,
-        }))}
-        loop={true}
-        visible
-        // bannerVisible = {true}
+        images={
+          images
+            ? images.map(({ url }, index) => ({
+                src: url,
+                key: index,
+              }))
+            : []
+        }
+        visible={images ? true : false}
         onClose={() => router.push("/comics")}
         index={index}
         onIndexChange={setIndex}

@@ -4,7 +4,6 @@ import { getAddressesEth, getContractCustom } from "@shared/web3";
 import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/router";
 import React, { useRef, useState } from "react";
-import ComicViewer from "react-comic-viewer";
 import { useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import comicDetails from "../../../comics.json";
@@ -15,15 +14,6 @@ export const ComicSlider = () => {
   const [isLoading, setIsLoading] = React.useState(true);
 
   const { addToast } = useToasts();
-  let isFullscreen;
-
-  try {
-    [isFullscreen] = useFullscreenStatus(maximizableElementScreen);
-  } catch (e) {
-    addToast(
-      "Fullscreen is unsupported by this browser, please try another browser.",
-    );
-  }
 
   const { name: comicName } = useRouter().query;
   const router = useRouter();
@@ -45,16 +35,18 @@ export const ComicSlider = () => {
   };
 
   const currentComic = comicDetails?.find((comic) => {
-    return comic.name === comicName;
+    return comic.nameLink === comicName;
   });
 
-  const comicImage = currentComic?.pages.find((comic) => {
+  const comicImage = currentComic?.pages?.find((comic) => {
     return comic.id === 1;
   });
 
-  const sliderImage = comicImage?.pages_pannels
-    ?.filter((page) => page.isPannal === false)
-    .map((page) => page.url);
+  console.log(comicImage, "comics");
+
+  const sliderImage = comicImage?.pages_pannels?.filter(
+    (page) => page.isPannal === false,
+  );
 
   React.useEffect(() => {
     if (currentComic) accountUpdate();
@@ -85,7 +77,7 @@ export const ComicSlider = () => {
 
   return (
     <div className="pt-16">
-      <Reader images={sliderImage} />{" "}
+      <Reader images={sliderImage} />
     </div>
   );
 };
