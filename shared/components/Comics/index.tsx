@@ -33,6 +33,7 @@ function Comics() {
       hideAddress();
       setPreBuy(true);
     },
+    noClose: true,
   });
 
   const { ethAddress: account } = useSelector(
@@ -135,6 +136,7 @@ function Comics() {
           getPriceMatic,
           Modal,
           hide,
+          hideAddress,
           dataAddress,
           preBuy,
           setPreBuy,

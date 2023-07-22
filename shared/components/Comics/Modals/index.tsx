@@ -31,6 +31,7 @@ export const Modals = ({
   getPriceMatic,
   Modal,
   hide,
+  hideAddress,
   preBuy,
   setPreBuy,
   dataAddress,
@@ -164,6 +165,7 @@ export const Modals = ({
       setPreBuy(true);
       await getComicsNFTs();
       hide();
+      hideAddress();
       dispatch(removeAllComics());
     } catch (error) {
       console.log(error);
@@ -180,6 +182,7 @@ export const Modals = ({
     <>
       {ModalAddress}
       <Modal
+        noClose
         cart={cartComics}
         removeAll={removeAllComics}
         messageBuy={messageBuy}

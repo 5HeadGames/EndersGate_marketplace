@@ -38,7 +38,9 @@ export const useCartComicsModal = () => {
       setTokenSelected,
       isShow,
       buy,
+      noClose,
     }) => {
+      console.log("cart noclose", noClose);
       return (
         <Transition.Root show={isShow} as={Fragment}>
           <Dialog
@@ -50,7 +52,7 @@ export const useCartComicsModal = () => {
             }}
             initialFocus={cancelButtonRef}
             open={isShow}
-            onClose={hide}
+            onClose={noClose ? () => {} : hide}
           >
             <div className="flex items-center justify-center pb-20 pt-4 min-h-screen text-center sm:block sm:p-0 bg-[#000000bb]">
               <Transition.Child
