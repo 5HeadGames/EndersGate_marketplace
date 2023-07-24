@@ -115,7 +115,6 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
                   required: { value: true, message: "This field is required" },
                 },
                 setValue,
-                watch: watch("address"),
                 className: "",
                 setError,
                 clearErrors,

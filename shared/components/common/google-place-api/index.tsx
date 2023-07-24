@@ -18,7 +18,6 @@ interface PropsGooglePlaceAPI {
   errors: DeepMap<FieldValues, FieldError>;
   register: FieldValues;
   setValue: UseFormSetValue<FieldValues>;
-  watch: boolean;
   className: string;
   cityOurs?: any[] | undefined;
   setError: UseFormSetError<FieldValues>;
@@ -37,7 +36,6 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
   rules,
   errors,
   setValue,
-  watch,
   className,
   setError,
   // setDataGooglePlaceSelected,
@@ -127,7 +125,6 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
         title="Address"
         rules={rules}
         error={errors}
-        isFill={watch}
         className={className}
       />
     </>
