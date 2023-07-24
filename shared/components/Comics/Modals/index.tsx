@@ -90,8 +90,6 @@ export const Modals = ({
         token: tokenSelected,
       };
 
-      console.log(ids, amounts, token);
-
       let price = "0";
       const ERC20 = getContractCustom("ERC20", token, providerEth);
       const addressesAllowed = getTokensAllowed();
@@ -199,8 +197,10 @@ export const Modals = ({
             isMatic: true,
             buy: preBuy
               ? () => {
-                  showAddress();
                   hide();
+                  setTimeout(() => {
+                    showAddress();
+                  }, 1000);
                 }
               : buyComics,
             messageBuy,
