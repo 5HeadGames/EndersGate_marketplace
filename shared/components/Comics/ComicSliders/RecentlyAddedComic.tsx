@@ -37,12 +37,13 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
     { name: "", photo: "" },
     {
       id: 1,
-      name: "AvS ISSUE #1",
-      nameComic: "Ascended vs Sentinels Issue #1",
-      photo: "/images/AscendedVsSentinels1.webp",
+      name: "HvsO ISSUES #1 & #2",
+      nameComic: "Humans vs Ogres Issue #1",
+      nameLink: "HvsO",
+      photo: "/images/HumansVsOgres1.webp",
       issues: [
-        { id: 1, name: "Ascended vs Sentinels Issue #1" },
-        { id: 2, name: "Ascended vs Sentinels Issue #2" },
+        { id: 1, name: "Humans vs Ogres Issue #1" },
+        { id: 2, name: "Humans vs Ogres Issue #2" },
       ],
       quantity: 0,
     },
@@ -52,7 +53,8 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
   const [nftModal, setNftModal] = React.useState({
     id: 0,
     balance: 0,
-    nameComic: "",
+    nameLink: "",
+    issues: [],
   });
 
   const router = useRouter();
@@ -135,7 +137,9 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
                 decoration="greenLine"
                 className="px-8 py-3 mb-2 rounded-full text-white relative border-none flex items-center justify-center w-full"
                 onClick={() => {
-                  router.push("/comics/" + nftModal.nameComic);
+                  router.push(
+                    `/comics/${nftModal.nameLink}/${nftModal.issues[0].id}`,
+                  );
                 }}
               >
                 <img
@@ -152,7 +156,17 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
                 decoration="greenLine"
                 className="px-8 py-3 mb-2 rounded-full text-white relative border-none flex items-center justify-center w-full"
                 onClick={() => {
-                  dispatch(addCartComics({ ...nftModal, quantity: 1 }));
+                  nftModal.issues.forEach((issue) => {
+                    dispatch(
+                      addCartComics({
+                        ...nftModal,
+                        name: issue.name,
+                        idNFT: issue.id,
+                        priceUSD: priceUSD,
+                        quantity: 1,
+                      }),
+                    );
+                  });
                   getPriceMatic();
                   showCart();
                 }}
@@ -287,7 +301,7 @@ const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
 
   return (
     <Flex className="relative flex flex-col items-center justify-center">
-      <Flex className="box-shadow relative w-auto">
+      <Flex className="box-shadow relative w-auto flex items-center justify-center">
         <div
           onMouseOver={() =>
             setHoverBuy((prev) => {
@@ -317,7 +331,7 @@ const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
           }
           style={{ zIndex: 1000 }}
           className={clsx(
-            "rounded-full p-2 flex w-10 h-10 items-center justify-center border-overlay-border border cursor-pointer absolute top-4 right-10",
+            "rounded-full p-2 flex w-10 h-10 items-center justify-center border-overlay-border border cursor-pointer absolute top-4 right-6",
             {
               "gap-1 w-20 px-3 text-center": hoverBuy[id],
             },
@@ -497,11 +511,11 @@ const SliderItemMobile = ({
 
   return (
     <Flex className="relative flex flex-col items-center justify-center">
-      <Flex className="box-shadow relative w-auto">
+      <Flex className="box-shadow relative w-auto flex flex-col items-center justify-center">
         <div
           style={{ zIndex: 1000 }}
           className={clsx(
-            "rounded-full p-2 flex h-10 items-center justify-center border-overlay-border border cursor-pointer absolute top-4 right-14 gap-1 w-20 px-3 text-center",
+            "rounded-full p-2 flex h-10 items-center justify-center border-overlay-border border cursor-pointer absolute top-4 right-10 gap-1 w-20 px-3 text-center",
 
             {
               "hover:bg-red-500 bg-green-button hover:transition-all transition-all duration-500 hover:duration-500 !w-10":

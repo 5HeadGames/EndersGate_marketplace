@@ -1058,339 +1058,678 @@
     "comic_banner": "https://bafybeicku2srofgncroohp2xvfd6phe2yp4pwf3i3z7aq36hrrrxo7l3sy.ipfs.nftstorage.link/",
     "issues": {
       "1": {
-        "id": 1,
-        "cid": "https://ipfs.io/ipfs/bafybeigvv6mh5wf6gyrffcj7jbsketmvpju6s42bqltvnxztv4p74hibum",
-        "full_page": "https://ipfs.io/ipfs/bafybeigvv6mh5wf6gyrffcj7jbsketmvpju6s42bqltvnxztv4p74hibum/HVO_FULLPAGE1.png",
+        "name": "Humans vs Ogres Issue #1",
+        "pages": {
+          "id": 1,
+          "cid": "https://ipfs.io/ipfs/bafybeigvv6mh5wf6gyrffcj7jbsketmvpju6s42bqltvnxztv4p74hibum",
+          "full_page": "https://ipfs.io/ipfs/bafybeigvv6mh5wf6gyrffcj7jbsketmvpju6s42bqltvnxztv4p74hibum/HVO_FULLPAGE1.png",
+          "pages_pannels": [
+            {
+              "url": "https://bafybeicvxsksypr4z6bkwey2dbtmzmm7dmu2eienae5zl25r6nb5u64kuu.ipfs.nftstorage.link/HVO_COVER.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/HVO_FULLPAGE1.webp",
+              "isPublic": false
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/HVO_FULLPAGE2.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/HVO_FULLPAGE3.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/HVO_FULLPAGE4.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/HVO_FULLPAGE5.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/HVO_FULLPAGE6.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/HVO_FULLPAGE7.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/HVO_FULLPAGE8.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/HVO_FULLPAGE9.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/HVO_FULLPAGE10.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/HVO_FULLPAGE11.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/HVO_FULLPAGE12.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeicvxsksypr4z6bkwey2dbtmzmm7dmu2eienae5zl25r6nb5u64kuu.ipfs.nftstorage.link/HVO_COVER.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
 
-        "pages_pannels": [
-          {
-            "url": "https://bafybeicvxsksypr4z6bkwey2dbtmzmm7dmu2eienae5zl25r6nb5u64kuu.ipfs.nftstorage.link/HVO_COVER.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/HVO_FULLPAGE1.webp",
-            "isPublic": false
-          },
-          {
-            "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/HVO_FULLPAGE2.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/HVO_FULLPAGE3.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/HVO_FULLPAGE4.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/HVO_FULLPAGE5.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/HVO_FULLPAGE6.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/HVO_FULLPAGE7.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/HVO_FULLPAGE8.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/HVO_FULLPAGE9.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/HVO_FULLPAGE10.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/HVO_FULLPAGE11.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/HVO_FULLPAGE12.webp",
-            "isPannal": false
-          },
-          {
-            "url": "https://bafybeicvxsksypr4z6bkwey2dbtmzmm7dmu2eienae5zl25r6nb5u64kuu.ipfs.nftstorage.link/HVO_COVER.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/04.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/05.webp",
-            "isPannal": true
-          },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
 
-          {
-            "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/04.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/05.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/06.webp",
-            "isPannal": true
-          },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
 
-          {
-            "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/04.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/05.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/06.webp",
-            "isPannal": true
-          },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
 
-          {
-            "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/04.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/05.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/06.webp",
-            "isPannal": true
-          },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/07.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/08.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
 
-          {
-            "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/07.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/08.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/04.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/05.webp",
-            "isPannal": true
-          },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/07.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
 
-          {
-            "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/06.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/07.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
+            {
+              "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
 
-          {
-            "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
+            {
+              "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
 
-          {
-            "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/04.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
 
-          {
-            "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/04.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/05.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
 
-          {
-            "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/04.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/05.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
 
-          {
-            "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/04.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/05.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/06.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            }
+          ]
+        }
+      },
+      "2": {
+        "name": "Humans vs Ogres Issue #2",
+        "pages": {
+          "id": 1,
+          "cid": "https://ipfs.io/ipfs/bafybeigvv6mh5wf6gyrffcj7jbsketmvpju6s42bqltvnxztv4p74hibum",
+          "full_page": "https://ipfs.io/ipfs/bafybeigvv6mh5wf6gyrffcj7jbsketmvpju6s42bqltvnxztv4p74hibum/HVO_FULLPAGE1.png",
+          "pages_pannels": [
+            {
+              "url": "https://bafybeicvxsksypr4z6bkwey2dbtmzmm7dmu2eienae5zl25r6nb5u64kuu.ipfs.nftstorage.link/HVO_COVER.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/HVO_FULLPAGE1.webp",
+              "isPublic": false
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/HVO_FULLPAGE2.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/HVO_FULLPAGE3.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/HVO_FULLPAGE4.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/HVO_FULLPAGE5.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/HVO_FULLPAGE6.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/HVO_FULLPAGE7.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/HVO_FULLPAGE8.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/HVO_FULLPAGE9.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/HVO_FULLPAGE10.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/HVO_FULLPAGE11.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/HVO_FULLPAGE12.webp",
+              "isPannal": false
+            },
+            {
+              "url": "https://bafybeicvxsksypr4z6bkwey2dbtmzmm7dmu2eienae5zl25r6nb5u64kuu.ipfs.nftstorage.link/HVO_COVER.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeibduys34jkg6kxpfsis6eruck6raflyex7e4px3nfbircpcwe3v7m.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
 
-          {
-            "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/04.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/05.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/06.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/01.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/02.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/03.webp",
-            "isPannal": true
-          },
-          {
-            "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/04.webp",
-            "isPannal": true
-          }
-        ]
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeie3mt5k6syz5q7nglaoauhz2yuq3bto52vmwnh3keujpjkbbuapp4.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
+
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeigiiw72uwtd6glxuh6srfjalpjrmni3fr2in5tzwtxqznkil3iy6i.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
+
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
+
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/07.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeif63xmbk5es4cei7rbz4qi732crnkx4c3agerbabbuu2egwhyomji.ipfs.nftstorage.link/08.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeiguitex4fhojg4kihp3yxh2k4rw3lq2fjoqxyei5emzrgitzty4r4.ipfs.nftstorage.link/07.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+
+            {
+              "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifalouugjyinjbnfdn6pf3dxap7gvkrikhraak65kqxspk5n67bkq.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+
+            {
+              "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeidx3sqvua32llnhsenkmxvq2teerty7kanhres5qpmbivcazv2qmi.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeienls4zbjok2lzfou6bsms2grhuitczvhl6lshgvrlkzw2zqequba.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeic3jptm5dzoruepeceftz2kxmyc4tn2j3g7rpvntfkqtn36kg4nya.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeib63hb35jrppshgfvntpdrlfpvx25kuh6krqa3e4dxk7wnullncsi.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/05.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeih6ndzg6eggvfmeg6wlsg5rrf3i5bhymlywyhfe34lzzt3wfqjfbm.ipfs.nftstorage.link/06.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/01.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/02.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/03.webp",
+              "isPannal": true
+            },
+            {
+              "url": "https://bafybeifnv5hfdcxbydf52g35ofjj3mznpzuudkw3iuz6hc6ibdwc4wm774.ipfs.nftstorage.link/04.webp",
+              "isPannal": true
+            }
+          ]
+        }
       }
     }
   }

@@ -10,7 +10,6 @@ import comicDetails from "../../../comics.json";
 import Reader from "./ComicsReader";
 
 export const ComicSlider = () => {
-  const maximizableElementScreen = useRef(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
   const { name: comicName, issue } = useRouter().query;
@@ -41,6 +40,8 @@ export const ComicSlider = () => {
   const sliderImage = comicImage?.pages_pannels?.filter(
     (page) => page.isPannal === false,
   );
+
+  console.log(comicImage, sliderImage);
 
   React.useEffect(() => {
     if (currentComic) accountUpdate();

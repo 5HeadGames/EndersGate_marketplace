@@ -89,6 +89,7 @@ export const Modals = ({
       };
 
       console.log(ids, amounts, token);
+      
       let price = "0";
       const ERC20 = getContractCustom("ERC20", token, providerEth);
       const addressesAllowed = getTokensAllowed();

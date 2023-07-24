@@ -120,10 +120,10 @@ export const useCartComicsModal = () => {
                           <div className="gap-2 flex items-center justify-center w-full rounded-xl border border-overlay-border p-4">
                             <div className="flex flex-col items-center justify-center gap-2 w-[210px]">
                               <h2 className="text-white font-bold text-center">
-                                {cart[0].name}
+                                {cart[0]?.name}
                               </h2>
                               <img
-                                src="https://bafybeientsigvd3uqtjvpxer2rfr3bxabhu657do7y6g6spr7srv6xrqy4.ipfs.nftstorage.link/AVS%20COVER.webp"
+                                src="https://bafybeicvxsksypr4z6bkwey2dbtmzmm7dmu2eienae5zl25r6nb5u64kuu.ipfs.nftstorage.link/HVO_COVER.webp"
                                 alt=""
                                 className="w-[200px]"
                               />
@@ -131,10 +131,10 @@ export const useCartComicsModal = () => {
                             <img src="/icons/plus.svg" alt="" />
                             <div className="flex flex-col items-center justify-center gap-2 w-[210px]">
                               <h2 className="text-white font-bold text-center">
-                                {cart[1].name}
+                                {cart[1]?.name}
                               </h2>
                               <img
-                                src="https://bafybeientsigvd3uqtjvpxer2rfr3bxabhu657do7y6g6spr7srv6xrqy4.ipfs.nftstorage.link/AVS%20COVER.webp"
+                                src="https://bafybeicvxsksypr4z6bkwey2dbtmzmm7dmu2eienae5zl25r6nb5u64kuu.ipfs.nftstorage.link/HVO_COVER.webp"
                                 alt=""
                                 className="w-[200px]"
                               />
