@@ -37,10 +37,22 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
     { name: "", photo: "" },
     {
       id: 1,
-      name: "HvsO ISSUES #1 & #2",
+      name: "HvsO ISSUES #1",
       nameComic: "Humans vs Ogres Issue #1",
       nameLink: "HvsO",
       photo: "/images/HumansVsOgres1.webp",
+      issues: [
+        { id: 1, name: "Humans vs Ogres Issue #1" },
+        { id: 2, name: "Humans vs Ogres Issue #2" },
+      ],
+      quantity: 0,
+    },
+    {
+      id: 1,
+      name: "HvsO ISSUES #2",
+      nameComic: "Humans vs Ogres Issue #1",
+      nameLink: "HvsO",
+      photo: "/images/HvOIssue_2.webp",
       issues: [
         { id: 1, name: "Humans vs Ogres Issue #1" },
         { id: 2, name: "Humans vs Ogres Issue #2" },
@@ -61,33 +73,41 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
 
   const dispatch = useDispatch();
 
+  const { ethAddress: account } = useSelector(
+    (state: any) => state.layout.user,
+  );
+
   const { Modal, isShow, show, hide } = useModal();
 
   const [isAtLeast1078px] = useMediaQuery("(min-width: 840px)");
 
   const onClickItem = (item: any, id) => {
-    let valid = false;
-    balance.forEach((balance: { balance: number; id: any }) => {
-      if (balance.balance > 0 && balance.id === item.id) {
-        valid = true;
+    if (account) {
+      let valid = false;
+      balance.forEach((balance: { balance: number; id: any }) => {
+        if (balance.balance > 0 && balance.id === item.id) {
+          valid = true;
+        }
+      });
+      if (valid) {
+        setNftModal({
+          ...item,
+          priceUSD: priceUSD,
+          quantity: 1,
+          balance: 1,
+        });
+      } else {
+        setNftModal({
+          ...item,
+          priceUSD: priceUSD,
+          quantity: issues[id].quantity,
+          balance: 0,
+        });
       }
-    });
-    if (valid) {
-      setNftModal({
-        ...item,
-        priceUSD: priceUSD,
-        quantity: 1,
-        balance: 1,
-      });
+      show();
     } else {
-      setNftModal({
-        ...item,
-        priceUSD: priceUSD,
-        quantity: issues[id].quantity,
-        balance: 0,
-      });
+      router.push("/login?redirect=true&redirectAddress=/comics");
     }
-    show();
   };
 
   return (
