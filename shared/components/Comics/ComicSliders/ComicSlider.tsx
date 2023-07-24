@@ -13,9 +13,7 @@ export const ComicSlider = () => {
   const maximizableElementScreen = useRef(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const { addToast } = useToasts();
-
-  const { name: comicName } = useRouter().query;
+  const { name: comicName, issue } = useRouter().query;
   const router = useRouter();
   const { ethAddress: user } = useSelector((state: any) => state.layout.user);
 
@@ -28,7 +26,7 @@ export const ComicSlider = () => {
   const accountUpdate = async () => {
     if (!account && !user && !authStillValid()) {
       return router.push("/login?redirect=true&redirectAddress=/comics");
-    } else {
+    } else if (account) {
       await getComicID();
     }
     setIsLoading(false);
@@ -38,11 +36,7 @@ export const ComicSlider = () => {
     return comic.nameLink === comicName;
   });
 
-  const comicImage = currentComic?.pages?.find((comic) => {
-    return comic.id === 1;
-  });
-
-  console.log(comicImage, "comics");
+  const comicImage = currentComic?.issues[issue as string]?.pages;
 
   const sliderImage = comicImage?.pages_pannels?.filter(
     (page) => page.isPannal === false,

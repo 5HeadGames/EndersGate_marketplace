@@ -38,15 +38,12 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
     {
       id: 1,
       name: "AvS ISSUE #1",
-      nameComic: "Ascended vs Sentinels",
+      nameComic: "Ascended vs Sentinels Issue #1",
       photo: "/images/AscendedVsSentinels1.webp",
-      quantity: 0,
-    },
-    {
-      id: 2,
-      name: "HvO ISSUE #1",
-      nameComic: "Humans vs Ogres",
-      photo: "/images/HumansVsOgres1.webp",
+      issues: [
+        { id: 1, name: "Ascended vs Sentinels Issue #1" },
+        { id: 2, name: "Ascended vs Sentinels Issue #2" },
+      ],
       quantity: 0,
     },
     { name: "", photo: "" },
@@ -63,8 +60,6 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
   const dispatch = useDispatch();
 
   const { Modal, isShow, show, hide } = useModal();
-
-  const { cartComics } = useSelector((state: any) => state.layout);
 
   const [isAtLeast1078px] = useMediaQuery("(min-width: 840px)");
 
@@ -393,13 +388,18 @@ const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
                   e.preventDefault();
                   if (account) {
                     if (issues[id].quantity > 0) {
-                      dispatch(
-                        addCartComics({
-                          ...i,
-                          priceUSD: priceUSD,
-                          quantity: issues[id].quantity,
-                        }),
-                      );
+                      issues[id].issues.forEach((issue) => {
+                        dispatch(
+                          addCartComics({
+                            ...i,
+                            name: issue.name,
+                            idNFT: issue.id,
+                            priceUSD: priceUSD,
+                            quantity: issues[id].quantity,
+                          }),
+                        );
+                      });
+
                       toast.success("Your items has been added successfully");
                     } else {
                       toast.error(
@@ -527,14 +527,6 @@ const SliderItemMobile = ({
                       id: i.id,
                     }),
                   );
-                } else {
-                  dispatch(
-                    addCartComics({
-                      ...i,
-                      priceUSD: priceUSD,
-                      quantity: issues[id].quantity,
-                    }),
-                  );
                 }
               }}
             />
@@ -546,13 +538,17 @@ const SliderItemMobile = ({
                   e.preventDefault();
                   if (account) {
                     if (issues[id].quantity > 0) {
-                      dispatch(
-                        addCartComics({
-                          ...i,
-                          priceUSD: priceUSD,
-                          quantity: issues[id].quantity,
-                        }),
-                      );
+                      issues[id].issues.forEach((issue) => {
+                        dispatch(
+                          addCartComics({
+                            ...i,
+                            name: issue.name,
+                            idNFT: issue.id,
+                            priceUSD: priceUSD,
+                            quantity: issues[id].quantity,
+                          }),
+                        );
+                      });
                       toast.success("Your items has been added successfully");
                     } else {
                       toast.error(

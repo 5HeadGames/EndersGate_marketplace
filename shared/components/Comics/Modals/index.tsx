@@ -83,16 +83,18 @@ export const Modals = ({
     try {
       setMessageBuy(`Processing your purchase...`);
       const { ids, amounts, token } = {
-        ids: cartComics.map((item) => item.id),
+        ids: cartComics.map((item) => item.idNFT),
         amounts: cartComics.map((item) => item.quantity.toString()),
         token: tokenSelected,
       };
+
+      console.log(ids, amounts, token);
       let price = "0";
       const ERC20 = getContractCustom("ERC20", token, providerEth);
       const addressesAllowed = getTokensAllowed();
       if (
         tokenSelected ===
-        addressesAllowed.filter((item) => item.name == "MATIC")[0].address
+        addressesAllowed.filter((item) => item.name === "MATIC")[0].address
       ) {
         const Aggregator = getContractCustom(
           "Aggregator",
@@ -113,12 +115,6 @@ export const Modals = ({
           ) *
             10 ** 8) /
           priceMATIC;
-
-        const priceContract = await comics.methods
-          .getPrice(tokenSelected, cartComics[0].id, cartComics[0].quantity)
-          .call();
-
-        console.log(priceMATIC, preprice, priceContract);
 
         price = Web3.utils.toWei(
           (preprice + preprice * 0.00005).toFixed(10).toString(),
@@ -212,7 +208,7 @@ export const Modals = ({
               }
               onClick={item.onClick}
             >
-              <div className="flex items-center justify-start gap-2 w-full">
+              {/* <div className="flex items-center justify-start gap-2 w-full">
                 <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
                   <img
                     src={comic[item.id - 1]?.comic_banner}
@@ -222,7 +218,7 @@ export const Modals = ({
                 </div>
                 <div className="flex flex-col gap-1">
                   <h3 className={"text-md font-[700] uppercase"}>
-                    {comic[item.id - 1]?.name}
+                    {comic[item.id - 1].issues[item.idNFT]?.name}
                   </h3>
 
                   <div className="flex gap-2 items-end">
@@ -230,8 +226,8 @@ export const Modals = ({
                     <img src="icons/POLYGON.svg" className="w-6 h-6" alt="" />
                   </div>
                 </div>
-              </div>
-              <div className="flex gap-2 shrink-0">
+              </div> */}
+              {/* <div className="flex gap-2 shrink-0">
                 <div className="flex flex-col !shrink-0">
                   <h3 className={"text-sm font-[700] whitespace-nowrap w-24"}>
                     Price:
@@ -244,7 +240,7 @@ export const Modals = ({
                     {nFormatter(parseInt(item.priceUSD) / 10 ** 6)} USD{" "}
                   </h3>
                 </div>
-                <input
+                {/* <input
                   defaultValue={item.quantity}
                   type="number"
                   min={1}
@@ -262,16 +258,16 @@ export const Modals = ({
                     );
                     getPriceMatic();
                   }}
-                ></input>
-                <div
+                ></input> */}
+              {/* <div
                   className="rounded-full p-1 w-8 h-8 border border-transparent-color-gray-200 hover:bg-red-primary text-white shrink-0 cursor-pointer"
                   onClick={() => {
                     dispatch(removeFromCartComics({ id: item.id }));
                   }}
                 >
                   <XIcon></XIcon>
-                </div>
-              </div>
+                </div> 
+              </div> */}
             </div>
           );
         })}

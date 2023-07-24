@@ -3,7 +3,7 @@ import { Flex, Text, Image, useMediaQuery } from "@chakra-ui/react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import comicDetails from "utils/comicsData.json";
+import comicsByID from "@shared/comicsByNFTId.json";
 import Link from "next/link";
 
 function MyComics({ balance }) {
@@ -51,8 +51,9 @@ function MyComics({ balance }) {
               MY COMICS
             </Text>
           </Flex>
-          {comicDetails.filter((comic) => {
+          {comicsByID.filter((comic) => {
             let valid = false;
+            console.log(balance, comicsByID);
             balance.forEach((balance) => {
               if (balance.balance > 0 && balance.id === comic.id) {
                 valid = true;
@@ -61,7 +62,7 @@ function MyComics({ balance }) {
             return valid;
           }).length > 0 ? (
             <Slider {...settings} className="comic-slides">
-              {comicDetails
+              {comicsByID
                 .filter((comic) => {
                   let valid = false;
                   balance.forEach((balance) => {
@@ -73,7 +74,7 @@ function MyComics({ balance }) {
                 })
                 .map((item) => (
                   <Flex key={Math.random().toString()}>
-                    <Link href={`/comics/${item.nameLink}`}>
+                    <Link href={`/comics/${item.nameLink}/${item.issue}`}>
                       <Image
                         className="images-width-comic-series cursor-pointer"
                         src={item.comic_banner}
@@ -167,9 +168,9 @@ function MobileView() {
 
       <div className="added-comic-slider">
         <Slider {...settings}>
-          {comicDetails.map((item) => (
-            <Flex key={Math.random().toString()}>
-              <Link href={`/comics/${item.nameLink}`}>
+          {comicsByID.map((item) => (
+            <Flex key={item.nameLink + item.issue}>
+              <Link href={`/comics/${item.nameLink}/${item.issue}`}>
                 <Image
                   className="images-width-comic-series"
                   src={item.comic_banner}

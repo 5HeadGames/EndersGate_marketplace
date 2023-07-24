@@ -1,4 +1,4 @@
-import { XIcon } from "@heroicons/react/solid";
+import { PlusIcon, XIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
 import useMagicLink from "@shared/hooks/useMagicLink";
@@ -30,7 +30,7 @@ export const useCartComicsModal = () => {
       cart,
       removeAll,
       messageBuy,
-      itemsCart,
+      // itemsCart,
       priceMatic,
       isMatic,
       tokensAllowed,
@@ -40,7 +40,6 @@ export const useCartComicsModal = () => {
       buy,
       noClose,
     }) => {
-      console.log("cart noclose", noClose);
       return (
         <Transition.Root show={isShow} as={Fragment}>
           <Dialog
@@ -92,7 +91,7 @@ export const useCartComicsModal = () => {
                       ></XIcon>
                     </div>
                     <div className="text-center text-xl font-bold text-white">
-                      Complete checkout
+                      Your cart
                     </div>
                     {cart.length ? (
                       <div className="flex flex-col items-center border border-transparent-color-gray-200 rounded-xl md:min-w-[500px] md:w-max py-2">
@@ -117,10 +116,30 @@ export const useCartComicsModal = () => {
                             Clear all
                           </h2>
                         </div>
-                        <div className="px-4 py-2 pb-4 gap-2 flex flex-col items-center w-full">
-                          {itemsCart.map((item: any, index: any) => {
-                            return item;
-                          })}
+                        <div className="px-2 pb-4">
+                          <div className="gap-2 flex items-center justify-center w-full rounded-xl border border-overlay-border p-4">
+                            <div className="flex flex-col items-center justify-center gap-2 w-[210px]">
+                              <h2 className="text-white font-bold text-center">
+                                {cart[0].name}
+                              </h2>
+                              <img
+                                src="https://bafybeientsigvd3uqtjvpxer2rfr3bxabhu657do7y6g6spr7srv6xrqy4.ipfs.nftstorage.link/AVS%20COVER.webp"
+                                alt=""
+                                className="w-[200px]"
+                              />
+                            </div>
+                            <img src="/icons/plus.svg" alt="" />
+                            <div className="flex flex-col items-center justify-center gap-2 w-[210px]">
+                              <h2 className="text-white font-bold text-center">
+                                {cart[1].name}
+                              </h2>
+                              <img
+                                src="https://bafybeientsigvd3uqtjvpxer2rfr3bxabhu657do7y6g6spr7srv6xrqy4.ipfs.nftstorage.link/AVS%20COVER.webp"
+                                alt=""
+                                className="w-[200px]"
+                              />
+                            </div>
+                          </div>
                         </div>
                         <div className="text-md text-white font-bold w-full text-center">
                           Chose currency

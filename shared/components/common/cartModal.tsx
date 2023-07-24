@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { XIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
@@ -155,7 +156,7 @@ export const useCartModal = () => {
                             );
                           })}
                         </div>
-                        <div className="flex gap-6 justify-between w-full text-md text-xl py-2 px-8 border-y border-transparent-color-gray-200 bg-transparent w-full">
+                        <div className="flex gap-6 justify-between w-full text-md text-xl py-2 px-8 border-y border-transparent-color-gray-200 bg-transparent">
                           <div className="flex gap-1 items-center">
                             <h3 className="text-sm  text-white font-[700]">
                               Total price:
