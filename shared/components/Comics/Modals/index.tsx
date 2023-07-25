@@ -24,6 +24,7 @@ import { findSum, nFormatter } from "../../common/specialFields/SpecialFields";
 import { getDatabase, ref, set } from "firebase/database";
 import { toast } from "react-hot-toast";
 import useMagicLink from "@shared/hooks/useMagicLink";
+import { LoadingOutlined } from "@ant-design/icons";
 
 export const Modals = ({
   priceUSD,
@@ -276,7 +277,7 @@ const CartComic = ({
                     {cart[1]?.name}
                   </h2>
                   <img
-                    src="https://bafybeicvxsksypr4z6bkwey2dbtmzmm7dmu2eienae5zl25r6nb5u64kuu.ipfs.nftstorage.link/HVO_COVER.webp"
+                    src="/images/HvOIssue_2.webp"
                     alt=""
                     className="w-[200px]"
                   />
@@ -359,8 +360,13 @@ const CartComic = ({
             </div>
 
             {messageBuy !== "" ? (
-              <div className="py-2 text-lg text-white font-bold text-center w-full">
-                {messageBuy}
+              <div className="absolute m-auto top-0 bottom-0 left-0 right-0 w-full h-full flex items-center justify-center bg-[#000000aa]">
+                <div className="flex flex-col items-center justify-center gap-2 text-4xl text-white font-bold text-center p-2 rounded-xl bg-overlay-3 w-min border border-overlay-border">
+                  <span className="whitespace-nowrap text-lg">
+                    {messageBuy}
+                  </span>{" "}
+                  <LoadingOutlined />
+                </div>
               </div>
             ) : (
               ""

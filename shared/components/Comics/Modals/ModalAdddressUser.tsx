@@ -34,7 +34,7 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
     <Modal isShow={isShow} noClose={noClose} withoutX>
       <div
         style={{ width: "90vw", maxWidth: "500px" }}
-        className="relative bg-overlay flex flex-col items-center gap-4 jusify-center shadow-2xl rounded-2xl mt-16"
+        className="relative bg-overlay flex flex-col items-center gap-4 jusify-center shadow-2xl rounded-2xl mt-36"
       >
         <Image
           src="/images/comicsbg.png"
