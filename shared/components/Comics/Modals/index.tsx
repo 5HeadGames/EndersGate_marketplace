@@ -193,7 +193,7 @@ export const Modals = ({
           setPreBuy(true);
         }}
       >
-        {congrats ? (
+        {!congrats ? (
           <Congrats hide={hide} />
         ) : (
           <CartComic
@@ -454,7 +454,13 @@ const Congrats = ({ hide }) => {
         <p className="text-center text-white text-lg py-2">
           Share this with your friends and inform them about the waitlist!
         </p>
-        <img src="/images/share.png" className="h-12 cursor-pointer" alt="" />
+        <a
+          href="https://twitter.com/intent/tweet?text=I'm so excited to announce that I just have minted Humans vs Ogres Issues 1 and 2 Comics from Enders Gate! Get yours on: https://marketplace.endersgate.gg/comics"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="/images/share.png" className="h-12 cursor-pointer" alt="" />
+        </a>
         <img
           src="/images/view_comics.png"
           className="h-12 cursor-pointer"
