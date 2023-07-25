@@ -41,7 +41,7 @@ function MyComics({ balance }) {
     <div className="sliders-container">
       {isAtLeast1078px ? (
         <>
-          <Flex mt={20} mb={20} justifyContent={"center"}>
+          <Flex mt={20} mb={20} justifyContent={"center"} id="my_comics">
             <Text
               fontSize={["30px", "50px", "65px", "4xl"]}
               ml={3}

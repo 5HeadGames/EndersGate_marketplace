@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +26,10 @@ import { getDatabase, ref, set } from "firebase/database";
 import { toast } from "react-hot-toast";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { LoadingOutlined } from "@ant-design/icons";
+import { Button } from "@shared/components/common/button";
+import { Image } from "@chakra-ui/react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export const Modals = ({
   priceUSD,
@@ -47,6 +52,7 @@ export const Modals = ({
 
   const [tokenSelected, setTokenSelected] = React.useState("");
   const [messageBuy, setMessageBuy] = React.useState("");
+  const [congrats, setCongrats] = React.useState(false);
 
   const tokensAllowed = getTokensAllowedEth();
 
@@ -162,9 +168,9 @@ export const Modals = ({
       set(ref(db, "comics/" + account), dataAddress);
       setPreBuy(true);
       await getComicsNFTs();
-      hide();
       hideAddress();
       dispatch(removeAllComics());
+      setCongrats(true);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -187,26 +193,30 @@ export const Modals = ({
           setPreBuy(true);
         }}
       >
-        <CartComic
-          {...{
-            hide,
-            cart: cartComics,
-            tokensAllowed,
-            tokenSelected,
-            setTokenSelected,
-            priceMatic,
-            isMatic: true,
-            buy: preBuy
-              ? () => {
-                  hide();
-                  setTimeout(() => {
-                    showAddress();
-                  }, 1000);
-                }
-              : buyComics,
-            messageBuy,
-          }}
-        />
+        {congrats ? (
+          <Congrats hide={hide} />
+        ) : (
+          <CartComic
+            {...{
+              hide,
+              cart: cartComics,
+              tokensAllowed,
+              tokenSelected,
+              setTokenSelected,
+              priceMatic,
+              isMatic: true,
+              buy: preBuy
+                ? () => {
+                    hide();
+                    setTimeout(() => {
+                      showAddress();
+                    }, 1000);
+                  }
+                : buyComics,
+              messageBuy,
+            }}
+          />
+        )}
       </Modal>
     </>
   );
@@ -399,6 +409,61 @@ const CartComic = ({
             There aren't items in your cart.
           </div>
         )}
+      </div>
+    </div>
+  );
+};
+
+const Congrats = ({ hide }) => {
+  const router = useRouter();
+
+  return (
+    <div
+      style={{ width: "90vw", maxWidth: "375px" }}
+      className="relative bg-overlay flex flex-col items-center gap-4 jusify-center shadow-2xl rounded-2xl mt-36"
+    >
+      <Image
+        src="/images/comicsbg.png"
+        className="w-full opacity-25 absolute top-0"
+        alt=""
+      />
+      <Image
+        src="/images/comics.svg"
+        className="absolute"
+        width={"275px"}
+        top={"-175px"}
+        alt=""
+      />
+      <div className="absolute h-full w-full rounded-2xl bg-gradient-to-b from-transparent to-overlay px-2 from-0% to-30% "></div>
+      <div className="absolute top-2 right-2 flex justify-end w-full py-2">
+        <XIcon
+          className="text-white w-5 cursor-pointer p-[2px] rounded-full bg-overlay border border-white"
+          onClick={() => {
+            hide();
+          }}
+        />
+      </div>
+      <div className="flex flex-col items-center justify-center relative rounded-full px-6 pt-16 pb-8 gap-2">
+        <h2 className="text-white text-center font-bold text-5xl text-red-alert">
+          Success!
+        </h2>{" "}
+        <p className="text-center text-white text-lg py-4">
+          You have just joined the Enders Gate waitlist to mint Issues 1 & 2 of
+          Humans vs Ogres comic books!
+        </p>
+        <p className="text-center text-white text-lg py-2">
+          Share this with your friends and inform them about the waitlist!
+        </p>
+        <img src="/images/share.png" className="h-12 cursor-pointer" alt="" />
+        <img
+          src="/images/view_comics.png"
+          className="h-12 cursor-pointer"
+          alt=""
+          onClick={() => {
+            hide();
+            router.push("/comics#my_comics");
+          }}
+        />
       </div>
     </div>
   );
