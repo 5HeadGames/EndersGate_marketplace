@@ -37,9 +37,7 @@ export const ComicSlider = () => {
 
   const comicImage = currentComic?.issues[issue as string]?.pages;
 
-  const sliderImage = comicImage?.pages_pannels?.filter(
-    (page) => page.isPannal === false,
-  );
+  const sliderImage = comicImage?.pages_pannels;
 
   console.log(comicImage, sliderImage);
 
