@@ -1,4 +1,3 @@
-import useFullscreenStatus from "@shared/components/common/onFullScreen";
 import { authStillValid } from "@shared/components/utils";
 import { getAddressesEth, getContractCustom } from "@shared/web3";
 import { useWeb3React } from "@web3-react/core";
@@ -10,10 +9,7 @@ import comicDetails from "../../../comics.json";
 import Reader from "./ComicsReader";
 
 export const ComicSlider = () => {
-  const maximizableElementScreen = useRef(null);
   const [isLoading, setIsLoading] = React.useState(true);
-
-  const { addToast } = useToasts();
 
   const { name: comicName } = useRouter().query;
   const router = useRouter();

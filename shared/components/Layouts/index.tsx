@@ -23,7 +23,6 @@ import { Dropdown } from "../common/dropdown/dropdown";
 import { useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import { WALLETS } from "@shared/utils/connection/utils";
-import useFullscreenStatus from "../common/onFullScreen";
 import { authStillValid } from "../utils";
 import { Cart } from "./cart";
 
@@ -137,14 +136,6 @@ export default function AppLayout({ children }) {
   const maximizableElement = useRef(null);
 
   let isFullscreen;
-
-  try {
-    [isFullscreen] = useFullscreenStatus(maximizableElement);
-  } catch (e) {
-    addToast(
-      "Fullscreen is unsupported by this browser, please try another browser.",
-    );
-  }
 
   React.useEffect(() => {
     if (relogin || isLogged) {
