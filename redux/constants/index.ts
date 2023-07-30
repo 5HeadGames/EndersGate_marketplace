@@ -35,4 +35,7 @@ export const GET_LISTED_NFT = "get_listed_nft";
 export const GET_ASSETS = "get_assets";
 export const GET_VOLUME = "get_volume";
 
+export const BUY_NFT_FINDORA = "buy_nft_findora";
+export const SELL_NFT_FINDORA = "sell_nft_findora";
+
 export const SET_NETWORK = "set_network";

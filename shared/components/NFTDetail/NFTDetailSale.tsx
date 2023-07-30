@@ -11,7 +11,12 @@ import {
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useAppDispatch } from "redux/store";
-import { onBuyERC1155, onLoadSales, onGetAssets } from "@redux/actions";
+import {
+  onBuyERC1155,
+  onLoadSales,
+  onGetAssets,
+  onBuyERC1155Findora,
+} from "@redux/actions";
 import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import { AddressText, Type } from "../common/specialFields/SpecialFields";
@@ -80,21 +85,38 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     try {
       setMessage("Buying tokens");
       const { pack, endersGate } = getAddresses();
-      await dispatch(
-        onBuyERC1155({
-          seller: sale.seller,
-          amount: buyNFTData,
-          bid: Web3.utils
-            .toBN(sale.price)
-            .mul(Web3.utils.toBN(buyNFTData))
-            .toString(),
-          tokenId: id,
-          token: tokenSelected.address,
-          provider: provider.provider,
-          nftContract: isPack ? pack : endersGate,
-          user: user,
-        }),
-      );
+      if (CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]?.name.includes("Findora")) {
+        await dispatch(
+          onBuyERC1155Findora({
+            seller: sale.seller,
+            amount: buyNFTData,
+            bid: Web3.utils
+              .toBN(sale.price)
+              .mul(Web3.utils.toBN(buyNFTData))
+              .toString(),
+            tokenId: id,
+            provider: provider.provider,
+            nftContract: isPack ? pack : endersGate,
+            user: user,
+          }),
+        );
+      } else {
+        await dispatch(
+          onBuyERC1155({
+            seller: sale.seller,
+            amount: buyNFTData,
+            bid: Web3.utils
+              .toBN(sale.price)
+              .mul(Web3.utils.toBN(buyNFTData))
+              .toString(),
+            tokenId: id,
+            token: tokenSelected.address,
+            provider: provider.provider,
+            nftContract: isPack ? pack : endersGate,
+            user: user,
+          }),
+        );
+      }
     } catch {}
     setMessage("");
     await getSale();

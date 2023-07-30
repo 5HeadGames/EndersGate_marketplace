@@ -57,7 +57,7 @@ export const getBalance = async (address: string) => {
 };
 
 export const getAddresses = () => {
-  const testAddresses = require("../../Contracts/addresses.mumbai.json");
+  const testAddresses = require("../../Contracts/addresses.anvil.json");
   const addresses = require("../../Contracts/addresses.matic.json");
 
   return process.env.NEXT_PUBLIC_CHAIN_ID === "137" ? addresses : testAddresses;

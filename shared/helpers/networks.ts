@@ -28,6 +28,19 @@ export const networkConfigs = {
     blockExplorerURl: "https://mumbai.polygonscan.com/",
     currencySymbol: "MATIC",
   },
+
+  1205: {
+    name: "Findora Game Specific Chain Testnet",
+    rpc: process.env["NEXT_PUBLIC_POLYGON_RPC"] || publicRpc["polygon"],
+    blockExplorerURl: "https://gsc-testnet.evm.findorascan.io/",
+    currencySymbol: "TRPG",
+  },
+  1206: {
+    name: "Polygon Mumbai",
+    rpc: process.env["NEXT_PUBLIC_POLYGON_RPC"] || publicRpc["polygon"],
+    blockExplorerURl: "https://mumbai.polygonscan.com/",
+    currencySymbol: "TRPG",
+  },
 };
 
 export const getNativeByChain = (chainId) =>

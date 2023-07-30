@@ -133,8 +133,6 @@ export default function AppLayout({ children }) {
   );
   const dispatch = useAppDispatch();
 
-  const maximizableElement = useRef(null);
-
   let isFullscreen;
 
   React.useEffect(() => {

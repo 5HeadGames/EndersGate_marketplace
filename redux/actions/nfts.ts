@@ -331,6 +331,78 @@ export const onBuyERC1155 = createAsyncThunk(
   },
 );
 
+export const onSellERC1155Findora = createAsyncThunk(
+  actionTypes.SELL_NFT_FINDORA,
+  async function prepare(args: {
+    from: string;
+    tokenId: number | string;
+    startingPrice: number | string;
+    amount: number | string;
+    duration: string;
+    address: string;
+    provider: any;
+    // user: any;
+  }) {
+    const {
+      from,
+      tokenId,
+      startingPrice,
+      amount,
+      duration,
+      address,
+      // user,
+      provider,
+    } = args;
+
+    try {
+      const { marketplace } = getAddresses();
+
+      const marketplaceContract = getContractCustom(
+        "ClockSaleFindora",
+        marketplace,
+        provider,
+      );
+
+      const { transactionHash } = await marketplaceContract.methods
+        .createSale(address, tokenId, startingPrice, amount, duration)
+        .send({ from: from });
+
+      return { from, tokenId, startingPrice, amount, duration, address };
+    } catch (err) {
+      console.log({ err });
+    }
+  },
+);
+
+export const onBuyERC1155Findora = createAsyncThunk(
+  actionTypes.BUY_NFT_FINDORA,
+  async function prepare(args: {
+    seller: string;
+    tokenId: number | string;
+    bid: string | number;
+    amount: string | number;
+    nftContract: string;
+    provider: any;
+    user: any;
+  }) {
+    const { seller, tokenId, amount, bid, provider, user } = args;
+    try {
+      const { marketplace } = getAddresses();
+      const marketplaceContract = getContractCustom(
+        "ClockSaleFindora",
+        marketplace,
+        provider,
+      );
+      await marketplaceContract.methods
+        .buy(tokenId, amount)
+        .send({ from: user, value: bid });
+    } catch (err) {
+      console.log({ err });
+    }
+    return { seller, tokenId, amount, bid, provider };
+  },
+);
+
 export const onCancelSale = createAsyncThunk(
   actionTypes.CANCEL_NFT,
   async function prepare(args: {

@@ -212,7 +212,7 @@ export const PackOpening = ({
           <div
             className={clsx(
               { hidden: videoPlaying !== 3 },
-              "absolute bottom-0 right-0 m-10 mb-20 cursor-pointer titleNext font-bold",
+              "absolute bottom-0 right-0 m-10 mb-20 z-[10000] cursor-pointer titleNext font-bold",
             )}
             onClick={() => {
               setStartFlashingPack(true);

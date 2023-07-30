@@ -60,6 +60,25 @@ export function getAddChainParameters(
 export const CHAINS: {
   [chainId: number]: any;
 } = {
+  1205: {
+    urls: [`https://gsc-testnet.prod.findora.org:8545`],
+    name: "Findora GSC Testnet",
+    nativeCurrency: MATIC,
+    blockExplorerUrls: ["https://gsc-testnet.evm.findorascan.io/"],
+    blockExplorer: "https://gsc-testnet.evm.findorascan.io/",
+  },
+  1206: {
+    urls: [
+      process.env.infuraKey
+        ? `https://polygon-mainnet.infura.io/v3/${process.env.infuraKey}`
+        : "",
+      "https://polygon-rpc.com",
+    ].filter((url) => url !== ""),
+    name: "Polygon Mainnet",
+    nativeCurrency: MATIC,
+    blockExplorerUrls: ["https://mumbai.polygonscan.com"],
+    blockExplorer: "https://polygonscan.com",
+  },
   137: {
     urls: [
       process.env.infuraKey

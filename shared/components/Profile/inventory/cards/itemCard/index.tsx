@@ -292,17 +292,17 @@ export const CardInventory = (props) => {
                     className={clsx({ hidden: !isFlipped }, "cardPreview")}
                     src={
                       props.type === "reaction" || props.type === "action"
-                        ? "./images/ACTION_REACTION_CARD_BACK.png"
+                        ? "https://bafybeihcpwv3p6s3v2ud75snxe3yuuvv5yu7mw2t7tkmyya4fa475sqyay.ipfs.nftstorage.link/"
                         : props.type === "wood"
-                        ? "./images/bert_kurtback.png"
+                        ? "https://bafybeicuhzudy54dbu6ptekwea5hfxyl7zbv2il7tyht7gkolzlklumnva.ipfs.nftstorage.link/"
                         : props.type === "stone"
-                        ? "./images/CardStoneBack.png"
+                        ? "https://bafybeidcxv7rxdyat3mh642vcmouu4kopyq7tnnvmx65kt7dge425c4t7e.ipfs.nftstorage.link/"
                         : props.type === "iron"
-                        ? "./images/cardsilver.png"
+                        ? "https://bafybeihusx7vstfvzjltvdnyl6njvntpdo2h5omkwjrdphhd2liowfewmu.ipfs.nftstorage.link/"
                         : props.type === "gold"
-                        ? "./images/CardBack.png"
+                        ? "https://bafybeiam2levzdsrwxi7pkwbq6hlok3xk6owd3o66f2vzyqxwd7euxfgvu.ipfs.nftstorage.link/"
                         : props.type === "legendary"
-                        ? "./images/redback.png"
+                        ? "https://bafybeih2vpmzogfeinhrojfc44tkvzmd7kv5naimntmzfz3lc4uwcpiubm.ipfs.nftstorage.link/"
                         : props.type === "avatar"
                         ? "./images/backAvatar.png"
                         : props.icon

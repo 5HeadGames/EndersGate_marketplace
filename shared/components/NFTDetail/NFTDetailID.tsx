@@ -9,7 +9,12 @@ import { useRouter } from "next/router";
 import Web3 from "web3";
 
 import { useAppDispatch, useAppSelector } from "redux/store";
-import { onSellERC1155, onLoadSales, onGetAssets } from "@redux/actions";
+import {
+  onSellERC1155,
+  onLoadSales,
+  onGetAssets,
+  onSellERC1155Findora,
+} from "@redux/actions";
 import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import {
@@ -24,14 +29,12 @@ import { convertArrayCards } from "../common/convertCards";
 import clsx from "clsx";
 import Styles from "./styles.module.scss";
 import Tilt from "react-parallax-tilt";
-import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
-import { DropdownActions } from "../common/dropdownActions/dropdownActions";
 import { AddressText } from "../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
 import { CHAINS } from "../chains";
 
-const { marketplace, endersGate } = getAddresses();
+const { endersGate } = getAddresses();
 
 const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { account: user, provider } = useWeb3React();
@@ -58,7 +61,6 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { Modal, show, hide, isShow } = useModal();
 
   const sellNft = async () => {
-    console.log(NFTs.balanceCards, id);
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
       return alert("You don't have enough tokens to sell");
     }
@@ -83,38 +85,53 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         provider.provider,
       );
 
-      console.log("xd", endersgateInstance);
+      if (CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]?.name.includes("Findora")) {
+        await dispatch(
+          onSellERC1155Findora({
+            address: endersGate,
+            from: user,
+            startingPrice: Web3.utils.toWei(
+              sellNFTData.startingPrice.toString(),
+              "ether",
+            ),
+            amount: sellNFTData.amount,
+            tokenId: tokenId,
+            duration: sellNFTData.duration.toString(),
+            provider: provider.provider,
+            // user: user,
+          }),
+        );
+      } else {
+        const isApprovedForAll = await endersgateInstance.methods
+          .isApprovedForAll(user, marketplace)
+          .call();
+        if (isApprovedForAll === false) {
+          setMessage("Allowing us to sell your tokens");
+          await approveERC1155({
+            provider: provider.provider,
+            from: user,
+            to: marketplace,
+            address: endersGate,
+          });
+        }
+        setMessage("Listing your tokens");
 
-      const isApprovedForAll = await endersgateInstance.methods
-        .isApprovedForAll(user, marketplace)
-        .call();
-      if (isApprovedForAll == false) {
-        setMessage("Allowing us to sell your tokens");
-        await approveERC1155({
-          provider: provider.provider,
-          from: user,
-          to: marketplace,
-          address: endersGate,
-        });
+        await dispatch(
+          onSellERC1155({
+            address: endersGate,
+            from: user,
+            startingPrice: (sellNFTData.startingPrice * 10 ** 6).toString(),
+            amount: sellNFTData.amount,
+            tokenId: tokenId,
+            tokens: tokensSelected,
+            duration: sellNFTData.duration.toString(),
+            provider: provider.provider,
+            // user: user,
+          }),
+        );
       }
-      setMessage("Listing your tokens");
-      console.log("que ta pasando");
-
-      await dispatch(
-        onSellERC1155({
-          address: endersGate,
-          from: user,
-          startingPrice: (sellNFTData.startingPrice * 10 ** 6).toString(),
-          amount: sellNFTData.amount,
-          tokenId: tokenId,
-          tokens: tokensSelected,
-          duration: sellNFTData.duration.toString(),
-          provider: provider.provider,
-          // user: user,
-        }),
-      );
     } catch (err) {
-      console.log({ err }, "error mamawebo");
+      console.log({ err });
     }
 
     dispatch(onLoadSales());
@@ -281,7 +298,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           </div>
           <div className="w-full flex xl:flex-row flex-col  gap-4 justify-center">
             <div className="flex flex-col gap-2">
-              <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
+              <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer overflow-hidden border border-gray-500">
                 <div
                   className="absolute top-2 right-2 z-10 text-white text-2xl p-1"
                   onClick={() => setFlippedCard((prev) => !prev)}
@@ -363,7 +380,13 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       <div className="flex flex-col gap-4 w-full items-center px-8">
                         <div className="flex gap-4 w-full justify-between items-center">
                           <label className="text-primary font-bold whitespace-nowrap">
-                            Price per NFT (USD)
+                            Price per NFT (
+                            {CHAINS[
+                              process.env.NEXT_PUBLIC_CHAIN_ID
+                            ]?.name.includes("Findora")
+                              ? "TGRP"
+                              : "USD"}
+                            )
                           </label>
                           <input
                             type="number"
@@ -429,80 +452,94 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             }}
                           />
                         </div>
-                        <div className="text-[11px] w-full text-left text-white font-bold">
-                          Select at least 1 currency you want to accept as a
-                          payment for this listing
-                        </div>
-                        <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
-                          {tokensAllowed.map((item, index) => {
-                            return (
-                              <div
-                                className={clsx(
-                                  "w-28 text-[14px] flex items-center justify-center border gap-2 rounded-full cursor-pointer p-2",
-                                  {
-                                    "bg-overlay-border border-none":
-                                      !tokensSelected.includes(item.address),
-                                  },
-                                  {
-                                    "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
-                                      tokensSelected.includes(item.address),
-                                  },
+                        {CHAINS[
+                          process.env.NEXT_PUBLIC_CHAIN_ID
+                        ]?.name.includes("Findora") ? (
+                          ""
+                        ) : (
+                          <>
+                            {" "}
+                            <div className="text-[11px] w-full text-left text-white font-bold">
+                              Select at least 1 currency you want to accept as a
+                              payment for this listing
+                            </div>
+                            <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
+                              {tokensAllowed.map((item, index) => {
+                                return (
+                                  <div
+                                    className={clsx(
+                                      "w-28 text-[14px] flex items-center justify-center border gap-2 rounded-full cursor-pointer p-2",
+                                      {
+                                        "bg-overlay-border border-none":
+                                          !tokensSelected.includes(
+                                            item.address,
+                                          ),
+                                      },
+                                      {
+                                        "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
+                                          tokensSelected.includes(item.address),
+                                      },
+                                    )}
+                                    onClick={() => {
+                                      if (
+                                        tokensSelected.includes(item.address)
+                                      ) {
+                                        setTokensSelected((prev) =>
+                                          prev.filter(
+                                            (itemNew) =>
+                                              item.address !== itemNew,
+                                          ),
+                                        );
+                                      } else {
+                                        setTokensSelected((prev) => {
+                                          const newArray = [];
+                                          prev.forEach((item2) =>
+                                            newArray.push(item2),
+                                          );
+                                          newArray.push(item.address);
+                                          return newArray;
+                                        });
+                                      }
+                                    }}
+                                  >
+                                    <img
+                                      src={item.logo}
+                                      className="w-6 h-6"
+                                      alt=""
+                                    />
+                                    <h2 className="text-white text-md font-bold">
+                                      {item.name}
+                                    </h2>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            <div className="py-6">
+                              <div className="text-primary text-[12px] text-center flex flex-col items-center justify-center">
+                                {message ===
+                                "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
+                                  <span className="text-left w-full">
+                                    <span className="font-bold">Note:</span>{" "}
+                                    {message}
+                                  </span>
+                                ) : (
+                                  <>
+                                    <span className="flex gap-4 items-center justify-center">
+                                      {message} <LoadingOutlined />
+                                    </span>
+                                    <span className="flex gap-4 mt-6 items-center justify-center">
+                                      {message === "Listing your tokens" &&
+                                        "Last Transaction"}
+                                      {message ===
+                                        "Allowing us to sell your tokens" &&
+                                        "Transaction 1/2"}
+                                    </span>
+                                  </>
                                 )}
-                                onClick={() => {
-                                  if (tokensSelected.includes(item.address)) {
-                                    setTokensSelected((prev) =>
-                                      prev.filter(
-                                        (itemNew) => item.address !== itemNew,
-                                      ),
-                                    );
-                                  } else {
-                                    setTokensSelected((prev) => {
-                                      const newArray = [];
-                                      prev.forEach((item2) =>
-                                        newArray.push(item2),
-                                      );
-                                      newArray.push(item.address);
-                                      return newArray;
-                                    });
-                                  }
-                                }}
-                              >
-                                <img
-                                  src={item.logo}
-                                  className="w-6 h-6"
-                                  alt=""
-                                />
-                                <h2 className="text-white text-md font-bold">
-                                  {item.name}
-                                </h2>
                               </div>
-                            );
-                          })}
-                        </div>
-                        <div className="py-6">
-                          <div className="text-primary text-[12px] text-center flex flex-col items-center justify-center">
-                            {message ===
-                            "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
-                              <span className="text-left w-full">
-                                <span className="font-bold">Note:</span>{" "}
-                                {message}
-                              </span>
-                            ) : (
-                              <>
-                                <span className="flex gap-4 items-center justify-center">
-                                  {message} <LoadingOutlined />
-                                </span>
-                                <span className="flex gap-4 mt-6 items-center justify-center">
-                                  {message === "Listing your tokens" &&
-                                    "Last Transaction"}
-                                  {message ===
-                                    "Allowing us to sell your tokens" &&
-                                    "Transaction 1/2"}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </div>
+                            </div>
+                          </>
+                        )}
                         <Button
                           decoration="fill"
                           className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
