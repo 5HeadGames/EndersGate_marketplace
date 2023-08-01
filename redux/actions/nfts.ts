@@ -20,6 +20,8 @@ import {
   MAINNET_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
 } from "@shared/components/chains";
+import { useToast } from "@chakra-ui/react";
+import { findSum } from "@shared/components/common/specialFields/SpecialFields";
 
 const getCardSold = (successfulSales: Sale[]) => {
   return successfulSales?.reduce(
@@ -317,6 +319,163 @@ export const onSellERC1155 = createAsyncThunk(
     } catch (err) {
       console.log({ err });
     }
+  },
+);
+
+export const onBuyFromShop = createAsyncThunk(
+  actionTypes.BUY_NFT_SHOP,
+  async function prepare(args: {
+    blockchain: string;
+    account: string;
+    tokenSelected: string;
+    provider: any;
+    setMessageBuy: any;
+    cartShop: any[];
+  }) {
+    const {
+      account,
+      tokenSelected,
+      provider,
+      blockchain,
+      setMessageBuy,
+      cartShop,
+    } = args;
+
+    try {
+      const { shop: shopAddress, MATICUSD: NATIVE_TO_USD } =
+        getAddresses(blockchain);
+
+      console.log("a1");
+
+      const shop = await getContractCustom("Shop", shopAddress, provider);
+      const tokensAllowed = getTokensAllowed();
+
+      console.log("a2");
+
+      setMessageBuy(`Processing your purchase...`);
+
+      const { amounts, token, tokensId } = {
+        amounts: cartShop.map((item) => item.quantity),
+        token: tokenSelected,
+        tokensId: cartShop.map((item) => item.id),
+      };
+
+      let price = "0";
+      const ERC20 = getContractCustom("ERC20", token, provider);
+      const addressesAllowed = getTokensAllowed();
+      if (
+        tokenSelected ===
+        addressesAllowed.filter((item) => item.name === "MATIC")[0].address
+      ) {
+        const Aggregator = getContractCustom(
+          "Aggregator",
+          NATIVE_TO_USD,
+          provider,
+        );
+        const priceMATIC = await Aggregator.methods.latestAnswer().call();
+        const preprice =
+          (cartShop
+            ?.map((item, i) => {
+              return (parseInt(item.price) / 10 ** 6) * item.quantity;
+            })
+            .reduce((item, acc) => {
+              return item + acc;
+            }) *
+            10 ** 8) /
+          priceMATIC;
+        price = Web3.utils.toWei(
+          (preprice + preprice * 0.05).toString(),
+          "ether",
+        );
+        await shop.methods
+          .buyBatch(tokensId, amounts, token)
+          .send({ from: account, value: price });
+      } else {
+        const allowance = await ERC20.methods
+          .allowance(account, shopAddress)
+          .call();
+
+        if (allowance < 1000000000000) {
+          setMessageBuy(
+            `Increasing the allowance of ${
+              tokensAllowed.filter((item) => item.address === tokenSelected)[0]
+                .name
+            } 1/2`,
+          );
+          await ERC20.methods
+            .increaseAllowance(
+              shopAddress,
+              "1000000000000000000000000000000000000000000000000",
+            )
+            .send({
+              from: account,
+            });
+          setMessageBuy("Buying your NFT(s) 2/2");
+          await shop.methods
+            .buyBatch(tokensId, amounts, tokenSelected)
+            .send({ from: account });
+        } else {
+          setMessageBuy("Buying your NFT(s)");
+          await shop.methods
+            .buyBatch(tokensId, amounts, tokenSelected)
+            .send({ from: account });
+        }
+      }
+    } catch (err) {
+      console.log({ err });
+      return { err };
+    }
+    return { account, provider };
+  },
+);
+
+export const onBuyFromShopNative = createAsyncThunk(
+  actionTypes.BUY_NFT_SHOP_FINDORA,
+  async function prepare(args: {
+    blockchain: string;
+    account: string;
+    tokenSelected: string;
+    provider: any;
+    setMessageBuy: any;
+    cartShop: any[];
+  }) {
+    const {
+      account,
+      tokenSelected,
+      provider,
+      blockchain,
+      setMessageBuy,
+      cartShop,
+    } = args;
+
+    try {
+      const { shop: shopAddress } = getAddresses(blockchain);
+
+      const shop = await getContractCustom(
+        "ShopFindora",
+        shopAddress,
+        provider,
+      );
+      setMessageBuy(`Processing your purchase...`);
+
+      const { amounts, token, tokensId, bid } = {
+        amounts: cartShop.map((item) => item.quantity),
+        token: tokenSelected,
+        tokensId: cartShop.map((item) => item.id),
+        bid: cartShop
+          .map((item) => (item.price * item.quantity).toString())
+          .reduce((acc, item) => findSum(acc, item)),
+      };
+
+      console.log(amounts, token, tokensId, bid);
+
+      await shop.methods
+        .buyBatch(tokensId, amounts)
+        .send({ from: account, value: bid });
+    } catch (err) {
+      console.log({ err });
+    }
+    return { account, provider };
   },
 );
 

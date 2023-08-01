@@ -6,6 +6,7 @@ import { getAddresses, getContractCustom } from "@shared/web3";
 import { PackOpeningComponent } from "@shared/components/PackOpening/PackOpeningComponent";
 import { onGetAssets } from "@redux/actions";
 import { useBlockchain } from "@shared/context/useBlockchain";
+import { CHAIN_IDS_BY_NAME, CHAINS } from "@shared/components/chains";
 
 const Packs = () => {
   const [contract, setContract] = useState(null);
@@ -18,7 +19,7 @@ const Packs = () => {
 
   const { endersGate, pack } = getAddresses(blockchain);
 
-  const { ethAddress, provider, networkId } = useSelector(
+  const { ethAddress, provider } = useSelector(
     (state: any) => state.layout.user,
   );
 
@@ -29,11 +30,7 @@ const Packs = () => {
   }, [NFTContract, provider]);
 
   const updateHistory = async () => {
-    const web3 = new Web3(
-      networkId !== "137"
-        ? "https://polygon-mumbai.g.alchemy.com/v2/HxxZ-aFZZPrlenpzbC_UdAMg-4tN4UzM"
-        : "https://nd-031-365-435.p2pify.com/00d23c83da737df7693dceffb182e42c",
-    );
+    const web3 = new Web3(CHAINS[CHAIN_IDS_BY_NAME[blockchain]].urls[0]);
     const block = await web3.eth.getBlockNumber();
     const eventsTransfer = await NFTContract.getPastEvents("TransferSingle", {
       filter: {

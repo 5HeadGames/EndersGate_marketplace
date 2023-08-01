@@ -1,5 +1,6 @@
 import ClockSale from "./ClockSaleMultitoken.json";
 import ClockSaleFindora from "./ClockSaleFindora.json";
+import ShopFindora from "./ClockSaleOwnableFindora.json";
 import EndersPack from "./EndersPack.json";
 import EndersGate from "./EndersGate.json";
 import GameItems from "./GameItems.json";
@@ -22,5 +23,6 @@ const contracts = {
   ExchangeERC1155,
   ERC721Seadrop,
   Shop,
+  ShopFindora,
 };
 export default contracts;

@@ -6,6 +6,9 @@ import { findSum } from "./specialFields/SpecialFields";
 
 import React, { useCallback, useState, Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { formatPrice } from "@shared/utils/formatPrice";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
+import { Icons } from "@shared/const/Icons";
 
 export const useCartModal = () => {
   const { providerName } = useSelector((state: any) => state.layout.user);
@@ -32,11 +35,11 @@ export const useCartModal = () => {
       messageBuy,
       itemsCart,
       priceMatic,
-      isMatic,
       tokensAllowed,
       tokenSelected,
       setTokenSelected,
       buy,
+      blockchain,
       isShow,
     }) => {
       return (
@@ -120,45 +123,58 @@ export const useCartModal = () => {
                             return item;
                           })}
                         </div>
-                        <div className="text-md text-white font-bold w-full text-center">
-                          Chose currency
-                        </div>
-                        <div className="flex  gap-4 pb-4 w-full flex-wrap items-center justify-center shadow-inner">
-                          {tokensAllowed.map((item: any, index: any) => {
-                            return (
-                              <div
-                                className={clsx(
-                                  "w-24 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
+                        {blockchain === "matic" && (
+                          <>
+                            <div className="text-md text-white font-bold w-full text-center">
+                              Chose currency
+                            </div>
+                            <div className="flex  gap-4 pb-4 w-full flex-wrap items-center justify-center shadow-inner">
+                              {tokensAllowed.map((item: any, index: any) => {
+                                return (
+                                  <div
+                                    className={clsx(
+                                      "w-24 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
 
-                                  {
-                                    "bg-transparent-color-gray-200 border-none":
-                                      tokenSelected !== item.address,
-                                  },
-                                  {
-                                    "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
-                                      tokenSelected === item.address,
-                                  },
-                                )}
-                                onClick={() => {
-                                  setTokenSelected(item.address);
-                                }}
-                              >
-                                <img
-                                  src={item.logo}
-                                  className="w-6 h-6"
-                                  alt=""
-                                />
-                                <h2 className="text-white text-sm font-bold">
-                                  {item.name}
-                                </h2>
-                              </div>
-                            );
-                          })}
-                        </div>
-                        <div className="flex gap-6 justify-between w-full text-md text-xl py-2 px-8 border-y border-transparent-color-gray-200 bg-transparent w-full">
+                                      {
+                                        "bg-transparent-color-gray-200 border-none":
+                                          tokenSelected !== item.address,
+                                      },
+                                      {
+                                        "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
+                                          tokenSelected === item.address,
+                                      },
+                                    )}
+                                    onClick={() => {
+                                      setTokenSelected(item.address);
+                                    }}
+                                  >
+                                    <img
+                                      src={item.logo}
+                                      className="w-6 h-6"
+                                      alt=""
+                                    />
+                                    <h2 className="text-white text-sm font-bold">
+                                      {item.name}
+                                    </h2>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </>
+                        )}
+                        <div className="flex gap-6 justify-between items-center text-md text-xl py-2 px-8 border-y border-transparent-color-gray-200 bg-transparent w-full">
                           <div className="flex gap-1 items-center">
-                            <h3 className="text-sm  text-white font-[700]">
-                              Total price:
+                            <img src={Icons.logo} className="w-8 h-8" alt="" />
+                            <h3
+                              className="text-[12px] text-primary-disabled font-[700]"
+                              style={{ lineHeight: "14px" }}
+                            >
+                              Total price on <br />
+                              <span className="text-red-primary font-bold">
+                                5
+                              </span>
+                              <span className="text-white font-bold">HG</span>{" "}
+                              Shop:
                             </h3>
                           </div>
                           <div className="flex flex-col gap items-end">
@@ -170,37 +186,58 @@ export const useCartModal = () => {
                                 className="text-sm font-[700] text-white flex gap-1 items-center justify-center"
                                 style={{ fontSize: "14px" }}
                               >
-                                {priceMatic} {isMatic ? "MATIC" : "ETH"}{" "}
+                                {blockchain === "matic" ? (
+                                  <>
+                                    {priceMatic}{" "}
+                                    {
+                                      CHAINS[CHAIN_IDS_BY_NAME[blockchain]]
+                                        ?.nativeCurrency?.symbol
+                                    }{" "}
+                                  </>
+                                ) : (
+                                  <>
+                                    {formatPrice(
+                                      cart
+                                        ?.map((item: any, i: any) =>
+                                          (
+                                            parseInt(item.price) * item.quantity
+                                          ).toString(),
+                                        )
+                                        .reduce((item: any, acc: any) => {
+                                          return findSum(item, acc);
+                                        }),
+                                      blockchain,
+                                    )}
+                                  </>
+                                )}
                                 <img
-                                  src={
-                                    isMatic
-                                      ? "icons/polygon-matic-logo.png"
-                                      : "icons/eth.png"
-                                  }
+                                  src={`/images/${blockchain}.png`}
                                   className="w-3 h-3"
                                   alt=""
                                 />
                               </h3>
                             )}
-                            <h3
-                              className="text-sm font-[700] text-white opacity-50"
-                              style={{ fontSize: "14px" }}
-                            >
-                              ($
-                              {parseInt(
-                                cart
-                                  ?.map((item: any, i: any) =>
-                                    (
-                                      parseInt(item.priceUSD) * item.quantity
-                                    ).toString(),
-                                  )
-                                  .reduce((item: any, acc: any) => {
-                                    return findSum(item, acc);
-                                  }),
-                              ) /
-                                10 ** 6}
-                              )
-                            </h3>
+                            {blockchain === "matic" && (
+                              <h3
+                                className="text-sm font-[700] text-white opacity-50"
+                                style={{ fontSize: "14px" }}
+                              >
+                                (
+                                {formatPrice(
+                                  cart
+                                    ?.map((item: any, i: any) =>
+                                      (
+                                        parseInt(item.price) * item.quantity
+                                      ).toString(),
+                                    )
+                                    .reduce((item: any, acc: any) => {
+                                      return findSum(item, acc);
+                                    }),
+                                  blockchain,
+                                )}
+                                )
+                              </h3>
+                            )}
                           </div>
                         </div>
 
@@ -221,7 +258,7 @@ export const useCartModal = () => {
                             Checkout
                           </div>
                         </div>
-                        {providerName === "magic" && (
+                        {providerName === "magic" && blockchain === "matic" && (
                           <div
                             className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
                             onClick={() => {

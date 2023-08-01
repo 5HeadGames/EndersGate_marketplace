@@ -143,28 +143,46 @@ export const approveERC1155 = async ({
 
 export const switchChain = async (network) => {
   try {
-    await (window as any).ethereum.request({
-      method: "wallet_addEthereumChain",
-      params: [
-        {
-          chainId: "0x" + parseInt(network).toString(16),
-          chainName: CHAINS[network].name,
-          rpcUrls: CHAINS[network].rpcUrls,
-          nativeCurrency: CHAINS[network].nativeCurrency,
-          blockExplorerUrls: CHAINS[network].blockExplorerUrls,
-        },
-      ],
+    const chainId = await (window as any).ethereum.request({
+      method: "eth_chainId",
     });
-    await (window as any).ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [
-        {
-          chainId: "0x" + parseInt(network).toString(16),
-        },
-      ],
-    });
+
+    if (chainId !== network) {
+      await (window as any).ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [
+          {
+            chainId: "0x" + parseInt(network).toString(16),
+          },
+        ],
+      });
+    }
     return true;
   } catch (err) {
+    if (err.code === 4902) {
+      try {
+        await (window as any).ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x13881",
+              chainName: "Polygon Mumbai Testnet",
+              rpcUrls: ["https://rpc-mumbai.maticvigil.com/"],
+              nativeCurrency: {
+                name: "Mumbai Matic",
+                symbol: "MATIC",
+                decimals: 18,
+              },
+              blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+            },
+          ],
+        });
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    }
     return false;
   }
 };

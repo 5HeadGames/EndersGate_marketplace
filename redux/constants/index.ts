@@ -38,4 +38,7 @@ export const GET_VOLUME = "get_volume";
 export const BUY_NFT_FINDORA = "buy_nft_findora";
 export const SELL_NFT_FINDORA = "sell_nft_findora";
 
+export const BUY_NFT_SHOP_FINDORA = "buy_nft_shop_findora";
+export const BUY_NFT_SHOP = "buy_nft_shop";
+
 export const SET_NETWORK = "set_network";
