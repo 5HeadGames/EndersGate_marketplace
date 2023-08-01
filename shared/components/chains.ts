@@ -54,6 +54,8 @@ export const CHAINS: {
   1205: {
     urls: [`https://gsc-testnet.prod.findora.org:8545`],
     name: "Findora GSC Testnet",
+    rpcUrls: ["https://gsc-testnet.prod.findora.org:8545"],
+
     nativeCurrency: FINDORA,
     blockExplorerUrls: ["https://gsc-testnet.evm.findorascan.io/"],
     blockExplorer: "https://gsc-testnet.evm.findorascan.io/",
@@ -61,6 +63,8 @@ export const CHAINS: {
   1204: {
     urls: ["https://gsc-mainnet.prod.findora.org:8545"],
     name: "Findora GSC Mainnet",
+    rpcUrls: ["https://gsc-mainnet.prod.findora.org:8545"],
+
     nativeCurrency: FINDORA,
     blockExplorerUrls: ["https://gsc-mainnet.evm.findorascan.io/"],
     blockExplorer: "https://gsc-mainnet.evm.findorascan.io/",
@@ -70,6 +74,8 @@ export const CHAINS: {
       process.env.NEXT_PUBLIC_POLYGON_PROVIDER || "",
       "https://polygon-rpc.com",
     ].filter((url) => url !== ""),
+    rpcUrls: ["https://endpoints.omniatech.io/v1/matic/mumbai/public	"],
+
     name: "Polygon Mainnet",
     nativeCurrency: MATIC,
     blockExplorerUrls: ["https://polygonscan.com"],
@@ -78,8 +84,9 @@ export const CHAINS: {
   80001: {
     urls: [
       process.env.NEXT_PUBLIC_POLYGON_PROVIDER || "",
-      "https://polygon-rpc.com",
+      "https://rpc-mumbai.maticvigil.com",
     ].filter((url) => url !== ""),
+    rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
     name: "Polygon Mumbai",
     nativeCurrency: MATIC,
     blockExplorerUrls: ["https://mumbai.polygonscan.com"],

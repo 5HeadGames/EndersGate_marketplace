@@ -38,30 +38,38 @@ export const MarketplaceCard = (props) => {
         return false;
       }
 
-      let intersection = getTokensAllowed();
-      cart.map((item) => {
-        intersection = intersection.filter((element) =>
-          item?.tokens
-            ?.map((item) => item.toLowerCase())
-            ?.includes(element.address.toLowerCase()),
+      if (blockchain === "matic") {
+        let intersection = getTokensAllowed();
+        cart.map((item) => {
+          intersection = intersection.filter((element) =>
+            item?.tokens
+              ?.map((item) => item.toLowerCase())
+              ?.includes(element.address.toLowerCase()),
+          );
+        });
+        intersection = intersection.filter((item) =>
+          props?.sale?.tokens?.includes(item.address),
         );
-      });
-      console.log(intersection, "intersection");
-      intersection = intersection.filter((item) =>
-        props?.sale?.tokens?.includes(item.address),
-      );
 
-      if (intersection.length > 0) {
+        if (intersection.length > 0) {
+          dispatch(
+            addCart({
+              ...props?.sale,
+              quantity: quantity,
+            }),
+          );
+        } else {
+          addToast("Please select sales with the same currency", {
+            appearance: "error",
+          });
+        }
+      } else {
         dispatch(
           addCart({
             ...props?.sale,
             quantity: quantity,
           }),
         );
-      } else {
-        addToast("Please select sales with the same currency", {
-          appearance: "error",
-        });
       }
     } else {
       router.push("/login");

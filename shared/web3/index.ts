@@ -3,7 +3,12 @@ import { AbiItem } from "web3-utils";
 import contracts from "shared/contracts";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/components/chains";
-import { parseSaleNative, parseSaleTokens, removeAll } from "@redux/actions";
+import {
+  onLoadSales,
+  parseSaleNative,
+  parseSaleTokens,
+  removeAll,
+} from "@redux/actions";
 import { findSum } from "@shared/components/common/specialFields/SpecialFields";
 // import Moralis from "moralis";
 
@@ -138,6 +143,18 @@ export const approveERC1155 = async ({
 
 export const switchChain = async (network) => {
   try {
+    await (window as any).ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
+          chainId: "0x" + parseInt(network).toString(16),
+          chainName: CHAINS[network].name,
+          rpcUrls: CHAINS[network].rpcUrls,
+          nativeCurrency: CHAINS[network].nativeCurrency,
+          blockExplorerUrls: CHAINS[network].blockExplorerUrls,
+        },
+      ],
+    });
     await (window as any).ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [
@@ -312,6 +329,7 @@ export const buyNFTsNative = async ({
       .send({ from: ethAddress, value: bid });
 
     dispatch(removeAll());
+    dispatch(onLoadSales());
   } catch (err) {}
 
   setMessageBuy(``);
