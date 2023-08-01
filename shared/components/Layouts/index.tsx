@@ -186,7 +186,7 @@ export default function AppLayout({ children }) {
 
   const initApp = async () => {
     console.log(blockchain, "load");
-    await dispatch(onLoadSales(blockchain));
+    await dispatch(onLoadSales());
   };
 
   React.useEffect(() => {

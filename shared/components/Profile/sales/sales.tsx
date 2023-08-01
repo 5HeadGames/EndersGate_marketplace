@@ -42,7 +42,7 @@ const Sales = () => {
         nftContract: cancelId.pack ? packsAddress : endersGate,
       }),
     );
-    dispatch(onLoadSales(blockchain));
+    dispatch(onLoadSales());
     dispatch(onGetAssets({ address: user, blockchain }));
     hide();
   };

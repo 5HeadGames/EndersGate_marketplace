@@ -155,7 +155,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       console.log({ err });
     }
 
-    dispatch(onLoadSales(blockchain));
+    dispatch(onLoadSales());
     console.log("loaded");
     dispatch(onGetAssets({ address: user, blockchain }));
     setMessage(

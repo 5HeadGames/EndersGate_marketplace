@@ -145,7 +145,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       console.log({ err });
     }
 
-    dispatch(onLoadSales(blockchain));
+    dispatch(onLoadSales());
     dispatch(onGetAssets({ address: user, blockchain }));
     setMessage(
       "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",

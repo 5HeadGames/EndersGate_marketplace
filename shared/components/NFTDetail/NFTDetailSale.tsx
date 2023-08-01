@@ -141,7 +141,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     setMessage("");
     await getSale();
     hide();
-    dispatch(onLoadSales(blockchain));
+    dispatch(onLoadSales());
     dispatch(onGetAssets({ address: user, blockchain }));
     setBuyNFTData(0);
   };
