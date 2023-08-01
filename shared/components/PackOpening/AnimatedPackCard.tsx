@@ -15,7 +15,7 @@ const AnimatedPackCard = (props: any) => {
   };
 
   const cardsBacks = {
-    reaction: "/images/reactio.png",
+    reaction: "/images/reaction.png",
     action: "/images/action.png",
     wood: "/images/wood.png",
     stone: "/images/stone.png",
