@@ -25,6 +25,11 @@ import { useToasts } from "react-toast-notifications";
 import { WALLETS } from "@shared/utils/connection/utils";
 import { authStillValid } from "../utils";
 import { Cart } from "./cart";
+import ChainSelect from "./chainSelect";
+import { switchChain } from "@shared/web3";
+import { CHAIN_IDS_BY_NAME } from "../chains";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { toast } from "react-hot-toast";
 
 type ButtonsTypes = { logout: boolean; userData: boolean };
 
@@ -121,16 +126,19 @@ export default function AppLayout({ children }) {
   });
   const [search, setSearch] = React.useState("");
 
-  const { addToast } = useToasts();
-
   const router = useRouter();
+
   const { account } = useWeb3React();
+
   const { logout, login } = useMagicLink();
+
   const { ethAddress } = useSelector((state: any) => state.layout.user);
-  const { isLogged } = useSelector((state: any) => state.layout);
-  const { provider, providerName, cart } = useSelector(
+  const { provider, providerName, cart, isLogged } = useSelector(
     (state: any) => state.layout,
   );
+
+  const { blockchain } = useBlockchain();
+
   const dispatch = useAppDispatch();
 
   let isFullscreen;
@@ -145,47 +153,45 @@ export default function AppLayout({ children }) {
           providerName: "web3react",
         }),
       );
-      dispatch(onGetAssets(account));
+      dispatch(onGetAssets({ address: account, blockchain }));
     }
-  }, [account, relogin, isLogged]);
+  }, [account, relogin, isLogged, blockchain]);
+
+  const reconnect = async () => {
+    try {
+      const typeOfConnection = localStorage.getItem("typeOfConnection");
+      if (authStillValid()) {
+        await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+        WALLETS.forEach(async (wallet) => {
+          if (wallet.title === typeOfConnection) {
+            await wallet.connection.connector.activate();
+            setRelogin(true);
+          }
+        });
+        if (typeOfConnection === "magic") {
+          login(dispatch);
+        }
+      } else {
+        localStorage.removeItem("typeOfConnection");
+        localStorage.removeItem("loginTime");
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   React.useEffect(() => {
-    const typeOfConnection = localStorage.getItem("typeOfConnection");
-    if (authStillValid()) {
-      WALLETS.forEach(async (wallet) => {
-        if (wallet.title === typeOfConnection) {
-          await wallet.connection.connector.activate();
-          setRelogin(true);
-        }
-      });
-      if (typeOfConnection === "magic") {
-        login(dispatch);
-      }
-    } else {
-      localStorage.removeItem("typeOfConnection");
-      localStorage.removeItem("loginTime");
-    }
+    reconnect();
   }, []);
 
-  // React.useEffect(() => {
-  //   if (
-  //     typeof window !== "undefined" &&
-  //     (window as any).ethereum?.isConnected() &&
-  //     !isExecuted
-  //   ) {
-  //     (window as any).ethereum.on("accountsChanged", accountChangedHandler);
-  //     (window as any).ethereum.on("chainChanged", chainChangedHandler);
-  //     setIsExecuted(true);
-  //   }
-  // }, []);
-
   const initApp = async () => {
-    await dispatch(onLoadSales());
+    console.log(blockchain, "load");
+    await dispatch(onLoadSales(blockchain));
   };
 
   React.useEffect(() => {
     initApp();
-  }, []);
+  }, [blockchain]);
 
   const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
     setDisabled((prev) => ({ ...prev, [field]: value }));
@@ -367,14 +373,13 @@ export default function AppLayout({ children }) {
                   })}
                 </div>
               </Dropdown>
+              <ChainSelect />
             </>
           ) : (
             <NavbarItem
-              name={ethAddress ? "MY ACCOUNT" : "LOG IN"}
+              name={"LOG IN"}
               link={
-                ethAddress
-                  ? "/profile"
-                  : router.pathname !== "/login"
+                router.pathname !== "/login"
                   ? `/login?redirect=true&redirectAddress=${router.pathname}`
                   : router.asPath
               }

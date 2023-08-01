@@ -19,8 +19,10 @@ import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import {
   getAddresses,
+  getAddressesMatic,
   getContractCustom,
   getTokensAllowed,
+  switchChain,
 } from "@shared/web3";
 import { Typography } from "../common/typography";
 import { useModal } from "@shared/hooks/modal";
@@ -32,9 +34,10 @@ import Tilt from "react-parallax-tilt";
 import { useWeb3React } from "@web3-react/core";
 import { AddressText } from "../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
-import { CHAINS } from "../chains";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
+import { useBlockchain } from "@shared/context/useBlockchain";
 
-const { endersGate } = getAddresses();
+const { endersGate } = getAddressesMatic();
 
 const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { account: user, provider } = useWeb3React();
@@ -58,7 +61,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     duration: 0,
   });
 
-  const { Modal, show, hide, isShow } = useModal();
+  const { blockchain } = useBlockchain();
 
   const sellNft = async () => {
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
@@ -77,15 +80,33 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       return alert("You have to put at least one currency to accept");
     }
     try {
+      const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+      if (!changed) {
+        throw Error(
+          "An error has occurred while switching chain, please try again.",
+        );
+      }
       const tokenId = id;
-      const { endersGate, marketplace } = getAddresses();
+      const { endersGate, marketplace } = getAddresses(blockchain);
       const endersgateInstance = getContractCustom(
         "EndersGate",
         endersGate,
         provider.provider,
       );
 
-      if (CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]?.name.includes("Findora")) {
+      if (blockchain !== "matic") {
+        const isApprovedForAll = await endersgateInstance.methods
+          .isApprovedForAll(user, marketplace)
+          .call();
+        if (isApprovedForAll === false) {
+          setMessage("Allowing us to sell your tokens");
+          await approveERC1155({
+            provider: provider.provider,
+            from: user,
+            to: marketplace,
+            address: endersGate,
+          });
+        }
         await dispatch(
           onSellERC1155Findora({
             address: endersGate,
@@ -134,12 +155,12 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       console.log({ err });
     }
 
-    dispatch(onLoadSales());
-    dispatch(onGetAssets(user));
+    dispatch(onLoadSales(blockchain));
+    console.log("loaded");
+    dispatch(onGetAssets({ address: user, blockchain }));
     setMessage(
       "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
     );
-    hide();
     setSellNFTData({
       startingPrice: 0,
       amount: 0,
@@ -155,137 +176,6 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
 
   return (
     <>
-      <Modal isShow={isShow} withoutX>
-        {id ? (
-          <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
-            <h2 className="font-bold text-primary text-center">Sell NFT</h2>
-            <div className="flex md:flex-row flex-col sm:gap-16 gap-4 w-full items-center">
-              <Tilt>
-                <div className={clsx("h-auto w-auto")}>
-                  <img
-                    src={cards[id]?.properties.image?.value}
-                    className={clsx(
-                      Styles.animatedImage,
-                      {
-                        "rounded-full": cards[id].typeCard == "avatar",
-                      },
-                      {
-                        "rounded-md": cards[id].typeCard != "avatar",
-                      },
-                    )}
-                    alt=""
-                  />
-                </div>
-              </Tilt>
-              <div
-                className="flex flex-col gap-4 w-full justify-center items-center md:w-64"
-                style={{ maxWidth: "100vw" }}
-              >
-                <div className="flex flex-col gap-4 w-full justify-center items-center">
-                  <label className="text-primary font-medium">
-                    Starting price for each NFT (ONE)
-                  </label>
-                  <input
-                    type="number"
-                    className="bg-overlay text-primary text-center"
-                    value={sellNFTData.startingPrice}
-                    min={0}
-                    onChange={(e) => {
-                      setSellNFTData((prev: any) => {
-                        return { ...prev, startingPrice: e.target.value };
-                      });
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col gap-4 w-full justify-center items-center">
-                  <label className="text-primary font-medium">
-                    Amount of NFTs
-                  </label>
-                  <input
-                    type="number"
-                    className="bg-overlay text-primary text-center"
-                    value={sellNFTData.amount}
-                    min={1}
-                    onChange={(e) => {
-                      setSellNFTData((prev: any) => {
-                        return { ...prev, amount: parseInt(e.target.value) };
-                      });
-                    }}
-                  />
-                  {sellNFTData.amount > NFTs?.balanceCards[id]?.balance && (
-                    <Typography type="caption" className="text-red-primary">
-                      The amount can't be higher than your balance
-                    </Typography>
-                  )}
-                </div>
-                <div className="flex flex-col gap-4 w-full justify-center items-center">
-                  <label className="text-primary font-medium">End Date</label>
-                  <input
-                    type="date"
-                    className="bg-overlay text-primary text-center"
-                    onChange={(e) => {
-                      const date = new Date(e.target.value + " 00:00");
-                      setSellNFTData((prev: any) => {
-                        return {
-                          ...prev,
-                          duration:
-                            Math.floor(date.getTime() / 1000) -
-                            Math.floor(new Date().getTime() / 1000),
-                        };
-                      });
-                    }}
-                  />
-                </div>
-                <div className="py-6">
-                  <div className="text-primary text-sm text-center flex flex-col items-center justify-center">
-                    {message ===
-                    "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
-                      message
-                    ) : (
-                      <>
-                        <span className="flex gap-4 items-center justify-center">
-                          {message} <LoadingOutlined />
-                        </span>
-                        <span className="flex gap-4 mt-6 items-center justify-center">
-                          {message === "Listing your tokens" &&
-                            "Last Transaction"}
-                          {message === "Allowing us to sell your tokens" &&
-                            "Transaction 1/2"}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
-                  <Button
-                    // className="px-4 py-2 border border-primary text-primary"
-                    decoration="line-primary"
-                    className="hover:text-white border-primary"
-                    size="small"
-                    onClick={() => {
-                      hide();
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    // className="px-4 py-2 border border-primary text-primary"
-                    decoration="fillPrimary"
-                    className="degradated hover:text-white border-none"
-                    size="small"
-                    onClick={sellNft}
-                  >
-                    List NFT/s
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
-      </Modal>
-
       {id !== undefined ? (
         <div className="min-h-screen w-full flex flex-col xl:px-36 md:px-10 sm:px-6 px-4 pt-20 pb-20">
           <div
@@ -381,12 +271,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                         <div className="flex gap-4 w-full justify-between items-center">
                           <label className="text-primary font-bold whitespace-nowrap">
                             Price per NFT (
-                            {CHAINS[
-                              process.env.NEXT_PUBLIC_CHAIN_ID
-                            ]?.name.includes("Findora")
-                              ? "TGRP"
-                              : "USD"}
-                            )
+                            {blockchain === "findora" ? "TGRP" : "USD"})
                           </label>
                           <input
                             type="number"
@@ -452,9 +337,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             }}
                           />
                         </div>
-                        {CHAINS[
-                          process.env.NEXT_PUBLIC_CHAIN_ID
-                        ]?.name.includes("Findora") ? (
+                        {blockchain === "findora" ? (
                           ""
                         ) : (
                           <>

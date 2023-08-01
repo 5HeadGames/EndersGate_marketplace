@@ -17,7 +17,7 @@ import { DropdownActions } from "../common/dropdownActions/dropdownActions";
 import { Dropdown } from "../common/dropdown/dropdown";
 import clsx from "clsx";
 import { Typography } from "../common/typography";
-import { getAddresses, getContract } from "@shared/web3";
+import { getAddressesMatic, getContract } from "@shared/web3";
 import { onLoadSales } from "@redux/actions";
 import { convertArrayCards } from "../common/convertCards";
 import packs from "../../packs.json";
@@ -55,7 +55,7 @@ const MarketplaceComponent = () => {
   const [soldSelected, setSoldSelected] = React.useState("trading_cards");
   const { search: searched } = useRouter().query;
   const cards = convertArrayCards();
-  const { endersGate, pack } = getAddresses();
+  const { endersGate, pack } = getAddressesMatic();
 
   const { transactionsBoard } = useStats({
     nfts,
@@ -84,7 +84,7 @@ const MarketplaceComponent = () => {
   }, [searched]);
 
   const getSales = async (currentOrder: string) => {
-    const { endersGate, pack } = getAddresses();
+    const { endersGate, pack } = getAddressesMatic();
     let cardSalesCreated: any = [],
       packSalesCreated: any = [],
       nftsCreated: any = [];
@@ -593,8 +593,10 @@ const MarketplaceComponent = () => {
                     .filter((sale) => {
                       const price = sale.price / 10 ** 6;
                       const { minPrice, maxPrice } = priceSettings;
+
                       return (
-                        (minPrice === 0 && maxPrice === 0) ||
+                        (minPrice == 0 && maxPrice == 0) ||
+                        (minPrice == undefined && maxPrice == undefined) ||
                         (minPrice <= price && maxPrice >= price)
                       );
                     })
@@ -605,30 +607,30 @@ const MarketplaceComponent = () => {
                       );
                     })
                     .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
-                    .map((a, id) => {
+                    .map((sale, id) => {
                       return (
                         <NftCard
                           classes={{ root: "m-4 cursor-pointer" }}
                           setPage={setPage}
-                          id={a.nftId}
-                          transactionId={a.id}
-                          seller={a.seller}
-                          tokens={a.tokens}
+                          id={sale.nftId}
+                          transactionId={sale.id}
+                          seller={sale.seller}
+                          tokens={sale.tokens}
                           icon={
-                            a.nft === pack
-                              ? packs[a.nftId]?.properties?.image?.value
-                              : cards[a.nftId]?.properties?.image?.value
+                            sale.nft === pack
+                              ? packs[sale.nftId]?.properties?.image?.value
+                              : cards[sale.nftId]?.properties?.image?.value
                           }
                           name={
-                            a.nft === pack
-                              ? packs[a.nftId]?.properties?.name?.value
-                              : cards[a.nftId]?.properties?.name?.value
+                            sale.nft === pack
+                              ? packs[sale.nftId]?.properties?.name?.value
+                              : cards[sale.nftId]?.properties?.name?.value
                           }
                           byId={false}
-                          price={a.price}
+                          price={sale.price}
                           type={type}
-                          sale={a}
-                          {...a}
+                          sale={sale}
+                          {...sale}
                         />
                       );
                     })

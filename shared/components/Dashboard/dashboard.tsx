@@ -3,7 +3,7 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "@redux/store";
 import Table from "./tableItems/table";
 import TransactionsBoard from "./TransactionsBoard/TransactionsBoard";
-import { getAddresses, getContract } from "@shared/web3";
+import { getAddressesMatic, getContract } from "@shared/web3";
 import cardsJson from "../../../cards.json";
 import { TimeConverter } from "../common/unixDateConverter/unixConverter";
 import Web3 from "web3";
@@ -52,7 +52,7 @@ const DashboardComponent = () => {
     columnSelected,
   });
 
-  const { pack } = getAddresses();
+  const { pack } = getAddressesMatic();
 
   const [sales, setSales] = React.useState(recentlySold);
   const [salesDefault, setSalesDefault] = React.useState(recentlyListedCards);

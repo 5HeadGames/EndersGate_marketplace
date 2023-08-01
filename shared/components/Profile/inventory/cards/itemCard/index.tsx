@@ -13,15 +13,16 @@ import {
   Button,
   Container,
   Text,
-  Link,
 } from "@chakra-ui/react";
 import ReactCardFlip from "react-card-flip";
 import Tilt from "react-parallax-tilt";
 import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetAssets } from "@redux/actions";
-import { getAddresses, getContractCustom } from "@shared/web3";
+import { getAddressesMatic, getContractCustom } from "@shared/web3";
 import { Icons } from "@shared/const/Icons";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import Link from "next/link";
 
 export const CardInventory = (props) => {
   const { classes, ...rest } = props;
@@ -30,11 +31,13 @@ export const CardInventory = (props) => {
   const [transfer, setTransfer] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
+  const { blockchain } = useBlockchain();
+
   const { ethAddress: account, provider } = useSelector(
     (state: any) => state.layout.user,
   );
 
-  const { endersGate, pack } = getAddresses();
+  const { endersGate, pack } = getAddressesMatic();
 
   const dispatch = useDispatch();
 
@@ -48,7 +51,7 @@ export const CardInventory = (props) => {
   });
 
   const getAssets = async () => {
-    await dispatch(onGetAssets(account));
+    await dispatch(onGetAssets({ address: account, blockchain }));
   };
 
   const transferNft = async () => {
@@ -304,7 +307,7 @@ export const CardInventory = (props) => {
                         : props.type === "legendary"
                         ? "https://bafybeih2vpmzogfeinhrojfc44tkvzmd7kv5naimntmzfz3lc4uwcpiubm.ipfs.nftstorage.link/"
                         : props.type === "avatar"
-                        ? "./images/backAvatar.png"
+                        ? "https://bafybeienpnn5qgi6ce2mdf2maxrf3k6pn3bhhqo67pb2xd2g5uby6p5pfe.ipfs.nftstorage.link/"
                         : props.icon
                     }
                     alt=""
@@ -343,8 +346,6 @@ export const CardInventory = (props) => {
                           ? `/NFTDetailID/${props.id}`
                           : `/PackDetailID/${props.id}`
                       }
-                      target="_blank"
-                      rel="noopener noreferrer"
                     >
                       Sell
                     </Link>

@@ -13,6 +13,8 @@ import { useWeb3React } from "@web3-react/core";
 import { Dropdown } from "@shared/components/common/dropdown/dropdown";
 import { XIcon } from "@heroicons/react/solid";
 import { CardInventory } from "@shared/components/Profile/inventory/cards/itemCard/index";
+import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { useBlockchain } from "@shared/context/useBlockchain";
 
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
@@ -28,16 +30,18 @@ const Inventory = () => {
   const [balance, setBalance] = React.useState("0");
   const [search, setSearch] = React.useState("");
 
+  const { blockchain } = useBlockchain();
+
   const cards = convertArrayCards();
 
   React.useEffect(() => {
+    console.log(blockchain);
     if (user) {
       handleSetBalance();
     }
-  }, [user]);
+  }, [user, blockchain]);
 
   React.useEffect(() => {
-    console.log(nfts);
     const arrayPacks = [];
     nfts.balancePacks.forEach((pack, index) => {
       arrayPacks.push({
@@ -65,7 +69,8 @@ const Inventory = () => {
   }, [nfts]);
 
   const handleSetBalance = async () => {
-    const balance = await getBalance(user);
+    console.log(blockchain, "handle Balance");
+    const balance = await getBalance(user, CHAIN_IDS_BY_NAME[blockchain]);
     setBalance(balance);
   };
 

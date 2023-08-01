@@ -12,7 +12,7 @@ import { useCartModal } from "@shared/components/common/cartModal";
 import { useToasts } from "react-toast-notifications";
 import { useRouter } from "next/router";
 import {
-  getAddresses,
+  getAddressesMatic,
   getContractCustom,
   getTokensAllowed,
   switchChain,
@@ -24,6 +24,7 @@ import {
   removeAll,
   removeFromCart,
 } from "@redux/actions";
+import { toast } from "react-hot-toast";
 
 const Shop = () => {
   const { ethAddress: account, provider } = useSelector(
@@ -46,7 +47,7 @@ const Shop = () => {
   const { networkId } = useSelector((state: any) => state.layout.user);
   const { cartShop } = useSelector((state: any) => state.layout);
 
-  const { shop: shopAddress, MATICUSD } = getAddresses();
+  const { shop: shopAddress, MATICUSD } = getAddressesMatic();
 
   const dispatch = useDispatch();
 
@@ -139,15 +140,26 @@ const Shop = () => {
 
   React.useEffect(() => {
     if (networkId) {
-      switchChain(networkId);
-      updateSales();
+      try {
+        switchChain(networkId);
+        updateSales();
+      } catch (err) {
+        toast.error(
+          "An error occurred while changing the network, please try again.",
+        );
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [networkId]);
 
   const buyPacks = async () => {
     try {
-      await switchChain(networkId);
+      const changed = await switchChain(networkId);
+      if (!changed) {
+        throw new Error(
+          "An error occurred while changing the network, please try again.",
+        );
+      }
 
       const shop = await getContractCustom("Shop", shopAddress, provider);
 

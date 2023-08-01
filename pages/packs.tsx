@@ -5,6 +5,7 @@ import Web3 from "web3";
 import { getAddresses, getContractCustom } from "@shared/web3";
 import { PackOpeningComponent } from "@shared/components/PackOpening/PackOpeningComponent";
 import { onGetAssets } from "@redux/actions";
+import { useBlockchain } from "@shared/context/useBlockchain";
 
 const Packs = () => {
   const [contract, setContract] = useState(null);
@@ -13,8 +14,9 @@ const Packs = () => {
   const [packs, setPacks] = useState([]);
   const nfts = useSelector((state: any) => state.nfts);
   const dispatch = useDispatch();
+  const { blockchain } = useBlockchain();
 
-  const { endersGate, pack } = getAddresses();
+  const { endersGate, pack } = getAddresses(blockchain);
 
   const { ethAddress, provider, networkId } = useSelector(
     (state: any) => state.layout.user,

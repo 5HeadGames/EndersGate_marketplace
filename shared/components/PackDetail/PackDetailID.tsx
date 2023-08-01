@@ -8,11 +8,16 @@ import { useRouter } from "next/router";
 import Web3 from "web3";
 
 import { useAppDispatch, useAppSelector } from "redux/store";
-import { onSellERC1155, onLoadSales, onGetAssets } from "@redux/actions";
+import {
+  onSellERC1155,
+  onLoadSales,
+  onGetAssets,
+  onSellERC1155Findora,
+} from "@redux/actions";
 import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import {
-  getAddresses,
+  getAddressesMatic,
   getContractCustom,
   getTokensAllowed,
 } from "@shared/web3";
@@ -28,6 +33,7 @@ import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
 import { AddressText } from "../common/specialFields/SpecialFields";
 import { CHAINS } from "../chains";
+import { useBlockchain } from "@shared/context/useBlockchain";
 
 const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { account: user, provider } = useWeb3React();
@@ -45,10 +51,11 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     duration: 0,
   });
 
+  const { blockchain } = useBlockchain();
+
   const [tokensSelected, setTokensSelected] = React.useState([]);
 
-  const { Modal, show, hide, isShow } = useModal();
-  const { pack } = getAddresses();
+  const { pack } = getAddressesMatic();
 
   const sellNft = async () => {
     if (sellNFTData.amount > NFTs.balancePacks[id]?.balance) {
@@ -68,7 +75,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     }
     try {
       const tokenId = id;
-      const { pack, marketplace } = getAddresses();
+      const { pack, marketplace } = getAddressesMatic();
       const endersgateInstance = getContractCustom(
         "EndersPack",
         pack,
@@ -89,29 +96,60 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
       }
       setMessage("Listing your tokens");
 
-      await dispatch(
-        onSellERC1155({
-          address: pack,
-          from: user,
-          startingPrice: (sellNFTData.startingPrice * 10 ** 6).toString(),
-          amount: sellNFTData.amount,
-          tokenId: tokenId,
-          tokens: tokensSelected,
-          duration: sellNFTData.duration.toString(),
-          provider: provider.provider,
-          // user: user,
-        }),
-      );
+      if (blockchain !== "matic") {
+        await dispatch(
+          onSellERC1155Findora({
+            address: pack,
+            from: user,
+            startingPrice: Web3.utils.toWei(
+              sellNFTData.startingPrice.toString(),
+              "ether",
+            ),
+            amount: sellNFTData.amount,
+            tokenId: tokenId,
+            duration: sellNFTData.duration.toString(),
+            provider: provider.provider,
+            // user: user,
+          }),
+        );
+      } else {
+        const isApprovedForAll = await endersgateInstance.methods
+          .isApprovedForAll(user, marketplace)
+          .call();
+        if (isApprovedForAll === false) {
+          setMessage("Allowing us to sell your tokens");
+          await approveERC1155({
+            provider: provider.provider,
+            from: user,
+            to: marketplace,
+            address: pack,
+          });
+        }
+        setMessage("Listing your tokens");
+
+        await dispatch(
+          onSellERC1155({
+            address: pack,
+            from: user,
+            startingPrice: (sellNFTData.startingPrice * 10 ** 6).toString(),
+            amount: sellNFTData.amount,
+            tokenId: tokenId,
+            tokens: tokensSelected,
+            duration: sellNFTData.duration.toString(),
+            provider: provider.provider,
+            // user: user,
+          }),
+        );
+      }
     } catch (err) {
       console.log({ err });
     }
 
-    dispatch(onLoadSales());
-    dispatch(onGetAssets(user));
+    dispatch(onLoadSales(blockchain));
+    dispatch(onGetAssets({ address: user, blockchain }));
     setMessage(
       "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
     );
-    hide();
     setSellNFTData({
       startingPrice: 0,
       amount: 0,
@@ -127,123 +165,6 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
 
   return (
     <>
-      <Modal isShow={isShow} withoutX>
-        {id ? (
-          <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-8 max-w-xl">
-            <h2 className="font-bold text-primary text-center">Sell NFT</h2>
-            <div className="flex md:flex-row flex-col md:gap-16 gap-4 w-full items-center">
-              <Tilt>
-                <div className="h-auto w-auto">
-                  <img
-                    src={packs[id]?.properties?.image?.value}
-                    className={clsx(Styles.animatedImage)}
-                    alt=""
-                  />
-                </div>
-              </Tilt>
-              <div
-                className="flex flex-col gap-4 justify-between md:w-64"
-                style={{ maxWidth: "100vw" }}
-              >
-                <div className="flex flex-col gap-4 w-full justify-center items-center">
-                  <label className="text-primary font-medium">
-                    Starting price for each NFT (ONE)
-                  </label>
-                  <input
-                    type="number"
-                    className="bg-overlay text-primary text-center"
-                    value={sellNFTData.startingPrice}
-                    min={0}
-                    onChange={(e) => {
-                      setSellNFTData((prev: any) => {
-                        return { ...prev, startingPrice: e.target.value };
-                      });
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col gap-4 w-full justify-center items-center">
-                  <label className="text-primary font-medium">
-                    Amount of NFTs
-                  </label>
-                  <input
-                    type="number"
-                    className="bg-overlay text-primary text-center"
-                    value={sellNFTData.amount}
-                    min={1}
-                    onChange={(e) => {
-                      setSellNFTData((prev: any) => {
-                        return { ...prev, amount: parseInt(e.target.value) };
-                      });
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col gap-4 w-full justify-center items-center">
-                  <label className="text-primary font-medium">End Date</label>
-                  <input
-                    type="date"
-                    className="bg-overlay text-primary text-center"
-                    onChange={(e) => {
-                      const date = new Date(e.target.value + " 00:00");
-                      setSellNFTData((prev: any) => {
-                        return {
-                          ...prev,
-                          duration:
-                            Math.floor(date.getTime() / 1000) -
-                            Math.floor(new Date().getTime() / 1000),
-                        };
-                      });
-                    }}
-                  />
-                </div>
-                <div className="py-6">
-                  <div className="text-primary text-sm text-center flex flex-col items-center justify-center">
-                    {message ===
-                    "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
-                      message
-                    ) : (
-                      <>
-                        <span className="flex gap-4 items-center justify-center">
-                          {message}
-                        </span>
-                        <LoadingOutlined />
-                        <span className="flex gap-4 mt-6 items-center justify-center">
-                          {message === "Listing your tokens"
-                            ? "Transaction 2/2"
-                            : "Transaction 1/2"}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
-                  <Button
-                    // className="px-4 py-2 border border-primary text-primary"
-                    decoration="line-primary"
-                    className="hover:text-white border-primary"
-                    size="small"
-                    onClick={() => {
-                      hide();
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    // className="px-4 py-2 border border-primary text-primary"
-                    decoration="fillPrimary"
-                    className="degradated hover:text-white border-none"
-                    size="small"
-                    onClick={sellNft}
-                  >
-                    List NFT/s
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
-      </Modal>
       {id !== undefined ? (
         <div className="min-h-screen w-full flex flex-col xl:px-36 md:px-10 sm:px-6 px-4 pt-20 pb-20">
           <div
@@ -289,7 +210,8 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       <div className="flex flex-col gap-4 w-full items-center px-8">
                         <div className="flex gap-4 w-full justify-between items-center">
                           <label className="text-primary font-bold whitespace-nowrap">
-                            Price NFT
+                            Price per NFT (
+                            {blockchain === "findora" ? "TGRP" : "USD"})
                           </label>
                           <input
                             type="number"
@@ -306,27 +228,24 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             }}
                           />
                         </div>
-                        <div className="flex flex-col gap-2 w-full justify-between items-center">
-                          <div className="flex gap-4 w-full justify-between items-center">
-                            {" "}
-                            <label className="text-primary font-bold whitespace-nowrap">
-                              Amount of NFTs
-                            </label>
-                            <input
-                              type="number"
-                              className="bg-overlay text-primary text-center w-16 p-1 font-bold rounded-xl border border-overlay-border"
-                              value={sellNFTData.amount}
-                              min={1}
-                              onChange={(e) => {
-                                setSellNFTData((prev: any) => {
-                                  return {
-                                    ...prev,
-                                    amount: parseInt(e.target.value),
-                                  };
-                                });
-                              }}
-                            />
-                          </div>
+                        <div className="flex gap-4 w-full justify-between items-center">
+                          <label className="text-primary font-bold whitespace-nowrap">
+                            Amount of NFTs
+                          </label>
+                          <input
+                            type="number"
+                            className="bg-overlay text-primary text-center w-16 p-1 font-bold rounded-xl border border-overlay-border"
+                            value={sellNFTData.amount}
+                            min={1}
+                            onChange={(e) => {
+                              setSellNFTData((prev: any) => {
+                                return {
+                                  ...prev,
+                                  amount: parseInt(e.target.value),
+                                };
+                              });
+                            }}
+                          />
                           {sellNFTData.amount >
                             NFTs?.balancePacks[id]?.balance && (
                             <Typography
@@ -337,6 +256,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             </Typography>
                           )}
                         </div>
+
                         <div className="flex  gap-4 w-full justify-between items-center">
                           <label className="text-primary font-bold whitespace-nowrap">
                             End Date
@@ -357,80 +277,92 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             }}
                           />
                         </div>
-                        <div className="text-[11px] w-full text-left text-white font-bold">
-                          Select at least 1 currency you want to accept as a
-                          payment for this listing
-                        </div>
-                        <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
-                          {tokensAllowed.map((item, index) => {
-                            return (
-                              <div
-                                className={clsx(
-                                  "w-28 text-[14px] flex items-center justify-center border gap-2 rounded-full cursor-pointer p-2",
-                                  {
-                                    "bg-overlay-border border-none":
-                                      !tokensSelected.includes(item.address),
-                                  },
-                                  {
-                                    "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
-                                      tokensSelected.includes(item.address),
-                                  },
+                        {blockchain === "findora" ? (
+                          ""
+                        ) : (
+                          <>
+                            {" "}
+                            <div className="text-[11px] w-full text-left text-white font-bold">
+                              Select at least 1 currency you want to accept as a
+                              payment for this listing
+                            </div>
+                            <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
+                              {tokensAllowed.map((item, index) => {
+                                return (
+                                  <div
+                                    className={clsx(
+                                      "w-28 text-[14px] flex items-center justify-center border gap-2 rounded-full cursor-pointer p-2",
+                                      {
+                                        "bg-overlay-border border-none":
+                                          !tokensSelected.includes(
+                                            item.address,
+                                          ),
+                                      },
+                                      {
+                                        "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
+                                          tokensSelected.includes(item.address),
+                                      },
+                                    )}
+                                    onClick={() => {
+                                      if (
+                                        tokensSelected.includes(item.address)
+                                      ) {
+                                        setTokensSelected((prev) =>
+                                          prev.filter(
+                                            (itemNew) =>
+                                              item.address !== itemNew,
+                                          ),
+                                        );
+                                      } else {
+                                        setTokensSelected((prev) => {
+                                          const newArray = [];
+                                          prev.forEach((item2) =>
+                                            newArray.push(item2),
+                                          );
+                                          newArray.push(item.address);
+                                          return newArray;
+                                        });
+                                      }
+                                    }}
+                                  >
+                                    <img
+                                      src={item.logo}
+                                      className="w-6 h-6"
+                                      alt=""
+                                    />
+                                    <h2 className="text-white text-md font-bold">
+                                      {item.name}
+                                    </h2>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            <div className="py-6">
+                              <div className="text-primary text-[12px] text-center flex flex-col items-center justify-center">
+                                {message ===
+                                "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
+                                  <span className="text-left w-full">
+                                    <span className="font-bold">Note:</span>{" "}
+                                    {message}
+                                  </span>
+                                ) : (
+                                  <>
+                                    <span className="flex gap-4 items-center justify-center">
+                                      {message} <LoadingOutlined />
+                                    </span>
+                                    <span className="flex gap-4 mt-6 items-center justify-center">
+                                      {message === "Listing your tokens" &&
+                                        "Last Transaction"}
+                                      {message ===
+                                        "Allowing us to sell your tokens" &&
+                                        "Transaction 1/2"}
+                                    </span>
+                                  </>
                                 )}
-                                onClick={() => {
-                                  if (tokensSelected.includes(item.address)) {
-                                    setTokensSelected((prev) =>
-                                      prev.filter(
-                                        (itemNew) => item.address !== itemNew,
-                                      ),
-                                    );
-                                  } else {
-                                    setTokensSelected((prev) => {
-                                      const newArray = [];
-                                      prev.forEach((item2) =>
-                                        newArray.push(item2),
-                                      );
-                                      newArray.push(item.address);
-                                      return newArray;
-                                    });
-                                  }
-                                }}
-                              >
-                                <img
-                                  src={item.logo}
-                                  className="w-6 h-6"
-                                  alt=""
-                                />
-                                <h2 className="text-white text-md font-bold">
-                                  {item.name}
-                                </h2>
                               </div>
-                            );
-                          })}
-                        </div>
-                        <div className="py-6">
-                          <div className="text-primary text-[12px] text-center flex flex-col items-center justify-center">
-                            {message ===
-                            "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
-                              <span className="text-left w-full">
-                                <span className="font-bold">Note:</span>{" "}
-                                {message}
-                              </span>
-                            ) : (
-                              <>
-                                <span className="flex gap-4 items-center justify-center">
-                                  {message} <LoadingOutlined />
-                                </span>
-                                <span className="flex gap-4 mt-6 items-center justify-center">
-                                  {message === "Listing your tokens" &&
-                                    "Last Transaction"}
-                                  {message ===
-                                    "Allowing us to sell your tokens" &&
-                                    "Transaction 1/2"}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </div>
+                            </div>
+                          </>
+                        )}
                         <Button
                           decoration="fill"
                           className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"

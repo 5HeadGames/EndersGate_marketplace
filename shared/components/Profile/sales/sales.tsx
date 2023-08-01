@@ -9,13 +9,14 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import Styles from "./styles.module.scss";
 import packs from "../../../packs.json";
-import { getAddresses } from "@shared/web3";
+import { getAddressesMatic } from "@shared/web3";
 
 import { useModal } from "@shared/hooks/modal";
 import { onCancelSale, onLoadSales, onGetAssets } from "@redux/actions";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
+import { useBlockchain } from "@shared/context/useBlockchain";
 
 const Sales = () => {
   const nfts = useAppSelector((state) => state.nfts);
@@ -28,7 +29,9 @@ const Sales = () => {
   const cards = convertArrayCards();
 
   const [sales, setSales] = React.useState([]);
-  const { pack: packsAddress, endersGate } = getAddresses();
+  const { pack: packsAddress, endersGate } = getAddressesMatic();
+
+  const { blockchain } = useBlockchain();
 
   const cancelSale = async () => {
     await dispatch(
@@ -39,8 +42,8 @@ const Sales = () => {
         nftContract: cancelId.pack ? packsAddress : endersGate,
       }),
     );
-    dispatch(onLoadSales());
-    dispatch(onGetAssets(user));
+    dispatch(onLoadSales(blockchain));
+    dispatch(onGetAssets({ address: user, blockchain }));
     hide();
   };
 

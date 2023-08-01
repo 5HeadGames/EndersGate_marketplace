@@ -12,6 +12,8 @@ import { onGetAssets, onLogged, onUpdateUser } from "@redux/actions";
 import { useWeb3React } from "@web3-react/core";
 import { switchChain } from "@shared/web3";
 import { useSelector } from "react-redux";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 
 const Login = () => {
   const [loading, setLoading] = React.useState(false);
@@ -19,7 +21,7 @@ const Login = () => {
     store.getState()["networks"].networkId,
   );
 
-  const { networkId } = useSelector((state: any) => state.layout.user);
+  const { blockchain } = useBlockchain();
 
   const { query } = useRouter();
 
@@ -57,9 +59,12 @@ const Login = () => {
       dispatch(onLogged({ isLogged: true }));
 
       const queryAddress: any = query?.redirectAddress?.toString();
-
       setTimeout(async () => {
-        await switchChain(networkId);
+        try {
+          await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+        } catch (e) {
+          console.log(e.message);
+        }
         if (query.redirect === "true" && query.redirectAddress != null) {
           router.push(queryAddress !== undefined ? queryAddress : "/");
         }

@@ -1,28 +1,16 @@
 import type { AddEthereumChainParameter } from "@web3-react/types";
 
-// const ETH: AddEthereumChainParameter["nativeCurrency"] = {
-//   name: "Ether",
-//   symbol: "ETH",
-//   decimals: 18,
-// };
-
 const MATIC: any = {
   name: "Matic",
   symbol: "MATIC",
   decimals: 18,
 };
 
-// const CELO: AddEthereumChainParameter["nativeCurrency"] = {
-//   name: "Celo",
-//   symbol: "CELO",
-//   decimals: 18,
-// };
-
-// const ONE: AddEthereumChainParameter["nativeCurrency"] = {
-//   name: "Harmony One",
-//   symbol: "ONE",
-//   decimals: 18,
-// };
+const FINDORA: any = {
+  name: "Wrapped Findora",
+  symbol: "WFRA",
+  decimals: 18,
+};
 
 interface BasicChainInformation {
   urls: string[];
@@ -57,51 +45,65 @@ export function getAddChainParameters(
   }
 }
 
+export const MAINNET_CHAIN_IDS = [137, 1204];
+export const TESTNET_CHAIN_IDS = [80001, 1205];
+
 export const CHAINS: {
   [chainId: number]: any;
 } = {
   1205: {
     urls: [`https://gsc-testnet.prod.findora.org:8545`],
     name: "Findora GSC Testnet",
-    nativeCurrency: MATIC,
+    nativeCurrency: FINDORA,
     blockExplorerUrls: ["https://gsc-testnet.evm.findorascan.io/"],
     blockExplorer: "https://gsc-testnet.evm.findorascan.io/",
   },
-  1206: {
-    urls: [
-      process.env.infuraKey
-        ? `https://polygon-mainnet.infura.io/v3/${process.env.infuraKey}`
-        : "",
-      "https://polygon-rpc.com",
-    ].filter((url) => url !== ""),
-    name: "Polygon Mainnet",
-    nativeCurrency: MATIC,
-    blockExplorerUrls: ["https://mumbai.polygonscan.com"],
-    blockExplorer: "https://polygonscan.com",
+  1204: {
+    urls: ["https://gsc-mainnet.prod.findora.org:8545"],
+    name: "Findora GSC Mainnet",
+    nativeCurrency: FINDORA,
+    blockExplorerUrls: ["https://gsc-mainnet.evm.findorascan.io/"],
+    blockExplorer: "https://gsc-mainnet.evm.findorascan.io/",
   },
   137: {
     urls: [
-      process.env.infuraKey
-        ? `https://polygon-mainnet.infura.io/v3/${process.env.infuraKey}`
-        : "",
+      process.env.NEXT_PUBLIC_POLYGON_PROVIDER || "",
       "https://polygon-rpc.com",
     ].filter((url) => url !== ""),
     name: "Polygon Mainnet",
     nativeCurrency: MATIC,
-    blockExplorerUrls: ["https://mumbai.polygonscan.com"],
+    blockExplorerUrls: ["https://polygonscan.com"],
     blockExplorer: "https://polygonscan.com",
   },
   80001: {
     urls: [
-      process.env.infuraKey
-        ? `https://polygon-mumbai.infura.io/v3/${process.env.infuraKey}`
-        : "",
+      process.env.NEXT_PUBLIC_POLYGON_PROVIDER || "",
+      "https://polygon-rpc.com",
     ].filter((url) => url !== ""),
     name: "Polygon Mumbai",
     nativeCurrency: MATIC,
     blockExplorerUrls: ["https://mumbai.polygonscan.com"],
     blockExplorer: "https://mumbai.polygonscan.com",
   },
+};
+
+export const CHAIN_IDS_BY_NAME: {
+  [chain: string]: any;
+} = {
+  findora: process.env.NEXT_PUBLIC_ENV === "production" ? 1204 : 1205,
+  matic: process.env.NEXT_PUBLIC_ENV === "production" ? 137 : 80001,
+  ethereum: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
+};
+
+export const CHAIN_NAME_BY_ID: {
+  [chain: string]: any;
+} = {
+  1204: "findora",
+  1205: "findora",
+  137: "matic",
+  80001: "matic",
+  1: "ethereum",
+  11155111: "ethereum",
 };
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(

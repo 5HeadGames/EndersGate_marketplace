@@ -1,18 +1,28 @@
+/* eslint-disable no-loop-func */
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Web3 from "web3";
 
 import * as actionTypes from "../constants";
 import {
-  getAddresses,
+  getAddressesMatic,
   getContract,
   getContractCustom,
   createEvent,
   getTokensAllowed,
+  getAddresses,
+  getAddressesFindora,
 } from "@shared/web3";
 import cards from "../../cards.json";
+import {
+  CHAINS,
+  CHAIN_IDS_BY_NAME,
+  CHAIN_NAME_BY_ID,
+  MAINNET_CHAIN_IDS,
+  TESTNET_CHAIN_IDS,
+} from "@shared/components/chains";
 
 const getCardSold = (successfulSales: Sale[]) => {
-  return successfulSales.reduce(
+  return successfulSales?.reduce(
     (acc, cur) => acc.add(Web3.utils.toBN(cur.amount)),
     Web3.utils.toBN(0),
   );
@@ -24,7 +34,7 @@ const getDailyVolume = (successfulSales: Sale[]) => {
   const endOfDay = new Date();
   endOfDay.setUTCHours(23, 59, 59, 999);
 
-  return successfulSales.reduce((acc, cur) => {
+  return successfulSales?.reduce((acc, cur) => {
     const started = new Date(Number(cur.startedAt) * 1000).getTime();
     return acc.add(
       started > startOfDay.getTime() && started < endOfDay.getTime()
@@ -34,58 +44,134 @@ const getDailyVolume = (successfulSales: Sale[]) => {
   }, Web3.utils.toBN(0));
 };
 
+export const parseSaleNative = (sale: any[]) => {
+  return {
+    seller: sale[0],
+    nft: sale[1],
+    nftId: sale[2],
+    amount: sale[3],
+    price: sale[4],
+    duration: sale[5],
+    startedAt: sale[6],
+    status: sale[7],
+  };
+};
+
+export const parseSaleTokens = (sale: any[]) => {
+  return {
+    seller: sale[0],
+    nft: sale[1],
+    nftId: sale[2],
+    amount: sale[3],
+    price: sale[4],
+    tokens: sale[5],
+    duration: sale[6],
+    startedAt: sale[7],
+    status: sale[8],
+  };
+};
+
 export const onLoadSales = createAsyncThunk(
   actionTypes.GET_LISTED_NFTS,
   async function prepare() {
-    const addresses = getAddresses();
-    const marketplace = getContract("ClockSale", addresses.marketplace);
-    const lastSale = Number(await marketplace.methods.tokenIdTracker().call());
-    const rawSales = await marketplace.methods
-      .getSales(new Array(lastSale).fill(0).map((a, i) => i))
-      .call();
-    const allSales = rawSales.map((sale: string[], i) => ({
-      id: i,
-      seller: sale[0],
-      nft: sale[1],
-      nftId: sale[2],
-      amount: sale[3],
-      price: sale[4],
-      tokens: sale[5],
-      duration: sale[6],
-      startedAt: sale[7],
-      status: sale[8],
-    }));
-    const created = allSales.filter((sale: Sale) => sale.status === "0");
-    const successful = allSales.filter((sale: Sale) => sale.status === "1");
-    const dailyVolume = getDailyVolume(successful);
-    const cardsSold = getCardSold(successful);
+    const blockchains =
+      process.env.NEXT_PUBLIC_ENV === "production"
+        ? MAINNET_CHAIN_IDS
+        : TESTNET_CHAIN_IDS;
 
+    let saleCreated = [],
+      saleSuccessful = [],
+      dailyVolume = 0,
+      cardsSold = 0;
+    try {
+      for (let i = 0; i < blockchains.length; i++) {
+        const [blockchain, index] = [blockchains[i], i];
+        const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
+        const marketplace = getContract(
+          CHAIN_NAME_BY_ID[blockchain] === "matic"
+            ? "ClockSale"
+            : "ClockSaleFindora",
+          addresses.marketplace,
+          CHAIN_NAME_BY_ID[blockchain],
+        );
+        const lastSale = Number(
+          await marketplace.methods.tokenIdTracker().call(),
+        );
+
+        if (lastSale > 0) {
+          const rawSales = await marketplace.methods
+            .getSales(new Array(lastSale).fill(0).map((a, i) => i))
+            .call();
+
+          const allSales = rawSales.map((sale: any[], i) => {
+            const saleFormated =
+              CHAIN_NAME_BY_ID[blockchain] === "matic"
+                ? parseSaleTokens(sale)
+                : parseSaleNative(sale);
+            return {
+              id: i,
+              blockchain: CHAIN_NAME_BY_ID[blockchain],
+              ...saleFormated,
+            };
+          });
+
+          const saleCreatedPartial = allSales?.filter(
+            (sale: Sale) => sale.status === "0",
+          );
+          const saleSuccessfulPartial = allSales?.filter(
+            (sale: Sale) => sale.status === "1",
+          );
+          const dailyVolumePartial = getDailyVolume(saleSuccessful);
+          const cardsSoldPartial = getCardSold(saleSuccessful);
+
+          saleCreatedPartial.forEach((sale: Sale) => {
+            saleCreated = [...saleCreated, sale];
+          });
+
+          saleSuccessfulPartial.forEach((sale: Sale) => {
+            saleSuccessful = [...saleSuccessful, sale];
+          });
+
+          dailyVolume += dailyVolumePartial.toNumber();
+          cardsSold += cardsSoldPartial.toNumber();
+        }
+      }
+      return {
+        saleCreated,
+        saleSuccessful,
+        totalSales: saleCreated.length,
+        dailyVolume: dailyVolume.toString(),
+        cardsSold: cardsSold.toString(),
+      };
+    } catch (err) {
+      console.log(err.message, "ERROR");
+    }
     return {
-      saleCreated: created,
-      saleSuccessful: successful,
-      totalSales: created.length,
-      dailyVolume: dailyVolume.toString(),
-      cardsSold: cardsSold.toString(),
+      saleCreated: [],
+      saleSuccessful: [],
+      totalSales: 0,
+      dailyVolume: 0,
+      cardsSold: 0,
     };
   },
 );
 
 export const onGetAssets = createAsyncThunk(
   actionTypes.GET_ASSETS,
-  async function prepare(address: string) {
+  async function prepare({ address, blockchain }: any) {
     try {
-      const { endersGate, pack } = getAddresses();
-      const cardsContract = getContract("EndersGate", endersGate);
-      const packsContract = getContract("EndersPack", pack);
+      if (!address) throw new Error("No address provided");
+
+      const { endersGate, pack } = getAddresses(blockchain);
+
+      const cardsContract = getContract("EndersGate", endersGate, blockchain);
+      const packsContract = getContract("EndersPack", pack, blockchain);
+
       const packsIds = [0, 1, 2, 3];
       const cardsIds = Object.values(cards)
         .reduce((acc: any[], cur) => acc.concat(cur), [])
-        .map(
-          (card, i) =>
-            // card.properties?.id?.value !== undefined
-            //   ? card.properties.id.value
-            i,
-        );
+        .map((card, i) => i);
+
       const balancePacks = await packsContract.methods
         .balanceOfBatch(
           packsIds.map(() => address),
@@ -122,6 +208,7 @@ export const onExchangeERC721to1155 = createAsyncThunk(
     from: string;
     nfts: string[];
     provider: any;
+    blockchain: string;
     // user: any;
   }) {
     const {
@@ -129,11 +216,11 @@ export const onExchangeERC721to1155 = createAsyncThunk(
       nfts,
       // user,
       provider,
+      blockchain,
     } = args;
 
-    // const relation = user.relation("events");
     try {
-      const { exchange } = getAddresses();
+      const { exchange } = getAddresses(blockchain);
 
       const marketplaceContract = getContractCustom(
         "ExchangeERC1155",
@@ -158,7 +245,7 @@ export const onApproveERC1155 = createAsyncThunk(
   async function prepare(args: {
     from: string;
     pack: string;
-
+    blockchain: string;
     provider: any;
     // user: any;
   }) {
@@ -167,10 +254,10 @@ export const onApproveERC1155 = createAsyncThunk(
       pack,
       // user,
       provider,
+      blockchain,
     } = args;
 
-    const { exchange } = getAddresses();
-    // const relation = user.relation("events");
+    const { exchange } = getAddresses(blockchain);
     try {
       const marketplaceContract = getContractCustom(
         "ERC721Seadrop",
@@ -182,27 +269,9 @@ export const onApproveERC1155 = createAsyncThunk(
         .setApprovalForAll(exchange, true)
         .send({ from: from });
 
-      // const event = createEvent({
-      //   type: "sell",
-      //   metadata: {
-      //     from,
-      //     tokenId,
-      //     startingPrice,
-      //     amount,
-      //     duration,
-      //     address,
-      //     transactionHash,
-      //   },
-      // });
-
-      // await event.save();
-      // relation.add(event);
-      // await user.save();
-
       return { from, exchange, pack };
     } catch (err) {
       return { err };
-      console.log({ err });
     }
   },
 );
@@ -231,10 +300,8 @@ export const onSellERC1155 = createAsyncThunk(
       // user,
       provider,
     } = args;
-
-    // const relation = user.relation("events");
     try {
-      const { marketplace } = getAddresses();
+      const { marketplace } = getAddressesMatic();
 
       const marketplaceContract = getContractCustom(
         "ClockSale",
@@ -245,23 +312,6 @@ export const onSellERC1155 = createAsyncThunk(
       const { transactionHash } = await marketplaceContract.methods
         .createSale(address, tokenId, startingPrice, tokens, amount, duration)
         .send({ from: from });
-
-      // const event = createEvent({
-      //   type: "sell",
-      //   metadata: {
-      //     from,
-      //     tokenId,
-      //     startingPrice,
-      //     amount,
-      //     duration,
-      //     address,
-      //     transactionHash,
-      //   },
-      // });
-
-      // await event.save();
-      // relation.add(event);
-      // await user.save();
 
       return { from, tokenId, startingPrice, amount, duration, address };
     } catch (err) {
@@ -283,10 +333,9 @@ export const onBuyERC1155 = createAsyncThunk(
     user: any;
   }) {
     const { seller, tokenId, token, amount, bid, provider, user } = args;
-    // const user = Moralis.User.current();
-    // const relation = user.relation("events");
+
     try {
-      const { marketplace } = getAddresses();
+      const { marketplace } = getAddressesMatic();
       const marketplaceContract = getContractCustom(
         "ClockSale",
         marketplace,
@@ -321,9 +370,6 @@ export const onBuyERC1155 = createAsyncThunk(
           .buy(tokenId, amount, token)
           .send({ from: user });
       }
-      // await event.save();
-      // relation.add(event);
-      // await user.save
     } catch (err) {
       console.log({ err });
     }
@@ -355,7 +401,7 @@ export const onSellERC1155Findora = createAsyncThunk(
     } = args;
 
     try {
-      const { marketplace } = getAddresses();
+      const { marketplace } = getAddressesFindora();
 
       const marketplaceContract = getContractCustom(
         "ClockSaleFindora",
@@ -387,7 +433,7 @@ export const onBuyERC1155Findora = createAsyncThunk(
   }) {
     const { seller, tokenId, amount, bid, provider, user } = args;
     try {
-      const { marketplace } = getAddresses();
+      const { marketplace } = getAddressesFindora();
       const marketplaceContract = getContractCustom(
         "ClockSaleFindora",
         marketplace,
@@ -414,7 +460,7 @@ export const onCancelSale = createAsyncThunk(
     const { tokenId, provider, user } = args;
     // const relation = user.relation("events");
 
-    const { marketplace } = getAddresses();
+    const { marketplace } = getAddressesMatic();
     const marketplaceContract = getContractCustom(
       "ClockSale",
       marketplace,
