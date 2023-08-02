@@ -24,6 +24,8 @@ export const BlockchainContextProvider = ({ children }: any) => {
           "An error occurred while switching chain, please try again.",
         );
       }
+      //PUT HERE THE LOCAL STATE
+      localStorage.setItem("chain", blockchain);
       setBlockchain(blockchain);
     } catch (err: any) {
       console.log(err.message);

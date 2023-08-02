@@ -137,7 +137,7 @@ export default function AppLayout({ children }) {
     (state: any) => state.layout,
   );
 
-  const { blockchain } = useBlockchain();
+  const { blockchain, updateBlockchain } = useBlockchain();
 
   const dispatch = useAppDispatch();
 
@@ -160,8 +160,9 @@ export default function AppLayout({ children }) {
   const reconnect = async () => {
     try {
       const typeOfConnection = localStorage.getItem("typeOfConnection");
+      const chain = localStorage.getItem("chain");
       if (authStillValid()) {
-        await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+        updateBlockchain(chain || "matic");
         WALLETS.forEach(async (wallet) => {
           if (wallet.title === typeOfConnection) {
             await wallet.connection.connector.activate();
