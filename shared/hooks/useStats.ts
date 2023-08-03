@@ -1,4 +1,4 @@
-import { getAddressesMatic } from "@shared/web3";
+import { getAddresses, getAddressesMatic } from "@shared/web3";
 import React from "react";
 import Web3 from "web3";
 
@@ -18,11 +18,11 @@ export const useStats = ({
   });
 
   React.useEffect(() => {
-    const { endersGate, pack } = getAddressesMatic();
     if (nfts) {
       const cardSalesCreated = [];
       const packSalesCreated = [];
       nfts.saleCreated.forEach((sale) => {
+        const { endersGate, pack } = getAddresses(sale.blockchain);
         if (sale.nft == endersGate) {
           cardSalesCreated.push(sale);
         } else if (sale.nft == pack) {
@@ -61,6 +61,7 @@ export const useStats = ({
       const cardSalesSold = [];
       const packSalesSold = [];
       nfts.saleSuccessfull.forEach((sale) => {
+        const { endersGate, pack } = getAddresses(sale.blockchain);
         if (sale.nft == endersGate) {
           cardSalesSold.push(sale);
         } else if (sale.nft == pack) {
@@ -122,26 +123,12 @@ export const useStats = ({
                   return acc + cur;
                 })
             : 0,
-        totalVolume:
-          nfts.saleSuccessfull.length > 0
-            ? nfts.saleSuccessfull
-                ?.map((sale, i) => {
-                  return new Date().valueOf() -
-                    new Date(
-                      nfts.saleSuccessfull[i].startedAt * 1000,
-                    ).valueOf() <
-                    timePeriod
-                    ? parseInt(sale.price) / 10 ** 6
-                    : 0;
-                })
-                ?.reduce((acc, cur) => {
-                  return acc + cur;
-                })
-            : 0,
+        totalVolume: 0,
         cardsSold:
           nfts.saleSuccessfull.length > 0
             ? nfts.saleSuccessfull
                 ?.map((sale, i) => {
+                  const { endersGate } = getAddresses(sale.blockchain);
                   return new Date().valueOf() -
                     new Date(
                       nfts.saleSuccessfull[i].startedAt * 1000,
@@ -161,6 +148,7 @@ export const useStats = ({
           nfts.saleSuccessfull.length > 0
             ? nfts.saleSuccessfull
                 ?.map((sale, i) => {
+                  const { pack } = getAddresses(sale.blockchain);
                   return new Date().valueOf() -
                     new Date(
                       nfts.saleSuccessfull[i].startedAt * 1000,

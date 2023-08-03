@@ -109,6 +109,7 @@ export const onLoadSales = createAsyncThunk(
                 ? parseSaleTokens(sale)
                 : parseSaleNative(sale);
             allSales.push({
+              saleId: i,
               blockchain: CHAIN_NAME_BY_ID[blockchain],
               ...saleFormated,
             });
@@ -123,7 +124,10 @@ export const onLoadSales = createAsyncThunk(
         });
 
       const saleCreatedPartial = allSalesSorted?.filter(
-        (sale: Sale) => sale.status === "0",
+        (sale: Sale) =>
+          sale.status === "0" &&
+          Math.floor(new Date().getTime() / 1000) <=
+            parseInt(sale?.duration) + parseInt(sale?.startedAt),
       );
       const saleSuccessfulPartial = allSalesSorted?.filter(
         (sale: Sale) => sale.status === "1",
@@ -618,32 +622,19 @@ export const onCancelSale = createAsyncThunk(
   actionTypes.CANCEL_NFT,
   async function prepare(args: {
     tokenId: number | string;
-    nftContract: string;
     provider: any;
     user: any;
+    blockchain: any;
   }) {
-    const { tokenId, provider, user } = args;
+    const { tokenId, provider, user, blockchain } = args;
     // const relation = user.relation("events");
 
-    const { marketplace } = getAddressesMatic();
+    const { marketplace } = getAddresses(blockchain);
     const marketplaceContract = getContractCustom(
-      "ClockSale",
+      blockchain === "matic" ? "ClockSale" : "ClockSaleFindora",
       marketplace,
       provider,
     );
-    const { transactionHash } = await marketplaceContract.methods
-      .cancelSale(tokenId)
-      .send({ from: user });
-
-    const event = createEvent({
-      type: "cancel",
-      metadata: { tokenId, from: user, transactionHash },
-    });
-
-    // await event.save();
-    // relation.add(event);
-    await user.save();
-
-    return { tokenId, provider };
+    return marketplaceContract.methods.cancelSale(tokenId).send({ from: user });
   },
 );

@@ -10,6 +10,8 @@ import Tilt from "react-parallax-tilt";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import packs from "../../../packs.json";
 import { getTokensAllowed } from "@shared/web3";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { multiply } from "@shared/components/utils";
 
 export const ModalSale = ({
   isPack,
@@ -34,10 +36,8 @@ export const ModalSale = ({
           : cards[sale?.nftId]?.properties?.name?.value}
       </h2>
       <div className="flex sm:flex-row flex-col gap-4 w-full items-center justify-center md:w-[750px]">
-        {/* <div className="px-10 py-8"> */}
-
         <Tilt className="w-60">
-          <div className="h-auto w-full h-96 flex items-center">
+          <div className="w-full h-96 flex items-center">
             <img
               src={
                 isPack
@@ -99,7 +99,7 @@ export const ModalSale = ({
                 )
                   ? 0
                   : formatPrice(
-                      parseInt(sale.price) * buyNFTData,
+                      multiply(sale?.price?.toString(), buyNFTData.toString()),
                       sale.blockchain,
                     )}
               </span>
@@ -151,7 +151,10 @@ export const ModalSale = ({
                 alt=""
               />
               <h2 className="text-white text-lg font-bold uppercase">
-                {sale.blockchain}
+                {
+                  CHAINS[CHAIN_IDS_BY_NAME[sale.blockchain]].nativeCurrency
+                    .symbol
+                }
               </h2>
             </div>
           )}

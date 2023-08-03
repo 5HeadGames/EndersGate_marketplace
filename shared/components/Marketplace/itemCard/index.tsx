@@ -18,9 +18,9 @@ interface Props
   icon: string;
   name: any;
   byId: boolean;
-  type: string;
+  type?: string;
   sale: any;
-  setPage: any;
+  setPage?: any;
   currency?: any;
 }
 

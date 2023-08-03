@@ -5,6 +5,7 @@ import Link from "next/link";
 import Styles from "./styles.module.scss";
 import Web3 from "web3";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
+import { formatPrice } from "@shared/utils/formatPrice";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -22,6 +23,7 @@ interface Props
   seller?: string;
   onTimeChange?: any;
   sale?: any;
+  blockchain?: any;
 }
 
 const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
@@ -100,12 +102,14 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                       />
                       <div className="flex flex-col text-md font-medium">
                         <p>Price:</p>
-                        <span>{parseInt(props.price) / 10 ** 6} USD</span>
+                        <span>
+                          {formatPrice(props.price, props.blockchain)}
+                        </span>
                       </div>
                     </div>
                     <div className="flex flex-col text-md font-medium">
                       <p>Highest Bid:</p>
-                      <span>{parseInt(props.price) / 10 ** 6} USD</span>
+                      <span>{formatPrice(props.price, props.blockchain)}</span>
                     </div>
                   </div>
                 )}
@@ -182,12 +186,16 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                         />
                         <div className="flex flex-col text-[12px] font-medium">
                           <p>Price:</p>
-                          <span>{parseInt(props.price) / 10 ** 6} USD</span>
+                          <span>
+                            {formatPrice(props.price, props.blockchain)}
+                          </span>
                         </div>
                       </div>
                       <div className="flex flex-col text-[12px] font-medium">
                         <p>Highest Bid:</p>
-                        <span>{parseInt(props.price) / 10 ** 6} USD</span>
+                        <span>
+                          {formatPrice(props.price, props.blockchain)}
+                        </span>
                       </div>
                     </div>
                   )}

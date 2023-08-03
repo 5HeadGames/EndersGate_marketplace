@@ -91,6 +91,8 @@ export const Modals = ({
           "An error occurred while changing the network, please try again.",
         );
       }
+      updateBlockchain(networkEth);
+
       const comics = getContractCustom("Comics", comicsAddress, provider);
       if (tokenSelected === "") {
         return;

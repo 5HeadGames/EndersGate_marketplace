@@ -146,7 +146,7 @@ export const switchChain = async (network) => {
     const chainId = await (window as any).ethereum.request({
       method: "eth_chainId",
     });
-
+    console.log(chainId, network);
     if (chainId !== network) {
       await (window as any).ethereum.request({
         method: "wallet_switchEthereumChain",
@@ -165,15 +165,11 @@ export const switchChain = async (network) => {
           method: "wallet_addEthereumChain",
           params: [
             {
-              chainId: "0x13881",
-              chainName: "Polygon Mumbai Testnet",
-              rpcUrls: ["https://rpc-mumbai.maticvigil.com/"],
-              nativeCurrency: {
-                name: "Mumbai Matic",
-                symbol: "MATIC",
-                decimals: 18,
-              },
-              blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+              chainId: "0x" + parseInt(network).toString(16),
+              chainName: CHAINS[network].name,
+              rpcUrls: CHAINS[network].rpcUrls,
+              nativeCurrency: CHAINS[network].nativeCurrency,
+              blockExplorerUrls: CHAINS[network].blockExplorerUrls,
             },
           ],
         });

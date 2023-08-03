@@ -8,10 +8,8 @@ import clsx from "clsx";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { WALLETS } from "@shared/utils/connection/utils";
 import { LoadingOutlined } from "@ant-design/icons";
-import { onGetAssets, onLogged, onUpdateUser } from "@redux/actions";
-import { useWeb3React } from "@web3-react/core";
+import { onLogged } from "@redux/actions";
 import { switchChain } from "@shared/web3";
-import { useSelector } from "react-redux";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 

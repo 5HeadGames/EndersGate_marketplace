@@ -576,12 +576,6 @@ const MarketplaceComponent = () => {
                       ? filterCards(cards[sale.nftId])
                       : filterPacks(packs[sale.nftId]);
                   })
-                  .filter((sale) => {
-                    return (
-                      Math.floor(new Date().getTime() / 1000) <=
-                      parseInt(sale?.duration) + parseInt(sale?.startedAt)
-                    );
-                  })
                   .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
                   .length > 0 ? (
                   sales
@@ -598,12 +592,6 @@ const MarketplaceComponent = () => {
                         (minPrice == 0 && maxPrice == 0) ||
                         (minPrice == undefined && maxPrice == undefined) ||
                         (minPrice <= price && maxPrice >= price)
-                      );
-                    })
-                    .filter((sale) => {
-                      return (
-                        Math.floor(new Date().getTime() / 1000) <=
-                        parseInt(sale?.duration) + parseInt(sale?.startedAt)
                       );
                     })
                     .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
@@ -634,18 +622,11 @@ const MarketplaceComponent = () => {
                     There aren't sales for this search, try with other.
                   </div>
                 )}
-                {sales
-                  ?.filter((sale, i) => {
-                    return sale.nft !== pack
-                      ? filterCards(cards[sale.nftId])
-                      : filterPacks(packs[sale.nftId]);
-                  })
-                  .filter((sale) => {
-                    return (
-                      Math.floor(new Date().getTime() / 1000) <=
-                      parseInt(sale?.duration) + parseInt(sale?.startedAt)
-                    );
-                  }).length > 12 && (
+                {sales?.filter((sale, i) => {
+                  return sale.nft !== pack
+                    ? filterCards(cards[sale.nftId])
+                    : filterPacks(packs[sale.nftId]);
+                }).length > 12 && (
                   <div className="flex w-full items-center justify-center gap-2">
                     <div
                       className="rounded-full flex items-center bg-secondary text-white p-4 cursor-pointer"

@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import { Image, Text, Tooltip } from "@chakra-ui/react";
 import { useBlockchain } from "@shared/context/useBlockchain";
+import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 
 export const DropdownChain: React.FC<any> = () => {
   const { blockchain, updateBlockchain } = useBlockchain();

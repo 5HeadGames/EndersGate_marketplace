@@ -51,7 +51,7 @@ const Shop = () => {
 
   const { cartShop } = useSelector((state: any) => state.layout);
 
-  const { blockchain } = useBlockchain();
+  const { blockchain, updateBlockchain } = useBlockchain();
 
   const { shop: shopAddress, MATICUSD } = getAddresses(blockchain);
 
@@ -157,10 +157,9 @@ const Shop = () => {
     try {
       const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
       if (!changed) {
-        throw new Error(
-          "An error occurred while changing the network, please try again.",
-        );
+        return;
       }
+      updateBlockchain(blockchain);
 
       if (tokenSelected === "") {
         addToast("Please Select a Payment Method", { appearance: "error" });

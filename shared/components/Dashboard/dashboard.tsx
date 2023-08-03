@@ -286,36 +286,22 @@ const DashboardComponent = () => {
             </Dropdown>
           </div>
           <div className="flex flex-wrap w-full justify-center items-center relative md:px-40">
-            {sales.map((a, id) => {
-              return a.nft.toLowerCase() !== pack.toLowerCase() ? (
+            {sales.map((sale, id) => {
+              return (
                 <NFTCard
-                  classes={{ root: "lg:m-4 m-2 cursor-pointer" }}
-                  id={a.nftId}
-                  transactionId={a.id}
-                  tokens={a.tokens}
-                  seller={a.seller}
-                  icon={cards[a.nftId].properties.image.value}
-                  name={cards[a.nftId].properties.name.value}
+                  classes={{ root: "m-4 cursor-pointer" }}
+                  icon={
+                    sale.nft === pack
+                      ? packs[sale.nftId]?.properties?.image?.value
+                      : cards[sale.nftId]?.properties?.image?.value
+                  }
+                  name={
+                    sale.nft === pack
+                      ? packs[sale.nftId]?.properties?.name?.value
+                      : cards[sale.nftId]?.properties?.name?.value
+                  }
                   byId={false}
-                  setPage={(arg) => {}}
-                  sale={a}
-                  price={a.price}
-                  {...a}
-                />
-              ) : (
-                <NFTCard
-                  classes={{ root: "lg:m-4 m-2 cursor-pointer" }}
-                  id={a.nftId}
-                  transactionId={a.id}
-                  tokens={a.tokens}
-                  seller={a.seller}
-                  icon={packs[a.nftId]?.properties?.image?.value}
-                  name={packs[a.nftId]?.properties?.name?.value}
-                  byId={false}
-                  setPage={(arg) => {}}
-                  sale={a}
-                  price={a.price}
-                  {...a}
+                  sale={sale}
                 />
               );
             })}

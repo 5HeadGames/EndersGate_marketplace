@@ -26,6 +26,7 @@ import { Cart } from "./cart";
 import ChainSelect from "./chainSelect";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
+import { CHAIN_IDS_BY_NAME } from "../chains";
 
 type ButtonsTypes = { logout: boolean; userData: boolean };
 

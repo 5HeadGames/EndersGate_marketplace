@@ -15,7 +15,13 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 
-export const MarketplaceCard = ({ classes, sale, icon, name, setPage }) => {
+export const MarketplaceCard = ({
+  classes,
+  sale,
+  icon,
+  name,
+  setPage,
+}: any) => {
   const dispatch = useAppDispatch();
   const { cart, user } = useSelector((state: any) => state.layout);
   const [hoverAll, setHoverAll] = React.useState(false);

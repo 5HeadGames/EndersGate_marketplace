@@ -51,7 +51,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const [message, setMessage] = React.useState("");
 
-  const { blockchain } = useBlockchain();
+  const { blockchain, updateBlockchain } = useBlockchain();
 
   const nfts = useAppSelector((state) => state.nfts);
 
@@ -85,6 +85,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
           "An error has occurred while switching chain, please try again.",
         );
       }
+      updateBlockchain(sale.blockchain);
+
       setMessage("Buying tokens");
       const { pack, endersGate } = getAddresses(sale.blockchain);
       if (sale.blockchain !== "matic") {

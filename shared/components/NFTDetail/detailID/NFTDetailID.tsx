@@ -30,6 +30,8 @@ import ReactCardFlip from "react-card-flip";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
+import { useModal } from "@shared/hooks/modal";
+import { CongratsListing } from "./Congrats";
 
 const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { account: user, provider } = useWeb3React();
@@ -44,6 +46,8 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
   );
 
+  const { Modal, show, hide, isShow } = useModal();
+
   const [flippedCard, setFlippedCard] = React.useState(false);
   const [tokensSelected, setTokensSelected] = React.useState([]);
 
@@ -53,7 +57,8 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     duration: 0,
   });
 
-  const { blockchain } = useBlockchain();
+  const { blockchain, updateBlockchain } = useBlockchain();
+
   const { endersGate } = getAddresses(blockchain);
 
   const sellNft = async () => {
@@ -79,6 +84,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           "An error has occurred while switching chain, please try again.",
         );
       }
+      updateBlockchain(blockchain);
       const tokenId = id;
       const { endersGate, marketplace } = getAddresses(blockchain);
       const endersgateInstance = getContractCustom(
@@ -148,9 +154,8 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     } catch (err) {
       console.log({ err });
     }
-
     dispatch(onLoadSales());
-    console.log("loaded");
+    show();
     dispatch(onGetAssets({ address: user, blockchain }));
     setMessage(
       "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
@@ -170,6 +175,12 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
 
   return (
     <>
+      <Modal isShow={isShow}>
+        <CongratsListing
+          hide={hide}
+          name={cards[id]?.properties?.name?.value}
+        />
+      </Modal>
       {id !== undefined ? (
         <div className="min-h-screen w-full flex flex-col xl:px-36 md:px-10 sm:px-6 px-4 pt-20 pb-20">
           <div
