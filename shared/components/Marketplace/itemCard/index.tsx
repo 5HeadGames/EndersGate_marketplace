@@ -14,20 +14,13 @@ interface Props
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
   > {
-  classes?: Partial<Record<"root", string>>;
-  icon?: string;
-  id: any;
-  tokens?: any;
-  transactionId?: any;
-  name?: any;
-  balance?: any;
-  price?: any;
+  classes: Partial<Record<"root", string>>;
+  icon: string;
+  name: any;
   byId: boolean;
-  seller?: string;
-  type?: string;
-  sale?: any;
-  blockchain?: string;
-  setPage?: any;
+  type: string;
+  sale: any;
+  setPage: any;
   currency?: any;
 }
 

@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  LeftCircleFilled,
-  LeftOutlined,
-  LoadingOutlined,
-  SwapOutlined,
-} from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Web3 from "web3";
 
@@ -15,29 +10,26 @@ import {
   onGetAssets,
   onSellERC1155Findora,
 } from "@redux/actions";
-import { Button } from "../common/button/button";
+import { Button } from "../../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import {
   getAddresses,
-  getAddressesMatic,
   getContractCustom,
   getTokensAllowed,
   switchChain,
 } from "@shared/web3";
-import { Typography } from "../common/typography";
-import { useModal } from "@shared/hooks/modal";
+import { Typography } from "../../common/typography";
 import { approveERC1155 } from "@shared/web3";
-import { convertArrayCards } from "../common/convertCards";
+import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
-import Styles from "./styles.module.scss";
+import Styles from "../styles.module.scss";
 import Tilt from "react-parallax-tilt";
 import { useWeb3React } from "@web3-react/core";
-import { AddressText } from "../common/specialFields/SpecialFields";
+import { AddressText } from "../../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
-
-const { endersGate } = getAddressesMatic();
+import { ChevronLeftIcon } from "@heroicons/react/solid";
 
 const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { account: user, provider } = useWeb3React();
@@ -62,6 +54,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   });
 
   const { blockchain } = useBlockchain();
+  const { endersGate } = getAddresses(blockchain);
 
   const sellNft = async () => {
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
@@ -107,6 +100,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
             address: endersGate,
           });
         }
+        setMessage("Listing your tokens");
         await dispatch(
           onSellERC1155Findora({
             address: endersGate,
@@ -183,7 +177,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
             onClick={() => router.back()}
           >
             <div className="flex items-center gap-2 cursor-pointer w-min">
-              <LeftCircleFilled className="w-8 h-8" />
+              <ChevronLeftIcon className="w-8 h-8" />
             </div>
           </div>
           <div className="w-full flex xl:flex-row flex-col  gap-4 justify-center">
@@ -271,7 +265,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                         <div className="flex gap-4 w-full justify-between items-center">
                           <label className="text-primary font-bold whitespace-nowrap">
                             Price per NFT (
-                            {blockchain === "findora" ? "TGRP" : "USD"})
+                            {blockchain === "findora" ? "WFRA" : "USD"})
                           </label>
                           <input
                             type="number"
@@ -397,32 +391,32 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                                 );
                               })}
                             </div>
-                            <div className="py-6">
-                              <div className="text-primary text-[12px] text-center flex flex-col items-center justify-center">
-                                {message ===
-                                "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
-                                  <span className="text-left w-full">
-                                    <span className="font-bold">Note:</span>{" "}
-                                    {message}
-                                  </span>
-                                ) : (
-                                  <>
-                                    <span className="flex gap-4 items-center justify-center">
-                                      {message} <LoadingOutlined />
-                                    </span>
-                                    <span className="flex gap-4 mt-6 items-center justify-center">
-                                      {message === "Listing your tokens" &&
-                                        "Last Transaction"}
-                                      {message ===
-                                        "Allowing us to sell your tokens" &&
-                                        "Transaction 1/2"}
-                                    </span>
-                                  </>
-                                )}
-                              </div>
-                            </div>
                           </>
                         )}
+                        <div className="py-6">
+                          <div className="text-primary text-[12px] text-center flex flex-col items-center justify-center">
+                            {message ===
+                            "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
+                              <span className="text-left w-full">
+                                <span className="font-bold">Note:</span>{" "}
+                                {message}
+                              </span>
+                            ) : (
+                              <>
+                                <span className="flex gap-4 items-center justify-center">
+                                  {message} <LoadingOutlined />
+                                </span>
+                                <span className="flex gap-4 mt-6 items-center justify-center">
+                                  {message === "Listing your tokens" &&
+                                    "Last Transaction"}
+                                  {message ===
+                                    "Allowing us to sell your tokens" &&
+                                    "Transaction 1/2"}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
                         <Button
                           decoration="fill"
                           className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
@@ -450,7 +444,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                         Blockchain:
                       </p>
                       <p className="text-primary-disabled  font-[400] text-lg">
-                        {CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]?.name}
+                        {CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.name}
                       </p>
                     </div>
                     <div className="w-full flex justify-between py-2 border-b border-overlay-border px-6">
@@ -483,8 +477,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       </p>
                       <a
                         href={
-                          CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]
-                            ?.blockExplorer +
+                          CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.blockExplorer +
                           "/address/" +
                           endersGate
                         }

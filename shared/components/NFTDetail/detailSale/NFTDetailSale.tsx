@@ -1,45 +1,33 @@
 import React from "react";
 import Web3 from "web3";
-import {
-  ExclamationCircleOutlined,
-  LeftCircleFilled,
-  LeftOutlined,
-  LeftSquareFilled,
-  LinkOutlined,
-  LoadingOutlined,
-  MenuOutlined,
-} from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
-import { useAppDispatch } from "redux/store";
+import { useAppDispatch, useAppSelector } from "redux/store";
 import {
   onBuyERC1155,
   onLoadSales,
   onGetAssets,
   onBuyERC1155Findora,
 } from "@redux/actions";
-import { Button } from "../common/button/button";
+import { Button } from "../../common/button/button";
 import { Icons } from "@shared/const/Icons";
-import { AddressText } from "../common/specialFields/SpecialFields";
-import {
-  getAddresses,
-  getAddressesMatic,
-  getTokensAllowed,
-  loadSale,
-  switchChain,
-} from "@shared/web3";
-import packs from "../../packs.json";
+import { AddressText } from "../../common/specialFields/SpecialFields";
+import { getAddresses, getTokensAllowed, switchChain } from "@shared/web3";
+import packs from "../../../packs.json";
 import { useModal } from "@shared/hooks/modal";
-import { convertArrayCards } from "../common/convertCards";
+import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
-import Styles from "./styles.module.scss";
+import Styles from "../styles.module.scss";
 import Tilt from "react-parallax-tilt";
 import { useWeb3React } from "@web3-react/core";
-import { DropdownActions } from "../common/dropdownActions/dropdownActions";
+import { DropdownActions } from "../../common/dropdownActions/dropdownActions";
 import ReactCardFlip from "react-card-flip";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
 import { formatPrice } from "@shared/utils/formatPrice";
+import { ChevronLeftIcon } from "@heroicons/react/solid";
+import { ModalSale } from "./ModalSale";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const { account: user, provider } = useWeb3React();
@@ -48,7 +36,6 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const [buyNFTData, setBuyNFTData] = React.useState(0);
   const { Modal, show, hide, isShow } = useModal();
   const [isPack, setIsPack] = React.useState(false);
-  const [saleData, setSaleData] = React.useState(false);
   const [flippedCard, setFlippedCard] = React.useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -66,23 +53,20 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const { blockchain } = useBlockchain();
 
-  const { pack: packAddress, endersGate: endersGateAddress } =
-    getAddresses(blockchain);
+  const nfts = useAppSelector((state) => state.nfts);
 
   React.useEffect(() => {
-    if (id) {
+    if (id && nfts?.allSales?.length) {
       getSale();
     }
-  }, [id, blockchain]);
+  }, [id, nfts.allSales]);
 
   const getSale = async () => {
-    console.log(id, blockchain);
-
-    const sale = await loadSale({ tokenId: id, blockchain });
-
-    console.log(sale);
-    const { pack } = getAddresses(blockchain);
-    if (sale.nft === pack) {
+    const sale = nfts.allSales.filter((sale) => {
+      return sale?.id?.toString() == id;
+    })[0];
+    const { pack: packAddress } = getAddresses(sale?.blockchain);
+    if (sale?.nft === packAddress) {
       setIsPack(true);
     } else {
       setIsPack(false);
@@ -95,15 +79,15 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
       router.push("/login");
     }
     try {
-      const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+      const changed = await switchChain(CHAIN_IDS_BY_NAME[sale.blockchain]);
       if (!changed) {
         throw Error(
           "An error has occurred while switching chain, please try again.",
         );
       }
       setMessage("Buying tokens");
-      const { pack, endersGate } = getAddresses(blockchain);
-      if (blockchain !== "matic") {
+      const { pack, endersGate } = getAddresses(sale.blockchain);
+      if (sale.blockchain !== "matic") {
         await dispatch(
           onBuyERC1155Findora({
             seller: sale.seller,
@@ -156,184 +140,21 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   return (
     <>
       <Modal isShow={isShow} withoutX>
-        {id !== undefined && sale !== undefined ? (
-          <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-12 border border-overlay-border w-auto relative">
-            <h2 className="font-bold text-primary text-center uppercase text-3xl">
-              BUY{" "}
-              {isPack
-                ? packs[sale?.nftId].properties.name.value
-                : cards[sale?.nftId]?.properties?.name?.value}
-            </h2>
-            <div className="flex sm:flex-row flex-col gap-4 w-full items-center justify-center md:w-[750px]">
-              {/* <div className="px-10 py-8"> */}
-
-              <Tilt className="w-60">
-                <div className="h-auto w-full h-96 flex items-center">
-                  <img
-                    src={
-                      isPack
-                        ? packs[sale?.nftId].properties.image.value
-                        : cards[sale?.nftId]?.properties?.image?.value ||
-                          Icons.logo
-                    }
-                    className={clsx(
-                      Styles.animatedImage,
-                      {
-                        "rounded-full": !isPack
-                          ? cards[sale.nftId].typeCard === "avatar"
-                          : false,
-                      },
-                      {
-                        "rounded-md": !isPack
-                          ? cards[sale.nftId].typeCard !== "avatar"
-                          : false,
-                      },
-                      "w-96",
-                    )}
-                    alt=""
-                  />
-                </div>
-              </Tilt>
-              {/* </div> */}
-              <div className="flex flex-col gap-4  justify-between">
-                <div className="flex flex-col gap-2 w-full">
-                  <div className="flex justify-between items-center sm:flex-row gap-4 flex-col w-96">
-                    <label className="text-primary font-bold text-lg w-full">
-                      Amount of NFTs
-                    </label>
-
-                    <input
-                      type="number"
-                      className="bg-overlay text-primary text-center w-24 shrink-0 py-2 rounded-md border border-overlay-border"
-                      onChange={(e) => {
-                        setBuyNFTData(parseInt(e.target.value));
-                      }}
-                    />
-                  </div>
-                  {buyNFTData > sale?.amount && (
-                    <div className="text-red-primary flex gap-2 items-center w-full text-[13px]">
-                      <ExclamationCircleOutlined />
-                      <caption>
-                        The quantity of tokens can't exceed available to buy
-                      </caption>
-                    </div>
-                  )}
-                </div>
-                <div className="flex sm:flex-row flex-col gap-4 w-full justify-between items-center">
-                  <label className="text-primary font-bold text-lg">
-                    Total Price:
-                  </label>
-                  {sale && sale.price && (
-                    <span className="text-white w-24 text-center font-bold text-green-button">
-                      {isNaN(
-                        parseInt(
-                          formatPrice(parseInt(sale.price), blockchain),
-                        ) * buyNFTData,
-                      )
-                        ? 0
-                        : parseInt(
-                            formatPrice(parseInt(sale.price), blockchain),
-                          ) * buyNFTData}
-                    </span>
-                  )}
-                </div>
-                {blockchain === "matic" ? (
-                  <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
-                    {tokensAllowed
-                      .filter((item) =>
-                        sale?.tokens
-                          ?.map((item) => item.toLowerCase())
-                          ?.includes(item.address.toLowerCase()),
-                      )
-                      .map((item, index) => {
-                        return (
-                          <div
-                            className={clsx(
-                              "w-28 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
-                              {
-                                "bg-overlay-border border-white":
-                                  tokenSelected?.address == item.address,
-                              },
-                              {
-                                "bg-overlay":
-                                  tokenSelected?.address !== item.address,
-                              },
-                            )}
-                            onClick={() => {
-                              setTokenSelected(item);
-                            }}
-                          >
-                            <img src={item.logo} className="w-8 h-8" alt="" />
-                            <h2 className="text-white text-lg font-bold">
-                              {item.name}
-                            </h2>
-                          </div>
-                        );
-                      })}
-                  </div>
-                ) : (
-                  <div
-                    className={clsx(
-                      "w-28 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
-                      "bg-overlay-border border-white",
-                    )}
-                  >
-                    <img
-                      src={`/images/${blockchain}.png`}
-                      className="w-8 h-8"
-                      alt=""
-                    />
-                    <h2 className="text-white text-lg font-bold uppercase">
-                      {blockchain}
-                    </h2>
-                  </div>
-                )}
-                <div className="flex gap-4 items-center justify-center">
-                  <img
-                    src={`/images/${blockchain}.png`}
-                    className="md:h-10 md:w-10 w-8 h-8"
-                    alt=""
-                  />
-                  <img
-                    src={Icons.logo}
-                    className="md:w-12 md:h-12 w-8 h-8"
-                    alt=""
-                  />
-                </div>
-                <div className="py-4">
-                  <div className="text-primary text-sm text-center flex items-center justify-center">
-                    {message === "Buying tokens" && (
-                      <span className="flex gap-4 items-center justify-center">
-                        {message} <LoadingOutlined />
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
-                  <Button
-                    decoration="line-white"
-                    className="bg-dark md:text-lg w-28 text-md py-[6px] rounded-lg text-white hover:text-overlay border-none"
-                    onClick={() => {
-                      setBuyNFTData(0);
-                      hide();
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    decoration="fill"
-                    className="w-28 md:text-lg text-md py-[6px] font-[600] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
-                    onClick={buyNFTData > sale?.amount ? undefined : buyNft}
-                    disabled={buyNFTData > sale?.amount}
-                  >
-                    Buy Now
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          ""
+        {id !== undefined && sale !== undefined && (
+          <ModalSale
+            {...{
+              message,
+              buyNft,
+              tokensAllowed,
+              hide,
+              buyNFTData,
+              setBuyNFTData,
+              sale,
+              isPack,
+              setTokenSelected,
+              tokenSelected,
+            }}
+          />
         )}
       </Modal>
       {id !== undefined && sale !== undefined ? (
@@ -342,7 +163,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
             className="w-full text-white font-bold cursor-pointer text-2xl"
             onClick={() => router.back()}
           >
-            <LeftCircleFilled className="" />
+            <ChevronLeftIcon className="w-8 h-8" />
           </div>
           <div className="w-full flex xl:flex-row flex-col  gap-4 justify-center">
             <div className="flex flex-col gap-2">
@@ -547,7 +368,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                     <div className="flex flex-row xl:gap-32 gap-16 w-full">
                       <div className="flex flex-col">
                         <h2 className="md:text-3xl text-xl font-[450] text-white whitespace-nowrap">
-                          {formatPrice(sale.price, blockchain)}
+                          {formatPrice(sale.price, sale.blockchain)}
                           {/* <span className="!text-sm text-overlay-border">
                             ($1.5k)
                           </span> */}
@@ -688,18 +509,14 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         </p>
                         <a
                           href={`${
-                            CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]
-                              ?.blockExplorer
-                          }/address/${
-                            !isPack ? endersGateAddress : packAddress
-                          }`}
+                            CHAINS[CHAIN_IDS_BY_NAME[sale.blockchain]]
+                              ?.blockExplorerUrls[0]
+                          }/address/${sale.nft}`}
                           target="_blank"
                           rel="noreferrer"
                           className="text-red-primary font-[400] text-lg flex items-center gap-1"
                         >
-                          <AddressText
-                            text={!isPack ? endersGateAddress : packAddress}
-                          ></AddressText>{" "}
+                          <AddressText text={sale.nft}></AddressText>{" "}
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"

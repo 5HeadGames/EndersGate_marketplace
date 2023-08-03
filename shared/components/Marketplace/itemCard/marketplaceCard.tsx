@@ -15,8 +15,7 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 
-export const MarketplaceCard = (props) => {
-  const { classes } = props;
+export const MarketplaceCard = ({ classes, sale, icon, name, setPage }) => {
   const dispatch = useAppDispatch();
   const { cart, user } = useSelector((state: any) => state.layout);
   const [hoverAll, setHoverAll] = React.useState(false);
@@ -31,7 +30,7 @@ export const MarketplaceCard = (props) => {
   const handleAdd = (e) => {
     e.preventDefault();
     if (user?.ethAddress) {
-      if (props.sale.blockchain !== blockchain) {
+      if (sale.blockchain !== blockchain) {
         addToast("Please select sales in the same blockchain", {
           appearance: "error",
         });
@@ -48,13 +47,13 @@ export const MarketplaceCard = (props) => {
           );
         });
         intersection = intersection.filter((item) =>
-          props?.sale?.tokens?.includes(item.address),
+          sale?.tokens?.includes(item.address),
         );
 
         if (intersection.length > 0) {
           dispatch(
             addCart({
-              ...props?.sale,
+              ...sale,
               quantity: quantity,
             }),
           );
@@ -66,7 +65,7 @@ export const MarketplaceCard = (props) => {
       } else {
         dispatch(
           addCart({
-            ...props?.sale,
+            ...sale,
             quantity: quantity,
           }),
         );
@@ -80,23 +79,23 @@ export const MarketplaceCard = (props) => {
     e.preventDefault();
     dispatch(
       removeFromCart({
-        id: props?.transactionId,
+        id: sale.id,
       }),
     );
   };
 
   const handleChecked = (e) => {
     e.preventDefault();
-    if (cart.filter((e) => e.id === props?.transactionId).length > 0) {
+    if (cart.filter((e) => e.id === sale.id).length > 0) {
       dispatch(
         removeFromCart({
-          id: props?.transactionId,
+          id: sale.id,
         }),
       );
     } else {
       dispatch(
         addCart({
-          ...props?.sale,
+          ...sale,
           quantity: quantity,
         }),
       );
@@ -108,20 +107,20 @@ export const MarketplaceCard = (props) => {
       onMouseOver={() => setHoverAll(true)}
       onMouseLeave={() => setHoverAll(false)}
     >
-      <Link href={`/NFTDetailSale/${props?.transactionId}`}>
+      <Link href={`/NFTDetailSale/${sale.id}`}>
         <div
           className={clsx(
             "rounded-xl flex flex-col text-gray-100 lg:w-96 w-64 bg-secondary relative overflow-hidden border border-gray-500 z-[2] cursor-pointer",
             {
-              ["!border-green-button"]:
-                cart.filter((e) => e.id === props?.transactionId).length > 0,
+              "!border-green-button":
+                cart.filter((e) => e.id === sale.id).length > 0,
             },
             // Styles.cardHover,
             classes?.root,
           )}
         >
           <img
-            src={props?.icon || Icons.logo}
+            src={icon || Icons.logo}
             className="absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto opacity-50 min-w-[175%]"
             alt=""
           />
@@ -130,53 +129,46 @@ export const MarketplaceCard = (props) => {
               <div className="w-full lg:text-lg text-md flex justify-between rounded-xl p-2 bg-secondary">
                 <span>
                   Card #
-                  {props?.id !== undefined
-                    ? props?.id + "-" + props?.transactionId
-                    : "12345"}
+                  {sale.id !== undefined ? sale.nftId + "-" + sale.id : "12345"}
                 </span>
-                {props?.sale?.amount && <span>x{props?.sale?.amount}</span>}
+                {sale?.amount && <span>x{sale?.amount}</span>}
               </div>
             </div>
             <div className="w-full lg:h-80 h-48 flex justify-center items-center my-6 relative">
               <div
                 className={clsx(
-                  { ["opacity-0"]: !hoverAll },
+                  { "opacity-0": !hoverAll },
                   "flex flex-col items-end transition-all duration-500 justify-center gap-4 top-4 right-3 absolute",
                 )}
               >
-                {props?.sale?.status == 0 &&
+                {sale?.status == 0 &&
                   Math.floor(new Date().getTime() / 1000) <=
-                    parseInt(props?.sale?.duration) +
-                      parseInt(props?.sale?.startedAt) && (
+                    parseInt(sale?.duration) + parseInt(sale?.startedAt) && (
                     <div
                       onMouseOver={() => setHoverBuy(true)}
                       onMouseLeave={() => setHoverBuy(false)}
                       className={clsx(
                         "rounded-full p-2 flex w-10 h-10 items-center justify-center border-overlay-border border cursor-pointer",
                         {
-                          ["gap-1 !w-20 px-3 text-center"]:
+                          "gap-1 !w-20 px-3 text-center":
                             hoverBuy &&
-                            cart.filter((e) => e.id === props?.transactionId)
-                              .length == 0 &&
-                            parseInt(props?.sale.amount) > 1,
+                            cart.filter((e) => e.id === sale.id).length == 0 &&
+                            parseInt(sale.amount) > 1,
                         },
                         {
-                          ["hover:bg-red-500 bg-green-button hover:transition-all transition-all duration-500 hover:duration-500"]:
-                            cart.filter((e) => e.id === props?.transactionId)
-                              .length > 0,
+                          "hover:bg-red-500 bg-green-button hover:transition-all transition-all duration-500 hover:duration-500":
+                            cart.filter((e) => e.id === sale.id).length > 0,
                         },
                         {
-                          ["bg-overlay hover:bg-overlay-2 hover:transition-all transition-all duration-500 hover:duration-500"]:
-                            cart.filter((e) => e.id === props?.transactionId)
-                              .length == 0,
+                          "bg-overlay hover:bg-overlay-2 hover:transition-all transition-all duration-500 hover:duration-500":
+                            cart.filter((e) => e.id === sale.id).length == 0,
                         },
                       )}
                       onClick={(e) => {
                         e.preventDefault();
                       }}
                     >
-                      {cart.filter((e) => e.id === props?.transactionId)
-                        .length > 0 ? (
+                      {cart.filter((e) => e.id === sale.id).length > 0 ? (
                         hoverBuy ? (
                           <XIcon className="!w-6" onClick={handleRemove} />
                         ) : (
@@ -199,22 +191,20 @@ export const MarketplaceCard = (props) => {
                             )}
                             className={clsx(
                               {
-                                ["!hidden"]:
-                                  !hoverBuy ||
-                                  parseInt(props?.sale.amount) <= 1,
+                                "!hidden":
+                                  !hoverBuy || parseInt(sale.amount) <= 1,
                               },
                               "!p-0",
                             )}
                             withoutX
                             onClick={(e) => e.preventDefault()}
-                            max={props?.sale.amount}
+                            max={sale.amount}
                             min={1}
                             defaultValue={quantity}
                             value={quantity}
                             onChange={(e) => {
                               if (
-                                parseInt(e.target.value) >
-                                parseInt(props?.sale.amount)
+                                parseInt(e.target.value) > parseInt(sale.amount)
                               ) {
                                 addToast(
                                   "Your amount exceeds the amount of NFTs of the sale",
@@ -235,16 +225,17 @@ export const MarketplaceCard = (props) => {
                   )}
                   onClick={(e) => {
                     e.preventDefault();
-                    props?.setPage(0);
-                    router.push("/marketplace?search=" + props?.name);
+                    setPage(0);
+                    router.push("/marketplace?search=" + name);
                   }}
                 >
                   <SearchIcon />
                 </div>
               </div>
               <img
-                src={props?.icon || Icons.logo}
-                className={props?.icon ? "lg:h-64 h-48" : "h-24"}
+                src={icon || Icons.logo}
+                className={icon ? "lg:h-64 h-48" : "h-24"}
+                alt={sale.name}
               />
             </div>
             <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
@@ -258,13 +249,13 @@ export const MarketplaceCard = (props) => {
                 </div>
                 <div className="w-full flex flex-col">
                   <span className="uppercase text-white lg:text-lg text-md">
-                    {props?.name || "Enders Gate"}
+                    {name || "Enders Gate"}
                   </span>
                   <span
                     className="lg:text-[12px] text-[10px] text-gray-500 font-medium"
                     style={{ lineHeight: "10px" }}
                   >
-                    Owner: {<AddressText text={props?.seller} /> || "Owner"}
+                    Owner: {<AddressText text={sale?.seller} /> || "Owner"}
                   </span>
                 </div>
                 <img
@@ -273,28 +264,26 @@ export const MarketplaceCard = (props) => {
                   alt=""
                 />
               </div>
-              {props?.price && (
+              {sale?.price && (
                 <div
                   className="flex justify-between text-md text-white"
                   style={{ lineHeight: "18px" }}
                 >
                   <div className="flex items-center gap-2">
                     <img
-                      src={`/images/${props?.blockchain}.png`}
+                      src={`/images/${sale.blockchain}.png`}
                       className="lg:h-8 lg:w-8 w-6 h-6"
                       alt=""
                     />
                     <div className="flex flex-col lg:text-md text-sm font-medium">
                       <p>Price:</p>
-                      <span>
-                        {formatPrice(props?.price, props?.blockchain)}
-                      </span>
+                      <span>{formatPrice(sale?.price, sale.blockchain)}</span>
                     </div>
                   </div>
                   <div className="flex lg:text-md items-center gap-2 text-sm font-medium">
                     {getTokensAllowed()
                       .filter((item) => {
-                        return props?.tokens
+                        return sale?.tokens
                           ?.map((token) => token.toLowerCase())
                           ?.includes(item.address.toLowerCase());
                       })
@@ -313,14 +302,13 @@ export const MarketplaceCard = (props) => {
         </div>
       </Link>
 
-      {props?.sale?.status == 0 &&
+      {sale?.status == 0 &&
         Math.floor(new Date().getTime() / 1000) <=
-          parseInt(props?.sale?.duration) +
-            parseInt(props?.sale?.startedAt) && (
+          parseInt(sale?.duration) + parseInt(sale?.startedAt) && (
           <div
             className={clsx(
-              { ["bottom-[8px]"]: hoverAll },
-              { ["bottom-[50px]"]: !hoverAll },
+              { "bottom-[8px]": hoverAll },
+              { "bottom-[50px]": !hoverAll },
               "flex w-full gap-4 absolute transition-all duration-500  px-8 z-[1]  font-bold text-white",
             )}
           >
@@ -330,7 +318,7 @@ export const MarketplaceCard = (props) => {
             >
               Buy Now
             </div>
-            <Link href={`/NFTDetailSale/${props?.transactionId}`}>
+            <Link href={`/NFTDetailSale/${sale.id}`}>
               <div className="w-1/2 px-2 pb-1  flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-overlay-2 transition-all duration-500">
                 Details
               </div>

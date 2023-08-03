@@ -612,10 +612,6 @@ const MarketplaceComponent = () => {
                         <NftCard
                           classes={{ root: "m-4 cursor-pointer" }}
                           setPage={setPage}
-                          id={sale.nftId}
-                          transactionId={sale.id}
-                          seller={sale.seller}
-                          tokens={sale.tokens}
                           icon={
                             sale.nft === pack
                               ? packs[sale.nftId]?.properties?.image?.value
@@ -627,10 +623,8 @@ const MarketplaceComponent = () => {
                               : cards[sale.nftId]?.properties?.name?.value
                           }
                           byId={false}
-                          price={sale.price}
                           type={type}
                           sale={sale}
-                          {...sale}
                         />
                       );
                     })

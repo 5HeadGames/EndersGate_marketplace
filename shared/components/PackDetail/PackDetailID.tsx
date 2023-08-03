@@ -23,17 +23,15 @@ import {
 } from "@shared/web3";
 import { Typography } from "../common/typography";
 import packs from "../../packs.json";
-import { useModal } from "@shared/hooks/modal";
 import { approveERC1155 } from "@shared/web3";
-import { Images } from "@shared/const/Images";
 import Styles from "../NFTDetail/styles.module.scss";
 import clsx from "clsx";
 import Tilt from "react-parallax-tilt";
-import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
 import { AddressText } from "../common/specialFields/SpecialFields";
-import { CHAINS } from "../chains";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
+import { ChevronLeftIcon } from "@heroicons/react/solid";
 
 const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { account: user, provider } = useWeb3React();
@@ -172,7 +170,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
             onClick={() => router.back()}
           >
             <div className="flex items-center gap-2 cursor-pointer w-min">
-              <LeftCircleFilled className="w-8 h-8" />
+              <ChevronLeftIcon className="w-8 h-8" />
             </div>
           </div>
 
@@ -211,7 +209,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                         <div className="flex gap-4 w-full justify-between items-center">
                           <label className="text-primary font-bold whitespace-nowrap">
                             Price per NFT (
-                            {blockchain === "findora" ? "TGRP" : "USD"})
+                            {blockchain === "findora" ? "WFRA" : "USD"})
                           </label>
                           <input
                             type="number"
@@ -390,7 +388,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                         Blockchain:
                       </p>
                       <p className="text-primary-disabled  font-[400] text-lg">
-                        {CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID].name}
+                        {CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.name}
                       </p>
                     </div>
                     <div className="w-full flex justify-between py-2 border-b border-overlay-border px-6">
@@ -423,9 +421,8 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       </p>
                       <a
                         href={
-                          CHAINS[process.env.NEXT_PUBLIC_CHAIN_ID]
-                            .blockExplorer +
-                          "/address/" +
+                          CHAINS[CHAIN_IDS_BY_NAME[blockchain]].blockExplorer +
+                          "address/" +
                           pack
                         }
                         target="_blank"

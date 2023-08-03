@@ -14,13 +14,10 @@ import {
 } from "@shared/web3";
 import cards from "../../cards.json";
 import {
-  CHAINS,
-  CHAIN_IDS_BY_NAME,
   CHAIN_NAME_BY_ID,
   MAINNET_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
 } from "@shared/components/chains";
-import { useToast } from "@chakra-ui/react";
 import { findSum } from "@shared/components/common/specialFields/SpecialFields";
 
 const getCardSold = (successfulSales: Sale[]) => {
@@ -83,11 +80,12 @@ export const onLoadSales = createAsyncThunk(
 
     let saleCreated = [],
       saleSuccessful = [],
+      allSales = [],
       dailyVolume = 0,
       cardsSold = 0;
     try {
       for (let i = 0; i < blockchains.length; i++) {
-        const [blockchain, index] = [blockchains[i], i];
+        const blockchain = blockchains[i];
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
         const marketplace = getContract(
           CHAIN_NAME_BY_ID[blockchain] === "matic"
@@ -105,40 +103,47 @@ export const onLoadSales = createAsyncThunk(
             .getSales(new Array(lastSale).fill(0).map((a, i) => i))
             .call();
 
-          const allSales = rawSales.map((sale: any[], i) => {
+          rawSales.forEach((sale: any[], i) => {
             const saleFormated =
               CHAIN_NAME_BY_ID[blockchain] === "matic"
                 ? parseSaleTokens(sale)
                 : parseSaleNative(sale);
-            return {
-              id: i,
+            allSales.push({
               blockchain: CHAIN_NAME_BY_ID[blockchain],
               ...saleFormated,
-            };
+            });
           });
-
-          const saleCreatedPartial = allSales?.filter(
-            (sale: Sale) => sale.status === "0",
-          );
-          const saleSuccessfulPartial = allSales?.filter(
-            (sale: Sale) => sale.status === "1",
-          );
-          const dailyVolumePartial = getDailyVolume(saleSuccessful);
-          const cardsSoldPartial = getCardSold(saleSuccessful);
-
-          saleCreatedPartial.forEach((sale: Sale) => {
-            saleCreated = [...saleCreated, sale];
-          });
-
-          saleSuccessfulPartial.forEach((sale: Sale) => {
-            saleSuccessful = [...saleSuccessful, sale];
-          });
-
-          dailyVolume += dailyVolumePartial.toNumber();
-          cardsSold += cardsSoldPartial.toNumber();
         }
       }
+
+      const allSalesSorted = allSales
+        .sort((a, b) => a.startedAt - b.startedAt)
+        .map((sale: Sale, id) => {
+          return { id: id + 1, ...sale };
+        });
+
+      const saleCreatedPartial = allSalesSorted?.filter(
+        (sale: Sale) => sale.status === "0",
+      );
+      const saleSuccessfulPartial = allSalesSorted?.filter(
+        (sale: Sale) => sale.status === "1",
+      );
+      const dailyVolumePartial = getDailyVolume(saleSuccessful);
+      const cardsSoldPartial = getCardSold(saleSuccessful);
+
+      saleCreatedPartial.forEach((sale: Sale) => {
+        saleCreated = [...saleCreated, sale];
+      });
+
+      saleSuccessfulPartial.forEach((sale: Sale) => {
+        saleSuccessful = [...saleSuccessful, sale];
+      });
+
+      dailyVolume += dailyVolumePartial.toNumber();
+      cardsSold += cardsSoldPartial.toNumber();
+
       return {
+        allSales: allSalesSorted,
         saleCreated,
         saleSuccessful,
         totalSales: saleCreated.length,
@@ -149,6 +154,7 @@ export const onLoadSales = createAsyncThunk(
       console.log(err.message, "ERROR");
     }
     return {
+      allSales: [],
       saleCreated: [],
       saleSuccessful: [],
       totalSales: 0,

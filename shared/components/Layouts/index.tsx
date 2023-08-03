@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useRef } from "react";
+import React from "react";
 import Link from "next/link";
 import { Layout } from "antd";
 import useMagicLink from "@shared/hooks/useMagicLink";
@@ -9,7 +9,6 @@ import clsx from "clsx";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppDispatch } from "redux/store";
 import { onGetAssets, onLoadSales, onUpdateUser } from "redux/actions";
-
 import {
   AreaChartOutlined,
   SearchOutlined,
@@ -21,13 +20,10 @@ import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
 import { Dropdown } from "../common/dropdown/dropdown";
 import { useSelector } from "react-redux";
-import { useToasts } from "react-toast-notifications";
 import { WALLETS } from "@shared/utils/connection/utils";
 import { authStillValid } from "../utils";
 import { Cart } from "./cart";
 import ChainSelect from "./chainSelect";
-import { switchChain } from "@shared/web3";
-import { CHAIN_IDS_BY_NAME } from "../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
 
@@ -105,13 +101,6 @@ const styles = {
     fontFamily: "Roboto, sans-serif",
     color: "#041836",
   },
-  // headerRight: {
-  //   display: "flex",
-  //   gap: "20px",
-  //   alignItems: "center",
-  //   fontSize: "15px",
-  //   fontWeight: "600",
-  // },
 };
 
 export default function AppLayout({ children }) {
@@ -162,7 +151,7 @@ export default function AppLayout({ children }) {
       const typeOfConnection = localStorage.getItem("typeOfConnection");
       const chain = localStorage.getItem("chain");
       if (authStillValid()) {
-        updateBlockchain(chain || "matic");
+        await updateBlockchain(chain || "matic");
         WALLETS.forEach(async (wallet) => {
           if (wallet.title === typeOfConnection) {
             await wallet.connection.connector.activate();
@@ -185,13 +174,12 @@ export default function AppLayout({ children }) {
     reconnect();
   }, []);
 
-  const initApp = async () => {
-    console.log(blockchain, "load");
+  const loadSales = async () => {
     await dispatch(onLoadSales());
   };
 
   React.useEffect(() => {
-    initApp();
+    loadSales();
   }, [blockchain]);
 
   const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
