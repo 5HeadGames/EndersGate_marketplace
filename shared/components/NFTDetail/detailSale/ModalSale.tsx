@@ -167,11 +167,16 @@ export const ModalSale = ({
             <img src={Icons.logo} className="md:w-12 md:h-12 w-8 h-8" alt="" />
           </div>
           <div className="py-4">
-            <div className="text-primary text-sm text-center flex items-center justify-center">
+            <div className="text-primary text-sm text-center flex flex-col items-center justify-center">
               {message === "Buying tokens" && (
-                <span className="flex gap-4 items-center justify-center">
-                  {message} <LoadingOutlined />
-                </span>
+                <>
+                  <span className="flex gap-4 items-center justify-center">
+                    {message} <LoadingOutlined />
+                  </span>
+                  <span className="flex gap-4 items-center justify-center">
+                    Note: If the transa
+                  </span>
+                </>
               )}
             </div>
           </div>

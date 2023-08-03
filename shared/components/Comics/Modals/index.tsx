@@ -91,7 +91,6 @@ export const Modals = ({
           "An error occurred while changing the network, please try again.",
         );
       }
-      updateBlockchain(networkEth);
 
       const comics = getContractCustom("Comics", comicsAddress, provider);
       if (tokenSelected === "") {
@@ -165,7 +164,7 @@ export const Modals = ({
 
             .send({ from: account });
         } else {
-          setMessageBuy("Buying your NFT(s)");
+          setMessageBuy("Buying your NFT(s). ");
           await comics.methods
             .buyBatch(account, ids, amounts, token)
 
