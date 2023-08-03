@@ -10,7 +10,10 @@ import {
 } from "@shared/components/common/specialFields/SpecialFields";
 import { useToasts } from "react-toast-notifications";
 import {
+  buyNFTsMatic,
+  buyNFTsNative,
   getAddresses,
+  getAddressesMatic,
   getContractCustom,
   getTokensAllowed,
 } from "@shared/web3";
@@ -23,6 +26,8 @@ import { convertArrayCards } from "../common/convertCards";
 import { XIcon } from "@heroicons/react/solid";
 import { Icons } from "@shared/const/Icons";
 import useMagicLink from "@shared/hooks/useMagicLink";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { formatPrice } from "@shared/utils/formatPrice";
 
 export const Cart = ({
   tokenSelected,
@@ -42,14 +47,16 @@ export const Cart = ({
   );
   const [priceMatic, setPriceMatic] = React.useState("0");
 
-  const { pack, marketplace, MATICUSD } = getAddresses();
+  const { blockchain } = useBlockchain();
+
+  const { pack, marketplace, MATICUSD } = getAddresses(blockchain);
 
   const refCartMobile = React.useRef(null);
 
   const cards = convertArrayCards();
 
   React.useEffect(() => {
-    if (cart.length > 0) {
+    if (cart.length > 0 && blockchain === "matic") {
       getPriceMatic();
     } else {
       setPriceMatic("0");
@@ -78,86 +85,32 @@ export const Cart = ({
     setPriceMatic(price);
   };
 
-  const buyNFTs = async () => {
-    if (tokenSelected === "") {
-      addToast("Please Select a Payment Method", { appearance: "error" });
-      return;
-    }
-    try {
-      setMessageBuy(`Processing your purchase...`);
-
-      const { amounts, bid, token, tokensId } = {
-        amounts: cart.map((item) => item.quantity),
-        bid: cart
-          ?.map((item: any, i) =>
-            ((parseInt(item.price) / 10 ** 6) * item.quantity).toString(),
-          )
-          .reduce((item: any, acc: any) => {
-            return findSum(item, acc) as any;
-          }),
-        token: tokenSelected,
-        tokensId: cart.map((item) => item.id),
-      };
-
-      const marketplaceContract = getContractCustom(
-        "ClockSale",
+  const buyNFTs = () => {
+    if (blockchain === "matic") {
+      buyNFTsMatic({
+        tokenSelected,
+        addToast,
+        setMessageBuy,
+        cart,
         marketplace,
         provider,
-      );
-      let price: any = 0;
-
-      const ERC20 = getContractCustom("ERC20", token, provider);
-      const addresses = getTokensAllowed();
-      if (
-        tokenSelected ===
-        addresses.filter((item) => item.name === "MATIC")[0].address
-      ) {
-        const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
-        const priceMATIC = await Aggregator.methods.latestAnswer().call();
-        price = Web3.utils.toWei(
-          ((bid * 10 ** 8) / priceMATIC).toString(),
-          "ether",
-        );
-        await marketplaceContract.methods
-          .buyBatch(tokensId, amounts, token)
-          .send({ from: ethAddress, value: price });
-      } else {
-        const allowance = await ERC20.methods
-          .allowance(ethAddress, marketplace)
-          .call();
-        if (allowance < 1000000000000) {
-          setMessageBuy(
-            `Increasing the allowance of ${
-              tokensAllowed.filter((item) => item.address === tokenSelected)[0]
-                .name
-            } 1/2`,
-          );
-          await ERC20.methods
-            .increaseAllowance(
-              marketplace,
-              "1000000000000000000000000000000000000000000000000",
-            )
-            .send({
-              from: ethAddress,
-            });
-          setMessageBuy("Buying your NFT(s) 2/2");
-          await marketplaceContract.methods
-            .buyBatch(tokensId, amounts, tokenSelected)
-            .send({ from: ethAddress });
-        } else {
-          setMessageBuy("Buying your NFT(s)");
-          await marketplaceContract.methods
-            .buyBatch(tokensId, amounts, tokenSelected)
-            .send({ from: ethAddress });
-        }
-
-        // }
-        dispatch(removeAll());
-      }
-    } catch (err) {}
-
-    setMessageBuy(``);
+        ethAddress,
+        tokensAllowed,
+        MATICUSD,
+        dispatch,
+      });
+    } else {
+      buyNFTsNative({
+        setMessageBuy,
+        cart,
+        marketplace,
+        provider,
+        ethAddress,
+        dispatch,
+      });
+    }
   };
+
   return (
     <DropdownCart
       sidebarOpen={cartOpen}
@@ -241,7 +194,7 @@ export const Cart = ({
                           "text-sm font-[700] uppercase whitespace-nowrap w-24",
                         )}
                       >
-                        {nFormatter(parseInt(item.price) / 10 ** 6)} USD{" "}
+                        {formatPrice(item.price, blockchain)}
                         {/* <span className="!text-sm text-overlay-border">
                                     ($1.5k)
                                   </span> */}
@@ -258,7 +211,7 @@ export const Cart = ({
                           "text-sm font-[700] uppercase whitespace-nowrap w-max",
                         )}
                       >
-                        {nFormatter(parseInt(item.price) / 10 ** 6)} USD{" "}
+                        {formatPrice(item.price, blockchain)}
                       </h3>
                     </div>
                     <div className="text-lg">x{item.quantity}</div>
@@ -276,47 +229,48 @@ export const Cart = ({
             })}
           </div>
           <div className="flex  gap-4 pb-4 w-full flex-wrap items-center justify-center">
-            {tokensAllowed
-              .filter((tokenAllowed) => {
-                let intersection = true;
-                cart.forEach((item) => {
-                  if (
-                    !item.tokens
-                      .map((item) => item.toLowerCase())
-                      .includes(tokenAllowed.address.toLowerCase())
-                  ) {
-                    intersection = false;
-                  }
-                });
-                return intersection;
-              })
-              .map((item, index) => {
-                return (
-                  <div
-                    key={tokenSelected + item.name}
-                    className={clsx(
-                      "w-20 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
+            {blockchain === "matic" &&
+              tokensAllowed
+                .filter((tokenAllowed) => {
+                  let intersection = true;
+                  cart.forEach((item) => {
+                    if (
+                      !item?.tokens
+                        ?.map((item) => item.toLowerCase())
+                        ?.includes(tokenAllowed.address.toLowerCase())
+                    ) {
+                      intersection = false;
+                    }
+                  });
+                  return intersection;
+                })
+                .map((item, index) => {
+                  return (
+                    <div
+                      key={tokenSelected + item.name}
+                      className={clsx(
+                        "w-20 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
 
-                      {
-                        "bg-overlay-border border-none":
-                          tokenSelected !== item.address,
-                      },
-                      {
-                        "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
-                          tokenSelected === item.address,
-                      },
-                    )}
-                    onClick={() => {
-                      setTokenSelected(item.address);
-                    }}
-                  >
-                    <img src={item.logo} className="w-6 h-6" alt="" />
-                    <h2 className="text-white text-[13px] font-bold">
-                      {item.name}
-                    </h2>
-                  </div>
-                );
-              })}
+                        {
+                          "bg-overlay-border border-none":
+                            tokenSelected !== item.address,
+                        },
+                        {
+                          "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
+                            tokenSelected === item.address,
+                        },
+                      )}
+                      onClick={() => {
+                        setTokenSelected(item.address);
+                      }}
+                    >
+                      <img src={item.logo} className="w-6 h-6" alt="" />
+                      <h2 className="text-white text-[13px] font-bold">
+                        {item.name}
+                      </h2>
+                    </div>
+                  );
+                })}
           </div>
           <div className="flex gap-6 justify-between w-full text-md text-xl py-4 px-8 border-y border-overlay-border bg-secondary">
             <div className="flex gap-1 items-center">
@@ -332,7 +286,7 @@ export const Cart = ({
             </div>
             <div className="flex flex-col gap items-end">
               <h3 className="text-[14px] font-[700] text-white">
-                {parseInt(
+                {formatPrice(
                   cart
                     ?.map((item: any, i) =>
                       (parseInt(item.price) * item.quantity).toString(),
@@ -340,9 +294,8 @@ export const Cart = ({
                     .reduce((item: any, acc: any) => {
                       return findSum(item, acc) as any;
                     }),
-                ) /
-                  10 ** 6}{" "}
-                USD
+                  blockchain,
+                )}
                 {/* <span className="!text-sm text-overlay-border">
                           ($1.5k)
                         </span> */}
@@ -352,7 +305,7 @@ export const Cart = ({
                 .filter((tokenAllowed) => {
                   let intersection = true;
                   cart.forEach((item) => {
-                    if (!item.tokens.includes(tokenAllowed.address)) {
+                    if (!item?.tokens?.includes(tokenAllowed.address)) {
                       intersection = false;
                     }
                   });
@@ -364,7 +317,7 @@ export const Cart = ({
               )}
             </div>
           </div>
-          {providerName === "magic" && (
+          {providerName === "magic" && blockchain === "matic" && (
             <div className="text-[12px] text-white pt-4 font-bold">
               Don't have crypto? Click{" "}
               <span

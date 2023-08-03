@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  LeftCircleFilled,
-  LeftOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Web3 from "web3";
 
@@ -14,34 +10,42 @@ import {
   onGetAssets,
   onSellERC1155Findora,
 } from "@redux/actions";
-import { Button } from "../common/button/button";
+import { Button } from "../../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import {
-  getAddressesMatic,
+  getAddresses,
   getContractCustom,
   getTokensAllowed,
+  switchChain,
 } from "@shared/web3";
-import { Typography } from "../common/typography";
-import packs from "../../packs.json";
+import { Typography } from "../../common/typography";
 import { approveERC1155 } from "@shared/web3";
-import Styles from "../NFTDetail/styles.module.scss";
+import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
+import Styles from "../styles.module.scss";
 import Tilt from "react-parallax-tilt";
 import { useWeb3React } from "@web3-react/core";
-import { AddressText } from "../common/specialFields/SpecialFields";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
+import { AddressText } from "../../common/specialFields/SpecialFields";
+import ReactCardFlip from "react-card-flip";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 
-const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
+const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const { account: user, provider } = useWeb3React();
+
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  const cards = convertArrayCards();
+
   const [message, setMessage] = React.useState(
     "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
   );
+
+  const [flippedCard, setFlippedCard] = React.useState(false);
+  const [tokensSelected, setTokensSelected] = React.useState([]);
 
   const [sellNFTData, setSellNFTData] = React.useState({
     startingPrice: 0,
@@ -50,13 +54,10 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   });
 
   const { blockchain } = useBlockchain();
-
-  const [tokensSelected, setTokensSelected] = React.useState([]);
-
-  const { pack } = getAddressesMatic();
+  const { endersGate } = getAddresses(blockchain);
 
   const sellNft = async () => {
-    if (sellNFTData.amount > NFTs.balancePacks[id]?.balance) {
+    if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
       return alert("You don't have enough tokens to sell");
     }
     if (sellNFTData.amount < 1) {
@@ -68,36 +69,41 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     if (sellNFTData.duration <= 3600 * 24) {
       return alert("You have to put a end date higher than 1 day");
     }
-    if (tokensSelected.length === 0) {
+    if (tokensSelected.length == 0) {
       return alert("You have to put at least one currency to accept");
     }
     try {
+      const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+      if (!changed) {
+        throw Error(
+          "An error has occurred while switching chain, please try again.",
+        );
+      }
       const tokenId = id;
-      const { pack, marketplace } = getAddressesMatic();
+      const { endersGate, marketplace } = getAddresses(blockchain);
       const endersgateInstance = getContractCustom(
-        "EndersPack",
-        pack,
+        "EndersGate",
+        endersGate,
         provider.provider,
       );
 
-      const isApprovedForAll = await endersgateInstance.methods
-        .isApprovedForAll(user, marketplace)
-        .call();
-      if (isApprovedForAll === false) {
-        setMessage("Allowing us to sell your tokens");
-        await approveERC1155({
-          provider: provider.provider,
-          from: user,
-          to: marketplace,
-          address: pack,
-        });
-      }
-      setMessage("Listing your tokens");
-
       if (blockchain !== "matic") {
+        const isApprovedForAll = await endersgateInstance.methods
+          .isApprovedForAll(user, marketplace)
+          .call();
+        if (isApprovedForAll === false) {
+          setMessage("Allowing us to sell your tokens");
+          await approveERC1155({
+            provider: provider.provider,
+            from: user,
+            to: marketplace,
+            address: endersGate,
+          });
+        }
+        setMessage("Listing your tokens");
         await dispatch(
           onSellERC1155Findora({
-            address: pack,
+            address: endersGate,
             from: user,
             startingPrice: Web3.utils.toWei(
               sellNFTData.startingPrice.toString(),
@@ -120,14 +126,14 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
             provider: provider.provider,
             from: user,
             to: marketplace,
-            address: pack,
+            address: endersGate,
           });
         }
         setMessage("Listing your tokens");
 
         await dispatch(
           onSellERC1155({
-            address: pack,
+            address: endersGate,
             from: user,
             startingPrice: (sellNFTData.startingPrice * 10 ** 6).toString(),
             amount: sellNFTData.amount,
@@ -144,6 +150,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
     }
 
     dispatch(onLoadSales());
+    console.log("loaded");
     dispatch(onGetAssets({ address: user, blockchain }));
     setMessage(
       "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
@@ -173,31 +180,80 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               <ChevronLeftIcon className="w-8 h-8" />
             </div>
           </div>
-
-          <div className="w-full flex xl:flex-row flex-col gap-4 justify-center">
+          <div className="w-full flex xl:flex-row flex-col  gap-4 justify-center">
             <div className="flex flex-col gap-2">
-              <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
+              <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer overflow-hidden border border-gray-500">
+                <div
+                  className="absolute top-2 right-2 z-10 text-white text-2xl p-1"
+                  onClick={() => setFlippedCard((prev) => !prev)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
                 <img
-                  src={packs[id].properties.image?.value}
+                  src={cards[id].properties.image?.value}
                   className="absolute xl:top-[-20%] top-[-25%] bottom-0 xl:left-[-55%] left-[-35%] right-0 margin-auto opacity-50 xl:min-w-[1050px] min-w-[175%]"
                   alt=""
                 />
-                <Tilt className="flex items-center justify-center">
-                  <div className="sm:sticky sm:top-32 h-min w-auto">
-                    <img
-                      src={packs[id].properties.image?.value || Icons.logo}
-                      className={clsx(Styles.animatedImageMain)}
-                      alt=""
-                    />
-                  </div>
-                </Tilt>
+
+                <div className="sm:sticky sm:top-20 h-min w-auto">
+                  <ReactCardFlip
+                    isFlipped={flippedCard}
+                    flipDirection="horizontal"
+                  >
+                    <Tilt className="flex items-center justify-center">
+                      <img
+                        src={cards[id].properties.image?.value || Icons.logo}
+                        className={clsx(
+                          Styles.animatedImageMain,
+                          { ["hidden"]: flippedCard },
+
+                          {
+                            "rounded-full": cards[id].typeCard == "avatar",
+                          },
+                          {
+                            "rounded-md": cards[id].typeCard != "avatar",
+                          },
+                        )}
+                        alt=""
+                      />
+                    </Tilt>
+
+                    <Tilt className="flex items-center justify-center">
+                      <img
+                        src={`/images/${cards[id].typeCard.toLowerCase()}.png`}
+                        className={clsx(
+                          Styles.animatedImageMain,
+                          { ["hidden"]: !flippedCard },
+                          {
+                            "rounded-full": cards[id].typeCard == "avatar",
+                          },
+                          {
+                            "rounded-md": cards[id].typeCard != "avatar",
+                          },
+                        )}
+                        alt=""
+                      />
+                    </Tilt>
+                  </ReactCardFlip>
+                </div>
               </div>
             </div>
             <div className="flex flex-col xl:w-[500px] gap-6 w-full py-10">
               <div className="flex flex-col  w-full">
                 <div className="flex flex-col">
                   <h1 className="text-primary uppercase md:text-4xl text-3xl font-bold">
-                    {packs[id]?.properties?.name?.value}
+                    {cards[id]?.properties?.name?.value}
                   </h1>
                   <div className="flex flex-col md:px-6 md:py-10 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
                     <p className="absolute md:top-4 md:right-6 top-2 right-4 text-overlay-border text-sm">
@@ -245,7 +301,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             }}
                           />
                           {sellNFTData.amount >
-                            NFTs?.balancePacks[id]?.balance && (
+                            NFTs?.balanceCards[id]?.balance && (
                             <Typography
                               type="caption"
                               className="text-red-primary"
@@ -335,32 +391,32 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                                 );
                               })}
                             </div>
-                            <div className="py-6">
-                              <div className="text-primary text-[12px] text-center flex flex-col items-center justify-center">
-                                {message ===
-                                "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
-                                  <span className="text-left w-full">
-                                    <span className="font-bold">Note:</span>{" "}
-                                    {message}
-                                  </span>
-                                ) : (
-                                  <>
-                                    <span className="flex gap-4 items-center justify-center">
-                                      {message} <LoadingOutlined />
-                                    </span>
-                                    <span className="flex gap-4 mt-6 items-center justify-center">
-                                      {message === "Listing your tokens" &&
-                                        "Last Transaction"}
-                                      {message ===
-                                        "Allowing us to sell your tokens" &&
-                                        "Transaction 1/2"}
-                                    </span>
-                                  </>
-                                )}
-                              </div>
-                            </div>
                           </>
                         )}
+                        <div className="py-6">
+                          <div className="text-primary text-[12px] text-center flex flex-col items-center justify-center">
+                            {message ===
+                            "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens" ? (
+                              <span className="text-left w-full">
+                                <span className="font-bold">Note:</span>{" "}
+                                {message}
+                              </span>
+                            ) : (
+                              <>
+                                <span className="flex gap-4 items-center justify-center">
+                                  {message} <LoadingOutlined />
+                                </span>
+                                <span className="flex gap-4 mt-6 items-center justify-center">
+                                  {message === "Listing your tokens" &&
+                                    "Last Transaction"}
+                                  {message ===
+                                    "Allowing us to sell your tokens" &&
+                                    "Transaction 1/2"}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
                         <Button
                           decoration="fill"
                           className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
@@ -404,7 +460,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                         Balance:
                       </p>
                       <p className="text-primary-disabled  font-[400] text-lg">
-                        {NFTs?.balancePacks[id]?.balance}
+                        {NFTs.balanceCards[id]?.balance}
                       </p>
                     </div>
                     <div className="w-full flex justify-between py-2 border-b border-overlay-border px-6">
@@ -421,15 +477,15 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       </p>
                       <a
                         href={
-                          CHAINS[CHAIN_IDS_BY_NAME[blockchain]].blockExplorer +
-                          "address/" +
-                          pack
+                          CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.blockExplorer +
+                          "/address/" +
+                          endersGate
                         }
                         target="_blank"
                         rel="noreferrer"
                         className="text-red-primary font-[400] text-lg flex items-center gap-1"
                       >
-                        <AddressText text={pack}></AddressText>{" "}
+                        <AddressText text={endersGate}></AddressText>{" "}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -469,7 +525,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
           </div>
         </div>
       ) : (
-        <div className="h-screen w-screen bg-overlay flex items-center justify-center text-3xl text-primary">
+        <div className="h-screen w-full bg-overlay flex items-center justify-center text-3xl text-primary">
           <LoadingOutlined />
         </div>
       )}
@@ -477,4 +533,4 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   );
 };
 
-export default PackDetailIDComponent;
+export default NFTDetailIDComponent;

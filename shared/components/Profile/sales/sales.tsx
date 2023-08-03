@@ -9,13 +9,15 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import Styles from "./styles.module.scss";
 import packs from "../../../packs.json";
-import { getAddresses } from "@shared/web3";
+import { getAddressesMatic } from "@shared/web3";
 
 import { useModal } from "@shared/hooks/modal";
 import { onCancelSale, onLoadSales, onGetAssets } from "@redux/actions";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { formatPrice } from "@shared/utils/formatPrice";
 
 const Sales = () => {
   const nfts = useAppSelector((state) => state.nfts);
@@ -25,10 +27,10 @@ const Sales = () => {
   const { Modal, show, hide, isShow } = useModal();
   const dispatch = useAppDispatch();
 
-  const cards = convertArrayCards();
-
   const [sales, setSales] = React.useState([]);
-  const { pack: packsAddress, endersGate } = getAddresses();
+  const { pack: packsAddress, endersGate } = getAddressesMatic();
+
+  const { blockchain } = useBlockchain();
 
   const cancelSale = async () => {
     await dispatch(
@@ -40,23 +42,19 @@ const Sales = () => {
       }),
     );
     dispatch(onLoadSales());
-    dispatch(onGetAssets(user));
+    dispatch(onGetAssets({ address: user, blockchain }));
     hide();
   };
 
   React.useEffect(() => {
     const arrayPacks = [];
-    console.log(nfts.saleCreated);
     nfts.saleCreated.forEach((sale, index) => {
-      console.log(sale.seller === user, sale.seller, user);
       if (sale.seller.toLowerCase() === user.toLowerCase()) {
         if (sale.status !== 3) {
           arrayPacks.push(sale);
         }
       }
     });
-    console.log(arrayPacks);
-
     setSales(arrayPacks);
   }, [nfts, user]);
 
@@ -133,100 +131,7 @@ const Sales = () => {
                           i < sales.length - 1,
                       })}
                     >
-                      {sale && (
-                        <>
-                          <td className="py-4 px-4">
-                            <div className="flex flex-col items-center gap-y-2 w-full">
-                              <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
-                                <img
-                                  src={
-                                    pack
-                                      ? packs[sale.nftId]?.properties?.image
-                                          ?.value
-                                      : cards[sale.nftId]?.properties.image
-                                          ?.value
-                                  }
-                                  className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
-                                  alt=""
-                                />
-                              </div>
-                              <div className="flex flex-col items-center gap-4">
-                                <h2 className="text-primary-disabled text-xl font-bold">
-                                  {pack
-                                    ? packs[sale.nftId]?.properties?.name?.value
-                                    : cards[sale.nftId]?.properties.name?.value}
-                                </h2>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <div className="flex flex-col items-center">
-                              <h2 className="text-white text-lg font-bold">
-                                #{sale.id}
-                              </h2>
-                            </div>
-                          </td>
-                          {/* <td className="py-4 px-4">
-                            <div className="flex flex-col items-center">
-                              <h2 className="text-white text-lg font-bold">
-                                {cards[sale.nftId]?.properties.role?.value
-                                  ? cards[sale.nftId]?.properties.role?.value
-                                  : cards[sale.nftId]?.properties.isGuardian
-                                      ?.value
-                                  ? "Guardian"
-                                  : ""}
-                              </h2>
-                            </div>
-                          </td> */}
-                          <td className="py-4 px-4">
-                            <div className="flex flex-col items-center pr-2">
-                              <h2 className="text-white text-lg font-bold">
-                                {parseInt(sale.price) / 10 ** 6} USD
-                              </h2>
-                            </div>
-                          </td>
-
-                          <td className="py-4 px-4">
-                            <div className="flex flex-col items-center just">
-                              <h2 className="text-white text-lg font-bold">
-                                {sale.amount}
-                              </h2>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <div className="flex flex-col items-center just">
-                              <Button
-                                decoration="line-white"
-                                className="text-white hover:text-overlay rounded-xl"
-                                size="small"
-                                onClick={() => {
-                                  setCancelId({
-                                    id: sale.id,
-                                    pack: sale.nft === pack,
-                                  });
-                                  show();
-                                }}
-                              >
-                                Cancel
-                              </Button>
-                            </div>
-                          </td>
-
-                          <td className="py-4">
-                            <Link href={`/NFTDetailSale/${sale.id}`}>
-                              <div className="flex flex-col items-center just">
-                                <Button
-                                  decoration="fill"
-                                  className="text-overlay hover:text-white rounded-xl"
-                                  size="small"
-                                >
-                                  Go to Sale
-                                </Button>
-                              </div>
-                            </Link>
-                          </td>
-                        </>
-                      )}
+                      {sale && <Sale {...{ sale, pack, setCancelId, show }} />}
                     </tr>
                   );
                 })}
@@ -250,3 +155,96 @@ const Sales = () => {
 };
 
 export default Sales;
+
+const Sale = ({ sale, pack, setCancelId, show }) => {
+  const cards = convertArrayCards();
+
+  return (
+    <>
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center gap-y-2 w-full">
+          <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
+            <img
+              src={
+                pack
+                  ? packs[sale.nftId]?.properties?.image?.value
+                  : cards[sale.nftId]?.properties.image?.value
+              }
+              className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
+              alt=""
+            />
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <h2 className="text-primary-disabled text-xl font-bold">
+              {pack
+                ? packs[sale.nftId]?.properties?.name?.value
+                : cards[sale.nftId]?.properties.name?.value}
+            </h2>
+          </div>
+        </div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center">
+          <h2 className="text-white text-lg font-bold">#{sale.id}</h2>
+        </div>
+      </td>
+      {/* <td className="py-4 px-4">
+                            <div className="flex flex-col items-center">
+                              <h2 className="text-white text-lg font-bold">
+                                {cards[sale.nftId]?.properties.role?.value
+                                  ? cards[sale.nftId]?.properties.role?.value
+                                  : cards[sale.nftId]?.properties.isGuardian
+                                      ?.value
+                                  ? "Guardian"
+                                  : ""}
+                              </h2>
+                            </div>
+                          </td> */}
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center pr-2">
+          <h2 className="text-white text-lg font-bold">
+            {formatPrice(sale.price, sale.blockchain)}
+          </h2>
+        </div>
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center just">
+          <h2 className="text-white text-lg font-bold">{sale.amount}</h2>
+        </div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center just">
+          <Button
+            decoration="line-white"
+            className="text-white hover:text-overlay rounded-xl"
+            size="small"
+            onClick={() => {
+              setCancelId({
+                id: sale.id,
+                pack: sale.nft === pack,
+              });
+              show();
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
+      </td>
+
+      <td className="py-4">
+        <Link href={`/NFTDetailSale/${sale.id}`}>
+          <div className="flex flex-col items-center just">
+            <Button
+              decoration="fill"
+              className="!text-overlay hover:!text-white rounded-xl"
+              size="small"
+            >
+              Go to Sale
+            </Button>
+          </div>
+        </Link>
+      </td>
+    </>
+  );
+};

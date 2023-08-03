@@ -173,7 +173,7 @@ export const PackOpeningMobile: React.FC<any> = ({
         <div
           className={clsx(
             { ["hidden"]: videoPlaying !== 3 },
-            "absolute bottom-0 right-0 mx-12 mb-6 z-50 cursor-pointer titleNext",
+            "absolute bottom-0 right-0 mx-12 mb-6 z-[10000] cursor-pointer titleNext",
           )}
           onClick={() => {
             setStartFlashingPack(true);

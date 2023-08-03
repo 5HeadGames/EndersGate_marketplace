@@ -2,28 +2,34 @@
 import React, { useState } from "react";
 import { LoadingOutlined, ShopOutlined } from "@ant-design/icons";
 import clsx from "clsx";
-import Web3 from "web3";
 import { useDispatch, useSelector } from "react-redux";
-import { nFormatter } from "@shared/components/common/specialFields/SpecialFields";
-import { networkConfigs } from "@shared/components/helpers/networks";
-
-import { XIcon } from "@heroicons/react/solid";
-import { useCartModal } from "@shared/components/common/cartModal";
 import { useToasts } from "react-toast-notifications";
 import { useRouter } from "next/router";
 import {
   getAddresses,
+  getContract,
   getContractCustom,
   getTokensAllowed,
   switchChain,
 } from "@shared/web3";
 import {
   addCartShop,
-  editCart,
   editCartShop,
+  onBuyFromShop,
+  onBuyFromShopNative,
+  onGetAssets,
+  parseSaleNative,
+  parseSaleTokens,
   removeAll,
-  removeFromCart,
+  removeAllShop,
+  removeFromCartShop,
 } from "@redux/actions";
+import { toast } from "react-hot-toast";
+import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { formatPrice } from "@shared/utils/formatPrice";
+import { useCartModal } from "@shared/components/common/cartModal";
+import { XIcon } from "@heroicons/react/solid";
 
 const Shop = () => {
   const { ethAddress: account, provider } = useSelector(
@@ -37,16 +43,17 @@ const Shop = () => {
   const [tokenSelected, setTokenSelected] = React.useState("");
   const [messageBuy, setMessageBuy] = React.useState("");
   const { addToast } = useToasts();
-  const [priceMatic, setPriceMatic] = React.useState("0");
+  const [priceNative, setPriceNative] = React.useState("0");
 
   const tokensAllowed = getTokensAllowed();
 
   const { Modal, show, isShow, hide } = useCartModal();
 
-  const { networkId } = useSelector((state: any) => state.layout.user);
   const { cartShop } = useSelector((state: any) => state.layout);
 
-  const { shop: shopAddress, MATICUSD } = getAddresses();
+  const { blockchain } = useBlockchain();
+
+  const { shop: shopAddress, MATICUSD } = getAddresses(blockchain);
 
   const dispatch = useDispatch();
 
@@ -58,33 +65,21 @@ const Shop = () => {
     {
       name: "Common Pack",
       imagePack: "./images/0.png",
-      quantity: "8000",
-      price: "25 USD in MATIC Token",
-      imageCoin: "./assets/shop/coins1.png",
       color: "#FFA6FF",
     },
     {
       name: "Rare Pack",
       imagePack: "./images/1.png",
-      quantity: "6000",
-      price: "50 USD in MATIC Token",
-      imageCoin: "./assets/shop/coins2.png",
       color: "#E9D880",
     },
     {
       name: "Epic Pack",
       imagePack: "./images/2.png",
-      quantity: "4000",
-      price: "100 USD in MATIC Token",
-      imageCoin: "./assets/shop/coins3.png",
       color: "#7FBADD",
     },
     {
       name: "Legendary Pack",
       imagePack: "./images/3.png",
-      quantity: "2000",
-      price: "200 USD in MATIC Token",
-      imageCoin: "./assets/shop/coins4.png",
       color: "#8AE98C",
     },
   ];
@@ -93,24 +88,29 @@ const Shop = () => {
     setIsLoading(true);
     try {
       // Use web3 to get the user's accounts.
-      const web3 = new Web3(networkConfigs[networkId].rpc);
-      const shop = getContractCustom("Shop", shopAddress, web3.currentProvider);
+      const shop = getContract(
+        blockchain === "matic" ? "Shop" : "ShopFindora",
+        shopAddress,
+        blockchain,
+      );
+
       const lastSale = Number(await shop.methods.tokenIdTracker().call());
       const rawSales = await shop.methods
         .getSales(new Array(lastSale).fill(0).map((a, i) => i))
         .call();
-      const allSales = rawSales.map((sale, i) => ({
-        id: i,
-        seller: sale[0],
-        nft: sale[1],
-        nftId: sale[2],
-        amount: sale[3],
-        priceUSD: sale[4],
-        tokens: sale[5],
-        duration: sale[6],
-        startedAt: sale[7],
-        status: sale[8],
-      }));
+
+      console.log(rawSales, "SALES", lastSale);
+
+      const allSales = rawSales.map((sale, i) => {
+        const saleFormatted =
+          blockchain === "matic"
+            ? parseSaleTokens(sale)
+            : parseSaleNative(sale);
+        return {
+          id: i,
+          ...saleFormatted,
+        };
+      });
       const created = allSales
         .filter((sale) => sale.status === "0")
         .map((sale) => {
@@ -118,15 +118,16 @@ const Shop = () => {
             ...sale,
             name: packs[sale.nftId]?.name,
             imagePack: packs[sale.nftId]?.imagePack,
-            imageCoin: packs[sale.nftId]?.imageCoin,
             color: packs[sale.nftId]?.color,
-            price: packs[sale.nftId]?.price,
+            priceText: formatPrice(sale.price, blockchain),
           };
         });
+      console.log(created);
+
       setSales(created);
       setCounters(created.map(() => 1));
       // Update State
-      setContract(contract);
+      setContract(shop);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -138,94 +139,64 @@ const Shop = () => {
   };
 
   React.useEffect(() => {
-    if (networkId) {
-      switchChain(networkId);
-      updateSales();
+    if (blockchain) {
+      try {
+        switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+        updateSales();
+        dispatch(removeAllShop());
+      } catch (err) {
+        toast.error(
+          "An error occurred while changing the network, please try again.",
+        );
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [networkId]);
+  }, [blockchain]);
 
   const buyPacks = async () => {
     try {
-      await switchChain(networkId);
-
-      const shop = await getContractCustom("Shop", shopAddress, provider);
+      const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+      if (!changed) {
+        throw new Error(
+          "An error occurred while changing the network, please try again.",
+        );
+      }
 
       if (tokenSelected === "") {
         addToast("Please Select a Payment Method", { appearance: "error" });
         return;
       }
-
-      setMessageBuy(`Processing your purchase...`);
-
-      const { amounts, token, tokensId } = {
-        amounts: cartShop.map((item) => item.quantity),
-        token: tokenSelected,
-        tokensId: cartShop.map((item) => item.id),
-      };
-
-      let price = "0";
-      const ERC20 = getContractCustom("ERC20", token, provider);
-      const addressesAllowed = getTokensAllowed();
-      if (
-        tokenSelected ===
-        addressesAllowed.filter((item) => item.name === "MATIC")[0].address
-      ) {
-        const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
-        const priceMATIC = await Aggregator.methods.latestAnswer().call();
-        const preprice =
-          (parseFloat(
-            cartShop
-              ?.map((item, i) => {
-                return (parseInt(item.priceUSD) / 10 ** 6) * item.quantity;
-              })
-              .reduce((item, acc) => {
-                return item + acc;
-              }),
-          ) *
-            10 ** 8) /
-          priceMATIC;
-        price = Web3.utils.toWei(
-          (preprice + preprice * 0.05).toString(),
-          "ether",
+      let tx;
+      if (blockchain === "matic") {
+        tx = await dispatch(
+          onBuyFromShop({
+            blockchain,
+            account,
+            tokenSelected,
+            provider,
+            setMessageBuy,
+            cartShop,
+          }),
         );
-        await shop.methods
-          .buyBatch(tokensId, amounts, token)
-          .send({ from: account, value: price });
       } else {
-        const allowance = await ERC20.methods
-          .allowance(account, shopAddress)
-          .call();
-
-        if (allowance < 1000000000000) {
-          setMessageBuy(
-            `Increasing the allowance of ${
-              tokensAllowed.filter((item) => item.address === tokenSelected)[0]
-                .name
-            } 1/2`,
-          );
-          await ERC20.methods
-            .increaseAllowance(
-              shopAddress,
-              "1000000000000000000000000000000000000000000000000",
-            )
-            .send({
-              from: account,
-            });
-          setMessageBuy("Buying your NFT(s) 2/2");
-          await shop.methods
-            .buyBatch(tokensId, amounts, tokenSelected)
-            .send({ from: account });
-        } else {
-          setMessageBuy("Buying your NFT(s)");
-          await shop.methods
-            .buyBatch(tokensId, amounts, tokenSelected)
-            .send({ from: account });
-        }
-
-        // }
+        console.log("findora");
+        tx = await dispatch(
+          onBuyFromShopNative({
+            blockchain,
+            account,
+            tokenSelected,
+            provider,
+            setMessageBuy,
+            cartShop,
+          }),
+        );
       }
-
+      console.log(tx);
+      if (tx.err) {
+        console.log("xd", tx.err.message);
+        throw Error(tx.err.message);
+      }
+      dispatch(onGetAssets({ address: account, blockchain }));
       updateSales();
     } catch (error) {
       console.log(error);
@@ -242,7 +213,8 @@ const Shop = () => {
       (parseFloat(
         cartShop
           ?.map((item, i) => {
-            return (parseInt(item.priceUSD) / 10 ** 6) * item.quantity;
+            console.log(item);
+            return (parseInt(item.price) / 10 ** 6) * item.quantity;
           })
           .reduce((item, acc) => {
             return item + acc;
@@ -251,14 +223,16 @@ const Shop = () => {
         10 ** 8) /
       priceMATIC;
 
-    setPriceMatic((price + price * 0.05).toFixed(2).toString());
+    console.log(price, "PRICE");
+
+    setPriceNative((price + price * 0.05).toFixed(2).toString());
   };
 
   React.useEffect(() => {
-    if (cartShop.length > 0) {
+    if (cartShop.length > 0 && blockchain === "matic") {
       getPriceMatic();
     } else {
-      setPriceMatic("0");
+      setPriceNative("0");
     }
   }, [cartShop]);
 
@@ -284,6 +258,7 @@ const Shop = () => {
           style={{ minHeight: "100vh" }}
         >
           <Modal
+            blockchain={blockchain}
             isShow={isShow}
             cart={cartShop}
             removeAll={removeAll}
@@ -292,9 +267,9 @@ const Shop = () => {
             tokensAllowed={tokensAllowed}
             setTokenSelected={setTokenSelected}
             tokenSelected={tokenSelected}
-            priceMatic={priceMatic}
+            priceMatic={priceNative}
             buy={buyPacks}
-            isMatic
+            isMatic={blockchain === "matic"}
             itemsCart={cartShop.map((item, index) => {
               return (
                 <div
@@ -345,7 +320,7 @@ const Shop = () => {
                           "text-sm font-[700] uppercase whitespace-nowrap w-24",
                         )}
                       >
-                        {nFormatter(parseInt(item.priceUSD) / 10 ** 6)} USD{" "}
+                        {formatPrice(item.price, blockchain)}
                       </h3>
                     </div>
                     <input
@@ -355,7 +330,7 @@ const Shop = () => {
                       className="text-lg px-2 text-white w-12 bg-transparent rounded-xl border border-overlay-overlay"
                       onChange={(e) => {
                         dispatch(
-                          editCart({
+                          editCartShop({
                             id: index,
                             item: { ...item, quantity: e.target.value },
                           }),
@@ -365,10 +340,10 @@ const Shop = () => {
                     <div
                       className="rounded-full p-1 w-8 h-8 border border-transparent-color-gray-200 hover:bg-red-primary text-white shrink-0 cursor-pointer"
                       onClick={() => {
-                        dispatch(removeFromCart({ id: item.id }));
+                        dispatch(removeFromCartShop({ id: item.id }));
                       }}
                     >
-                      <XIcon></XIcon>
+                      <XIcon />
                     </div>
                   </div>
                 </div>
@@ -389,7 +364,7 @@ const Shop = () => {
             <div className="flex w-full items-center justify-center gap-2">
               <div className="relative md:w-64 sm:w-40 w-24">
                 <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
-                  <h2 className="relative ringBearer sm:text-xl text-sm text-white">
+                  <h2 className="relative  sm:text-xl text-sm text-white">
                     NFT PACKS
                   </h2>
                 </div>
@@ -401,7 +376,7 @@ const Shop = () => {
               </div>
               <div className="relative md:w-64 sm:w-40 w-28">
                 <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
-                  <h2 className="relative ringBearer sm:text-xl text-sm text-white">
+                  <h2 className="relative  sm:text-xl text-sm text-white">
                     AVATAR CARDS
                   </h2>
                 </div>
@@ -414,7 +389,7 @@ const Shop = () => {
               {/* <Link href="/comics"> */}
               <div className="relative md:w-64 sm:w-40 w-24">
                 <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
-                  <h2 className="relative ringBearer sm:text-xl text-sm text-white">
+                  <h2 className="relative  sm:text-xl text-sm text-white">
                     EG COMICS
                   </h2>
                 </div>
@@ -488,7 +463,7 @@ const Shop = () => {
                           </h2>
                         </div>
                         <h2 className="Poppins uppercase text-md text-center text-white relative">
-                          {sale.price}
+                          {sale.priceText}
                         </h2>
                         <img
                           src={sale.imagePack}
@@ -504,7 +479,7 @@ const Shop = () => {
                             flexShrink: 0,
                           }}
                         >
-                          <h2 className="ringBearer text-md text-center text-gray-200 relative">
+                          <h2 className=" text-md text-center text-gray-200 relative">
                             {sale.amount} LEFT
                           </h2>
                         </div>
@@ -546,7 +521,7 @@ const Shop = () => {
                                 -
                               </div>
                               <input
-                                className="ringBearer text-xl text-white text-center bg-transparent w-5 outline-none"
+                                className=" text-xl text-white text-center bg-transparent w-5 outline-none"
                                 value={counters[index]}
                                 type="number"
                                 min={1}

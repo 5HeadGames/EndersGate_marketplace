@@ -4,6 +4,7 @@ import * as actions from "../actions";
 const INITIAL_STATE = {
   balanceCards: [],
   balancePacks: [],
+  allSales: [],
   saleCreated: [],
   saleSuccessfull: [],
   totalSales: 0,
@@ -26,8 +27,9 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
         state.saleCreated = action.payload.saleCreated;
         state.saleSuccessfull = action.payload.saleSuccessful;
         state.totalSales = action.payload.totalSales;
-        //state.dailyVolume = action.payload.dailyVolume;
-        //state.cardsSold = action.payload.cardsSold;
+        state.dailyVolume = Number(action.payload.dailyVolume);
+        state.cardsSold = Number(action.payload.cardsSold);
+        state.allSales = action.payload.allSales;
       },
     )
     .addCase(

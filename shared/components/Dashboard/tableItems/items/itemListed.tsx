@@ -15,6 +15,7 @@ import packs from "../../../../packs.json";
 import Web3 from "web3";
 import { loadSale } from "@shared/web3";
 import { convertArrayCards } from "../../../common/convertCards";
+import { useBlockchain } from "@shared/context/useBlockchain";
 
 interface Props {
   id: string;
@@ -32,7 +33,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
 
   const [sale, setSale] = React.useState<any>();
 
-  const dispatch = useAppDispatch();
+  const { blockchain } = useBlockchain();
 
   React.useEffect(() => {
     if (id !== undefined) {
@@ -41,7 +42,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
   }, [id]);
 
   const getSale = async () => {
-    const sale = await loadSale(id);
+    const sale = await loadSale({ id, blockchain });
     setSale(sale);
   };
 

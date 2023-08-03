@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useRef } from "react";
+import React from "react";
 import Link from "next/link";
 import { Layout } from "antd";
 import useMagicLink from "@shared/hooks/useMagicLink";
@@ -9,7 +9,6 @@ import clsx from "clsx";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppDispatch } from "redux/store";
 import { onGetAssets, onLoadSales, onUpdateUser } from "redux/actions";
-
 import {
   AreaChartOutlined,
   SearchOutlined,
@@ -21,11 +20,12 @@ import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
 import { Dropdown } from "../common/dropdown/dropdown";
 import { useSelector } from "react-redux";
-import { useToasts } from "react-toast-notifications";
 import { WALLETS } from "@shared/utils/connection/utils";
-import useFullscreenStatus from "../common/onFullScreen";
 import { authStillValid } from "../utils";
 import { Cart } from "./cart";
+import ChainSelect from "./chainSelect";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { toast } from "react-hot-toast";
 
 type ButtonsTypes = { logout: boolean; userData: boolean };
 
@@ -101,13 +101,6 @@ const styles = {
     fontFamily: "Roboto, sans-serif",
     color: "#041836",
   },
-  // headerRight: {
-  //   display: "flex",
-  //   gap: "20px",
-  //   alignItems: "center",
-  //   fontSize: "15px",
-  //   fontWeight: "600",
-  // },
 };
 
 export default function AppLayout({ children }) {
@@ -122,29 +115,22 @@ export default function AppLayout({ children }) {
   });
   const [search, setSearch] = React.useState("");
 
-  const { addToast } = useToasts();
-
   const router = useRouter();
+
   const { account } = useWeb3React();
+
   const { logout, login } = useMagicLink();
+
   const { ethAddress } = useSelector((state: any) => state.layout.user);
-  const { isLogged } = useSelector((state: any) => state.layout);
-  const { provider, providerName, cart } = useSelector(
+  const { provider, providerName, cart, isLogged } = useSelector(
     (state: any) => state.layout,
   );
+
+  const { blockchain, updateBlockchain } = useBlockchain();
+
   const dispatch = useAppDispatch();
 
-  const maximizableElement = useRef(null);
-
   let isFullscreen;
-
-  try {
-    [isFullscreen] = useFullscreenStatus(maximizableElement);
-  } catch (e) {
-    addToast(
-      "Fullscreen is unsupported by this browser, please try another browser.",
-    );
-  }
 
   React.useEffect(() => {
     if (relogin || isLogged) {
@@ -156,47 +142,45 @@ export default function AppLayout({ children }) {
           providerName: "web3react",
         }),
       );
-      dispatch(onGetAssets(account));
+      dispatch(onGetAssets({ address: account, blockchain }));
     }
-  }, [account, relogin, isLogged]);
+  }, [account, relogin, isLogged, blockchain]);
+
+  const reconnect = async () => {
+    try {
+      const typeOfConnection = localStorage.getItem("typeOfConnection");
+      const chain = localStorage.getItem("chain");
+      if (authStillValid()) {
+        await updateBlockchain(chain || "matic");
+        WALLETS.forEach(async (wallet) => {
+          if (wallet.title === typeOfConnection) {
+            await wallet.connection.connector.activate();
+            setRelogin(true);
+          }
+        });
+        if (typeOfConnection === "magic") {
+          login(dispatch);
+        }
+      } else {
+        localStorage.removeItem("typeOfConnection");
+        localStorage.removeItem("loginTime");
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   React.useEffect(() => {
-    const typeOfConnection = localStorage.getItem("typeOfConnection");
-    if (authStillValid()) {
-      WALLETS.forEach(async (wallet) => {
-        if (wallet.title === typeOfConnection) {
-          await wallet.connection.connector.activate();
-          setRelogin(true);
-        }
-      });
-      if (typeOfConnection === "magic") {
-        login(dispatch);
-      }
-    } else {
-      localStorage.removeItem("typeOfConnection");
-      localStorage.removeItem("loginTime");
-    }
+    reconnect();
   }, []);
 
-  // React.useEffect(() => {
-  //   if (
-  //     typeof window !== "undefined" &&
-  //     (window as any).ethereum?.isConnected() &&
-  //     !isExecuted
-  //   ) {
-  //     (window as any).ethereum.on("accountsChanged", accountChangedHandler);
-  //     (window as any).ethereum.on("chainChanged", chainChangedHandler);
-  //     setIsExecuted(true);
-  //   }
-  // }, []);
-
-  const initApp = async () => {
+  const loadSales = async () => {
     await dispatch(onLoadSales());
   };
 
   React.useEffect(() => {
-    initApp();
-  }, []);
+    loadSales();
+  }, [blockchain]);
 
   const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
     setDisabled((prev) => ({ ...prev, [field]: value }));
@@ -378,14 +362,13 @@ export default function AppLayout({ children }) {
                   })}
                 </div>
               </Dropdown>
+              <ChainSelect />
             </>
           ) : (
             <NavbarItem
-              name={ethAddress ? "MY ACCOUNT" : "LOG IN"}
+              name={"LOG IN"}
               link={
-                ethAddress
-                  ? "/profile"
-                  : router.pathname !== "/login"
+                router.pathname !== "/login"
                   ? `/login?redirect=true&redirectAddress=${router.pathname}`
                   : router.asPath
               }

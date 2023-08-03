@@ -28,7 +28,7 @@ export const useModal = () => {
                 ? () => {}
                 : () => {
                     hide();
-                    onClose();
+                    onClose && onClose();
                   }
             }
           >

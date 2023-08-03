@@ -84,12 +84,17 @@ export const Modals = ({
   };
 
   const buyComics = async () => {
-    await switchChain(networkEth);
-    const comics = getContractCustom("Comics", comicsAddress, provider);
-    if (tokenSelected === "") {
-      return;
-    }
     try {
+      const changed = await switchChain(networkEth);
+      if (!changed) {
+        throw new Error(
+          "An error occurred while changing the network, please try again.",
+        );
+      }
+      const comics = getContractCustom("Comics", comicsAddress, provider);
+      if (tokenSelected === "") {
+        return;
+      }
       setMessageBuy(`Processing your purchase...`);
       const { ids, amounts, token } = {
         ids: cartComics.map((item) => item.idNFT),

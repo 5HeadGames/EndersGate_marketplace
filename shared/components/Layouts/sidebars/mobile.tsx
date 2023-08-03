@@ -22,6 +22,7 @@ import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
 import { NavbarItem } from "..";
 import { Dropdown } from "../../common/dropdown/dropdown";
+import ChainSelect from "../chainSelect";
 
 interface LayoutDashboardProps {
   title?: string;
@@ -171,6 +172,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                           })}
                         </div>
                       </Dropdown>
+                      <ChainSelect />
                     </>
                   ) : (
                     <Fragment key={"nav-mobile"}>

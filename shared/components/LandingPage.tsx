@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useAppDispatch, useAppSelector } from "@redux/store";
-import { getAddresses, getContract } from "@shared/web3";
+import { getAddressesMatic, getContract } from "@shared/web3";
 import Web3 from "web3";
 
 const LandingComponent = () => {
@@ -19,7 +19,7 @@ const LandingComponent = () => {
   const { nfts } = useAppSelector((state) => state);
 
   React.useEffect(() => {
-    const { endersGate, pack } = getAddresses();
+    const { endersGate, pack } = getAddressesMatic();
     if (nfts) {
       const cardSalesCreated = [];
       const packSalesCreated = [];

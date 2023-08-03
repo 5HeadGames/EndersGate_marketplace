@@ -4,18 +4,6 @@ const publicRpc = {
 };
 
 export const networkConfigs = {
-  1666600000: {
-    name: "Harmony Mainnet",
-    rpc: process.env["NEXT_PUBLIC_HARMONY_RPC"] || publicRpc["harmony"],
-    blockExplorerUrl: "https://explorer.harmony.one/",
-    currencySymbol: "ONE",
-  },
-  1666700000: {
-    name: "Harmony Mainnet",
-    rpc: process.env["NEXT_PUBLIC_HARMONY_RPC"] || publicRpc["harmony"],
-    blockExplorerUrl: "https://explorer.harmony.one/",
-    currencySymbol: "ONE",
-  },
   137: {
     name: "Polygon Mainnet",
     rpc: process.env["NEXT_PUBLIC_POLYGON_RPC"] || publicRpc["polygon"],
@@ -27,6 +15,19 @@ export const networkConfigs = {
     rpc: process.env["NEXT_PUBLIC_POLYGON_RPC"] || publicRpc["polygon"],
     blockExplorerURl: "https://mumbai.polygonscan.com/",
     currencySymbol: "MATIC",
+  },
+  1204: {
+    name: "Findora Game Specific Chain Mainnet",
+    rpc: process.env["NEXT_PUBLIC_FINDORA_RPC"] || publicRpc["polygon"],
+    blockExplorerURl: "https://gsc-testnet.evm.findorascan.io/",
+    currencySymbol: "WFRA",
+  },
+
+  1205: {
+    name: "Findora Game Specific Chain Testnet",
+    rpc: process.env["NEXT_PUBLIC_FINDORA_RPC"] || publicRpc["polygon"],
+    blockExplorerURl: "https://gsc-testnet.evm.findorascan.io/",
+    currencySymbol: "WFRA",
   },
 };
 

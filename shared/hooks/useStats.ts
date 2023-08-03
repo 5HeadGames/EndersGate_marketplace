@@ -1,4 +1,4 @@
-import { getAddresses } from "@shared/web3";
+import { getAddressesMatic } from "@shared/web3";
 import React from "react";
 import Web3 from "web3";
 
@@ -18,7 +18,7 @@ export const useStats = ({
   });
 
   React.useEffect(() => {
-    const { endersGate, pack } = getAddresses();
+    const { endersGate, pack } = getAddressesMatic();
     if (nfts) {
       const cardSalesCreated = [];
       const packSalesCreated = [];

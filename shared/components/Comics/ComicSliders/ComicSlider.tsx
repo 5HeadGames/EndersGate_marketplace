@@ -1,4 +1,3 @@
-import useFullscreenStatus from "@shared/components/common/onFullScreen";
 import { authStillValid } from "@shared/components/utils";
 import { getAddressesEth, getContractCustom } from "@shared/web3";
 import { useWeb3React } from "@web3-react/core";
@@ -12,7 +11,11 @@ import Reader from "./ComicsReader";
 export const ComicSlider = () => {
   const [isLoading, setIsLoading] = React.useState(true);
 
+<<<<<<< HEAD
   const { name: comicName, issue } = useRouter().query;
+=======
+  const { name: comicName } = useRouter().query;
+>>>>>>> findora
   const router = useRouter();
   const { ethAddress: user } = useSelector((state: any) => state.layout.user);
 
