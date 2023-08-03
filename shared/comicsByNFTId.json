@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Humans vs Ogres Issue #1",
+    "nameLink": "HvsO",
+    "issue": 1,
+    "comic_banner": "https://bafybeicku2srofgncroohp2xvfd6phe2yp4pwf3i3z7aq36hrrrxo7l3sy.ipfs.nftstorage.link/"
+  },
+  {
+    "id": 2,
+    "name": "Humans vs Ogres Issue #2",
+    "nameLink": "HvsO",
+    "issue": 1,
+    "comic_banner": "https://bafybeicku2srofgncroohp2xvfd6phe2yp4pwf3i3z7aq36hrrrxo7l3sy.ipfs.nftstorage.link/"
+  },
+  {
+    "id": 3,
+    "name": "Ascended vs Sentinels Issue #1",
+    "nameLink": "AvsS",
+    "issue": 1,
+    "comic_banner": "https://bafybeibvopnjeon5z56tzhwqhmjr2n26yjosdzjdf66nebzmmp6cstsfxm.ipfs.nftstorage.link/"
+  }
+]

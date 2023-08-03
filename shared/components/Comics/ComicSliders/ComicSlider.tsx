@@ -11,7 +11,7 @@ import Reader from "./ComicsReader";
 export const ComicSlider = () => {
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const { name: comicName } = useRouter().query;
+  const { name: comicName, issue } = useRouter().query;
   const router = useRouter();
   const { ethAddress: user } = useSelector((state: any) => state.layout.user);
 
@@ -24,7 +24,7 @@ export const ComicSlider = () => {
   const accountUpdate = async () => {
     if (!account && !user && !authStillValid()) {
       return router.push("/login?redirect=true&redirectAddress=/comics");
-    } else {
+    } else if (account) {
       await getComicID();
     }
     setIsLoading(false);
@@ -34,15 +34,11 @@ export const ComicSlider = () => {
     return comic.nameLink === comicName;
   });
 
-  const comicImage = currentComic?.pages?.find((comic) => {
-    return comic.id === 1;
-  });
+  const comicImage = currentComic?.issues[issue as string]?.pages;
 
-  console.log(comicImage, "comics");
+  const sliderImage = comicImage?.pages_pannels;
 
-  const sliderImage = comicImage?.pages_pannels?.filter(
-    (page) => page.isPannal === false,
-  );
+  console.log(comicImage, sliderImage);
 
   React.useEffect(() => {
     if (currentComic) accountUpdate();

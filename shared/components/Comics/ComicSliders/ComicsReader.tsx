@@ -2,6 +2,8 @@ import React from "react";
 import "react-photo-view/dist/react-photo-view.css";
 import { PhotoSlider } from "react-photo-view";
 import { useRouter } from "next/router";
+import { BsGrid1X2, BsGrid1X2Fill } from "react-icons/bs";
+import clsx from "clsx";
 
 const FullScreenIcon = (props) => {
   const [fullscreen, setFullscreen] = React.useState(false);
@@ -39,10 +41,29 @@ function toggleFullScreen() {
   }
 }
 
-const toolbarRender = (props) => {
+const toolbarRender = (props, guidedViewIsActive, handleChangeGuidedView) => {
   const { rotate, onRotate, scale, onScale } = props;
   return (
     <>
+      {guidedViewIsActive ? (
+        <BsGrid1X2Fill
+          className={clsx(
+            "cursor-pointer mr-2 opacity-75 hover:opacity-100 transition-all duration-500",
+          )}
+          onClick={handleChangeGuidedView}
+          size={"18px"}
+          color="white"
+        />
+      ) : (
+        <BsGrid1X2
+          className={clsx(
+            "cursor-pointer mr-2 opacity-75 hover:opacity-100 transition-all duration-500",
+          )}
+          onClick={handleChangeGuidedView}
+          size={"18px"}
+          color="white"
+        />
+      )}
       <svg
         className="PhotoView-Slider__toolbarIcon"
         width="44"
@@ -83,16 +104,32 @@ const toolbarRender = (props) => {
 export default function Reader({ images }) {
   const [index, setIndex] = React.useState(0);
   const router = useRouter();
+  const [guidedViewIsActive, setGuidedViewIsActive] = React.useState(false);
+
+  const handleChangeGuidedView = () => {
+    setGuidedViewIsActive((prev) => !prev);
+  };
+
   return (
     <div className="mt-16">
       <PhotoSlider
-        toolbarRender={toolbarRender}
+        toolbarRender={(e) =>
+          toolbarRender(e, guidedViewIsActive, handleChangeGuidedView)
+        }
         images={
           images
-            ? images.map(({ url }, index) => ({
-                src: url,
-                key: index,
-              }))
+            ? images
+                .filter((item) => {
+                  if (guidedViewIsActive) {
+                    return item.isPannal;
+                  } else {
+                    return !item.isPannal;
+                  }
+                })
+                .map(({ url }, index) => ({
+                  src: url,
+                  key: index,
+                }))
             : []
         }
         visible={images ? true : false}

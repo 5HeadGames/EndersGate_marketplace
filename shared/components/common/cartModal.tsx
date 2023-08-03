@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { XIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
