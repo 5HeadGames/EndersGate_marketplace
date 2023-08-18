@@ -2,17 +2,12 @@ import React from "react";
 import clsx from "clsx";
 import Web3 from "web3";
 import {
-  Image,
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
-  ModalCloseButton,
   Button,
   Container,
-  Text,
 } from "@chakra-ui/react";
 import ReactCardFlip from "react-card-flip";
 import Tilt from "react-parallax-tilt";

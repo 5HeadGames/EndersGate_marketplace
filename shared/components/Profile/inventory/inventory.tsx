@@ -75,11 +75,11 @@ const Inventory = () => {
   };
 
   return (
-    <div className="flex flex-col w-full px-24">
-      <h2 className="text-white font-bold text-4xl mb-8">
+    <div className="flex flex-col w-full sm:px-24 px-4">
+      <h2 className="text-white font-bold text-4xl mb-8 xs:text-left text-center">
         My Enders Gate NFTs
       </h2>
-      <div className="flex gap-4 items-center mb-4">
+      <div className="flex md:flex-row flex-col gap-4 items-center mb-4">
         <div className="border flex items-center text-lg justify-center border-overlay-border bg-overlay-2 rounded-xl w-full">
           <div className="text-white flex items-center w-full py-3 px-4 rounded-xl bg-overlay border-r border-overlay-border">
             <input

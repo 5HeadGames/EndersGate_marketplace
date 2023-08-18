@@ -12,7 +12,7 @@ import { Tooltip } from "@mui/material";
 import { Button } from "@shared/components/common/button/button";
 import { authStillValid } from "@shared/components/utils";
 
-const ProfileIndexPage = ({ children }) => {
+const ProfileLayout = ({ children }) => {
   const { ethAddress: user } = useSelector((state: any) => state.layout.user);
   const { providerName } = useSelector((state: any) => state.layout);
   const { showWallet } = useMagicLink();
@@ -37,7 +37,7 @@ const ProfileIndexPage = ({ children }) => {
             alt=""
           />
         </div>
-        <div className="absolute bottom-[-120px] left-[120px] flex flex-col gap-2 items-center justify-center">
+        <div className="absolute bottom-[-120px] sm:left-[120px] left-0 sm:right-auto right-0 mx-auto flex flex-col gap-2 items-center justify-center">
           <img
             className="md:w-40 w-32 rounded-full border-t border-overlay-border p-2 bg-overlay"
             src={profileImage}
@@ -145,4 +145,4 @@ export const Activity = ({ date, type, metadata, pack }) => {
   );
 };
 
-export default ProfileIndexPage;
+export default ProfileLayout;

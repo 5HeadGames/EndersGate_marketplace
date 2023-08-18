@@ -11,25 +11,24 @@ export const GetStarted = () => {
         "w-full flex flex-col items-center xl:py-10 py-6 gap-10 px-10 border-t border-overlay-border",
       )}
     >
-      <h2 className="text-white text-xl font-bold">
+      <h2 className="text-white text-xl font-bold text-center">
         It's <span className="text-red-primary">easy</span> to get started!
         Here's how,
       </h2>
-      <div className="flex flex-wrap items-center justify-center gap-10">
-        <div className="flex flex-col items-center text-white gap-2 w-[300px]">
+      <div className="flex flex-wrap items-center justify-center gap-10 w-full">
+        <div className="flex flex-col items-center justify-center text-white gap-2 max-w-[300px] w-full">
           <img src="/icons/getStarted2.svg" className="w-10" alt="" />
-          <h3 className="text-xl font-bold">Set up your wallet</h3>
+          <h3 className="text-xl font-bold text-center">Set up your wallet</h3>
           <p className="text-md text-center">
             Set up your wallet, connect it to the Marketplace by clicking my
             account and selecting connect my wallet option. <br />
             <br />
-            <a className="text-red-primary" href="" target={"_blank"}>
-              {" "}
+            <span className="text-red-primary" rel="noreferrer">
               Learn about the wallets we support here
-            </a>
+            </span>
           </p>
         </div>
-        <div className="flex flex-col items-center text-white gap-2 w-[300px]">
+        <div className="flex flex-col items-center text-white gap-2 max-w-[300px] w-full">
           <img src="/icons/getStarted3.svg" className="w-10" alt="" />
           <h3 className="text-xl font-bold">Explore in the markeplace</h3>
           <p className="text-md text-center">
@@ -42,7 +41,7 @@ export const GetStarted = () => {
             You can buy NFTs, sell them, rent them & much more.
           </p>
         </div>
-        <div className="flex flex-col items-center text-white gap-2 w-[300px]">
+        <div className="flex flex-col items-center text-white gap-2 max-w-[300px] w-full">
           <img src="/icons/getStarted1.svg" className="w-10" alt="" />
           <h3 className="text-xl font-bold">List or buy NFTs </h3>
           <p className="text-md text-center">

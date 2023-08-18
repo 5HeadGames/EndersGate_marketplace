@@ -1,12 +1,12 @@
 import React from "react";
 import Sales from "@shared/components/Profile/sales/sales";
-import ProfileIndexPage from "@shared/components/Profile/index";
+import ProfileLayout from "@shared/components/Profile/layout";
 
 const ProfileSales = () => {
   return (
-    <ProfileIndexPage>
+    <ProfileLayout>
       <Sales />
-    </ProfileIndexPage>
+    </ProfileLayout>
   );
 };
 

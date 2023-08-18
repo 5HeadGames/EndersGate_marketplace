@@ -199,7 +199,7 @@ export const Modals = ({
           setPreBuy(true);
         }}
       >
-        {!congrats ? (
+        {congrats ? (
           <Congrats hide={hide} />
         ) : (
           <CartComic

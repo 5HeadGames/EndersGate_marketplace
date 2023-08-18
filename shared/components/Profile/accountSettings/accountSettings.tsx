@@ -19,32 +19,15 @@ const AccountSettingsComponent = () => {
     reset,
     formState: { errors },
   } = useForm();
-  // const [image, setImage] = React.useState<File | null>(null);
   const [loadingForm, setLoading] = React.useState(false);
   const [successPassword, setSuccessPassword] = React.useState(false);
-  // const {user, setUserData, signup, Moralis} = useMoralis();
   const { account: user } = useWeb3React();
-  // const {saveFile} = useMoralisFile();
 
-  const handleChangePicture = async (e: React.ChangeEvent<any>) => {
-    // try {
-    //   const file = e.target.files[0];
-    //   const moralisFile = await saveFile(file.name, file, {
-    //     type: "image/png",
-    //   });
-    //   await setUserData({ profileImage: moralisFile });
-    //   console.log(file);
-    //   // setImage(file);
-    // } catch (error) {
-    //   console.log({ error });
-    // }
-  };
+  const handleChangePicture = async (e: React.ChangeEvent<any>) => {};
 
   const handleSetField =
     (field: "name" | "userStatus") => async (e: React.ChangeEvent<any>) => {
       try {
-        const value = e.target.value;
-        // await setUserData({[field]: value});
       } catch (error) {
         console.log({ error });
       }
@@ -56,37 +39,12 @@ const AccountSettingsComponent = () => {
   }: {
     newEmail: string;
     newPassword: string;
-  }) => {
-    // try {
-    //   if (!user.email) {
-    //     await Moralis.Cloud.run("sendVerificationEmail", {
-    //       email: newEmail,
-    //       name: newEmail,
-    //     });
-    //   }
-    // } catch (err) {
-    //   console.log({err});
-    // }
-  };
+  }) => {};
 
-  const sendPasswordReset = async () => {
-    // console.log("sent");
-    // const email = user?.get("email");
-    // await Moralis.User.requestPasswordReset(email);
-    // await Moralis.Cloud.run("sendResetPasswordEmail", {
-    //   email,
-    //   name: email,
-    // });
-    // setSuccessPassword(true);
-  };
+  const sendPasswordReset = async () => {};
 
   return (
     <div className="flex w-full items-center justify-center relative">
-      {/* <img
-        src="/images/settings.png"
-        className="absolute w-full h-full top-0 opacity-25"
-        alt=""
-      /> */}
       {user && (
         <div className="flex flex-col max-w-[1300px] items-center justify-center w-full xl:px-24 md:px-6 relative">
           <form
@@ -134,7 +92,7 @@ const AccountSettingsComponent = () => {
                     title="User Name"
                     labelVisible
                     className="text-primary mt-2"
-                    classNameContainer="rounded-xl"
+                    classNameContainer="rounded-xl px-2"
                     // defaultValue={user}
                     onBlur={handleSetField("name")}
                   />
@@ -146,7 +104,7 @@ const AccountSettingsComponent = () => {
                     reset={reset}
                     name="userStatus"
                     title="Status"
-                    classNameContainer="rounded-xl"
+                    classNameContainer="rounded-xl px-2"
                     labelVisible
                     className="text-primary mt-2"
                     onBlur={handleSetField("userStatus")}

@@ -8,16 +8,19 @@ import clsx from "clsx";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { WALLETS } from "@shared/utils/connection/utils";
 import { LoadingOutlined } from "@ant-design/icons";
-import { onLogged } from "@redux/actions";
+import { onGetAssets, onLogged, onUpdateUser } from "@redux/actions";
 import { switchChain } from "@shared/web3";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { useWeb3React } from "@web3-react/core";
 
 const Login = () => {
   const [loading, setLoading] = React.useState(false);
   const { login, isAuthenticated } = useMagicLink(
     store.getState()["networks"].networkId,
   );
+
+  const { account, provider } = useWeb3React();
 
   const { blockchain } = useBlockchain();
 
@@ -55,7 +58,15 @@ const Login = () => {
       localStorage.setItem("typeOfConnection", title);
       localStorage.setItem("loginTime", new Date().getTime().toString());
       dispatch(onLogged({ isLogged: true }));
+    } catch (err) {
+      console.log({ err });
+      setLoading(false);
+    }
+  };
 
+  React.useEffect(() => {
+    console.log(account, "AAA");
+    if (account) {
       const queryAddress: any = query?.redirectAddress?.toString();
       setTimeout(async () => {
         try {
@@ -63,20 +74,28 @@ const Login = () => {
         } catch (e) {
           console.log(e.message);
         }
+        dispatch(
+          onUpdateUser({
+            ethAddress: account,
+            email: "",
+            provider: provider?.provider,
+            providerName: "web3react",
+          }),
+        );
+        dispatch(onGetAssets({ address: account, blockchain }));
         if (query.redirect === "true" && query.redirectAddress != null) {
           router.push(queryAddress !== undefined ? queryAddress : "/");
+        } else {
+          router.push("/");
         }
         setLoading(false);
-      }, 5000);
-    } catch (err) {
-      console.log({ err });
-      setLoading(false);
+      }, 1000);
     }
-  };
+  }, [account]);
 
   return (
     <div className="max-w-[100vw] h-screen overflow-hidden">
-      <div className="max-w-[100vw] overflow-hidden h-[100vh] w-full flex flex-col items-center justify-center gap-10">
+      <div className="max-w-[100vw] overflow-hidden h-[100vh] w-full flex flex-col items-center justify-center gap-10 py-20">
         <div className="absolute h-full overflow-hidden w-full flex items-center justify-center">
           <img
             src="/images/community.svg"

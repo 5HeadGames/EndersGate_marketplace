@@ -26,6 +26,7 @@ const ComicButtons = ({ priceUSD, getPriceMatic, balance, showCart }) => {
       bgImage={"/images/ComicSeriesBgColor.png"}
       justifyContent="center"
       alignItems="center"
+      mb={32}
     >
       {renderElements(element)}
     </Flex>

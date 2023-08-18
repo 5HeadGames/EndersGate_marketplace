@@ -79,9 +79,9 @@ const DashboardComponent = () => {
             className={`absolute 2xl:min-w-[165vw] lg:min-w-[250vw] min-w-[350vw] lg:max-h-[85vh] top-0 banner border-b border-overlay-border`}
             alt=""
           />
-          <div className="flex flex-col pt-24 w-full items-center lg:min-h-screen relative gap-4 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 px-8 text-white">
+          <div className="flex flex-col pt-24 w-full items-center lg:min-h-screen relative gap-4 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 xs:px-8 text-white">
             <div className="max-w-[1000px] xl:px-10 w-full flex justify-center relative lg:min-h-[350px]">
-              <div className="flex flex-col lg:items-start items-center gap-8 lg:pr-[250px] w-full lg:pl-0 pl-16 pr-16">
+              <div className="flex flex-col lg:items-start items-center gap-8 lg:pr-[250px] w-full lg:pl-0 sm:pl-16 sm:pr-16 pl-2 pr-2">
                 <h1 className="lg:text-3xl text-3xl flex flex-col font-bold w-full lg:text-left text-center">
                   Discover, collect, buy or sell Endersgate NFTs
                 </h1>
@@ -109,7 +109,7 @@ const DashboardComponent = () => {
                   </a>
                 </div>
               </div>
-              <div className="lg:block hidden w-[485px] flex items-end justify-end absolute right-0">
+              <div className="lg:block hidden w-[485px] items-end justify-end absolute right-0">
                 <SliderMain
                   cards={cards}
                   salesDefault={salesDefault}
@@ -308,9 +308,9 @@ const DashboardComponent = () => {
           </div>
           <div className="flex items-center justify-center">
             <Link href={"/marketplace"}>
-              <div className="p-3 px-6 font-[450] hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border text-overlay-border rounded-md cursor-pointer">
+              <p className="p-3 px-6 font-[450] hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border text-overlay-border rounded-md cursor-pointer">
                 Browse More
-              </div>
+              </p>
             </Link>
           </div>
         </div>

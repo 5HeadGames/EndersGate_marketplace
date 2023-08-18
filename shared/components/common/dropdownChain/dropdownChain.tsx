@@ -4,7 +4,6 @@ import clsx from "clsx";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import { Image, Text, Tooltip } from "@chakra-ui/react";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 
 export const DropdownChain: React.FC<any> = () => {
   const { blockchain, updateBlockchain } = useBlockchain();
@@ -66,7 +65,6 @@ export const DropdownChain: React.FC<any> = () => {
               >
                 <Menu.Items className="absolute top-0 right-3 z-20 md:mt-7 origin-top-right bg-overlay divide-y shadow-lg rounded-xl focus:outline-none">
                   <div>
-                    {" "}
                     <div className="flex flex-col items-center justify-center border border-overlay-border rounded-xl overflow-hidden">
                       {blockchains.map(({ name, value, image }) => {
                         return (

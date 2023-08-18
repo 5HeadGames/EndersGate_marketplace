@@ -2,15 +2,12 @@ import { authStillValid } from "@shared/components/utils";
 import { getAddressesEth, getContractCustom } from "@shared/web3";
 import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/router";
-import React, { useRef, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import { useToasts } from "react-toast-notifications";
 import comicDetails from "../../../comics.json";
 import Reader from "./ComicsReader";
 
 export const ComicSlider = () => {
-  const [isLoading, setIsLoading] = React.useState(true);
-
   const { name: comicName, issue } = useRouter().query;
   const router = useRouter();
   const { ethAddress: user } = useSelector((state: any) => state.layout.user);
@@ -22,12 +19,11 @@ export const ComicSlider = () => {
   const { comics: comicsAddress } = getAddressesEth();
 
   const accountUpdate = async () => {
-    if (!account && !user && !authStillValid()) {
+    if (!Boolean(account) && !Boolean(user) && !authStillValid()) {
       return router.push("/login?redirect=true&redirectAddress=/comics");
     } else if (account) {
       await getComicID();
     }
-    setIsLoading(false);
   };
 
   const currentComic = comicDetails?.find((comic) => {
@@ -61,10 +57,11 @@ export const ComicSlider = () => {
       .filter((balance) => balance.balance > 0)
       .map((id) => id.id);
 
-    if (!balanceCheck.includes(currentComic?.id)) {
+    console.log(balanceCheck, "balance gei", currentComic);
+    // comic.issue.id corresponds to the ID of the NFT in the smart contract
+    if (!balanceCheck.includes(currentComic?.issues[issue as string]?.id)) {
       return router.push("/login?redirect=true&redirectAddress=/comics");
     }
-    setIsLoading(false);
   };
 
   return (

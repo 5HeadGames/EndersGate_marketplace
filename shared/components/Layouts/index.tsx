@@ -81,15 +81,13 @@ export const Logo = () => (
 export const NavbarItem = ({ name, link, route }) => {
   return (
     <Link href={link}>
-      <a className={clsx("py-2 relative")} href={link}>
-        <div
-          className={clsx(
-            { "opacity-50": link !== route },
-            "gap-2 flex items-center text-white hover:opacity-100",
-          )}
-        >
-          <h3 className={clsx("text-md font-[500]")}>{name}</h3>
-        </div>
+      <a
+        className={clsx("py-2 relative", "text-md font-[500] text-white", {
+          "opacity-50": link !== route,
+        })}
+        href={link}
+      >
+        {name}
       </a>
     </Link>
   );
@@ -134,7 +132,7 @@ export default function AppLayout({ children }) {
   let isFullscreen;
 
   React.useEffect(() => {
-    if (relogin || isLogged) {
+    if (relogin) {
       dispatch(
         onUpdateUser({
           ethAddress: account,
@@ -188,6 +186,7 @@ export default function AppLayout({ children }) {
   };
 
   const handleSignOut = async () => {
+    console.log("a", providerName);
     if (providerName === "magic") {
       const toggleLogout = handleDisabled("logout");
       toggleLogout(true);
@@ -235,11 +234,11 @@ export default function AppLayout({ children }) {
       link: "/packs",
       icon: <AreaChartOutlined />,
     },
-    {
-      name: "PROFILE",
-      link: "/profile/accountSettings",
-      icon: <AreaChartOutlined />,
-    },
+    // {
+    //   name: "PROFILE",
+    //   link: "/profile/accountSettings",
+    //   icon: <AreaChartOutlined />,
+    // },
     {
       name: "LOG OUT",
       decoration: "line-primary",
@@ -377,7 +376,7 @@ export default function AppLayout({ children }) {
             />
           )}
         </div>
-        <div className="lg:hidden flex gap-3">
+        <div className="lg:hidden flex gap-4">
           <div
             className={clsx(
               { "!opacity-100": cartOpen || cart.length > 0 },
@@ -394,9 +393,11 @@ export default function AppLayout({ children }) {
             )}
             <ShoppingCartOutlined />
           </div>
+          <ChainSelect />
+
           {!sidebarOpen ? (
             <MenuIcon
-              className="h-6 w-6 text-primary cursor-pointer"
+              className="h-6 w-6 shrink-0 text-primary cursor-pointer"
               aria-hidden="true"
               onClick={() => {
                 setSidebarOpen((prev) => !prev);
@@ -404,7 +405,7 @@ export default function AppLayout({ children }) {
             />
           ) : (
             <XIcon
-              className="h-6 w-6 text-primary cursor-pointer"
+              className="h-6 w-6 shrink-0 text-primary cursor-pointer"
               aria-hidden="true"
               onClick={() => {
                 setSidebarOpen((prev) => !prev);

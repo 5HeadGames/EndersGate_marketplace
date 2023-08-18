@@ -4,7 +4,7 @@ import clsx from "clsx";
 import React from "react";
 // import { useMoralis } from "react-moralis";
 import Styles from "./styles.module.scss";
-import { Activity } from "../index/index";
+import { Activity } from "../layout/index";
 import { useWeb3React } from "@web3-react/core";
 import { getAddressesMatic } from "@shared/web3";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";

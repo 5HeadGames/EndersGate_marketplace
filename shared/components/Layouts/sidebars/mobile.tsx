@@ -1,28 +1,11 @@
-import React, { Fragment, useRef } from "react";
+import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import clsx from "clsx";
-import { XIcon } from "@heroicons/react/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Icons } from "@shared/const/Icons";
-import { Button } from "@shared/components/common/button/button";
-import ProfileDataAndActions from "@shared/components/Profile/profilePersonalData/profilePersonalData";
-import {
-  AppstoreFilled,
-  AreaChartOutlined,
-  DownOutlined,
-  GoldenFilled,
-  RightOutlined,
-  ShopOutlined,
-  ShoppingCartOutlined,
-  TwitterOutlined,
-  WalletOutlined,
-} from "@ant-design/icons";
-import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
-import { NavbarItem } from "..";
-import { Dropdown } from "../../common/dropdown/dropdown";
 import ChainSelect from "../chainSelect";
+import { useSelector } from "react-redux";
 
 interface LayoutDashboardProps {
   title?: string;
@@ -54,9 +37,8 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
   const router = useRouter();
   // const { user } = useMoralis();
 
-  const { account: user } = useWeb3React();
+  const { ethAddress: user } = useSelector((state: any) => state.layout.user);
 
-  const address = user || "";
   const [set, setSet] = React.useState(false);
 
   return (
@@ -66,7 +48,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
         <Dialog
           as="div"
           static
-          className="fixed h-[calc(100vh-56px)] top-[56px] w-screen top-0 flex z-40 md:hidden bg-overlay"
+          className="fixed h-[calc(100vh-56px)] top-[56px] w-screen flex z-40 md:hidden bg-overlay"
           open={sidebarOpen}
           onClose={setSet as any}
           initialFocus={initialFocus}
@@ -100,7 +82,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                         <Link href={item.link} key={"nav-desktop-" + index}>
                           <p
                             className={clsx(
-                              "group flex items-center px-3 pb-3 text-xl  hover:opacity-90 text-base rounded-md  relative text-primary font-[500]",
+                              "group flex items-center px-3 pb-3 text-xl hover:opacity-90 rounded-md  relative text-primary font-[500]",
                               {
                                 "opacity-50": item.link !== router.asPath,
                               },
@@ -116,73 +98,60 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                   })}
                   {user ? (
                     <>
-                      {/* <div
-                        className={clsx(
-                          "flex items-center px-3 pb-3 text-xl hover:opacity-90 text-base rounded-md  relative text-primary font-[500]",
-                        )}
-                        onClick={() => {
-                          setSidebarOpen(false);
-                          setCartOpen(true);
-                        }}
-                      >
-                        {cart.length > 0 && (
-                          <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary">
-                            {cart.length}
-                          </div>
-                        )}
-                        <span className="opacity-50">MY CART</span>
-                      </div> */}
-
-                      <Dropdown
-                        classTitle={
-                          "text-white opacity-50 hover:opacity-100 font-bold pl-3"
-                        }
-                        title={"MY ACCOUNT"}
-                      >
-                        <div className="flex flex-col items-center px-4 border border-overlay-border rounded-xl">
-                          {profileItems.map((item, index) => {
-                            console.log(
-                              providerName,
-                              item.name === "LOG OUT" &&
-                                providerName === "magic",
-                            );
-                            return (
-                              <>
-                                {item.onClick ? (
-                                  <div
-                                    className={clsx(
-                                      "gap-2 py-2 flex items-center text-white opacity-50 hover:opacity-100 cursor-pointer",
-                                    )}
-                                    onClick={item.onClick}
-                                  >
-                                    <h3 className={clsx("text-md font-bold")}>
-                                      {item.name}
-                                    </h3>
-                                  </div>
-                                ) : (
-                                  <NavbarItem
-                                    key={index}
-                                    name={item.name}
-                                    link={item.link}
-                                    route={router.asPath}
-                                  />
+                      {profileItems.map((item, index) => {
+                        return (
+                          <>
+                            {item.onClick ? (
+                              <div
+                                className={clsx(
+                                  "group flex items-center px-3 pb-3 text-xl hover:opacity-90 rounded-md  relative text-primary font-[500]",
                                 )}
-                              </>
-                            );
-                          })}
-                        </div>
-                      </Dropdown>
-                      <ChainSelect />
+                                onClick={() => {
+                                  item.onClick();
+                                  setSidebarOpen(false);
+                                }}
+                              >
+                                <h3 className={clsx("text-xl")}>{item.name}</h3>
+                              </div>
+                            ) : (
+                              <Fragment key={"nav-mobile-" + index}>
+                                <Link
+                                  href={item.link}
+                                  key={"nav-desktop-" + index}
+                                >
+                                  <p
+                                    className={clsx(
+                                      "group flex items-center px-3 pb-3 text-xl hover:opacity-90 rounded-md  relative text-primary font-[500]",
+                                      {
+                                        "opacity-50":
+                                          item.link !== router.asPath,
+                                      },
+                                    )}
+                                    onClick={() => setSidebarOpen(false)}
+                                  >
+                                    {item.name}
+                                  </p>
+                                </Link>
+                                <div className="divider mx-3 mt-4"></div>
+                              </Fragment>
+                            )}
+                          </>
+                        );
+                      })}
                     </>
                   ) : (
                     <Fragment key={"nav-mobile"}>
                       <Link
-                        href={user ? "/profile" : "/login"}
+                        href={
+                          router.pathname !== "/login"
+                            ? `/login?redirect=true&redirectAddress=${router.pathname}`
+                            : router.asPath
+                        }
                         key={"nav-desktop-"}
                       >
                         <p
                           className={clsx(
-                            "group flex items-center px-3 pb-3 text-xl  hover:opacity-90 text-base rounded-md  relative text-primary font-[500]",
+                            "group flex items-center px-3 pb-3 text-xl hover:opacity-90 rounded-md  relative text-primary font-[500]",
                             {
                               "opacity-50": user
                                 ? "/profile"
@@ -191,7 +160,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                           )}
                           onClick={() => setSidebarOpen(false)}
                         >
-                          {user ? "MY ACCOUNT" : "LOG IN"}
+                          {"LOG IN"}
                         </p>
                       </Link>
                     </Fragment>

@@ -20,11 +20,13 @@ export const Footer = () => {
       )}
     >
       <img className="h-12" src={Icons.logo5HG} alt="logo" />
-      <div className="flex md:flex-row flex-wrap lg:justify-start justify-center gap-y-4">
+      <div className="flex md:flex-row flex-col flex-wrap lg:justify-start justify-center items-center gap-y-4">
         {items.map((item, i) => (
           <>
             <div
-              className={clsx("px-2 text-xl font-bold text-primary-disabled")}
+              className={clsx(
+                "px-2 text-xl font-bold text-primary-disabled text-center",
+              )}
             >
               {item}
             </div>
