@@ -687,20 +687,21 @@ export const rentERC1155 = createAsyncThunk(
 
     try {
       const { rent } = getAddressesMatic();
-      const rentContract = getContractCustom("ClockSale", rent, provider);
+      const rentContract = getContractCustom("Rent", rent, provider);
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addresses = getTokensAllowed();
+
       if (
         token === addresses.filter((item) => item.name === "MATIC")[0].address
       ) {
         await rentContract.methods
-          .buy(tokenId, daysOfRent, token)
+          .rent(tokenId, daysOfRent, token)
           .send({ from: user, value: bid });
       } else {
         const allowance = await ERC20.methods.allowance(user, rent).call();
-        const price = await rentContract.methods
-          .getPrice(tokenId, token, daysOfRent)
-          .call();
+        const price = (
+          await rentContract.methods.getRatePrice(tokenId, token).call()
+        ).mul(daysOfRent);
         if (allowance < price) {
           await ERC20.methods
             .increaseAllowance(
@@ -928,14 +929,8 @@ export const cancelRent = createAsyncThunk(
     blockchain: any;
   }) {
     const { tokenId, provider, user, blockchain } = args;
-    // const relation = user.relation("events");
-
-    const { marketplace } = getAddresses(blockchain);
-    const marketplaceContract = getContractCustom(
-      blockchain === "matic" ? "ClockSale" : "ClockSaleFindora",
-      marketplace,
-      provider,
-    );
-    return marketplaceContract.methods.cancelSale(tokenId).send({ from: user });
+    const { rent } = getAddresses(blockchain);
+    const rentContract = getContractCustom("Rent", rent, provider);
+    return rentContract.methods.cancelRent(tokenId).send({ from: user });
   },
 );

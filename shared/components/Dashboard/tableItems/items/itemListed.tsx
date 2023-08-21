@@ -129,11 +129,8 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
             </td>
           )} */}
           <td className="bg-secondary  cursor-pointer py-4 text-center w-8">
-            <Link href={`/NFTDetailSale/${id}`}>
-              <a
-                href={`/NFTDetailSale/${id}`}
-                className="flex justify-center shrink-0"
-              >
+            <Link href={`/sale/${id}`}>
+              <a href={`/sale/${id}`} className="flex justify-center shrink-0">
                 <img src={Icons.arrowLeft} className="w-5" alt="" />
               </a>
             </Link>

@@ -159,22 +159,14 @@ const DashboardComponent = () => {
                           image: "/images/gen0_pack.png",
                           link: "https://www.endersgate.gg/shop",
                         },
-                        // {
-                        //   name: "EG NFT Comics",
-                        //   description:
-                        //     "Collect the lore & enjoy original stories.",
-                        //   image: "/images/comic_pack.png",
-                        // },
                       ]?.map(({ name, description, image, link }: any) => {
                         return (
-                          // <SwiperSlide>
                           <a
                             href={link}
                             target="_blank"
                             rel="noreferrer"
                             className="flex flex-col items-center justify-center h-[400px] sm:max-w-[350px] overflow-hidden shrink-0"
                           >
-                            {/* <div className="px-4"> */}
                             <div className="bg-secondary rounded-xl border border-overlay-border h-[390px] sm:max-w-[350px] flex items-end overflow-hidden w-full">
                               <img
                                 src={image}
@@ -199,66 +191,12 @@ const DashboardComponent = () => {
                                   </p>
                                 </div>
                               </div>
-                              {/* </div> */}
                             </div>
                           </a>
-                          // </SwiperSlide>
                         );
                       })}
                     </div>
                   </SwiperSlide>
-                  {/* {[
-                    {
-                      name: "Gen 0 Pack Drop",
-                      description:
-                        "Enjoy +230 Unique hand drawn playing cards.",
-                      image: "/images/gen0_pack.png",
-                      link: "https://www.endersgate.gg/shop",
-                    },
-                    // {
-                    //   name: "EG NFT Comics",
-                    //   description: "Collect the lore & enjoy original stories.",
-                    //   image: "/images/comic_pack.png",
-                    //   link: "https://www.endersgate.gg/shop",
-                    // },
-                  ]?.map(({ name, description, image, link }: any) => {
-                    return (
-                      <SwiperSlide className="xl:hidden flex">
-                        <a
-                          href={link}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex flex-col items-center justify-center h-[450px] max-w-[400px] overflow-hidden"
-                        >
-                          <div className="bg-secondary rounded-xl border border-overlay-border h-[440px] max-w-[400px] flex items-end overflow-hidden w-full">
-                            <img
-                              src={image}
-                              className="absolute max-w-[400px] w-full h-[440px]"
-                              alt=""
-                            />
-                            <div className="p-4 flex items-center justify-center relative max-w-[400px] w-full rounded-xl bg-secondary border border-secondary gap-2">
-                              <img
-                                src={Icons.logo}
-                                className="w-12 h-12"
-                                alt=""
-                              />
-                              <div className="w-full flex flex-col">
-                                <h2 className="font-bold text-white text-xl">
-                                  {name}
-                                </h2>
-                                <p
-                                  className="text-primary-disabled text-md w-[75%]"
-                                  style={{ lineHeight: "16px" }}
-                                >
-                                  {description}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                      </SwiperSlide>
-                    );
-                  })} */}
                 </Swiper>
               </div>
             </div>

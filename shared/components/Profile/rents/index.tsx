@@ -12,7 +12,12 @@ import packs from "../../../packs.json";
 import { getAddresses, getAddressesMatic, switchChain } from "@shared/web3";
 
 import { useModal } from "@shared/hooks/modal";
-import { onCancelSale, onLoadSales, onGetAssets } from "@redux/actions";
+import {
+  onCancelSale,
+  onLoadSales,
+  onGetAssets,
+  cancelRent,
+} from "@redux/actions";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import { useWeb3React } from "@web3-react/core";
 import { useBlockchain } from "@shared/context/useBlockchain";
@@ -21,7 +26,7 @@ import { toast } from "react-hot-toast";
 import { LoadingOutlined } from "@ant-design/icons";
 import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 
-const Sales = () => {
+const Rents = () => {
   const nfts = useAppSelector((state) => state.nfts);
   const { account: user, provider } = useWeb3React();
 
@@ -29,12 +34,12 @@ const Sales = () => {
   const { Modal, show, hide, isShow } = useModal();
   const dispatch = useAppDispatch();
 
-  const [sales, setSales] = React.useState([]);
+  const [rents, setRents] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
   const { blockchain, updateBlockchain } = useBlockchain();
 
-  const cancelSale = async () => {
+  const handleCancelRent = async () => {
     try {
       setIsLoading(true);
       const changed = await switchChain(CHAIN_IDS_BY_NAME[cancel.blockchain]);
@@ -45,7 +50,7 @@ const Sales = () => {
       }
       updateBlockchain(cancel.blockchain);
       const tx = await dispatch(
-        onCancelSale({
+        cancelRent({
           tokenId: cancel.id,
           provider: provider.provider,
           user: user,
@@ -70,21 +75,19 @@ const Sales = () => {
 
   React.useEffect(() => {
     const arrayPacks = [];
-    nfts.saleCreated.forEach((sale, index) => {
+    nfts.allRents.forEach((sale, index) => {
       if (sale.seller.toLowerCase() === user.toLowerCase()) {
-        if (sale.status !== 3) {
-          arrayPacks.push(sale);
-        }
+        arrayPacks.push(sale);
       }
     });
-    setSales(arrayPacks);
-  }, [nfts.saleCreated, user]);
+    setRents(arrayPacks);
+  }, [nfts.allRents, user]);
 
   return (
     <div className="flex flex-col w-full min-h-screen gap-4 md:px-20 px-8">
       <div className="flex w-full items-center">
         <h1 className="text-white text-4xl font-bold text-center w-full">
-          My Sales
+          My Rent Listings
         </h1>
       </div>
       <Modal isShow={isShow} withoutX>
@@ -93,7 +96,7 @@ const Sales = () => {
             type="subTitle"
             className="text-white text-center text-xl font-bold"
           >
-            Do you want to delete this sale?
+            Do you want to cancel this listing?
           </Typography>
           {isLoading ? (
             <div className="flex justify-center items-center">
@@ -117,7 +120,7 @@ const Sales = () => {
                 size="small"
                 className="hover:text-red-primary !font-bold !hover:border-red-primary text-overlay bg-red-primary rounded-xl"
                 onClick={() => {
-                  cancelSale();
+                  handleCancelRent();
                 }}
               >
                 Confirm
@@ -131,38 +134,38 @@ const Sales = () => {
           "flex mb-10 items-center  justify-center",
           {
             [`${Styles.gray} flex-col items-center gap-6 h-full min-h-[400px]`]:
-              sales.length == 0,
+              rents.length == 0,
           },
           {
-            ["gap-2 flex-wrap gap-2"]: sales.length != 0,
+            ["gap-2 flex-wrap gap-2"]: rents.length != 0,
           },
         )}
       >
-        {sales.length > 0 ? (
+        {rents.length > 0 ? (
           <div className="w-full overflow-x-auto border border-overlay-border rounded-xl py-4">
             <table className="w-full min-w-max">
               <thead className="text-white font-bold">
-                <th className="text-center px-10">NFT</th>
-                <th className="text-center px-10">SALE ID</th>
-                {/* <th className="text-center px-10"></th> */}
-                <th className="text-center px-10">PRICE</th>
-                <th className="text-center px-10">AMOUNT</th>
-                <th className="text-center px-10"></th>
+                <th className="text-center px-8">NFT</th>
+                <th className="text-center px-8">RENT ID</th>
+                <th className="text-center px-8">PRICE</th>
+                <th className="text-center px-8">AMOUNT</th>
+                <th className="text-center px-8">STATUS</th>
+                <th className="text-center px-8"></th>
                 <th className="text-center"></th>
               </thead>
               <tbody>
-                {sales.map((sale, i) => {
+                {rents.map((sale, i) => {
                   const { pack: packsAddress } = getAddresses(sale.blockchain);
                   const pack = sale.nft == packsAddress;
                   return (
                     <tr
                       className={clsx({
                         ["border-b border-overlay-border"]:
-                          i < sales.length - 1,
+                          i < rents.length - 1,
                       })}
                     >
                       {sale && (
-                        <Sale
+                        <Rent
                           {...{ sale, pack, setCancelId: setCancel, show }}
                         />
                       )}
@@ -188,10 +191,24 @@ const Sales = () => {
   );
 };
 
-export default Sales;
+export default Rents;
 
-const Sale = ({ sale, pack, setCancelId, show }) => {
+const Rent = ({ sale: rent, pack, setCancelId, show }) => {
   const cards = convertArrayCards();
+
+  const StatusInfo = ({ status }) => {
+    console.log(status);
+    switch (status) {
+      case "0":
+        return "Rent Listed";
+      case "1":
+        return "NFT In Rent";
+      case "2":
+        return "Rent FInished";
+      case "3":
+        return "Rent Cancelled";
+    }
+  };
 
   return (
     <>
@@ -201,8 +218,8 @@ const Sale = ({ sale, pack, setCancelId, show }) => {
             <img
               src={
                 pack
-                  ? packs[sale.nftId]?.properties?.image?.value
-                  : cards[sale.nftId]?.properties.image?.value
+                  ? packs[rent.nftId]?.properties?.image?.value
+                  : cards[rent.nftId]?.properties.image?.value
               }
               className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
               alt=""
@@ -211,59 +228,71 @@ const Sale = ({ sale, pack, setCancelId, show }) => {
           <div className="flex flex-col items-center gap-4">
             <h2 className="text-primary-disabled text-xl font-bold">
               {pack
-                ? packs[sale.nftId]?.properties?.name?.value
-                : cards[sale.nftId]?.properties.name?.value}
+                ? packs[rent.nftId]?.properties?.name?.value
+                : cards[rent.nftId]?.properties.name?.value}
             </h2>
           </div>
         </div>
       </td>
       <td className="py-4 px-4">
         <div className="flex flex-col items-center">
-          <h2 className="text-white text-lg font-bold">#{sale.id}</h2>
+          <h2 className="text-white text-lg font-bold">#{rent.id}</h2>
         </div>
       </td>
 
       <td className="py-4 px-4">
         <div className="flex flex-col items-center pr-2">
           <h2 className="text-white text-lg font-bold">
-            {formatPrice(sale.price, sale.blockchain)}
+            {formatPrice(rent.price, rent.blockchain)}
           </h2>
         </div>
       </td>
 
       <td className="py-4 px-4">
         <div className="flex flex-col items-center just">
-          <h2 className="text-white text-lg font-bold">{sale.amount}</h2>
+          <h2 className="text-white text-lg font-bold">{rent.amount}</h2>
         </div>
       </td>
       <td className="py-4 px-4">
         <div className="flex flex-col items-center just">
-          <Button
-            decoration="line-white"
-            className="text-white hover:text-overlay rounded-xl"
-            size="small"
-            onClick={() => {
-              setCancelId({
-                id: sale.saleId,
-                blockchain: sale.blockchain,
-              });
-              show();
-            }}
-          >
-            Cancel
-          </Button>
+          {
+            <h2 className="text-white font-bold text-sm">
+              {StatusInfo({ status: rent.status })}
+            </h2>
+          }
+        </div>
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center just">
+          {rent.status === "0" && (
+            <Button
+              decoration="line-white"
+              className="text-white hover:text-overlay rounded-xl"
+              size="small"
+              onClick={() => {
+                setCancelId({
+                  id: rent.rentId,
+                  blockchain: rent.blockchain,
+                });
+                show();
+              }}
+            >
+              Cancel
+            </Button>
+          )}
         </div>
       </td>
 
       <td className="py-4 pr-4">
-        <Link href={`/sale/${sale.id}`}>
+        <Link href={`/rent/${rent.id}`}>
           <div className="flex flex-col items-center just">
             <Button
               decoration="fill"
               className="!text-overlay hover:!text-white rounded-xl"
               size="small"
             >
-              Go to Sale
+              Go to Rent
             </Button>
           </div>
         </Link>

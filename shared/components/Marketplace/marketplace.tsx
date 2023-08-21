@@ -52,15 +52,14 @@ const MarketplaceComponent = () => {
   const [openFilters, setOpenFilters] = React.useState(true);
 
   const [columnSelected, setColumnSelected] = React.useState("forever");
-  const [listedSelected, setListedSelected] = React.useState("trading_cards");
-  const [soldSelected, setSoldSelected] = React.useState("trading_cards");
+  const [listingType, setListingType] = React.useState("sale");
   const { search: searched } = useRouter().query;
   const cards = convertArrayCards();
 
   const { transactionsBoard } = useStats({
     nfts,
-    listedSelected,
-    soldSelected,
+    listedSelected: "trading_cards",
+    soldSelected: "trading_cards",
     columnSelected,
   });
 
@@ -264,22 +263,29 @@ const MarketplaceComponent = () => {
     packRarity: [],
   });
 
-  const salesFiltered = sales.filter((sale, i) => {
-    return !isPack(sale.nft)
-      ? filterCards({
-          card: cards[sale.nftId],
-          filters,
-          search,
-          type,
-          cardType,
-        })
-      : filterPacks({
-          pack: packs[sale.nftId],
-          filters,
-          search,
-          type,
-        });
-  });
+  const salesFiltered = sales
+    .filter((sale) => {
+      return (
+        (sale.rent && listingType === "rent") ||
+        (!sale.rent && listingType === "sale")
+      );
+    })
+    .filter((sale, i) => {
+      return !isPack(sale.nft)
+        ? filterCards({
+            card: cards[sale.nftId],
+            filters,
+            search,
+            type,
+            cardType,
+          })
+        : filterPacks({
+            pack: packs[sale.nftId],
+            filters,
+            search,
+            type,
+          });
+    });
 
   return (
     <div className="flex flex-col w-full">
@@ -369,6 +375,8 @@ const MarketplaceComponent = () => {
               type={type}
               setType={setType}
               setPriceSettings={setPriceSettings}
+              listingType={listingType}
+              setListingType={setListingType}
             />
           </div>
           <div className="w-full xl:mt-0 mt-6 flex flex-col pb-10">

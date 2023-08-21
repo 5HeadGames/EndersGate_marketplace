@@ -283,7 +283,7 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
             >
               Buy Now
             </div>
-            <Link href={`/NFTDetailSale/${rent.id}`}>
+            <Link href={`/sale/${rent.id}`}>
               <div className="w-1/2 px-2 pb-1  flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-overlay-2 transition-all duration-500">
                 Details
               </div>

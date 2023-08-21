@@ -18,6 +18,8 @@ const FiltersBoard = ({
   setFilters,
   setCardType,
   cardType,
+  listingType,
+  setListingType,
   type,
   setType,
   setPage,
@@ -359,32 +361,6 @@ const FiltersBoard = ({
         },
       ],
     },
-    // {
-    //   title: "Limited Edition",
-    //   onClick: () => handleChange("limited_edition"),
-    //   slideButton: true,
-    //   value: "limited_edition",
-    // },
-    // {
-    //   title: "Stats",
-    //   subItems: [
-    //     {
-    //       title: "Attack",
-    //       onClick: () => handleChange("attack"),
-    //       value: "attack",
-    //     },
-    //     {
-    //       title: "Damage",
-    //       onClick: () => handleChange("damage_stats"),
-    //       value: "damage_stats",
-    //     },
-    //     {
-    //       title: "Mages",
-    //       onClick: () => handleChange("mages_stats"),
-    //       value: "mages_stats",
-    //     },
-    //   ],
-    // },
   ];
 
   const ResetAvatars = () => {
@@ -475,6 +451,48 @@ const FiltersBoard = ({
                   <p className="w-6 text-[10px] text-overlay-border">USD</p>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 lg:w-full w-48">
+            <h2 className="text-lg font-bold text-white lg:text-left text-center">
+              Listing Type
+            </h2>
+            <div className="flex flex-col gap-1 w-full">
+              {[
+                { text: "Sale", value: "sale" },
+                { text: "Rent", value: "rent" },
+              ].map((item, index) => (
+                <div
+                  onClick={() => {
+                    setListingType(item.value);
+                  }}
+                  className={clsx(
+                    "flex items-center justify-between  w-full  cursor-pointer",
+                    "rounded-md",
+                    "text-white text-[15px]",
+                  )}
+                >
+                  <p
+                    className={clsx(
+                      {
+                        "text-gray-300": item.value !== listingType,
+                      },
+                      {
+                        "text-white": listingType === item.value,
+                      },
+                    )}
+                  >
+                    {item.text}
+                  </p>
+                  <div
+                    className={clsx(
+                      { ["bg-primary"]: listingType === item.value },
+                      { ["bg-gray-800"]: listingType !== item.value },
+                      "rounded-full w-6 h-6 border border-gray-800",
+                    )}
+                  ></div>
+                </div>
+              ))}
             </div>
           </div>
           <div className="flex flex-col gap-2 lg:w-full w-48">

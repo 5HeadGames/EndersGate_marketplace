@@ -119,7 +119,7 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
           onMouseOver={() => setHoverAll(true)}
           onMouseLeave={() => setHoverAll(false)}
         >
-          <Link href={`/NFTDetailSale/${props.transactionId}`}>
+          <Link href={`/sale/${props.transactionId}`}>
             <div
               className={clsx(
                 "rounded-xl flex flex-col text-gray-100 w-72 bg-secondary cursor-pointer relative overflow-hidden border z-[2] border-gray-500 hover:border-green-button transition duration-500",
@@ -223,7 +223,7 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                   "flex w-full gap-2 absolute transition-all duration-500  px-2 z-[1]  font-bold text-white",
                 )}
               >
-                <Link href={`/NFTDetailSale/${props.transactionId}`}>
+                <Link href={`/sale/${props.transactionId}`}>
                   <div
                     onClick={() => {}}
                     className="w-1/2 px-2 pb-1 flex text-sm justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-green-button hover:text-overlay transition-all duration-500"
@@ -231,7 +231,7 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                     Buy Now
                   </div>
                 </Link>
-                <Link href={`/NFTDetailSale/${props.transactionId}`}>
+                <Link href={`/sale/${props.transactionId}`}>
                   <div className="w-1/2 px-2 pb-1 text-sm flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-overlay-2 transition-all duration-500">
                     Details
                   </div>
