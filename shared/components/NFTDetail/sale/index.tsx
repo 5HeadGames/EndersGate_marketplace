@@ -4,10 +4,10 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import {
-  onBuyERC1155,
+  buyERC1155,
   onLoadSales,
   onGetAssets,
-  onBuyERC1155Findora,
+  buyERC1155Findora,
 } from "@redux/actions";
 import { Button } from "../../common/button/button";
 import { Icons } from "@shared/const/Icons";
@@ -63,7 +63,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const getSale = async () => {
     const sale = nfts.allSales.filter((sale) => {
-      return sale?.id?.toString() == id;
+      return sale?.id?.toString() === id;
     })[0];
     const { pack: packAddress } = getAddresses(sale?.blockchain);
     if (sale?.nft === packAddress) {
@@ -91,14 +91,14 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
       const { pack, endersGate } = getAddresses(sale.blockchain);
       if (sale.blockchain !== "matic") {
         await dispatch(
-          onBuyERC1155Findora({
+          buyERC1155Findora({
             seller: sale.seller,
             amount: buyNFTData,
             bid: Web3.utils
               .toBN(sale.price)
               .mul(Web3.utils.toBN(buyNFTData))
               .toString(),
-            tokenId: id,
+            tokenId: sale.saleId,
             provider: provider.provider,
             nftContract: isPack ? pack : endersGate,
             user: user,
@@ -106,14 +106,14 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
         );
       } else {
         await dispatch(
-          onBuyERC1155({
+          buyERC1155({
             seller: sale.seller,
             amount: buyNFTData,
             bid: Web3.utils
               .toBN(sale.price)
               .mul(Web3.utils.toBN(buyNFTData))
               .toString(),
-            tokenId: id,
+            tokenId: sale.saleId,
             token: tokenSelected.address,
             provider: provider.provider,
             nftContract: isPack ? pack : endersGate,
@@ -169,7 +169,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
           </div>
           <div className="w-full flex xl:flex-row flex-col  gap-4 justify-center">
             <div className="flex flex-col gap-2">
-              <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] sm:min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
+              <div className="flex relative items-center justify-center xl:min-w-[500px] sm:min-w-[320px] min-w-full sm:min-h-[675px] min-h-[350px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer overflow-hidden border border-gray-500">
                 {!isPack && (
                   <div
                     className="absolute top-2 right-2 z-[2] text-white text-2xl p-1"

@@ -7,6 +7,7 @@ import comicsByID from "@shared/comicsByNFTId.json";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Zoom } from "swiper";
+import "swiper/css";
 
 function MyComics({ balance }) {
   const settings = {
@@ -17,7 +18,7 @@ function MyComics({ balance }) {
   };
 
   return (
-    <>
+    <div>
       <Flex mt={20} mb={10} justifyContent={"center"} id="my_comics">
         <Text
           fontSize={["30px", "50px", "65px", "4xl"]}
@@ -101,7 +102,7 @@ function MyComics({ balance }) {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

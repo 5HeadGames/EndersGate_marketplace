@@ -36,11 +36,7 @@ export const CongratsListing = ({ hide, name }) => {
           Success!
         </h2>{" "}
         <p className="text-center text-white text-lg py-4">
-          You have just joined the Enders Gate waitlist to mint Issues 1 & 2 of
-          Humans vs Ogres comic books!
-        </p>
-        <p className="text-center text-white text-lg py-2">
-          Share this with your friends and inform them about the waitlist!
+          You've successfully listed {name} NFT/s on the EndersGate Marketplace!
         </p>
         <a
           href={`https://twitter.com/intent/tweet?text=I'm so excited to announce that I just have listed a ${name} from Enders Gate! Get yours on: https://marketplace.endersgate.gg`}
@@ -49,15 +45,6 @@ export const CongratsListing = ({ hide, name }) => {
         >
           <img src="/images/share.png" className="h-12 cursor-pointer" alt="" />
         </a>
-        <img
-          src="/images/view_comics.png"
-          className="h-12 cursor-pointer"
-          alt=""
-          onClick={() => {
-            hide();
-            router.push("/profile/mySales");
-          }}
-        />
       </div>
     </div>
   );

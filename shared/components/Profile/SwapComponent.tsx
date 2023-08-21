@@ -153,7 +153,6 @@ const SwapComponent = () => {
           blockchain: blockchain,
         }),
       );
-      console.log(res?.payload.err, "res");
       if (res?.payload?.err) {
         throw new Error(res?.payload.err.message);
       }

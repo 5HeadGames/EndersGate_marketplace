@@ -34,8 +34,6 @@ export const ComicSlider = () => {
 
   const sliderImage = comicImage?.pages_pannels;
 
-  console.log(comicImage, sliderImage);
-
   React.useEffect(() => {
     if (currentComic) accountUpdate();
   }, [account, currentComic]);
@@ -57,7 +55,6 @@ export const ComicSlider = () => {
       .filter((balance) => balance.balance > 0)
       .map((id) => id.id);
 
-    console.log(balanceCheck, "balance gei", currentComic);
     // comic.issue.id corresponds to the ID of the NFT in the smart contract
     if (!balanceCheck.includes(currentComic?.issues[issue as string]?.id)) {
       return router.push("/login?redirect=true&redirectAddress=/comics");

@@ -337,12 +337,10 @@ export const CardInventory = (props) => {
                   >
                     <Link
                       href={
-                        props.card
-                          ? `/NFTDetailID/${props.id}`
-                          : `/PackDetailID/${props.id}`
+                        props.card ? `/card/${props.id}` : `/pack/${props.id}`
                       }
                     >
-                      Sell
+                      Sell / Rent
                     </Link>
                   </Button>
 

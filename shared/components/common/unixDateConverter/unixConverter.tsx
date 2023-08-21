@@ -26,9 +26,8 @@ export const TimeConverter: React.FC<any> = ({ UNIX_timestamp }) => {
     var hour = a.getHours();
     var min = a.getMinutes();
     var sec = a.getSeconds();
-    console.log(a);
     setTime(
-      month + " " + date + " " + year + " " + hour + ":" + min + ":" + sec
+      month + " " + date + " " + year + " " + hour + ":" + min + ":" + sec,
     );
   }, []);
 

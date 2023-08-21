@@ -47,10 +47,6 @@ const Activities = () => {
     }
   }, [user]);
 
-  React.useEffect(() => {
-    console.log("act", activities);
-  }, [activities]);
-
   return (
     <div className="flex flex-col items-center w-full">
       <div className="flex justify-between  w-full items-center pt-28 mb-10">

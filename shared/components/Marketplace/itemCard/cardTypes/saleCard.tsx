@@ -15,13 +15,7 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 
-export const MarketplaceCard = ({
-  classes,
-  sale,
-  icon,
-  name,
-  setPage,
-}: any) => {
+export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
   const dispatch = useAppDispatch();
   const { cart, user } = useSelector((state: any) => state.layout);
   const [hoverAll, setHoverAll] = React.useState(false);
@@ -107,13 +101,14 @@ export const MarketplaceCard = ({
       );
     }
   };
+
   return (
     <div
       className="pb-6 relative"
       onMouseOver={() => setHoverAll(true)}
       onMouseLeave={() => setHoverAll(false)}
     >
-      <Link href={`/NFTDetailSale/${sale.id}`}>
+      <Link href={`/sale/${sale.id}`}>
         <div
           className={clsx(
             "rounded-xl flex flex-col text-gray-100 lg:w-96 w-64 bg-secondary relative overflow-hidden border border-gray-500 z-[2] cursor-pointer",
@@ -324,7 +319,7 @@ export const MarketplaceCard = ({
             >
               Buy Now
             </div>
-            <Link href={`/NFTDetailSale/${sale.id}`}>
+            <Link href={`/sale/${sale.id}`}>
               <div className="w-1/2 px-2 pb-1  flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-overlay-2 transition-all duration-500">
                 Details
               </div>

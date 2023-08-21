@@ -65,7 +65,6 @@ const Login = () => {
   };
 
   React.useEffect(() => {
-    console.log(account, "AAA");
     if (account) {
       const queryAddress: any = query?.redirectAddress?.toString();
       setTimeout(async () => {

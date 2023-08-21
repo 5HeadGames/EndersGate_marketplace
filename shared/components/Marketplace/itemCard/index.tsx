@@ -1,13 +1,8 @@
 import React from "react";
-import clsx from "clsx";
-import { Icons } from "@shared/const/Icons";
-import Link from "next/link";
-import Styles from "./styles.module.scss";
-import Web3 from "web3";
-
-import { MarketplaceCard } from "./marketplaceCard";
-import { OpenseaCard } from "./openseaCard";
-import { InventoryCard } from "./inventoryCard";
+import { RentCard } from "./cardTypes/rentCard";
+import { OpenseaCard } from "./cardTypes/openseaCard";
+import { InventoryCard } from "./cardTypes/inventoryCard";
+import { SaleCard } from "./cardTypes/saleCard";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -22,15 +17,35 @@ interface Props
   sale: any;
   setPage?: any;
   currency?: any;
+  rent?: any;
 }
 
 const NFTCard: React.FunctionComponent<Props> = (props) => {
+  const { classes, sale, icon, name, setPage } = props;
   return (
     <>
       {props.byId ? (
         <InventoryCard {...props} />
       ) : props.type != "opensea" ? (
-        <MarketplaceCard {...props} />
+        <>
+          {props.rent ? (
+            <RentCard
+              rent={sale}
+              classes={classes}
+              icon={icon}
+              name={name}
+              setPage={setPage}
+            />
+          ) : (
+            <SaleCard
+              sale={sale}
+              classes={classes}
+              icon={icon}
+              name={name}
+              setPage={setPage}
+            />
+          )}
+        </>
       ) : (
         <OpenseaCard {...props} />
       )}

@@ -1,11 +1,11 @@
 import React from "react";
-import NFTDetailSaleComponent from "@shared/components/NFTDetail/detailSale/NFTDetailSale";
+import NFTDetailSaleComponent from "@shared/components/NFTDetail/sale";
 import { useRouter } from "next/router";
 
-const NFTDetailSale = () => {
+const Sale = () => {
   const router = useRouter();
   const { id } = router.query;
   return <NFTDetailSaleComponent id={id} />;
 };
 
-export default NFTDetailSale;
+export default Sale;

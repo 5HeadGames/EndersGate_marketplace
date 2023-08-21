@@ -48,7 +48,6 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
 
   const onLoadGooglePlaces = () => {
     const input = document.getElementById("pac-input") as HTMLInputElement;
-    console.log(input, "INPUT");
     const options = {
       componentRestrictions: { country: restrictionsCountries || [] },
       fields: [
@@ -126,7 +125,6 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
         src={URL_GOOGLE_API}
         async
         onLoad={() => {
-          console.log("loaded");
           setOnLoadGooglePlaceAPI(true);
         }}
       />
