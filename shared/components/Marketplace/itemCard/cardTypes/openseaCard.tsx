@@ -36,9 +36,7 @@ export const OpenseaCard = (props) => {
             <div className="w-full lg:text-lg text-md flex justify-between rounded-xl p-2 bg-secondary">
               <span>
                 Card #
-                {props.sale.nftId !== undefined
-                  ? props.sale.nftId + "-" + props.transactionId
-                  : "12345"}
+                {props.sale.nftId !== undefined ? props.sale.nftId : "12345"}
               </span>
               {props.sale.amount && <span>x{props.sale.amount}</span>}
               {/* {<span>#{props.transactionId}</span>} */}

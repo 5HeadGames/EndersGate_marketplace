@@ -100,15 +100,11 @@ export default function useMagicLink(networkId: number = 137) {
   };
 
   const login = async (dispatch: any) => {
-    console.log("login");
     setLoading(true);
     try {
       const publicAddress = (await web3.eth.getAccounts())[0];
       setAccount(publicAddress);
       setIsAuthenticated(true);
-      // const email = await magic.connect.requestUserInfo();
-      // setEmail(email);
-      console.log(publicAddress);
       dispatch(
         onUpdateUser({
           ethAddress: publicAddress,
@@ -118,7 +114,7 @@ export default function useMagicLink(networkId: number = 137) {
         }),
       );
     } catch (error) {
-      console.log(error, "aqui");
+      console.log(error);
     }
     setLoading(false);
   };

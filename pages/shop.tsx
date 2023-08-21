@@ -15,8 +15,8 @@ import {
 import {
   addCartShop,
   editCartShop,
-  onBuyFromShop,
-  onBuyFromShopNative,
+  buyFromShop,
+  buyFromShopNative,
   onGetAssets,
   parseSaleNative,
   parseSaleTokens,
@@ -99,8 +99,6 @@ const Shop = () => {
         .getSales(new Array(lastSale).fill(0).map((a, i) => i))
         .call();
 
-      console.log(rawSales, "SALES", lastSale);
-
       const allSales = rawSales.map((sale, i) => {
         const saleFormatted =
           blockchain === "matic"
@@ -122,7 +120,6 @@ const Shop = () => {
             priceText: formatPrice(sale.price, blockchain),
           };
         });
-      console.log(created);
 
       setSales(created);
       setCounters(created.map(() => 1));
@@ -168,7 +165,7 @@ const Shop = () => {
       let tx;
       if (blockchain === "matic") {
         tx = await dispatch(
-          onBuyFromShop({
+          buyFromShop({
             blockchain,
             account,
             tokenSelected,
@@ -178,9 +175,8 @@ const Shop = () => {
           }),
         );
       } else {
-        console.log("findora");
         tx = await dispatch(
-          onBuyFromShopNative({
+          buyFromShopNative({
             blockchain,
             account,
             tokenSelected,
@@ -190,9 +186,7 @@ const Shop = () => {
           }),
         );
       }
-      console.log(tx);
       if (tx.err) {
-        console.log("xd", tx.err.message);
         throw Error(tx.err.message);
       }
       dispatch(onGetAssets({ address: account, blockchain }));
@@ -212,7 +206,6 @@ const Shop = () => {
       (parseFloat(
         cartShop
           ?.map((item, i) => {
-            console.log(item);
             return (parseInt(item.price) / 10 ** 6) * item.quantity;
           })
           .reduce((item, acc) => {
@@ -221,8 +214,6 @@ const Shop = () => {
       ) *
         10 ** 8) /
       priceMATIC;
-
-    console.log(price, "PRICE");
 
     setPriceNative((price + price * 0.05).toFixed(2).toString());
   };

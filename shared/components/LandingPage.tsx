@@ -40,7 +40,6 @@ const LandingComponent = () => {
             setRecentlyListed(cardSalesCreatedReverse);
           } else {
             setRecentlyListed(cardSalesCreated.reverse());
-            console.log(cardSalesCreated);
           }
           break;
         case "packs":

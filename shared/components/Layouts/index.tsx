@@ -121,7 +121,7 @@ export default function AppLayout({ children }) {
   const { logout, login } = useMagicLink();
 
   const { ethAddress } = useSelector((state: any) => state.layout.user);
-  const { provider, providerName, cart, isLogged } = useSelector(
+  const { provider, providerName, cart, cartRent, isLogged } = useSelector(
     (state: any) => state.layout,
   );
 
@@ -186,7 +186,6 @@ export default function AppLayout({ children }) {
   };
 
   const handleSignOut = async () => {
-    console.log("a", providerName);
     if (providerName === "magic") {
       const toggleLogout = handleDisabled("logout");
       toggleLogout(true);
@@ -211,34 +210,24 @@ export default function AppLayout({ children }) {
     {
       name: "ACTIVITY",
       link: "/profile/activity",
-      icon: <AreaChartOutlined />,
     },
-
-    // {
-    //   link: "/profile/inventory",
-    //   name: "INVENTORY",
-    //   icon: <GoldenFilled />,
-    // },
     {
       name: "MY SALES",
       link: "/profile/mySales",
-      icon: <AreaChartOutlined />,
+    },
+    {
+      name: "MY RENTS",
+      link: "/profile/rents",
+      notification: 0,
     },
     {
       name: "SWAP",
       link: "/profile/swap",
-      icon: <AreaChartOutlined />,
     },
     {
       name: "MY PACKS",
-      link: "/packs",
-      icon: <AreaChartOutlined />,
+      link: "/pack_opening",
     },
-    // {
-    //   name: "PROFILE",
-    //   link: "/profile/accountSettings",
-    //   icon: <AreaChartOutlined />,
-    // },
     {
       name: "LOG OUT",
       decoration: "line-primary",
@@ -315,16 +304,19 @@ export default function AppLayout({ children }) {
             <>
               <div
                 className={clsx(
-                  { "!opacity-100": cartOpen || cart.length > 0 },
+                  {
+                    "!opacity-100":
+                      cartOpen || cart.length + cartRent.length > 0,
+                  },
                   "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
                 )}
                 onClick={() => {
                   setCartOpen(true);
                 }}
               >
-                {cart.length > 0 && (
+                {(cart.length > 0 || cartRent.length > 0) && (
                   <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary">
-                    {cart.length}
+                    {cart.length + cartRent.length}
                   </div>
                 )}
                 <ShoppingCartOutlined />
@@ -438,7 +430,7 @@ export default function AppLayout({ children }) {
         {children}
       </div>
       {!router.asPath.includes("/comics") &&
-        !router.asPath.includes("/packs") && <Footer />}
+        !router.asPath.includes("/pack_opening") && <Footer />}
     </Layout>
   );
 }

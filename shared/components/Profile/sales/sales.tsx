@@ -37,7 +37,6 @@ const Sales = () => {
   const cancelSale = async () => {
     try {
       setIsLoading(true);
-      console.log(CHAIN_IDS_BY_NAME[cancel.blockchain]);
       const changed = await switchChain(CHAIN_IDS_BY_NAME[cancel.blockchain]);
       if (!changed) {
         throw new Error(
@@ -256,7 +255,7 @@ const Sale = ({ sale, pack, setCancelId, show }) => {
         </div>
       </td>
 
-      <td className="py-4">
+      <td className="py-4 pr-4">
         <Link href={`/NFTDetailSale/${sale.id}`}>
           <div className="flex flex-col items-center just">
             <Button

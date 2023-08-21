@@ -31,14 +31,10 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
 
   const [hoverAll, setHoverAll] = React.useState(false);
 
-  console.log(props.onTimeChange);
-  React.useEffect(() => {
-    console.log(props.onTimeChange);
-  }, [props.onTimeChange]);
   return (
     <>
       {props.byId ? (
-        <Link href={`/NFTDetailID/${props.id}`}>
+        <Link href={`/card/${props.id}`}>
           <div
             className={clsx(
               "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 ",

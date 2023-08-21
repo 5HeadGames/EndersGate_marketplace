@@ -25,12 +25,9 @@ const FiltersBoard = ({
 }) => {
   const handleAvatarChange = (checked, value) => {
     if (checked) {
-      setFilters({ ...filters, avatar: [...filters.avatar, value] });
+      setFilters({ ...filters, avatar: [value] });
     } else {
-      let arr = [...filters.avatar];
-      const index = arr.findIndex((item) => item === value);
-      arr.splice(index, 1);
-      setFilters({ ...filters, avatar: arr });
+      setFilters({ ...filters, avatar: [] });
     }
   };
 
@@ -420,10 +417,6 @@ const FiltersBoard = ({
     });
   };
 
-  React.useEffect(() => {
-    console.log(filters, "filters");
-  }, [filters]);
-
   const [priceCollapsed, setPriceCollapsed] = React.useState(true);
 
   return (
@@ -539,9 +532,11 @@ const FiltersBoard = ({
                     if (item.value !== cardType) {
                       setType("trading_cards");
                       setCardType(item.value);
+                      handleAvatarChange(true, item.value);
                     } else {
                       setCardType("all");
                       setType("");
+                      handleAvatarChange(false, item.value);
                     }
                     ResetGuardians();
                     ResetPacks();

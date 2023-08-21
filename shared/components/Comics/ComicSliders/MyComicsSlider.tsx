@@ -30,7 +30,6 @@ function MyComics({ balance }) {
       </Flex>
       {comicsByID.filter((comic) => {
         let valid = false;
-        console.log(balance, comicsByID);
         balance.forEach((balance) => {
           if (balance.balance > 0 && balance.id === comic.id) {
             valid = true;

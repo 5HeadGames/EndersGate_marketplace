@@ -17,7 +17,7 @@ import { DropdownActions } from "../common/dropdownActions/dropdownActions";
 import { Dropdown } from "../common/dropdown/dropdown";
 import clsx from "clsx";
 import { Typography } from "../common/typography";
-import { getAddressesMatic, getContract } from "@shared/web3";
+import { getAddressesMatic, getContract, isPack } from "@shared/web3";
 import { onLoadSales } from "@redux/actions";
 import { convertArrayCards } from "../common/convertCards";
 import packs from "../../packs.json";
@@ -35,6 +35,7 @@ import { GetStarted } from "../common/footerComponents/getStarted";
 import Partners from "../common/footerComponents/partners";
 import { XIcon } from "@heroicons/react/solid";
 import { OpenseaApiService } from "@shared/api/opensea/openseaServices";
+import { filterCards, filterPacks } from "@shared/utils/filtersCards";
 
 const MarketplaceComponent = () => {
   const [currentOrder, setCurrentOrder] = React.useState("recently_listed");
@@ -55,7 +56,6 @@ const MarketplaceComponent = () => {
   const [soldSelected, setSoldSelected] = React.useState("trading_cards");
   const { search: searched } = useRouter().query;
   const cards = convertArrayCards();
-  const { endersGate, pack } = getAddressesMatic();
 
   const { transactionsBoard } = useStats({
     nfts,
@@ -264,218 +264,22 @@ const MarketplaceComponent = () => {
     packRarity: [],
   });
 
-  const filterCards = (card) => {
-    let passed = false;
-    if (cardType === "all") {
-      if (
-        filters.avatar.length === 0 &&
-        filters.cardRace.length === 0 &&
-        filters.cardRole.length === 0 &&
-        filters.cardElement.length === 0 &&
-        type === ""
-      ) {
-        passed = true;
-      }
-
-      if (filters.cardElement.length > 0) {
-        if (
-          filters.cardElement?.includes(
-            card?.properties?.element?.value?.toLowerCase(),
-          )
-        ) {
-          passed = true;
-        } else {
-          return false;
-        }
-      }
-      if (filters.cardRace.length > 0) {
-        if (
-          filters.cardRace?.includes(
-            card?.properties?.race?.value?.toLowerCase(),
-          )
-        ) {
-          passed = true;
-        } else {
-          return false;
-        }
-      }
-      if (filters.cardRole.length > 0) {
-        if (
-          filters.cardRole?.includes(
-            card?.properties?.role?.value?.toLowerCase(),
-          )
-        ) {
-          passed = true;
-        } else {
-          return false;
-        }
-      }
-      if (filters.avatar.length > 0) {
-        if (filters.avatar?.includes("avatars")) {
-          if (card?.typeCard === "avatar") {
-            passed = true;
-          } else {
-            return false;
-          }
-        }
-        if (filters.avatar?.includes("guardians")) {
-          if (card?.properties?.isGuardian?.value === true) {
-            passed = true;
-          } else {
-            return false;
-          }
-        }
-        if (filters.avatar?.includes("reaction cards")) {
-          if (card.typeCard === "reaction") {
-            passed = true;
-          } else {
-            return false;
-          }
-        }
-        if (filters.avatar?.includes("action cards")) {
-          if (card.typeCard === "action") {
-            passed = true;
-          } else {
-            return false;
-          }
-        }
-        if (filters.avatar?.includes("ghost cards")) {
-          if (card?.name === "Shinobi Guardian") {
-            passed = true;
-          } else {
-            return false;
-          }
-        }
-      }
-    } else {
-      if (cardType === card.typeCard) {
-        if (
-          filters.avatar.length === 0 &&
-          filters.cardRace.length === 0 &&
-          filters.cardRole.length === 0 &&
-          filters.cardElement.length === 0 &&
-          type === ""
-        ) {
-          passed = true;
-        }
-        if (filters.cardElement.length > 0) {
-          if (
-            filters.cardElement?.includes(
-              card?.properties?.element?.value?.toLowerCase(),
-            )
-          ) {
-            passed = true;
-          } else {
-            return false;
-          }
-        }
-        if (filters.cardRace.length > 0) {
-          if (
-            filters.cardRace?.includes(
-              card?.properties?.race?.value?.toLowerCase(),
-            )
-          ) {
-            passed = true;
-          } else {
-            return false;
-          }
-        }
-        if (filters.cardRole.length > 0) {
-          if (
-            filters.cardRole?.includes(
-              card?.properties?.role?.value?.toLowerCase(),
-            )
-          ) {
-            passed = true;
-          } else {
-            return false;
-          }
-        }
-        if (filters.avatar.length > 0) {
-          if (filters.avatar?.includes("avatars")) {
-            if (card?.properties?.isGuardian?.value === true) {
-              passed = true;
-            } else {
-              return false;
-            }
-          }
-          if (filters.avatar?.includes("guardians")) {
-            if (card?.properties?.isGuardian?.value === true) {
-              passed = true;
-            } else {
-              return false;
-            }
-          }
-          if (filters.avatar?.includes("reaction cards")) {
-            if (card.typeCard === "reaction") {
-              passed = true;
-            } else {
-              return false;
-            }
-          }
-          if (filters.avatar?.includes("action cards")) {
-            if (card.typeCard === "reaction") {
-              passed = true;
-            } else {
-              return false;
-            }
-          }
-          if (filters.avatar?.includes("ghost cards")) {
-            if (card?.name === "Shinobi Guardian") {
-              passed = true;
-            } else {
-              return false;
-            }
-          }
-        }
-      }
-    }
-    if (type === "guardian_cards" && card?.properties?.isGuardian?.value) {
-      if (filters.cardRarity.length === 0) {
-        passed = true;
-      } else {
-        if (filters.cardRarity?.includes(card?.typeCard.toLowerCase())) {
-          passed = true;
-        } else {
-          return false;
-        }
-      }
-    } else if (type === "guardian_cards") {
-      return false;
-    }
-
-    if (search === "") {
-      return passed;
-    } else if (card?.name.toLowerCase().includes(search.toLowerCase())) {
-      return passed;
-    } else {
-      return false;
-    }
-  };
-
-  const filterPacks = (pack) => {
-    let passed = false;
-    if (type === "guardian_cards" || type === "trading_cards") {
-      return false;
-    }
-    if (filters.packRarity.length > 0) {
-      if (
-        filters.packRarity.includes(pack.properties.name.value.toLowerCase())
-      ) {
-        passed = true;
-      }
-    } else {
-      passed = true;
-    }
-
-    if (search === "") {
-      return passed;
-    } else if (pack?.name.toLowerCase().includes(search.toLowerCase())) {
-      return passed;
-    } else {
-      return false;
-    }
-  };
+  const salesFiltered = sales.filter((sale, i) => {
+    return !isPack(sale.nft)
+      ? filterCards({
+          card: cards[sale.nftId],
+          filters,
+          search,
+          type,
+          cardType,
+        })
+      : filterPacks({
+          pack: packs[sale.nftId],
+          filters,
+          search,
+          type,
+        });
+  });
 
   return (
     <div className="flex flex-col w-full">
@@ -570,20 +374,10 @@ const MarketplaceComponent = () => {
           <div className="w-full xl:mt-0 mt-6 flex flex-col pb-10">
             <div>
               <div className="flex flex-wrap w-full justify-center items-center relative ">
-                {sales
-                  ?.filter((sale, i) => {
-                    return sale.nft !== pack
-                      ? filterCards(cards[sale.nftId])
-                      : filterPacks(packs[sale.nftId]);
-                  })
-                  .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
-                  .length > 0 ? (
-                  sales
-                    ?.filter((sale, i) => {
-                      return sale.nft !== pack
-                        ? filterCards(cards[sale.nftId])
-                        : filterPacks(packs[sale.nftId]);
-                    })
+                {salesFiltered.filter(
+                  (sale, i) => i < (page + 1) * 12 && i >= page * 12,
+                ).length > 0 ? (
+                  salesFiltered
                     .filter((sale) => {
                       const price = sale.price / 10 ** 6;
                       const { minPrice, maxPrice } = priceSettings;
@@ -601,18 +395,19 @@ const MarketplaceComponent = () => {
                           classes={{ root: "m-4 cursor-pointer" }}
                           setPage={setPage}
                           icon={
-                            sale.nft === pack
+                            isPack(sale.nft)
                               ? packs[sale.nftId]?.properties?.image?.value
                               : cards[sale.nftId]?.properties?.image?.value
                           }
                           name={
-                            sale.nft === pack
+                            isPack(sale.nft)
                               ? packs[sale.nftId]?.properties?.name?.value
                               : cards[sale.nftId]?.properties?.name?.value
                           }
                           byId={false}
-                          type={type}
+                          type={sale.type}
                           sale={sale}
+                          rent={sale.rent}
                         />
                       );
                     })
@@ -622,11 +417,7 @@ const MarketplaceComponent = () => {
                     There aren't sales for this search, try with other.
                   </div>
                 )}
-                {sales?.filter((sale, i) => {
-                  return sale.nft !== pack
-                    ? filterCards(cards[sale.nftId])
-                    : filterPacks(packs[sale.nftId]);
-                }).length > 12 && (
+                {salesFiltered.length > 12 && (
                   <div className="flex w-full items-center justify-center gap-2">
                     <div
                       className="rounded-full flex items-center bg-secondary text-white p-4 cursor-pointer"
@@ -649,19 +440,13 @@ const MarketplaceComponent = () => {
                         if (
                           page <
                           Math.floor(
-                            (sales
-                              .filter((sale, i) => {
-                                return sale.nft !== pack
-                                  ? filterCards(cards[sale.nftId])
-                                  : filterPacks(packs[sale.nftId]);
-                              })
-                              .filter((sale) => {
-                                return (
-                                  Math.floor(new Date().getTime() / 1000) <=
-                                  parseInt(sale?.duration) +
-                                    parseInt(sale?.startedAt)
-                                );
-                              }).length -
+                            (salesFiltered.filter((sale) => {
+                              return (
+                                Math.floor(new Date().getTime() / 1000) <=
+                                parseInt(sale?.duration) +
+                                  parseInt(sale?.startedAt)
+                              );
+                            }).length -
                               1) /
                               12,
                           )

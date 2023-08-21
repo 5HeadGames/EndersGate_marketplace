@@ -18,8 +18,6 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
     clearErrors,
   } = useForm();
 
-  console.log(errors, "errors");
-
   const handleSubmitModal = (data: any) => {
     setIsLoading(true);
     try {

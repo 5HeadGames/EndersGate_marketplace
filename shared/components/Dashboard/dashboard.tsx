@@ -147,7 +147,7 @@ const DashboardComponent = () => {
                   }}
                 >
                   <SwiperSlide
-                    className="xl:block !w-full hidden"
+                    className="block !w-full"
                     style={{ width: "100%!important", marginRight: "0px" }}
                   >
                     <div className="!w-full flex items-center justify-center gap-2">
@@ -178,7 +178,7 @@ const DashboardComponent = () => {
                             <div className="bg-secondary rounded-xl border border-overlay-border h-[390px] sm:max-w-[350px] flex items-end overflow-hidden w-full">
                               <img
                                 src={image}
-                                className="absolute sm:max-w-[350px] w-full h-[390px]"
+                                className="absolute max-w-[350px] w-full h-[390px]"
                                 alt=""
                               />
                               <div className="p-4 flex items-center justify-center relative sm:min-w-[400px] max-w-[350px] w-full rounded-xl bg-secondary border border-secondary gap-2">
@@ -207,7 +207,7 @@ const DashboardComponent = () => {
                       })}
                     </div>
                   </SwiperSlide>
-                  {[
+                  {/* {[
                     {
                       name: "Gen 0 Pack Drop",
                       description:
@@ -258,7 +258,7 @@ const DashboardComponent = () => {
                         </a>
                       </SwiperSlide>
                     );
-                  })}
+                  })} */}
                 </Swiper>
               </div>
             </div>

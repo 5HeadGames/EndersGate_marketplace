@@ -174,7 +174,8 @@ export const ModalSale = ({
                     {message} <LoadingOutlined />
                   </span>
                   <span className="flex gap-4 items-center justify-center">
-                    Note: If the transa
+                    Note: If the transaction doesn't appears please open your
+                    wallet manually
                   </span>
                 </>
               )}

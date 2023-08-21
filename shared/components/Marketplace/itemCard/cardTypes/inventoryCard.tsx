@@ -3,13 +3,13 @@ import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
 import Link from "next/link";
 import Web3 from "web3";
-import Styles from "./styles.module.scss";
+import Styles from "../styles.module.scss";
 
 export const InventoryCard = (props) => {
   const { classes } = props;
 
   return (
-    <Link href={`/NFTDetailID/${props.id}`}>
+    <Link href={`/card/${props.id}`}>
       <div
         className={clsx(
           "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 ",

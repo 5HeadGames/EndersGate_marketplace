@@ -58,7 +58,6 @@ export const getContractCustom = (
 };
 
 export const getProvider = (blockchain) => {
-  console.log(CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0]);
   return CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0];
 };
 
@@ -146,7 +145,6 @@ export const switchChain = async (network) => {
     const chainId = await (window as any).ethereum.request({
       method: "eth_chainId",
     });
-    console.log(chainId, network);
     if (chainId !== network) {
       await (window as any).ethereum.request({
         method: "wallet_switchEthereumChain",
@@ -246,7 +244,7 @@ export const buyNFTsMatic = async ({
           return findSum(item, acc) as any;
         }),
       token: tokenSelected,
-      tokensId: cart.map((item) => item.id),
+      tokensId: cart.map((item) => item.saleId),
     };
 
     const marketplaceContract = getContractCustom(
@@ -329,7 +327,7 @@ export const buyNFTsNative = async ({
         .reduce((item: any, acc: any) => {
           return findSum(item, acc) as any;
         }),
-      tokensId: cart.map((item) => item.id),
+      tokensId: cart.map((item) => item.saleId),
     };
 
     const marketplaceContract = getContractCustom(
@@ -347,4 +345,11 @@ export const buyNFTsNative = async ({
   } catch (err) {}
 
   setMessageBuy(``);
+};
+
+export const isPack = (address: string) => {
+  return (
+    address === getAddressesMatic().pack ||
+    address === getAddressesFindora().pack
+  );
 };

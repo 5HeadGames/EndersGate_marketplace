@@ -83,7 +83,6 @@ function Chains() {
   const [selected, setSelected] = useState<any>({});
 
   const handleMenuClick = (e) => {
-    console.log("switch to: ", e.key);
     switchNetwork(e.key);
   };
 
@@ -94,7 +93,7 @@ function Chains() {
           <span style={{ marginLeft: "5px" }}>{item.value}</span>
         </Menu.Item>
       ))}
-    </Menu> 
+    </Menu>
   );
 
   return (

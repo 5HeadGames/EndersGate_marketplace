@@ -9,10 +9,10 @@ import Web3 from "web3";
 
 import { useAppDispatch, useAppSelector } from "redux/store";
 import {
-  onSellERC1155,
+  sellERC1155,
   onLoadSales,
   onGetAssets,
-  onSellERC1155Findora,
+  sellERC1155Findora,
 } from "@redux/actions";
 import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
@@ -33,7 +33,7 @@ import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 
-const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
+const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
   const { account: user, provider } = useWeb3React();
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
@@ -96,7 +96,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
 
       if (blockchain !== "matic") {
         await dispatch(
-          onSellERC1155Findora({
+          sellERC1155Findora({
             address: pack,
             from: user,
             startingPrice: Web3.utils.toWei(
@@ -126,7 +126,7 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         setMessage("Listing your tokens");
 
         await dispatch(
-          onSellERC1155({
+          sellERC1155({
             address: pack,
             from: user,
             startingPrice: (sellNFTData.startingPrice * 10 ** 6).toString(),
@@ -477,4 +477,4 @@ const PackDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   );
 };
 
-export default PackDetailIDComponent;
+export default PackDetailComponent;

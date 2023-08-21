@@ -1,19 +1,13 @@
-import React, { Fragment, useRef } from "react";
+import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ShoppingCartOutlined } from "@ant-design/icons";
-import clsx from "clsx";
-import { XCircleIcon, XIcon } from "@heroicons/react/solid";
+import { XIcon } from "@heroicons/react/solid";
 
 export const DropdownCart: React.FC<any> = ({
-  // title = '',
-  // isLoading = false,
   children,
   setSideBar,
   sidebarOpen = false,
   initialFocus = null,
 }) => {
-  const [set, setSet] = React.useState(false);
-
   return (
     <>
       {/* Sidebar mobile */}
@@ -21,7 +15,7 @@ export const DropdownCart: React.FC<any> = ({
         <Dialog
           as="div"
           static
-          className="fixed w-screen h-[calc(100vh-56px)] top-[56px] !right-0  z-40  bg-overlay-opacity"
+          className="fixed w-screen h-[calc(100vh-56px)] top-[56px] !right-0  z-40  bg-overlay-opacity overflow-auto"
           open={sidebarOpen}
           onClose={() => setSideBar(false)}
           initialFocus={initialFocus}

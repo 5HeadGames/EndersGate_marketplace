@@ -19,27 +19,19 @@ import { useBlockchain } from "@shared/context/useBlockchain";
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
   { title: "Packs", value: "Packs" },
+  { title: "Rented Cards", value: "Rented Cards" },
 ];
 
 const Inventory = () => {
   const nfts = useAppSelector((state) => state.nfts);
   const { account: user } = useWeb3React();
   const inventoryCards = nfts.balanceCards;
+  const inventoryRented = nfts.balanceWrapped;
   const [inventoryPacks, setInventoryPacks] = React.useState([]);
   const [columnSelected, setColumnSelected] = React.useState("Trading Cards");
-  const [balance, setBalance] = React.useState("0");
   const [search, setSearch] = React.useState("");
 
-  const { blockchain } = useBlockchain();
-
   const cards = convertArrayCards();
-
-  React.useEffect(() => {
-    console.log(blockchain);
-    if (user) {
-      handleSetBalance();
-    }
-  }, [user, blockchain]);
 
   React.useEffect(() => {
     const arrayPacks = [];
@@ -67,12 +59,6 @@ const Inventory = () => {
     });
     setInventoryPacks(arrayPacks);
   }, [nfts]);
-
-  const handleSetBalance = async () => {
-    console.log(blockchain, "handle Balance");
-    const balance = await getBalance(user, CHAIN_IDS_BY_NAME[blockchain]);
-    setBalance(balance);
-  };
 
   return (
     <div className="flex flex-col w-full sm:px-24 px-4">
@@ -128,13 +114,15 @@ const Inventory = () => {
           {
             [`${Styles.gray} flex-col items-center gap-6 h-72`]:
               (inventoryCards.length === 0 &&
-                columnSelected === "Trading Cards") ||
+                (columnSelected === "Trading Cards" ||
+                  columnSelected === "Rented Cards")) ||
               (inventoryPacks.length === 0 && columnSelected === "Packs"),
           },
           {
-            ["gap-2 flex-wrap gap-6"]:
+            "flex-wrap gap-6":
               (inventoryCards.length > 0 &&
-                columnSelected === "Trading Cards") ||
+                (columnSelected === "Trading Cards" ||
+                  columnSelected === "Rented Cards")) ||
               (inventoryPacks.length > 0 && columnSelected === "Packs"),
           },
         )}
@@ -195,6 +183,40 @@ const Inventory = () => {
             <div className="h-72 flex flex-col items-center justify-center text-white font-bold gap-4 relative">
               <img src={Icons.logoCard} className="w-24 h-24" alt="" />
               You don't own EG NFTs Packs yet
+            </div>
+          )
+        ) : columnSelected === "Rented Cards" ? (
+          inventoryRented.filter(
+            (card) =>
+              cards[card.id]?.properties?.name?.value
+                .toLowerCase()
+                .includes(search.toLowerCase()) && card.balance > 0,
+          ).length > 0 ? (
+            inventoryRented
+              .filter(
+                (card) =>
+                  cards[card.id]?.properties?.name?.value
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) && card.balance > 0,
+              )
+              .map((card) => {
+                return (
+                  <CardInventory
+                    key={card.id}
+                    id={card.id}
+                    icon={cards[card.id]?.properties?.image?.value}
+                    name={cards[card.id]?.properties?.name?.value}
+                    balance={card.balance}
+                    type={cards[card.id].typeCard}
+                    card={true}
+                    byId
+                  />
+                );
+              })
+          ) : (
+            <div className="h-72 flex flex-col items-center justify-center text-white font-bold gap-4 relative">
+              <img src={Icons.logoCard} className="w-24 h-24" alt="" />
+              You don't own Rented EG NFTs Cards
             </div>
           )
         ) : (
