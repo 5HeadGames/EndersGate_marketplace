@@ -90,7 +90,7 @@ const ProfileDataAndActions = () => {
       icon: <SettingOutlined />,
     },
     {
-      href: "/profile/mySales",
+      href: "/profile/sales",
       label: "My Sales",
       icon: <FundViewOutlined />,
     },

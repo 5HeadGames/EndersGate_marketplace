@@ -213,13 +213,13 @@ export default function AppLayout({ children }) {
     },
     {
       name: "MY SALES",
-      link: "/profile/mySales",
+      link: "/profile/sales",
     },
-    {
-      name: "MY RENTS",
-      link: "/profile/rents",
-      notification: 0,
-    },
+    // {
+    //   name: "MY RENTS",
+    //   link: "/profile/rents",
+    //   notification: 0,
+    // },
     {
       name: "SWAP",
       link: "/profile/swap",

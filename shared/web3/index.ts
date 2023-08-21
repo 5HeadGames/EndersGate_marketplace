@@ -91,7 +91,7 @@ export const getAddressesMatic = () => {
 
 export const getAddressesFindora = () => {
   const testAddresses = require("../../Contracts/addresses.anvil.json");
-  const addresses = require("../../Contracts/addresses.matic.json");
+  const addresses = require("../../Contracts/addresses.findora.json");
   return process.env.NEXT_PUBLIC_ENV === "production"
     ? addresses
     : testAddresses;
@@ -303,7 +303,7 @@ export const buyNFTsMatic = async ({
       dispatch(removeAll());
     }
   } catch (err) {}
-
+  dispatch(onLoadSales());
   setMessageBuy(``);
 };
 

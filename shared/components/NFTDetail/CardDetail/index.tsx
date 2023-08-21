@@ -1,5 +1,5 @@
 import React from "react";
-import { LoadingOutlined } from "@ant-design/icons";
+import { ExclamationCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Web3 from "web3";
 
@@ -30,14 +30,14 @@ import { AddressText } from "../../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { ChevronLeftIcon } from "@heroicons/react/solid";
+import { ChevronLeftIcon, ExclamationCircleIcon } from "@heroicons/react/solid";
 import { useModal } from "@shared/hooks/modal";
 import { CongratsListing } from "./Congrats";
 import { toast } from "react-hot-toast";
 
 const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const NFTs = useAppSelector((state) => state.nfts);
-  const [state, setState] = React.useState("choose");
+  const [state, setState] = React.useState("sell");
   const router = useRouter();
 
   const cards = convertArrayCards();
@@ -291,7 +291,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
           });
         }
         setMessage("Listing your tokens");
-        await dispatch(
+        const tx = await dispatch(
           sellERC1155Findora({
             address: endersGate,
             from: user,
@@ -306,6 +306,9 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
             // user: user,
           }),
         );
+        if (!tx.payload) {
+          throw Error("");
+        }
       } else {
         const isApprovedForAll = await endersgateInstance.methods
           .isApprovedForAll(user, marketplace)
@@ -321,7 +324,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
         }
         setMessage("Listing your tokens");
 
-        await dispatch(
+        const tx = await dispatch(
           sellERC1155({
             address: endersGate,
             from: user,
@@ -334,22 +337,29 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
             // user: user,
           }),
         );
+        if (!tx.payload) {
+          throw Error("");
+        }
       }
+      dispatch(onLoadSales());
+      show();
+      dispatch(onGetAssets({ address: user, blockchain }));
+      // setState("choose");
+
+      setSellNFTData({
+        startingPrice: 0,
+        amount: 0,
+        duration: 0,
+      });
     } catch (err) {
+      toast.error(
+        "An error has occurred while processing your listing. Please try again",
+      );
       console.log({ err });
     }
-    dispatch(onLoadSales());
-    show();
-    dispatch(onGetAssets({ address: user, blockchain }));
-    setState("choose");
     setMessage(
       "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
     );
-    setSellNFTData({
-      startingPrice: 0,
-      amount: 0,
-      duration: 0,
-    });
   };
 
   return (
@@ -359,10 +369,10 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
           {cards[id]?.properties?.name?.value}
         </h1>
         <div className="flex flex-col md:px-6 py-10 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-          <ChevronLeftIcon
+          {/* <ChevronLeftIcon
             onClick={() => setState("choose")}
             className="absolute md:top-3 left-2 top-2 text-overlay-border text-sm w-6 text-white cursor-pointer"
-          />
+          /> */}
 
           <p className="absolute md:top-3 md:right-6 top-2 right-4 text-overlay-border text-sm">
             SELL PANEL
@@ -389,28 +399,34 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
                   }}
                 />
               </div>
-              <div className="flex gap-4 w-full justify-between items-center">
-                <label className="text-primary font-bold whitespace-nowrap">
-                  Amount of NFTs
-                </label>
-                <input
-                  type="number"
-                  className="bg-overlay text-primary text-center w-16 p-1 font-bold rounded-xl border border-overlay-border"
-                  value={sellNFTData.amount}
-                  min={1}
-                  onChange={(e) => {
-                    setSellNFTData((prev: any) => {
-                      return {
-                        ...prev,
-                        amount: parseInt(e.target.value),
-                      };
-                    });
-                  }}
-                />
+
+              <div className="flex flex-col gap-2 w-full items-center">
+                <div className="flex gap-4 w-full justify-between items-center">
+                  <label className="text-primary font-bold whitespace-nowrap">
+                    Amount of NFTs
+                  </label>
+                  <input
+                    type="number"
+                    className="bg-overlay text-primary text-center w-16 p-1 font-bold rounded-xl border border-overlay-border"
+                    value={sellNFTData.amount}
+                    min={1}
+                    onChange={(e) => {
+                      setSellNFTData((prev: any) => {
+                        return {
+                          ...prev,
+                          amount: parseInt(e.target.value),
+                        };
+                      });
+                    }}
+                  />
+                </div>{" "}
                 {sellNFTData.amount > NFTs?.balanceCards[id]?.balance && (
-                  <Typography type="caption" className="text-red-primary">
-                    The amount can't be higher than your balance
-                  </Typography>
+                  <div className="flex gap-1 items-center justify-center">
+                    <ExclamationCircleOutlined className="text-[13px] text-red-primary" />
+                    <Typography type="caption" className="text-red-primary">
+                      The amount can't be higher than your balance
+                    </Typography>
+                  </div>
                 )}
               </div>
 

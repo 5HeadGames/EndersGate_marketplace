@@ -15,23 +15,31 @@ import { XIcon } from "@heroicons/react/solid";
 import { CardInventory } from "@shared/components/Profile/inventory/cards/itemCard/index";
 import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
+import { onGetAssets } from "@redux/actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
   { title: "Packs", value: "Packs" },
-  { title: "Rented Cards", value: "Rented Cards" },
+  // { title: "Rented Cards", value: "Rented Cards" },
 ];
 
 const Inventory = () => {
   const nfts = useAppSelector((state) => state.nfts);
-  const { account: user } = useWeb3React();
   const inventoryCards = nfts.balanceCards;
   const inventoryRented = nfts.balanceWrapped;
   const [inventoryPacks, setInventoryPacks] = React.useState([]);
   const [columnSelected, setColumnSelected] = React.useState("Trading Cards");
   const [search, setSearch] = React.useState("");
+  const dispatch = useDispatch();
+  const { ethAddress } = useSelector((state: any) => state.layout.user);
+  const { blockchain } = useBlockchain();
 
   const cards = convertArrayCards();
+
+  React.useEffect(() => {
+    dispatch(onGetAssets({ address: ethAddress, blockchain }));
+  }, []);
 
   React.useEffect(() => {
     const arrayPacks = [];

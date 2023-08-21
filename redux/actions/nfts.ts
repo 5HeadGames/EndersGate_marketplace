@@ -101,9 +101,20 @@ export const onLoadSales = createAsyncThunk(
       dailyVolume = 0,
       cardsSold = 0;
     try {
+      console.log(blockchains);
       for (let i = 0; i < blockchains.length; i++) {
         const blockchain = blockchains[i];
+
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
+        console.log(
+          addresses,
+          addresses.marketplace,
+          "addresses",
+          CHAIN_NAME_BY_ID[blockchain],
+          CHAIN_NAME_BY_ID[blockchain] === "matic"
+            ? "ClockSale"
+            : "ClockSaleFindora",
+        );
         /* SALES */
         const marketplace = getContract(
           CHAIN_NAME_BY_ID[blockchain] === "matic"
@@ -112,9 +123,12 @@ export const onLoadSales = createAsyncThunk(
           addresses.marketplace,
           CHAIN_NAME_BY_ID[blockchain],
         );
+        console.log(marketplace);
         const lastSale = Number(
           await marketplace.methods.tokenIdTracker().call(),
         );
+
+        console.log(lastSale);
 
         if (lastSale > 0) {
           const rawSales = await marketplace.methods
@@ -136,28 +150,27 @@ export const onLoadSales = createAsyncThunk(
 
         /* RENTS */
         if (CHAIN_NAME_BY_ID[blockchain] === "matic") {
-          const rent = getContract(
-            "Rent",
-            addresses.rent,
-            CHAIN_NAME_BY_ID[blockchain],
-          );
-          const lastRent = Number(await rent.methods.tokenIdTracker().call());
-
-          if (lastRent > 0) {
-            const rawRents = await rent.methods
-              .getRents(new Array(lastRent).fill(0).map((a, i) => i))
-              .call();
-
-            rawRents.forEach((sale: any[], i) => {
-              const rentFormated = parseRent(sale);
-              allRents.push({
-                rentId: i,
-                rent: true,
-                blockchain: CHAIN_NAME_BY_ID[blockchain],
-                ...rentFormated,
-              });
-            });
-          }
+          // const rent = getContract(
+          //   "Rent",
+          //   addresses.rent,
+          //   CHAIN_NAME_BY_ID[blockchain],
+          // );
+          // const lastRent = Number(await rent.methods.tokenIdTracker().call());
+          // if (lastRent > 0) {
+          // const rawRents = [];
+          // await rent.methods
+          //   .getRents(new Array(lastRent).fill(0).map((a, i) => i))
+          //   .call();
+          // rawRents.forEach((sale: any[], i) => {
+          //   const rentFormated = parseRent(sale);
+          //   allRents.push({
+          //     rentId: i,
+          //     rent: true,
+          //     blockchain: CHAIN_NAME_BY_ID[blockchain],
+          //     ...rentFormated,
+          //   });
+          // });
+          // }
         }
       }
 
@@ -170,29 +183,29 @@ export const onLoadSales = createAsyncThunk(
         .concat();
 
       /* RENTS */
-      const allRentsSorted = allRents
-        .sort((a, b) => a.startedAt - b.startedAt)
-        .map((rent: Sale, id) => {
-          return { id: id, ...rent };
-        });
+      // const allRentsSorted = allRents
+      //   .sort((a, b) => a.startedAt - b.startedAt)
+      //   .map((rent: Sale, id) => {
+      //     return { id: id, ...rent };
+      //   });
 
-      const rentCreatedPartial = allRentsSorted?.filter(
-        (sale: Sale) => sale.status === "0",
-      );
-      const rentInRentPartial = allRentsSorted?.filter(
-        (sale: Sale) => sale.status === "1",
-      );
+      // const rentCreatedPartial = allRentsSorted?.filter(
+      //   (sale: Sale) => sale.status === "0",
+      // );
+      // const rentInRentPartial = allRentsSorted?.filter(
+      //   (sale: Sale) => sale.status === "1",
+      // );
 
-      rentCreatedPartial.forEach((rent: Sale) => {
-        rentsListed = [...rentsListed, rent];
-      });
+      // rentCreatedPartial.forEach((rent: Sale) => {
+      //   rentsListed = [...rentsListed, rent];
+      // });
 
-      rentInRentPartial.forEach((rent: Sale) => {
-        rentsInRent = [...rentsInRent, rent];
-      });
+      // rentInRentPartial.forEach((rent: Sale) => {
+      //   rentsInRent = [...rentsInRent, rent];
+      // });
 
       const listsCreatedPartial = allSalesSorted
-        .concat(allRentsSorted)
+        // .concat(allRentsSorted)
         ?.filter(
           (sale: Sale | Rent) =>
             sale.status === "0" &&
@@ -202,7 +215,7 @@ export const onLoadSales = createAsyncThunk(
         );
 
       const listsSuccessfulPartial = allSalesSorted
-        .concat(allRentsSorted)
+        // .concat(allRentsSorted)
         ?.filter((sale: Sale) => sale.status === "1");
 
       listsCreatedPartial.forEach((sale: Sale) => {
@@ -216,22 +229,28 @@ export const onLoadSales = createAsyncThunk(
       const dailyVolumePartial = getDailyVolume(listsSuccessful);
       const cardsSoldPartial = getCardSold(listsSuccessful);
 
-      dailyVolume += dailyVolumePartial.toNumber();
-      cardsSold += cardsSoldPartial.toNumber();
+      dailyVolume += findSum(
+        dailyVolume.toString(),
+        dailyVolumePartial.toString(),
+      ) as any;
+      cardsSold = findSum(
+        cardsSold.toString(),
+        cardsSoldPartial.toString(),
+      ) as any;
 
       return {
         allSales: allSalesSorted,
         saleCreated: listsCreated,
         saleSuccessful: listsSuccessful,
-        allRents: allRentsSorted,
-        rentsListed,
-        rentsInRent,
+        // allRents: allRentsSorted,
+        // rentsListed,
+        // rentsInRent,
         totalSales: listsCreated.length,
         dailyVolume: dailyVolume.toString(),
         cardsSold: cardsSold.toString(),
       };
     } catch (err) {
-      console.log(err.message);
+      console.log(err.message, err);
     }
     return {
       allSales: [],
@@ -420,9 +439,10 @@ export const sellERC1155 = createAsyncThunk(
         .createSale(address, tokenId, startingPrice, tokens, amount, duration)
         .send({ from: from });
 
-      return { from, tokenId, startingPrice, amount, duration, address };
+      return true;
     } catch (err) {
       console.log({ err });
+      return false;
     }
   },
 );
@@ -863,9 +883,10 @@ export const sellERC1155Findora = createAsyncThunk(
         .createSale(address, tokenId, startingPrice, amount, duration)
         .send({ from: from });
 
-      return { from, tokenId, startingPrice, amount, duration, address };
+      return true;
     } catch (err) {
       console.log({ err });
+      return false;
     }
   },
 );

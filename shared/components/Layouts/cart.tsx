@@ -207,7 +207,7 @@ export const Cart = ({
       items={cart.length}
       setSideBar={setCartOpen}
     >
-      <div className="w-full py-2 flex gap-4 justify-center">
+      {/* <div className="w-full py-2 flex gap-4 justify-center">
         <div
           onClick={() => setCartSelected("rents")}
           className={clsx(
@@ -226,7 +226,7 @@ export const Cart = ({
         >
           Sales
         </div>
-      </div>
+      </div> */}
       {cart.length ? (
         <div className="flex flex-col items-center border border-overlay-border rounded-md md:min-w-[500px] md:w-max py-2">
           <div className="flex justify-between gap-4 w-full">
@@ -372,53 +372,56 @@ const TokenSelection = ({
 }) => {
   return (
     <>
-      <h2 className="text-xs pb-2 text-green-button font-bold">
-        Select a currency to make the payment
-      </h2>
-      <div className="flex  gap-4 pb-4 w-full flex-wrap items-center justify-center">
-        {blockchain === "matic" &&
-          tokensAllowed
-            .filter((tokenAllowed) => {
-              let intersection = true;
-              cart.forEach((item) => {
-                if (
-                  !item?.tokens
-                    ?.map((item) => item.toLowerCase())
-                    ?.includes(tokenAllowed.address.toLowerCase())
-                ) {
-                  intersection = false;
-                }
-              });
-              return intersection;
-            })
-            .map((item, index) => {
-              return (
-                <div
-                  key={tokenSelected + item.name}
-                  className={clsx(
-                    "w-20 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
+      {blockchain === "matic" && (
+        <>
+          <h2 className="text-xs pb-2 text-green-button font-bold">
+            Select a currency to make the payment
+          </h2>
+          <div className="flex  gap-4 pb-4 w-full flex-wrap items-center justify-center">
+            {tokensAllowed
+              .filter((tokenAllowed) => {
+                let intersection = true;
+                cart.forEach((item) => {
+                  if (
+                    !item?.tokens
+                      ?.map((item) => item.toLowerCase())
+                      ?.includes(tokenAllowed.address.toLowerCase())
+                  ) {
+                    intersection = false;
+                  }
+                });
+                return intersection;
+              })
+              .map((item, index) => {
+                return (
+                  <div
+                    key={tokenSelected + item.name}
+                    className={clsx(
+                      "w-20 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
 
-                    {
-                      "bg-overlay-border border-none":
-                        tokenSelected !== item.address,
-                    },
-                    {
-                      "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
-                        tokenSelected === item.address,
-                    },
-                  )}
-                  onClick={() => {
-                    setTokenSelected(item.address);
-                  }}
-                >
-                  <img src={item.logo} className="w-6 h-6" alt="" />
-                  <h2 className="text-white text-[13px] font-bold">
-                    {item.name}
-                  </h2>
-                </div>
-              );
-            })}
-      </div>
+                      {
+                        "bg-overlay-border border-none":
+                          tokenSelected !== item.address,
+                      },
+                      {
+                        "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
+                          tokenSelected === item.address,
+                      },
+                    )}
+                    onClick={() => {
+                      setTokenSelected(item.address);
+                    }}
+                  >
+                    <img src={item.logo} className="w-6 h-6" alt="" />
+                    <h2 className="text-white text-[13px] font-bold">
+                      {item.name}
+                    </h2>
+                  </div>
+                );
+              })}
+          </div>
+        </>
+      )}
     </>
   );
 };
