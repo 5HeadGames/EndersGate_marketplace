@@ -94,12 +94,12 @@ export const ModalSale = ({
             {sale && sale.price && (
               <span className="text-white w-24 text-center font-bold text-green-button">
                 {isNaN(
-                  parseInt(formatPrice(parseInt(sale.price), sale.blockchain)) *
+                  parseInt(formatPrice(sale.price, sale.blockchain)) *
                     buyNFTData,
                 )
                   ? 0
                   : formatPrice(
-                      multiply(sale?.price?.toString(), buyNFTData.toString()),
+                      multiply(sale?.price, buyNFTData.toString()),
                       sale.blockchain,
                     )}
               </span>

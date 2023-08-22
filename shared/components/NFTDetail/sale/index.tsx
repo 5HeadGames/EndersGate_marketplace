@@ -76,7 +76,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const buyNft = async () => {
     if (!user) {
-      router.push("/login");
+      router.push("/login?redirect=true&redirectAddress=" + router.pathname);
     }
     try {
       const changed = await switchChain(CHAIN_IDS_BY_NAME[sale.blockchain]);
