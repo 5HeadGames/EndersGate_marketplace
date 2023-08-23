@@ -389,7 +389,7 @@ const Shop = () => {
             <div className="flex w-full items-center justify-center gap-2">
               <div className="relative md:w-64 sm:w-40 w-24">
                 <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
-                  <h2 className="relative ringBearer sm:text-xl text-sm text-white">
+                  <h2 className="relative  sm:text-xl text-sm text-white">
                     NFT PACKS
                   </h2>
                 </div>
@@ -401,7 +401,7 @@ const Shop = () => {
               </div>
               <div className="relative md:w-64 sm:w-40 w-28">
                 <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
-                  <h2 className="relative ringBearer sm:text-xl text-sm text-white">
+                  <h2 className="relative  sm:text-xl text-sm text-white">
                     AVATAR CARDS
                   </h2>
                 </div>
@@ -414,7 +414,7 @@ const Shop = () => {
               {/* <Link href="/comics"> */}
               <div className="relative md:w-64 sm:w-40 w-24">
                 <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
-                  <h2 className="relative ringBearer sm:text-xl text-sm text-white">
+                  <h2 className="relative  sm:text-xl text-sm text-white">
                     EG COMICS
                   </h2>
                 </div>
@@ -504,7 +504,7 @@ const Shop = () => {
                             flexShrink: 0,
                           }}
                         >
-                          <h2 className="ringBearer text-md text-center text-gray-200 relative">
+                          <h2 className=" text-md text-center text-gray-200 relative">
                             {sale.amount} LEFT
                           </h2>
                         </div>
@@ -546,7 +546,7 @@ const Shop = () => {
                                 -
                               </div>
                               <input
-                                className="ringBearer text-xl text-white text-center bg-transparent w-5 outline-none"
+                                className="text-xl text-white text-center bg-transparent w-5 outline-none"
                                 value={counters[index]}
                                 type="number"
                                 min={1}
