@@ -13,8 +13,8 @@ import Web3Provider from "@shared/components/Web3Provider";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { Toaster } from "react-hot-toast";
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { GooglePlaceAPIContext } from "@shared/context/loadGooglePlaceApi";
+import { BlockchainContextProvider } from "@shared/context/useBlockchain";
+import "swiper/css";
 
 const { ToastProvider } = require("react-toast-notifications"); //it throws ts error
 
@@ -61,16 +61,18 @@ const MyApp = ({ Component, pageProps }: AppProps & { Component: any }) => {
         <title>Ender's Gate Marketplace</title>
       </Head>
       <Provider store={store}>
-        <ChakraProvider theme={theme}>
-          <ToastProvider autoDismiss placement="bottom-center">
-            <Web3Provider>
-              <Layout>
-                <Component {...pageProps} />
-                <Toaster containerClassName="!z-[100000000]" />
-              </Layout>
-            </Web3Provider>
-          </ToastProvider>
-        </ChakraProvider>
+        <BlockchainContextProvider>
+          <ChakraProvider theme={theme}>
+            <ToastProvider autoDismiss placement="bottom-center">
+              <Web3Provider>
+                <Layout>
+                  <Component {...pageProps} />
+                  <Toaster containerClassName="!z-[100000000]" />
+                </Layout>
+              </Web3Provider>
+            </ToastProvider>
+          </ChakraProvider>
+        </BlockchainContextProvider>
       </Provider>
     </>
   );

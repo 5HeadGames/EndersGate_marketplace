@@ -15,7 +15,6 @@ export const DropdownActions: React.FC<any> = ({
     <div>
       <Menu as="div" className="relative inline-block text-left">
         {({ open }) => {
-          console.log("open", open);
           return (
             <>
               <div>

@@ -64,11 +64,11 @@ export const Button: React.FC<
 
           //fill
           {
-            "bg-primary border-transparent shadow-md text-white":
+            "bg-primary border-transparent shadow-md":
               decoration === "fill" && !social && !tag,
           },
           {
-            "bg-primary border-primary shadow-md text-white":
+            "bg-primary border-primary shadow-md":
               decoration === "fillPrimary" && !social && !tag,
           },
           {

@@ -13,31 +13,35 @@ import { useWeb3React } from "@web3-react/core";
 import { Dropdown } from "@shared/components/common/dropdown/dropdown";
 import { XIcon } from "@heroicons/react/solid";
 import { CardInventory } from "@shared/components/Profile/inventory/cards/itemCard/index";
+import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { onGetAssets } from "@redux/actions";
+import { useDispatch, useSelector } from "react-redux";
 
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
   { title: "Packs", value: "Packs" },
+  // { title: "Rented Cards", value: "Rented Cards" },
 ];
 
 const Inventory = () => {
   const nfts = useAppSelector((state) => state.nfts);
-  const { account: user } = useWeb3React();
   const inventoryCards = nfts.balanceCards;
+  const inventoryRented = nfts.balanceWrapped;
   const [inventoryPacks, setInventoryPacks] = React.useState([]);
   const [columnSelected, setColumnSelected] = React.useState("Trading Cards");
-  const [balance, setBalance] = React.useState("0");
   const [search, setSearch] = React.useState("");
+  const dispatch = useDispatch();
+  const { ethAddress } = useSelector((state: any) => state.layout.user);
+  const { blockchain } = useBlockchain();
 
   const cards = convertArrayCards();
 
   React.useEffect(() => {
-    if (user) {
-      handleSetBalance();
-    }
-  }, [user]);
+    dispatch(onGetAssets({ address: ethAddress, blockchain }));
+  }, []);
 
   React.useEffect(() => {
-    console.log(nfts);
     const arrayPacks = [];
     nfts.balancePacks.forEach((pack, index) => {
       arrayPacks.push({
@@ -64,17 +68,12 @@ const Inventory = () => {
     setInventoryPacks(arrayPacks);
   }, [nfts]);
 
-  const handleSetBalance = async () => {
-    const balance = await getBalance(user);
-    setBalance(balance);
-  };
-
   return (
-    <div className="flex flex-col w-full px-24">
-      <h2 className="text-white font-bold text-4xl mb-8">
+    <div className="flex flex-col w-full sm:px-24 px-4">
+      <h2 className="text-white font-bold text-4xl mb-8 xs:text-left text-center">
         My Enders Gate NFTs
       </h2>
-      <div className="flex gap-4 items-center mb-4">
+      <div className="flex md:flex-row flex-col gap-4 items-center mb-4">
         <div className="border flex items-center text-lg justify-center border-overlay-border bg-overlay-2 rounded-xl w-full">
           <div className="text-white flex items-center w-full py-3 px-4 rounded-xl bg-overlay border-r border-overlay-border">
             <input
@@ -123,13 +122,15 @@ const Inventory = () => {
           {
             [`${Styles.gray} flex-col items-center gap-6 h-72`]:
               (inventoryCards.length === 0 &&
-                columnSelected === "Trading Cards") ||
+                (columnSelected === "Trading Cards" ||
+                  columnSelected === "Rented Cards")) ||
               (inventoryPacks.length === 0 && columnSelected === "Packs"),
           },
           {
-            ["gap-2 flex-wrap gap-6"]:
+            "flex-wrap gap-6":
               (inventoryCards.length > 0 &&
-                columnSelected === "Trading Cards") ||
+                (columnSelected === "Trading Cards" ||
+                  columnSelected === "Rented Cards")) ||
               (inventoryPacks.length > 0 && columnSelected === "Packs"),
           },
         )}
@@ -190,6 +191,40 @@ const Inventory = () => {
             <div className="h-72 flex flex-col items-center justify-center text-white font-bold gap-4 relative">
               <img src={Icons.logoCard} className="w-24 h-24" alt="" />
               You don't own EG NFTs Packs yet
+            </div>
+          )
+        ) : columnSelected === "Rented Cards" ? (
+          inventoryRented.filter(
+            (card) =>
+              cards[card.id]?.properties?.name?.value
+                .toLowerCase()
+                .includes(search.toLowerCase()) && card.balance > 0,
+          ).length > 0 ? (
+            inventoryRented
+              .filter(
+                (card) =>
+                  cards[card.id]?.properties?.name?.value
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) && card.balance > 0,
+              )
+              .map((card) => {
+                return (
+                  <CardInventory
+                    key={card.id}
+                    id={card.id}
+                    icon={cards[card.id]?.properties?.image?.value}
+                    name={cards[card.id]?.properties?.name?.value}
+                    balance={card.balance}
+                    type={cards[card.id].typeCard}
+                    card={true}
+                    byId
+                  />
+                );
+              })
+          ) : (
+            <div className="h-72 flex flex-col items-center justify-center text-white font-bold gap-4 relative">
+              <img src={Icons.logoCard} className="w-24 h-24" alt="" />
+              You don't own Rented EG NFTs Cards
             </div>
           )
         ) : (

@@ -12,7 +12,7 @@ import { useWeb3React } from "@web3-react/core";
 import { XIcon } from "@heroicons/react/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "@shared/hooks/modal";
-import { getAddresses, getContractCustom } from "@shared/web3";
+import { getAddressesMatic, getContractCustom } from "@shared/web3";
 import Web3 from "web3";
 import {
   onApproveERC1155,
@@ -21,6 +21,7 @@ import {
 } from "@redux/actions";
 import { useToasts } from "react-toast-notifications";
 import { Icons } from "@shared/const/Icons";
+import { useBlockchain } from "@shared/context/useBlockchain";
 
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
@@ -33,9 +34,11 @@ const SwapComponent = () => {
   const dispatch = useDispatch();
   const { Modal, show, hide, isShow } = useModal();
   const { common_pack, rare_pack, epic_pack, legendary_pack, exchange } =
-    getAddresses();
+    getAddressesMatic();
 
   const { addToast } = useToasts();
+
+  const { blockchain } = useBlockchain();
 
   const passPacks = [
     {
@@ -115,9 +118,9 @@ const SwapComponent = () => {
         (item) => balance[item.nameKey] > 0,
       );
 
-      for (let i = 0; i < packsToExchange.length; i++) {
-        const item = packsToExchange[i];
-        const pack = await getContractCustom(
+      for (const element of packsToExchange) {
+        const item = element;
+        const pack = getContractCustom(
           "ERC721Seadrop",
           item.address,
           provider.provider,
@@ -126,11 +129,12 @@ const SwapComponent = () => {
           .isApprovedForAll(user, exchange)
           .call();
         if (isApproved == false) {
-          const res: any = await dispatch(
+          const res: any = dispatch(
             onApproveERC1155({
               from: user,
               pack: item.address,
               provider: provider.provider,
+              blockchain,
             }),
           );
           if (res?.payload?.err) {
@@ -139,22 +143,22 @@ const SwapComponent = () => {
         }
       }
 
-      const res: any = await dispatch(
+      const res: any = dispatch(
         onExchangeERC721to1155({
           from: user,
           nfts: passPacks
             .filter((item) => balance[item.nameKey] > 0)
             .map((item) => item.address),
           provider: provider.provider,
+          blockchain: blockchain,
         }),
       );
-      console.log(res?.payload.err, "res");
       if (res?.payload?.err) {
         throw new Error(res?.payload.err.message);
       }
 
       setSuccess(true);
-      dispatch(onGetAssets(user));
+      dispatch(onGetAssets({ address: user, blockchain }));
       addToast("Your NFTs have been exchanged succesfully!", {
         appearance: "success",
       });

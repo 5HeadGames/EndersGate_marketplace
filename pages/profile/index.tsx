@@ -1,12 +1,12 @@
 import React from "react";
-import ProfileIndexPage from "@shared/components/Profile/index";
+import ProfileLayout from "@shared/components/Profile/layout";
 import Inventory from "@shared/components/Profile/inventory/inventory";
 
 const Profile: React.FunctionComponent<{}> = () => {
   return (
-    <ProfileIndexPage>
-      <Inventory></Inventory>
-    </ProfileIndexPage>
+    <ProfileLayout>
+      <Inventory />
+    </ProfileLayout>
   );
 };
 

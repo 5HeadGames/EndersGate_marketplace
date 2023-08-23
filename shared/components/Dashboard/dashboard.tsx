@@ -3,7 +3,7 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "@redux/store";
 import Table from "./tableItems/table";
 import TransactionsBoard from "./TransactionsBoard/TransactionsBoard";
-import { getAddresses, getContract } from "@shared/web3";
+import { getAddressesMatic, getContract } from "@shared/web3";
 import cardsJson from "../../../cards.json";
 import { TimeConverter } from "../common/unixDateConverter/unixConverter";
 import Web3 from "web3";
@@ -52,7 +52,7 @@ const DashboardComponent = () => {
     columnSelected,
   });
 
-  const { pack } = getAddresses();
+  const { pack } = getAddressesMatic();
 
   const [sales, setSales] = React.useState(recentlySold);
   const [salesDefault, setSalesDefault] = React.useState(recentlyListedCards);
@@ -79,9 +79,9 @@ const DashboardComponent = () => {
             className={`absolute 2xl:min-w-[165vw] lg:min-w-[250vw] min-w-[350vw] lg:max-h-[85vh] top-0 banner border-b border-overlay-border`}
             alt=""
           />
-          <div className="flex flex-col pt-24 w-full items-center lg:min-h-screen relative gap-4 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 px-8 text-white">
+          <div className="flex flex-col pt-24 w-full items-center lg:min-h-screen relative gap-4 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 xs:px-8 text-white">
             <div className="max-w-[1000px] xl:px-10 w-full flex justify-center relative lg:min-h-[350px]">
-              <div className="flex flex-col lg:items-start items-center gap-8 lg:pr-[250px] w-full lg:pl-0 pl-16 pr-16">
+              <div className="flex flex-col lg:items-start items-center gap-8 lg:pr-[250px] w-full lg:pl-0 sm:pl-16 sm:pr-16 pl-2 pr-2">
                 <h1 className="lg:text-3xl text-3xl flex flex-col font-bold w-full lg:text-left text-center">
                   Discover, collect, buy or sell Endersgate NFTs
                 </h1>
@@ -109,7 +109,7 @@ const DashboardComponent = () => {
                   </a>
                 </div>
               </div>
-              <div className="lg:block hidden w-[485px] flex items-end justify-end absolute right-0">
+              <div className="lg:block hidden w-[485px] items-end justify-end absolute right-0">
                 <SliderMain
                   cards={cards}
                   salesDefault={salesDefault}
@@ -147,7 +147,7 @@ const DashboardComponent = () => {
                   }}
                 >
                   <SwiperSlide
-                    className="xl:block !w-full hidden"
+                    className="block !w-full"
                     style={{ width: "100%!important", marginRight: "0px" }}
                   >
                     <div className="!w-full flex items-center justify-center gap-2">
@@ -159,26 +159,18 @@ const DashboardComponent = () => {
                           image: "/images/gen0_pack.png",
                           link: "https://www.endersgate.gg/shop",
                         },
-                        // {
-                        //   name: "EG NFT Comics",
-                        //   description:
-                        //     "Collect the lore & enjoy original stories.",
-                        //   image: "/images/comic_pack.png",
-                        // },
                       ]?.map(({ name, description, image, link }: any) => {
                         return (
-                          // <SwiperSlide>
                           <a
                             href={link}
                             target="_blank"
                             rel="noreferrer"
                             className="flex flex-col items-center justify-center h-[400px] sm:max-w-[350px] overflow-hidden shrink-0"
                           >
-                            {/* <div className="px-4"> */}
                             <div className="bg-secondary rounded-xl border border-overlay-border h-[390px] sm:max-w-[350px] flex items-end overflow-hidden w-full">
                               <img
                                 src={image}
-                                className="absolute sm:max-w-[350px] w-full h-[390px]"
+                                className="absolute max-w-[350px] w-full h-[390px]"
                                 alt=""
                               />
                               <div className="p-4 flex items-center justify-center relative sm:min-w-[400px] max-w-[350px] w-full rounded-xl bg-secondary border border-secondary gap-2">
@@ -199,66 +191,12 @@ const DashboardComponent = () => {
                                   </p>
                                 </div>
                               </div>
-                              {/* </div> */}
                             </div>
                           </a>
-                          // </SwiperSlide>
                         );
                       })}
                     </div>
                   </SwiperSlide>
-                  {[
-                    {
-                      name: "Gen 0 Pack Drop",
-                      description:
-                        "Enjoy +230 Unique hand drawn playing cards.",
-                      image: "/images/gen0_pack.png",
-                      link: "https://www.endersgate.gg/shop",
-                    },
-                    // {
-                    //   name: "EG NFT Comics",
-                    //   description: "Collect the lore & enjoy original stories.",
-                    //   image: "/images/comic_pack.png",
-                    //   link: "https://www.endersgate.gg/shop",
-                    // },
-                  ]?.map(({ name, description, image, link }: any) => {
-                    return (
-                      <SwiperSlide className="xl:hidden flex">
-                        <a
-                          href={link}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex flex-col items-center justify-center h-[450px] max-w-[400px] overflow-hidden"
-                        >
-                          <div className="bg-secondary rounded-xl border border-overlay-border h-[440px] max-w-[400px] flex items-end overflow-hidden w-full">
-                            <img
-                              src={image}
-                              className="absolute max-w-[400px] w-full h-[440px]"
-                              alt=""
-                            />
-                            <div className="p-4 flex items-center justify-center relative max-w-[400px] w-full rounded-xl bg-secondary border border-secondary gap-2">
-                              <img
-                                src={Icons.logo}
-                                className="w-12 h-12"
-                                alt=""
-                              />
-                              <div className="w-full flex flex-col">
-                                <h2 className="font-bold text-white text-xl">
-                                  {name}
-                                </h2>
-                                <p
-                                  className="text-primary-disabled text-md w-[75%]"
-                                  style={{ lineHeight: "16px" }}
-                                >
-                                  {description}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                      </SwiperSlide>
-                    );
-                  })}
                 </Swiper>
               </div>
             </div>
@@ -286,114 +224,31 @@ const DashboardComponent = () => {
             </Dropdown>
           </div>
           <div className="flex flex-wrap w-full justify-center items-center relative md:px-40">
-            {sales.map((a, id) => {
-              return a.nft.toLowerCase() !== pack.toLowerCase() ? (
+            {sales.map((sale, id) => {
+              return (
                 <NFTCard
-                  classes={{ root: "lg:m-4 m-2 cursor-pointer" }}
-                  id={a.nftId}
-                  transactionId={a.id}
-                  tokens={a.tokens}
-                  seller={a.seller}
-                  icon={cards[a.nftId].properties.image.value}
-                  name={cards[a.nftId].properties.name.value}
+                  classes={{ root: "m-4 cursor-pointer" }}
+                  icon={
+                    sale.nft === pack
+                      ? packs[sale.nftId]?.properties?.image?.value
+                      : cards[sale.nftId]?.properties?.image?.value
+                  }
+                  name={
+                    sale.nft === pack
+                      ? packs[sale.nftId]?.properties?.name?.value
+                      : cards[sale.nftId]?.properties?.name?.value
+                  }
                   byId={false}
-                  setPage={(arg) => {}}
-                  sale={a}
-                  price={a.price}
+                  sale={sale}
                 />
-              ) : (
-                <Link href={`/NFTDetailSale/${a.id}`}>
-                  <div
-                    className={clsx(
-                      "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 m-4 cursor-pointer",
-                      Styles.cardHover,
-                    )}
-                  >
-                    <img
-                      src={packs[a.nftId]?.properties?.image?.value}
-                      className="absolute top-[-40%] bottom-0 left-[-5%] right-0 margin-auto opacity-50 min-w-[110%]"
-                      alt=""
-                    />
-                    <div className="flex flex-col relative">
-                      <div className="w-full flex flex-col text-xs gap-1">
-                        <div className="w-full text-lg flex justify-between rounded-xl p-2 bg-secondary">
-                          <span>
-                            Pack #{a.nftId !== undefined ? a.nftId : "12345"}
-                          </span>
-                          {<span>#{a.id}</span>}
-                        </div>
-                      </div>
-                      <div className="w-full h-72 flex justify-center items-center my-6">
-                        <img
-                          src={
-                            packs[a.nftId]?.properties?.image?.value ||
-                            Icons.logo
-                          }
-                          className={
-                            packs[a.nftId]?.properties?.image?.value
-                              ? "h-64"
-                              : "h-24"
-                          }
-                        />
-                      </div>
-                      <div className="flex flex-col rounded-xl bg-secondary w-full px-4 pb-3 relative">
-                        <div className="flex text-lg font-bold text-left py-2 ">
-                          <div className="w-40 relative">
-                            <img
-                              src="icons/card_logo.svg"
-                              className="w-40 absolute top-[-60px]"
-                              alt=""
-                            />
-                          </div>
-                          <div className="w-full flex flex-col">
-                            <span className="uppercase text-white text-lg">
-                              {packs[a.nftId]?.properties?.name?.value ||
-                                "Enders Gate"}
-                            </span>
-                            <span
-                              className="text-[12px] text-gray-500 font-medium"
-                              style={{ lineHeight: "10px" }}
-                            >
-                              Owner:{" "}
-                              {<AddressText text={a.seller} /> || "Owner"}
-                            </span>
-                          </div>
-                          <img src={Icons.logo} className="w-10 h-10" alt="" />
-                        </div>
-                        {a.price && (
-                          <div
-                            className="flex justify-between text-md text-white "
-                            style={{ lineHeight: "18px" }}
-                          >
-                            <div className="flex items-center gap-2">
-                              <img
-                                src="/icons/POLYGON.svg"
-                                className="h-8 w-8"
-                                alt=""
-                              />
-                              <div className="flex flex-col text-md font-medium">
-                                <p>Price:</p>
-                                <span>{parseInt(a.price) / 10 ** 6} USD</span>
-                              </div>
-                            </div>
-                            <div className="flex flex-col text-md font-medium">
-                              <p>Highest Bid:</p>
-                              <span>{parseInt(a.price) / 10 ** 6} USD</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
               );
             })}
           </div>
           <div className="flex items-center justify-center">
             <Link href={"/marketplace"}>
-              <div className="p-3 px-6 font-[450] hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border text-overlay-border rounded-md cursor-pointer">
+              <p className="p-3 px-6 font-[450] hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border text-overlay-border rounded-md cursor-pointer">
                 Browse More
-              </div>
+              </p>
             </Link>
           </div>
         </div>

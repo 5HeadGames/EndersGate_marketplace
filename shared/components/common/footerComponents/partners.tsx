@@ -13,7 +13,7 @@ const Partners = () => {
     <div className="py-10 px-10 flex flex-col items-center border-t border-overlay-border bg-overlay-3">
       <img src="/icons/5HGPARTNERS.svg" className="w-40 mb-6" alt="" />
 
-      <div className="flex flex-wrap gap-x-10 gap-y-4 items-center justify-center">
+      <div className="flex flex-wrap gap-x-10 gap-y-8 items-center justify-center">
         {partners.map(({ logo, link }) => (
           <a href={link} target="_blank" rel="noreferrer">
             <img alt="" className="w-[11rem]" src={logo} />

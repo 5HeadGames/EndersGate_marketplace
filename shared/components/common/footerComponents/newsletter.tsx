@@ -32,8 +32,8 @@ export const Newsletter = () => {
           reset={reset}
           error={errors.email}
           placeholder="Enter your Gmail address"
-          classNameContainer="rounded-xl py-3"
-          className="md:w-1/2 w-full font-[500] text-[20px]"
+          classNameContainer="rounded-xl py-3 px-2"
+          className="md:w-1/2 w-full font-[500] text-[20px] "
         />
         <Button
           type="submit"

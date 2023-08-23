@@ -5,6 +5,7 @@ import Link from "next/link";
 import Styles from "./styles.module.scss";
 import Web3 from "web3";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
+import { formatPrice } from "@shared/utils/formatPrice";
 
 interface Props
   extends React.DetailedHTMLProps<
@@ -22,6 +23,7 @@ interface Props
   seller?: string;
   onTimeChange?: any;
   sale?: any;
+  blockchain?: any;
 }
 
 const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
@@ -29,14 +31,10 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
 
   const [hoverAll, setHoverAll] = React.useState(false);
 
-  console.log(props.onTimeChange);
-  React.useEffect(() => {
-    console.log(props.onTimeChange);
-  }, [props.onTimeChange]);
   return (
     <>
       {props.byId ? (
-        <Link href={`/NFTDetailID/${props.id}`}>
+        <Link href={`/card/${props.id}`}>
           <div
             className={clsx(
               "rounded-xl flex flex-col text-gray-100 w-96 bg-secondary cursor-pointer relative overflow-hidden border border-gray-500 ",
@@ -100,12 +98,14 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                       />
                       <div className="flex flex-col text-md font-medium">
                         <p>Price:</p>
-                        <span>{parseInt(props.price) / 10 ** 6} USD</span>
+                        <span>
+                          {formatPrice(props.price, props.blockchain)}
+                        </span>
                       </div>
                     </div>
                     <div className="flex flex-col text-md font-medium">
                       <p>Highest Bid:</p>
-                      <span>{parseInt(props.price) / 10 ** 6} USD</span>
+                      <span>{formatPrice(props.price, props.blockchain)}</span>
                     </div>
                   </div>
                 )}
@@ -119,7 +119,7 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
           onMouseOver={() => setHoverAll(true)}
           onMouseLeave={() => setHoverAll(false)}
         >
-          <Link href={`/NFTDetailSale/${props.transactionId}`}>
+          <Link href={`/sale/${props.transactionId}`}>
             <div
               className={clsx(
                 "rounded-xl flex flex-col text-gray-100 w-72 bg-secondary cursor-pointer relative overflow-hidden border z-[2] border-gray-500 hover:border-green-button transition duration-500",
@@ -182,12 +182,16 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                         />
                         <div className="flex flex-col text-[12px] font-medium">
                           <p>Price:</p>
-                          <span>{parseInt(props.price) / 10 ** 6} USD</span>
+                          <span>
+                            {formatPrice(props.price, props.blockchain)}
+                          </span>
                         </div>
                       </div>
                       <div className="flex flex-col text-[12px] font-medium">
                         <p>Highest Bid:</p>
-                        <span>{parseInt(props.price) / 10 ** 6} USD</span>
+                        <span>
+                          {formatPrice(props.price, props.blockchain)}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -219,7 +223,7 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                   "flex w-full gap-2 absolute transition-all duration-500  px-2 z-[1]  font-bold text-white",
                 )}
               >
-                <Link href={`/NFTDetailSale/${props.transactionId}`}>
+                <Link href={`/sale/${props.transactionId}`}>
                   <div
                     onClick={() => {}}
                     className="w-1/2 px-2 pb-1 flex text-sm justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-green-button hover:text-overlay transition-all duration-500"
@@ -227,7 +231,7 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                     Buy Now
                   </div>
                 </Link>
-                <Link href={`/NFTDetailSale/${props.transactionId}`}>
+                <Link href={`/sale/${props.transactionId}`}>
                   <div className="w-1/2 px-2 pb-1 text-sm flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-overlay-2 transition-all duration-500">
                     Details
                   </div>

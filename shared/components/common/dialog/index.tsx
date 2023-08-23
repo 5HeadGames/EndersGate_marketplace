@@ -29,8 +29,6 @@ const Dialog: React.FunctionComponent<Props> = (props) => {
 
     document.addEventListener("click", onClose);
 
-    console.log("a");
-
     return () => {
       document.removeEventListener("click", onClose);
     };

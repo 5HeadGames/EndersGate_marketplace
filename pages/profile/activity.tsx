@@ -1,12 +1,12 @@
 import React from "react";
 import Activities from "@shared/components/Profile/activities/activities";
-import ProfileIndexPage from "@shared/components/Profile/index";
+import ProfileLayout from "@shared/components/Profile/layout";
 
 const ProfileActivities = () => {
   return (
-    <ProfileIndexPage>
+    <ProfileLayout>
       <Activities></Activities>
-    </ProfileIndexPage>
+    </ProfileLayout>
   );
 };
 

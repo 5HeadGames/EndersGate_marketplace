@@ -123,3 +123,32 @@ export const removeFromCartComics = createAction(
 );
 
 export const removeAllComics = createAction(actionTypes.REMOVE_ALL_COMICS);
+
+export const addCartRent = createAction(
+  actionTypes.ADD_CART_RENT,
+  function prepare(cart: any) {
+    return {
+      payload: cart,
+    };
+  },
+);
+
+export const editCartRent = createAction(
+  actionTypes.EDIT_CART_RENT,
+  function prepare(cart: any) {
+    return {
+      payload: cart,
+    };
+  },
+);
+
+export const removeFromCartRent = createAction(
+  actionTypes.REMOVE_FROM_CART_RENT,
+  function prepare(item: any) {
+    return {
+      payload: item,
+    };
+  },
+);
+
+export const removeAllRent = createAction(actionTypes.REMOVE_ALL_RENT);

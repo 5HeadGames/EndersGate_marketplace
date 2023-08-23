@@ -1,12 +1,12 @@
 import React from "react";
-import ProfileIndexPage from "@shared/components/Profile/index";
+import ProfileLayout from "@shared/components/Profile/layout";
 import SwapComponent from "@shared/components/Profile/SwapComponent";
 
 const ProfileSales = () => {
   return (
-    <ProfileIndexPage>
+    <ProfileLayout>
       <SwapComponent />
-    </ProfileIndexPage>
+    </ProfileLayout>
   );
 };
 

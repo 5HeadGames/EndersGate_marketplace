@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useRef } from "react";
+import React from "react";
 import Link from "next/link";
 import { Layout } from "antd";
 import useMagicLink from "@shared/hooks/useMagicLink";
@@ -9,7 +9,6 @@ import clsx from "clsx";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppDispatch } from "redux/store";
 import { onGetAssets, onLoadSales, onUpdateUser } from "redux/actions";
-
 import {
   AreaChartOutlined,
   SearchOutlined,
@@ -21,10 +20,13 @@ import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
 import { Dropdown } from "../common/dropdown/dropdown";
 import { useSelector } from "react-redux";
-import { useToasts } from "react-toast-notifications";
 import { WALLETS } from "@shared/utils/connection/utils";
 import { authStillValid } from "../utils";
 import { Cart } from "./cart";
+import ChainSelect from "./chainSelect";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { toast } from "react-hot-toast";
+import { CHAIN_IDS_BY_NAME } from "../chains";
 
 type ButtonsTypes = { logout: boolean; userData: boolean };
 
@@ -79,15 +81,13 @@ export const Logo = () => (
 export const NavbarItem = ({ name, link, route }) => {
   return (
     <Link href={link}>
-      <a className={clsx("py-2 relative")} href={link}>
-        <div
-          className={clsx(
-            { "opacity-50": link !== route },
-            "gap-2 flex items-center text-white hover:opacity-100",
-          )}
-        >
-          <h3 className={clsx("text-md font-[500]")}>{name}</h3>
-        </div>
+      <a
+        className={clsx("py-2 relative", "text-md font-[500] text-white", {
+          "opacity-50": link !== route,
+        })}
+        href={link}
+      >
+        {name}
       </a>
     </Link>
   );
@@ -100,13 +100,6 @@ const styles = {
     fontFamily: "Roboto, sans-serif",
     color: "#041836",
   },
-  // headerRight: {
-  //   display: "flex",
-  //   gap: "20px",
-  //   alignItems: "center",
-  //   fontSize: "15px",
-  //   fontWeight: "600",
-  // },
 };
 
 export default function AppLayout({ children }) {
@@ -121,24 +114,25 @@ export default function AppLayout({ children }) {
   });
   const [search, setSearch] = React.useState("");
 
-  const { addToast } = useToasts();
-
   const router = useRouter();
+
   const { account } = useWeb3React();
+
   const { logout, login } = useMagicLink();
+
   const { ethAddress } = useSelector((state: any) => state.layout.user);
-  const { isLogged } = useSelector((state: any) => state.layout);
-  const { provider, providerName, cart } = useSelector(
+  const { provider, providerName, cart, cartRent, isLogged } = useSelector(
     (state: any) => state.layout,
   );
-  const dispatch = useAppDispatch();
 
-  const maximizableElement = useRef(null);
+  const { blockchain, updateBlockchain } = useBlockchain();
+
+  const dispatch = useAppDispatch();
 
   let isFullscreen;
 
   React.useEffect(() => {
-    if (relogin || isLogged) {
+    if (relogin) {
       dispatch(
         onUpdateUser({
           ethAddress: account,
@@ -147,47 +141,45 @@ export default function AppLayout({ children }) {
           providerName: "web3react",
         }),
       );
-      dispatch(onGetAssets(account));
+      dispatch(onGetAssets({ address: account, blockchain }));
     }
-  }, [account, relogin, isLogged]);
+  }, [account, relogin, isLogged, blockchain]);
+
+  const reconnect = async () => {
+    try {
+      const typeOfConnection = localStorage.getItem("typeOfConnection");
+      const chain = localStorage.getItem("chain");
+      if (authStillValid()) {
+        await updateBlockchain(chain || "matic");
+        WALLETS.forEach(async (wallet) => {
+          if (wallet.title === typeOfConnection) {
+            await wallet.connection.connector.activate();
+            setRelogin(true);
+          }
+        });
+        if (typeOfConnection === "magic") {
+          login(dispatch);
+        }
+      } else {
+        localStorage.removeItem("typeOfConnection");
+        localStorage.removeItem("loginTime");
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   React.useEffect(() => {
-    const typeOfConnection = localStorage.getItem("typeOfConnection");
-    if (authStillValid()) {
-      WALLETS.forEach(async (wallet) => {
-        if (wallet.title === typeOfConnection) {
-          await wallet.connection.connector.activate();
-          setRelogin(true);
-        }
-      });
-      if (typeOfConnection === "magic") {
-        login(dispatch);
-      }
-    } else {
-      localStorage.removeItem("typeOfConnection");
-      localStorage.removeItem("loginTime");
-    }
+    reconnect();
   }, []);
 
-  // React.useEffect(() => {
-  //   if (
-  //     typeof window !== "undefined" &&
-  //     (window as any).ethereum?.isConnected() &&
-  //     !isExecuted
-  //   ) {
-  //     (window as any).ethereum.on("accountsChanged", accountChangedHandler);
-  //     (window as any).ethereum.on("chainChanged", chainChangedHandler);
-  //     setIsExecuted(true);
-  //   }
-  // }, []);
-
-  const initApp = async () => {
+  const loadSales = async () => {
     await dispatch(onLoadSales());
   };
 
   React.useEffect(() => {
-    initApp();
-  }, []);
+    loadSales();
+  }, [blockchain]);
 
   const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
     setDisabled((prev) => ({ ...prev, [field]: value }));
@@ -218,33 +210,23 @@ export default function AppLayout({ children }) {
     {
       name: "ACTIVITY",
       link: "/profile/activity",
-      icon: <AreaChartOutlined />,
     },
-
-    // {
-    //   link: "/profile/inventory",
-    //   name: "INVENTORY",
-    //   icon: <GoldenFilled />,
-    // },
     {
       name: "MY SALES",
-      link: "/profile/mySales",
-      icon: <AreaChartOutlined />,
+      link: "/profile/sales",
     },
+    // {
+    //   name: "MY RENTS",
+    //   link: "/profile/rents",
+    //   notification: 0,
+    // },
     {
       name: "SWAP",
       link: "/profile/swap",
-      icon: <AreaChartOutlined />,
     },
     {
       name: "MY PACKS",
-      link: "/packs",
-      icon: <AreaChartOutlined />,
-    },
-    {
-      name: "PROFILE",
-      link: "/profile/accountSettings",
-      icon: <AreaChartOutlined />,
+      link: "/pack_opening",
     },
     {
       name: "LOG OUT",
@@ -322,16 +304,19 @@ export default function AppLayout({ children }) {
             <>
               <div
                 className={clsx(
-                  { "!opacity-100": cartOpen || cart.length > 0 },
+                  {
+                    "!opacity-100":
+                      cartOpen || cart.length + cartRent.length > 0,
+                  },
                   "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
                 )}
                 onClick={() => {
                   setCartOpen(true);
                 }}
               >
-                {cart.length > 0 && (
+                {(cart.length > 0 || cartRent.length > 0) && (
                   <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary">
-                    {cart.length}
+                    {cart.length + cartRent.length}
                   </div>
                 )}
                 <ShoppingCartOutlined />
@@ -369,14 +354,13 @@ export default function AppLayout({ children }) {
                   })}
                 </div>
               </Dropdown>
+              <ChainSelect />
             </>
           ) : (
             <NavbarItem
-              name={ethAddress ? "MY ACCOUNT" : "LOG IN"}
+              name={"LOG IN"}
               link={
-                ethAddress
-                  ? "/profile"
-                  : router.pathname !== "/login"
+                router.pathname !== "/login"
                   ? `/login?redirect=true&redirectAddress=${router.pathname}`
                   : router.asPath
               }
@@ -384,7 +368,7 @@ export default function AppLayout({ children }) {
             />
           )}
         </div>
-        <div className="lg:hidden flex gap-3">
+        <div className="lg:hidden flex gap-4">
           <div
             className={clsx(
               { "!opacity-100": cartOpen || cart.length > 0 },
@@ -401,9 +385,11 @@ export default function AppLayout({ children }) {
             )}
             <ShoppingCartOutlined />
           </div>
+          <ChainSelect />
+
           {!sidebarOpen ? (
             <MenuIcon
-              className="h-6 w-6 text-primary cursor-pointer"
+              className="h-6 w-6 shrink-0 text-primary cursor-pointer"
               aria-hidden="true"
               onClick={() => {
                 setSidebarOpen((prev) => !prev);
@@ -411,7 +397,7 @@ export default function AppLayout({ children }) {
             />
           ) : (
             <XIcon
-              className="h-6 w-6 text-primary cursor-pointer"
+              className="h-6 w-6 shrink-0 text-primary cursor-pointer"
               aria-hidden="true"
               onClick={() => {
                 setSidebarOpen((prev) => !prev);
@@ -444,7 +430,7 @@ export default function AppLayout({ children }) {
         {children}
       </div>
       {!router.asPath.includes("/comics") &&
-        !router.asPath.includes("/packs") && <Footer />}
+        !router.asPath.includes("/pack_opening") && <Footer />}
     </Layout>
   );
 }

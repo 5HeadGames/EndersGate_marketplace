@@ -28,7 +28,7 @@ export const Type = ({ id }) => {
 
 export const nFormatter = (num) => {
   if (num >= 1000000000) {
-    return (num / 1000000000).toFixed(1).replace(/\.0$/, "") + "G";
+    return (num / 1000000000).toFixed(1).replace(/\.0$/, "") + "MM";
   }
   if (num >= 1000000) {
     return (num / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
@@ -42,7 +42,6 @@ export const nFormatter = (num) => {
 export function findSum(str1, str2) {
   // Before proceeding further, make
   // sure length of str2 is larger.
-  console.log(str1, str2, "sum");
   if (str1.length > str2.length) {
     let t = str1;
     str1 = str2;

@@ -2,26 +2,22 @@ import React from "react";
 import clsx from "clsx";
 import Web3 from "web3";
 import {
-  Image,
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
-  ModalCloseButton,
   Button,
   Container,
-  Text,
-  Link,
 } from "@chakra-ui/react";
 import ReactCardFlip from "react-card-flip";
 import Tilt from "react-parallax-tilt";
 import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetAssets } from "@redux/actions";
-import { getAddresses, getContractCustom } from "@shared/web3";
+import { getAddressesMatic, getContractCustom } from "@shared/web3";
 import { Icons } from "@shared/const/Icons";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import Link from "next/link";
 
 export const CardInventory = (props) => {
   const { classes, ...rest } = props;
@@ -30,11 +26,13 @@ export const CardInventory = (props) => {
   const [transfer, setTransfer] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
+  const { blockchain } = useBlockchain();
+
   const { ethAddress: account, provider } = useSelector(
     (state: any) => state.layout.user,
   );
 
-  const { endersGate, pack } = getAddresses();
+  const { endersGate, pack } = getAddressesMatic();
 
   const dispatch = useDispatch();
 
@@ -48,7 +46,7 @@ export const CardInventory = (props) => {
   });
 
   const getAssets = async () => {
-    await dispatch(onGetAssets(account));
+    await dispatch(onGetAssets({ address: account, blockchain }));
   };
 
   const transferNft = async () => {
@@ -292,19 +290,19 @@ export const CardInventory = (props) => {
                     className={clsx({ hidden: !isFlipped }, "cardPreview")}
                     src={
                       props.type === "reaction" || props.type === "action"
-                        ? "./images/ACTION_REACTION_CARD_BACK.png"
+                        ? "https://bafybeihcpwv3p6s3v2ud75snxe3yuuvv5yu7mw2t7tkmyya4fa475sqyay.ipfs.nftstorage.link/"
                         : props.type === "wood"
-                        ? "./images/bert_kurtback.png"
+                        ? "https://bafybeicuhzudy54dbu6ptekwea5hfxyl7zbv2il7tyht7gkolzlklumnva.ipfs.nftstorage.link/"
                         : props.type === "stone"
-                        ? "./images/CardStoneBack.png"
+                        ? "https://bafybeidcxv7rxdyat3mh642vcmouu4kopyq7tnnvmx65kt7dge425c4t7e.ipfs.nftstorage.link/"
                         : props.type === "iron"
-                        ? "./images/cardsilver.png"
+                        ? "https://bafybeihusx7vstfvzjltvdnyl6njvntpdo2h5omkwjrdphhd2liowfewmu.ipfs.nftstorage.link/"
                         : props.type === "gold"
-                        ? "./images/CardBack.png"
+                        ? "https://bafybeiam2levzdsrwxi7pkwbq6hlok3xk6owd3o66f2vzyqxwd7euxfgvu.ipfs.nftstorage.link/"
                         : props.type === "legendary"
-                        ? "./images/redback.png"
+                        ? "https://bafybeih2vpmzogfeinhrojfc44tkvzmd7kv5naimntmzfz3lc4uwcpiubm.ipfs.nftstorage.link/"
                         : props.type === "avatar"
-                        ? "./images/backAvatar.png"
+                        ? "https://bafybeienpnn5qgi6ce2mdf2maxrf3k6pn3bhhqo67pb2xd2g5uby6p5pfe.ipfs.nftstorage.link/"
                         : props.icon
                     }
                     alt=""
@@ -339,14 +337,10 @@ export const CardInventory = (props) => {
                   >
                     <Link
                       href={
-                        props.card
-                          ? `/NFTDetailID/${props.id}`
-                          : `/PackDetailID/${props.id}`
+                        props.card ? `/card/${props.id}` : `/pack/${props.id}`
                       }
-                      target="_blank"
-                      rel="noopener noreferrer"
                     >
-                      Sell
+                      Sell {/* / Rent */}
                     </Link>
                   </Button>
 

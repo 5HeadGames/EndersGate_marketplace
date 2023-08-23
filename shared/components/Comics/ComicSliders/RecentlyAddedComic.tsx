@@ -30,6 +30,12 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
           slidesToShow: 2,
         },
       },
+      {
+        breakpoint: 700,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
     ],
   };
 
@@ -37,16 +43,26 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
     { name: "", photo: "" },
     {
       id: 1,
-      name: "AvS ISSUE #1",
-      nameComic: "Ascended vs Sentinels",
-      photo: "/images/AscendedVsSentinels1.webp",
+      name: "HvsO ISSUES #1",
+      nameComic: "Humans vs Ogres Issue #1",
+      nameLink: "HvsO_1",
+      photo: "/images/HumansVsOgres1.webp",
+      issues: [
+        { id: 1, name: "Humans vs Ogres Issue #1" },
+        { id: 2, name: "Humans vs Ogres Issue #2" },
+      ],
       quantity: 0,
     },
     {
-      id: 2,
-      name: "HvO ISSUE #1",
-      nameComic: "Humans vs Ogres",
-      photo: "/images/HumansVsOgres1.webp",
+      id: 1,
+      name: "HvsO ISSUES #2",
+      nameComic: "Humans vs Ogres Issue #1",
+      nameLink: "HvsO_2",
+      photo: "/images/HvOIssue_2.webp",
+      issues: [
+        { id: 1, name: "Humans vs Ogres Issue #1" },
+        { id: 2, name: "Humans vs Ogres Issue #2" },
+      ],
       quantity: 0,
     },
     { name: "", photo: "" },
@@ -55,42 +71,47 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
   const [nftModal, setNftModal] = React.useState({
     id: 0,
     balance: 0,
-    nameComic: "",
+    nameLink: "",
+    issues: [],
   });
 
   const router = useRouter();
 
   const dispatch = useDispatch();
 
+  const { ethAddress: account } = useSelector(
+    (state: any) => state.layout.user,
+  );
+
   const { Modal, isShow, show, hide } = useModal();
 
-  const { cartComics } = useSelector((state: any) => state.layout);
-
-  const [isAtLeast1078px] = useMediaQuery("(min-width: 840px)");
-
   const onClickItem = (item: any, id) => {
-    let valid = false;
-    balance.forEach((balance: { balance: number; id: any }) => {
-      if (balance.balance > 0 && balance.id === item.id) {
-        valid = true;
+    if (account) {
+      let valid = false;
+      balance.forEach((balance: { balance: number; id: any }) => {
+        if (balance.balance > 0 && balance.id === item.id) {
+          valid = true;
+        }
+      });
+      if (valid) {
+        setNftModal({
+          ...item,
+          priceUSD: priceUSD,
+          quantity: 1,
+          balance: 1,
+        });
+      } else {
+        setNftModal({
+          ...item,
+          priceUSD: priceUSD,
+          quantity: issues[id].quantity,
+          balance: 0,
+        });
       }
-    });
-    if (valid) {
-      setNftModal({
-        ...item,
-        priceUSD: priceUSD,
-        quantity: 1,
-        balance: 1,
-      });
+      show();
     } else {
-      setNftModal({
-        ...item,
-        priceUSD: priceUSD,
-        quantity: issues[id].quantity,
-        balance: 0,
-      });
+      router.push("/login?redirect=true&redirectAddress=/comics");
     }
-    show();
   };
 
   return (
@@ -132,15 +153,14 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
               enjoy free global shipping and receive a physical printed copy
               delivered right to your doorstep!
             </p>
-            {/* <p className="text-green-button text-xl font-black pt-1">
-              445/500 Left!
-            </p> */}
             {nftModal.balance > 0 ? (
               <Button
                 decoration="greenLine"
                 className="px-8 py-3 mb-2 rounded-full text-white relative border-none flex items-center justify-center w-full"
                 onClick={() => {
-                  router.push("/comics/" + nftModal.nameComic);
+                  router.push(
+                    `/comics/${nftModal.nameLink}/${nftModal.issues[0].id}`,
+                  );
                 }}
               >
                 <img
@@ -157,7 +177,17 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
                 decoration="greenLine"
                 className="px-8 py-3 mb-2 rounded-full text-white relative border-none flex items-center justify-center w-full"
                 onClick={() => {
-                  dispatch(addCartComics({ ...nftModal, quantity: 1 }));
+                  nftModal.issues.forEach((issue) => {
+                    dispatch(
+                      addCartComics({
+                        ...nftModal,
+                        name: issue.name,
+                        idNFT: issue.id,
+                        priceUSD: priceUSD,
+                        quantity: 1,
+                      }),
+                    );
+                  });
                   getPriceMatic();
                   showCart();
                 }}
@@ -175,103 +205,38 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
           </div>
         </div>
       </Modal>
-      {isAtLeast1078px ? (
-        <>
-          {/* <ComicSeriesSlider /> */}
 
-          <Flex mt={20} mb={20} justifyContent={"center"}>
-            <Text
-              fontSize={["30px", "50px", "65px", "4xl"]}
-              ml={3}
-              color="#FFFFFF"
-              fontWeight="500"
-            >
-              RECENTLY ADDED
-            </Text>
-          </Flex>
-          <Slider {...settings}>
-            {issues.map((i: any, id) => {
-              return (
-                i.name && (
-                  <SliderItem
-                    issues={issues}
-                    id={id}
-                    i={i}
-                    priceUSD={priceUSD}
-                    onClickItem={onClickItem}
-                    setIssues={setIssues}
-                  />
-                )
-              );
-            })}
-          </Slider>
-          <MyComics balance={balance} />
-        </>
-      ) : (
-        <MobileView
-          issues={issues}
-          priceUSD={priceUSD}
-          onClickItem={onClickItem}
-          setIssues={setIssues}
-        />
-      )}
-    </div>
-  );
-}
-export default RecentlyAddedComic;
-
-function MobileView({ priceUSD, onClickItem, setIssues, issues }) {
-  const settings = {
-    infinite: true,
-    slidesToShow: 2,
-    arrows: false,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    responsive: [
-      {
-        breakpoint: 450,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
-
-  return (
-    <div className="">
-      <Flex mt={10} mb={10} justifyContent={"center"}>
+      <Flex mt={20} mb={20} justifyContent={"center"}>
         <Text
-          fontSize={["lg", "xl", "3xl", "4xl"]}
+          fontSize={["30px", "50px", "65px", "4xl"]}
           ml={3}
           color="#FFFFFF"
           fontWeight="500"
-          className="recently-heading"
         >
           RECENTLY ADDED
         </Text>
       </Flex>
-      <div className="added-comic-slider">
-        <Slider {...settings}>
-          {issues.map((i: any, id) => {
-            return (
-              i.name && (
-                <SliderItemMobile
-                  issues={issues}
-                  id={id}
-                  i={i}
-                  priceUSD={priceUSD}
-                  onClickItem={onClickItem}
-                  setIssues={setIssues}
-                />
-              )
-            );
-          })}
-        </Slider>
-      </div>
-      <ComicSeriesSlider />
+      <Slider {...settings}>
+        {issues.map((i: any, id) => {
+          return (
+            i.name && (
+              <SliderItem
+                issues={issues}
+                id={id}
+                i={i}
+                priceUSD={priceUSD}
+                onClickItem={onClickItem}
+                setIssues={setIssues}
+              />
+            )
+          );
+        })}
+      </Slider>
+      <MyComics balance={balance} />
     </div>
   );
 }
+export default RecentlyAddedComic;
 
 const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
   const { addToast } = useToasts();
@@ -292,7 +257,7 @@ const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
 
   return (
     <Flex className="relative flex flex-col items-center justify-center">
-      <Flex className="box-shadow relative w-auto">
+      <Flex className="box-shadow relative w-auto flex items-center justify-center">
         <div
           onMouseOver={() =>
             setHoverBuy((prev) => {
@@ -322,7 +287,7 @@ const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
           }
           style={{ zIndex: 1000 }}
           className={clsx(
-            "rounded-full p-2 flex w-10 h-10 items-center justify-center border-overlay-border border cursor-pointer absolute top-4 right-10",
+            "rounded-full p-2 flex w-10 h-10 items-center justify-center border-overlay-border border cursor-pointer absolute top-4 right-6",
             {
               "gap-1 w-20 px-3 text-center": hoverBuy[id],
             },
@@ -393,13 +358,18 @@ const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
                   e.preventDefault();
                   if (account) {
                     if (issues[id].quantity > 0) {
-                      dispatch(
-                        addCartComics({
-                          ...i,
-                          priceUSD: priceUSD,
-                          quantity: issues[id].quantity,
-                        }),
-                      );
+                      issues[id].issues.forEach((issue) => {
+                        dispatch(
+                          addCartComics({
+                            ...i,
+                            name: issue.name,
+                            idNFT: issue.id,
+                            priceUSD: priceUSD,
+                            quantity: issues[id].quantity,
+                          }),
+                        );
+                      });
+
                       toast.success("Your items has been added successfully");
                     } else {
                       toast.error(
@@ -425,154 +395,6 @@ const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
                   },
                   "p-0 bg-transparent",
                 )}
-                withoutX
-                onClick={(e) => e.preventDefault()}
-                min={1}
-                defaultValue={issues[id].quantity}
-                value={issues[id].quantity}
-                onChange={(e) => {
-                  if (parseInt(e.target.value) > parseInt(i.amount)) {
-                    addToast(
-                      "Your amount exceeds the amount of NFTs of the sale",
-                      { appearance: "error" },
-                    );
-                  } else {
-                    setIssues((prev) => {
-                      const array = [];
-                      prev.forEach((a, idPrev) => {
-                        array.push({
-                          ...a,
-                          quantity:
-                            id === idPrev
-                              ? parseInt(e.target.value)
-                              : a.quantity,
-                        });
-                      });
-                      return array;
-                    });
-                  }
-                }}
-              ></Input>
-            </>
-          )}
-        </div>
-        <Image
-          className="images-width cursor-pointer shade-on-hover relative"
-          fontWeight="500"
-          ml={2}
-          mt={2}
-          mr={2}
-          src={i.photo}
-          onClick={() => onClickItem(i, id)}
-        ></Image>
-      </Flex>
-      <Text className="endersgate-issues-text" color="#FFFFFF">
-        {i.name}
-      </Text>
-    </Flex>
-  );
-};
-
-const SliderItemMobile = ({
-  priceUSD,
-  onClickItem,
-  id,
-  i,
-  setIssues,
-  issues,
-}) => {
-  const { addToast } = useToasts();
-
-  const { register } = useForm();
-
-  const router = useRouter();
-
-  const dispatch = useDispatch();
-
-  const { ethAddress: account } = useSelector(
-    (state: any) => state.layout.user,
-  );
-
-  const { cartComics } = useSelector((state: any) => state.layout);
-
-  return (
-    <Flex className="relative flex flex-col items-center justify-center">
-      <Flex className="box-shadow relative w-auto">
-        <div
-          style={{ zIndex: 1000 }}
-          className={clsx(
-            "rounded-full p-2 flex h-10 items-center justify-center border-overlay-border border cursor-pointer absolute top-4 right-14 gap-1 w-20 px-3 text-center",
-
-            {
-              "hover:bg-red-500 bg-green-button hover:transition-all transition-all duration-500 hover:duration-500 !w-10":
-                cartComics.filter((e) => e.name === i.name).length > 0,
-            },
-            {
-              "bg-overlay hover:bg-overlay-2 hover:transition-all transition-all duration-500 hover:duration-500":
-                cartComics.filter((e) => e.name === i.name).length === 0,
-            },
-          )}
-          onClick={(e) => {
-            e.preventDefault();
-          }}
-        >
-          {cartComics.filter((e) => e.name === i.name).length > 0 ? (
-            <XIcon
-              className="!w-6 text-white"
-              onClick={(e) => {
-                e.preventDefault();
-                if (cartComics.filter((e) => e.name === i.name).length > 0) {
-                  dispatch(
-                    removeFromCartComics({
-                      id: i.id,
-                    }),
-                  );
-                } else {
-                  dispatch(
-                    addCartComics({
-                      ...i,
-                      priceUSD: priceUSD,
-                      quantity: issues[id].quantity,
-                    }),
-                  );
-                }
-              }}
-            />
-          ) : (
-            <>
-              <PlusIcon
-                className="shrink-0 w-6 text-white"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (account) {
-                    if (issues[id].quantity > 0) {
-                      dispatch(
-                        addCartComics({
-                          ...i,
-                          priceUSD: priceUSD,
-                          quantity: issues[id].quantity,
-                        }),
-                      );
-                      toast.success("Your items has been added successfully");
-                    } else {
-                      toast.error(
-                        "You can't add 0 items to the cart, please try again with a different quantity",
-                      );
-                    }
-                  } else {
-                    router.push("/login?redirect=true&redirectAddress=/comics");
-                  }
-                }}
-              />
-
-              <Input
-                type="number"
-                name="quantity"
-                register={register}
-                classNameContainer={clsx(
-                  "border-none outline-none bg-transparent text-white w-10 text-sm p-0",
-                )}
-                className={clsx("p-0 bg-transparent")}
                 withoutX
                 onClick={(e) => e.preventDefault()}
                 min={1}

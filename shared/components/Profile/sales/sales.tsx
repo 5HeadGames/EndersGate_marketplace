@@ -9,56 +9,76 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import Styles from "./styles.module.scss";
 import packs from "../../../packs.json";
-import { getAddresses } from "@shared/web3";
+import { getAddresses, getAddressesMatic, switchChain } from "@shared/web3";
 
 import { useModal } from "@shared/hooks/modal";
 import { onCancelSale, onLoadSales, onGetAssets } from "@redux/actions";
 import { convertArrayCards } from "@shared/components/common/convertCards";
-import useMagicLink from "@shared/hooks/useMagicLink";
 import { useWeb3React } from "@web3-react/core";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { formatPrice } from "@shared/utils/formatPrice";
+import { toast } from "react-hot-toast";
+import { LoadingOutlined } from "@ant-design/icons";
+import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 
 const Sales = () => {
   const nfts = useAppSelector((state) => state.nfts);
   const { account: user, provider } = useWeb3React();
 
-  const [cancelId, setCancelId] = React.useState({ id: -1, pack: false });
+  const [cancel, setCancel] = React.useState({ id: -1, blockchain: "" });
   const { Modal, show, hide, isShow } = useModal();
   const dispatch = useAppDispatch();
 
-  const cards = convertArrayCards();
-
   const [sales, setSales] = React.useState([]);
-  const { pack: packsAddress, endersGate } = getAddresses();
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const { blockchain, updateBlockchain } = useBlockchain();
 
   const cancelSale = async () => {
-    await dispatch(
-      onCancelSale({
-        tokenId: cancelId.id,
-        provider: provider.provider,
-        user: user,
-        nftContract: cancelId.pack ? packsAddress : endersGate,
-      }),
-    );
-    dispatch(onLoadSales());
-    dispatch(onGetAssets(user));
+    try {
+      setIsLoading(true);
+      const changed = await switchChain(CHAIN_IDS_BY_NAME[cancel.blockchain]);
+      if (!changed) {
+        throw new Error(
+          "An error occurred while changing the network, please try again.",
+        );
+      }
+      updateBlockchain(cancel.blockchain);
+      const tx = await dispatch(
+        onCancelSale({
+          tokenId: cancel.id,
+          provider: provider.provider,
+          user: user,
+          blockchain: cancel.blockchain,
+        }),
+      );
+      if ((tx as any).error) {
+        throw Error(
+          "An error has occurred while cancelling the sale, please try again",
+        );
+      }
+      dispatch(onLoadSales());
+      dispatch(onGetAssets({ address: user, blockchain }));
+      toast.success("Your sale has been canceled successfully");
+    } catch (err) {
+      toast.error(err.message);
+    }
+    setIsLoading(false);
+
     hide();
   };
 
   React.useEffect(() => {
     const arrayPacks = [];
-    console.log(nfts.saleCreated);
     nfts.saleCreated.forEach((sale, index) => {
-      console.log(sale.seller === user, sale.seller, user);
       if (sale.seller.toLowerCase() === user.toLowerCase()) {
         if (sale.status !== 3) {
           arrayPacks.push(sale);
         }
       }
     });
-    console.log(arrayPacks);
-
     setSales(arrayPacks);
-  }, [nfts, user]);
+  }, [nfts.saleCreated, user]);
 
   return (
     <div className="flex flex-col w-full min-h-screen gap-4 md:px-20 px-8">
@@ -75,28 +95,35 @@ const Sales = () => {
           >
             Do you want to delete this sale?
           </Typography>
-          <div className="flex justify-center items-center gap-4">
-            <Button
-              decoration="line-white"
-              className="hover:text-overlay text-white rounded-xl"
-              size="small"
-              onClick={() => {
-                hide();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              // decoration="fill"
-              size="small"
-              className="hover:text-red-primary !hover:border-red-primary text-overlay bg-red-primary rounded-xl"
-              onClick={() => {
-                cancelSale();
-              }}
-            >
-              Confirm
-            </Button>
-          </div>
+          {isLoading ? (
+            <div className="flex justify-center items-center">
+              {" "}
+              <LoadingOutlined className="text-4xl text-white" />{" "}
+            </div>
+          ) : (
+            <div className="flex justify-center items-center gap-4">
+              <Button
+                decoration="line-white"
+                className="hover:text-overlay !font-bold text-white rounded-xl"
+                size="small"
+                onClick={() => {
+                  hide();
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                // decoration="fill"
+                size="small"
+                className="hover:text-red-primary !font-bold !hover:border-red-primary text-overlay bg-red-primary rounded-xl"
+                onClick={() => {
+                  cancelSale();
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
+          )}
         </div>
       </Modal>
       <div
@@ -125,6 +152,7 @@ const Sales = () => {
               </thead>
               <tbody>
                 {sales.map((sale, i) => {
+                  const { pack: packsAddress } = getAddresses(sale.blockchain);
                   const pack = sale.nft == packsAddress;
                   return (
                     <tr
@@ -134,98 +162,9 @@ const Sales = () => {
                       })}
                     >
                       {sale && (
-                        <>
-                          <td className="py-4 px-4">
-                            <div className="flex flex-col items-center gap-y-2 w-full">
-                              <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
-                                <img
-                                  src={
-                                    pack
-                                      ? packs[sale.nftId]?.properties?.image
-                                          ?.value
-                                      : cards[sale.nftId]?.properties.image
-                                          ?.value
-                                  }
-                                  className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
-                                  alt=""
-                                />
-                              </div>
-                              <div className="flex flex-col items-center gap-4">
-                                <h2 className="text-primary-disabled text-xl font-bold">
-                                  {pack
-                                    ? packs[sale.nftId]?.properties?.name?.value
-                                    : cards[sale.nftId]?.properties.name?.value}
-                                </h2>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <div className="flex flex-col items-center">
-                              <h2 className="text-white text-lg font-bold">
-                                #{sale.id}
-                              </h2>
-                            </div>
-                          </td>
-                          {/* <td className="py-4 px-4">
-                            <div className="flex flex-col items-center">
-                              <h2 className="text-white text-lg font-bold">
-                                {cards[sale.nftId]?.properties.role?.value
-                                  ? cards[sale.nftId]?.properties.role?.value
-                                  : cards[sale.nftId]?.properties.isGuardian
-                                      ?.value
-                                  ? "Guardian"
-                                  : ""}
-                              </h2>
-                            </div>
-                          </td> */}
-                          <td className="py-4 px-4">
-                            <div className="flex flex-col items-center pr-2">
-                              <h2 className="text-white text-lg font-bold">
-                                {parseInt(sale.price) / 10 ** 6} USD
-                              </h2>
-                            </div>
-                          </td>
-
-                          <td className="py-4 px-4">
-                            <div className="flex flex-col items-center just">
-                              <h2 className="text-white text-lg font-bold">
-                                {sale.amount}
-                              </h2>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <div className="flex flex-col items-center just">
-                              <Button
-                                decoration="line-white"
-                                className="text-white hover:text-overlay rounded-xl"
-                                size="small"
-                                onClick={() => {
-                                  setCancelId({
-                                    id: sale.id,
-                                    pack: sale.nft === pack,
-                                  });
-                                  show();
-                                }}
-                              >
-                                Cancel
-                              </Button>
-                            </div>
-                          </td>
-
-                          <td className="py-4">
-                            <Link href={`/NFTDetailSale/${sale.id}`}>
-                              <div className="flex flex-col items-center just">
-                                <Button
-                                  decoration="fill"
-                                  className="text-overlay hover:text-white rounded-xl"
-                                  size="small"
-                                >
-                                  Go to Sale
-                                </Button>
-                              </div>
-                            </Link>
-                          </td>
-                        </>
+                        <Sale
+                          {...{ sale, pack, setCancelId: setCancel, show }}
+                        />
                       )}
                     </tr>
                   );
@@ -250,3 +189,85 @@ const Sales = () => {
 };
 
 export default Sales;
+
+const Sale = ({ sale, pack, setCancelId, show }) => {
+  const cards = convertArrayCards();
+
+  return (
+    <>
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center gap-y-2 w-full">
+          <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
+            <img
+              src={
+                pack
+                  ? packs[sale.nftId]?.properties?.image?.value
+                  : cards[sale.nftId]?.properties.image?.value
+              }
+              className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
+              alt=""
+            />
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <h2 className="text-primary-disabled text-xl font-bold">
+              {pack
+                ? packs[sale.nftId]?.properties?.name?.value
+                : cards[sale.nftId]?.properties.name?.value}
+            </h2>
+          </div>
+        </div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center">
+          <h2 className="text-white text-lg font-bold">#{sale.id}</h2>
+        </div>
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center pr-2">
+          <h2 className="text-white text-lg font-bold">
+            {formatPrice(sale.price, sale.blockchain)}
+          </h2>
+        </div>
+      </td>
+
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center just">
+          <h2 className="text-white text-lg font-bold">{sale.amount}</h2>
+        </div>
+      </td>
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center just">
+          <Button
+            decoration="line-white"
+            className="text-white hover:text-overlay rounded-xl"
+            size="small"
+            onClick={() => {
+              setCancelId({
+                id: sale.saleId,
+                blockchain: sale.blockchain,
+              });
+              show();
+            }}
+          >
+            Cancel
+          </Button>
+        </div>
+      </td>
+
+      <td className="py-4 pr-4">
+        <Link href={`/sale/${sale.id}`}>
+          <div className="flex flex-col items-center just">
+            <Button
+              decoration="fill"
+              className="!text-overlay hover:!text-white rounded-xl"
+              size="small"
+            >
+              Go to Sale
+            </Button>
+          </div>
+        </Link>
+      </td>
+    </>
+  );
+};

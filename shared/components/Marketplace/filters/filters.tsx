@@ -1,16 +1,6 @@
-import { Typography } from "@shared/components/common/typography";
+/* eslint-disable no-useless-computed-key */
 import React from "react";
 import clsx from "clsx";
-import {
-  HeartOutlined,
-  HeartFilled,
-  DownOutlined,
-  UpOutlined,
-} from "@ant-design/icons";
-import { CollapseMenu } from "@shared/components/common/collapseMenu/collapseMenu";
-import { SlideButton } from "@shared/components/common/slideButton/slideButton";
-import { InputNumber } from "antd";
-import { Input } from "@shared/components/common/form/input";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
 
 const FiltersBoard = ({
@@ -18,6 +8,8 @@ const FiltersBoard = ({
   setFilters,
   setCardType,
   cardType,
+  // listingType,
+  // setListingType,
   type,
   setType,
   setPage,
@@ -25,12 +17,9 @@ const FiltersBoard = ({
 }) => {
   const handleAvatarChange = (checked, value) => {
     if (checked) {
-      setFilters({ ...filters, avatar: [...filters.avatar, value] });
+      setFilters({ ...filters, avatar: [value] });
     } else {
-      let arr = [...filters.avatar];
-      const index = arr.findIndex((item) => item === value);
-      arr.splice(index, 1);
-      setFilters({ ...filters, avatar: arr });
+      setFilters({ ...filters, avatar: [] });
     }
   };
 
@@ -362,32 +351,6 @@ const FiltersBoard = ({
         },
       ],
     },
-    // {
-    //   title: "Limited Edition",
-    //   onClick: () => handleChange("limited_edition"),
-    //   slideButton: true,
-    //   value: "limited_edition",
-    // },
-    // {
-    //   title: "Stats",
-    //   subItems: [
-    //     {
-    //       title: "Attack",
-    //       onClick: () => handleChange("attack"),
-    //       value: "attack",
-    //     },
-    //     {
-    //       title: "Damage",
-    //       onClick: () => handleChange("damage_stats"),
-    //       value: "damage_stats",
-    //     },
-    //     {
-    //       title: "Mages",
-    //       onClick: () => handleChange("mages_stats"),
-    //       value: "mages_stats",
-    //     },
-    //   ],
-    // },
   ];
 
   const ResetAvatars = () => {
@@ -419,10 +382,6 @@ const FiltersBoard = ({
       };
     });
   };
-
-  React.useEffect(() => {
-    console.log(filters, "filters");
-  }, [filters]);
 
   const [priceCollapsed, setPriceCollapsed] = React.useState(true);
 
@@ -484,6 +443,48 @@ const FiltersBoard = ({
               </div>
             </div>
           </div>
+          {/* <div className="flex flex-col gap-2 lg:w-full w-48">
+            <h2 className="text-lg font-bold text-white lg:text-left text-center">
+              Listing Type
+            </h2>
+            <div className="flex flex-col gap-1 w-full">
+              {[
+                { text: "Sale", value: "sale" },
+                { text: "Rent", value: "rent" },
+              ].map((item, index) => (
+                <div
+                  onClick={() => {
+                    setListingType(item.value);
+                  }}
+                  className={clsx(
+                    "flex items-center justify-between  w-full  cursor-pointer",
+                    "rounded-md",
+                    "text-white text-[15px]",
+                  )}
+                >
+                  <p
+                    className={clsx(
+                      {
+                        "text-gray-300": item.value !== listingType,
+                      },
+                      {
+                        "text-white": listingType === item.value,
+                      },
+                    )}
+                  >
+                    {item.text}
+                  </p>
+                  <div
+                    className={clsx(
+                      { ["bg-primary"]: listingType === item.value },
+                      { ["bg-gray-800"]: listingType !== item.value },
+                      "rounded-full w-6 h-6 border border-gray-800",
+                    )}
+                  ></div>
+                </div>
+              ))}
+            </div>
+          </div> */}
           <div className="flex flex-col gap-2 lg:w-full w-48">
             <h2 className="text-lg font-bold text-white lg:text-left text-center">
               NFT Type
@@ -539,9 +540,11 @@ const FiltersBoard = ({
                     if (item.value !== cardType) {
                       setType("trading_cards");
                       setCardType(item.value);
+                      handleAvatarChange(true, item.value);
                     } else {
                       setCardType("all");
                       setType("");
+                      handleAvatarChange(false, item.value);
                     }
                     ResetGuardians();
                     ResetPacks();

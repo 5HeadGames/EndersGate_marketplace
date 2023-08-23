@@ -20,6 +20,7 @@ interface InitialState {
   cart: any[];
   cartComics: any[];
   cartShop: any[];
+  cartRent: any[];
 }
 
 const INITIAL_STATE: InitialState = {
@@ -38,6 +39,7 @@ const INITIAL_STATE: InitialState = {
   provider: undefined,
   tokenToPay: "",
   cart: [],
+  cartRent: [],
   cartComics: [],
   cartShop: [],
 };
@@ -104,5 +106,22 @@ export const layoutReducer = createReducer(INITIAL_STATE, (builder) => {
     )
     .addCase(actions.removeAllShop, (state: typeof INITIAL_STATE) => {
       state.cartShop = [];
+    })
+    .addCase(actions.addCartRent, (state: typeof INITIAL_STATE, action) => {
+      state.cartRent.push(action.payload);
+    })
+    .addCase(actions.editCartRent, (state: typeof INITIAL_STATE, action) => {
+      state.cartRent[action.payload.id] = action.payload.item;
+    })
+    .addCase(
+      actions.removeFromCartRent,
+      (state: typeof INITIAL_STATE, action) => {
+        state.cartRent = state.cartRent.filter(
+          (item) => item.id !== action.payload.id,
+        );
+      },
+    )
+    .addCase(actions.removeAllRent, (state: typeof INITIAL_STATE) => {
+      state.cartRent = [];
     });
 });

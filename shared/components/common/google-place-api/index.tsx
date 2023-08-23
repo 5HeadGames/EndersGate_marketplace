@@ -48,7 +48,6 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
 
   const onLoadGooglePlaces = () => {
     const input = document.getElementById("pac-input") as HTMLInputElement;
-    console.log(input, "INPUT");
     const options = {
       componentRestrictions: { country: restrictionsCountries || [] },
       fields: [
@@ -81,6 +80,21 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
       clearErrors("address");
 
       setValue("address", place.formatted_address);
+
+      place.address_components.forEach((item) => {
+        if (item.types.includes("locality")) {
+          setValue("city", item.long_name);
+        }
+        if (item.types.includes("country")) {
+          setValue("country", item.long_name);
+        }
+        if (item.types.includes("postal_code")) {
+          setValue("zip", item.long_name);
+        }
+        if (item.types.includes("sublocality")) {
+          setValue("zone", item.long_name);
+        }
+      });
     });
   };
 
@@ -111,7 +125,6 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
         src={URL_GOOGLE_API}
         async
         onLoad={() => {
-          console.log("loaded");
           setOnLoadGooglePlaceAPI(true);
         }}
       />
@@ -127,6 +140,66 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
         error={errors}
         className={className}
       />
+      <InputModal
+        register={register}
+        name="country"
+        id="pac-input"
+        placeholder="Country"
+        labelVisible
+        title="Country"
+        rules={rules}
+        error={errors}
+        className={className}
+      />
+      <div className="flex gap-2 w-full">
+        <InputModal
+          register={register}
+          name="city"
+          id="pac-input"
+          placeholder="City"
+          labelVisible
+          title="City"
+          rules={rules}
+          error={errors}
+          className={className}
+        />
+        <InputModal
+          register={register}
+          name="zip"
+          id="pac-input"
+          placeholder="Zip Code"
+          labelVisible
+          title="Zip Code"
+          rules={rules}
+          error={errors}
+          className={className}
+        />
+      </div>
+
+      <div className="flex gap-2 w-full">
+        <InputModal
+          register={register}
+          name="zone"
+          id="pac-input"
+          placeholder="Zone"
+          labelVisible
+          title="Zone"
+          rules={rules}
+          error={errors}
+          className={className}
+        />
+        <InputModal
+          register={register}
+          name="house"
+          id="pac-input"
+          placeholder="Number of Apartment/House"
+          labelVisible
+          title="N⁰ House"
+          rules={rules}
+          error={errors}
+          className={className}
+        />
+      </div>
     </>
   );
 };

@@ -1,13 +1,13 @@
 import React from "react";
 import Inventory from "@shared/components/Profile/inventory/inventory";
 
-import ProfileIndexPage from "@shared/components/Profile/index";
+import ProfileLayout from "@shared/components/Profile/layout";
 
 const ProfileInventory = () => {
   return (
-    <ProfileIndexPage>
+    <ProfileLayout>
       <Inventory />
-    </ProfileIndexPage>
+    </ProfileLayout>
   );
 };
 

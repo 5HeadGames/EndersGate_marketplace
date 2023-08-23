@@ -15,11 +15,8 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
     formState: { isValid, errors },
     setValue,
     setError,
-    watch,
     clearErrors,
   } = useForm();
-
-  console.log(errors, "errors");
 
   const handleSubmitModal = (data: any) => {
     setIsLoading(true);
@@ -35,7 +32,7 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
     <Modal isShow={isShow} noClose={noClose} withoutX>
       <div
         style={{ width: "90vw", maxWidth: "500px" }}
-        className="relative bg-overlay flex flex-col items-center gap-4 jusify-center shadow-2xl rounded-2xl mt-16"
+        className="relative bg-overlay flex flex-col items-center gap-4 jusify-center shadow-2xl rounded-2xl mt-36"
       >
         <Image
           src="/images/comicsbg.png"
@@ -66,15 +63,12 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
           className="flex flex-col items-center justify-center relative rounded-full px-4 pb-8 gap-2"
           onSubmit={handleSubmit(handleSubmitModal)}
         >
-          <h2 className="text-white text-center font-bold text-2xl text-red-alert">
-            Waitlist for <br /> issues #1 & #2 of Humans VS Ogres
+          <h2 className="text-white text-center font-bold text-3xl text-red-alert">
+            Enter your shipping address
           </h2>{" "}
-          <p className="text-center text-white text-sm py-4">
-            To ensure a fair distribution process, we have created this Form for
-            you to request access to the whitelist. Please fill out the form
-            below with accurate information:
+          <p className="text-center text-white text-md py-4">
+            Where do you want us to ship your physical comics to?
           </p>
-          <p className="text-green-button font-bold text-lg">SIGN UP BELOW!</p>
           <div className="flex flex-col items-center justify-center gap-5 w-full">
             <InputModal
               type="text"

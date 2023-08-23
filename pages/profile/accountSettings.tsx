@@ -1,12 +1,12 @@
 import React from "react";
 import AccountSettingsComponent from "@shared/components/Profile/accountSettings/accountSettings";
-import ProfileIndexPage from "@shared/components/Profile/index";
+import ProfileLayout from "@shared/components/Profile/layout";
 
 const ProfileSettings = () => {
   return (
-    <ProfileIndexPage>
+    <ProfileLayout>
       <AccountSettingsComponent />
-    </ProfileIndexPage>
+    </ProfileLayout>
   );
 };
 

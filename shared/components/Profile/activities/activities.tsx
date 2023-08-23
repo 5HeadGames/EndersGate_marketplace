@@ -4,9 +4,9 @@ import clsx from "clsx";
 import React from "react";
 // import { useMoralis } from "react-moralis";
 import Styles from "./styles.module.scss";
-import { Activity } from "../index/index";
+import { Activity } from "../layout/index";
 import { useWeb3React } from "@web3-react/core";
-import { getAddresses } from "@shared/web3";
+import { getAddressesMatic } from "@shared/web3";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 const navItems = [
@@ -20,7 +20,7 @@ const Activities = () => {
   const [activities, setActivities] = React.useState<Activity[]>([]);
   const [page, setPage] = React.useState(0);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
-  const { pack } = getAddresses();
+  const { pack } = getAddressesMatic();
 
   const loadEvents = async () => {
     // // const relation = user.relation("events");
@@ -46,10 +46,6 @@ const Activities = () => {
       loadEvents();
     }
   }, [user]);
-
-  React.useEffect(() => {
-    console.log("act", activities);
-  }, [activities]);
 
   return (
     <div className="flex flex-col items-center w-full">

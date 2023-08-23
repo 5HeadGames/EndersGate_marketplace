@@ -56,10 +56,10 @@ export const SliderMain = ({ salesDefault, cards }) => {
         <>
           <div className="absolute bottom-0 left-0 w-full">
             <div className="flex gap-4 items-end justify-between overflow-hidden relative w-full h-[200px] bg-transparent">
-              {arraySlider.map((a, id) => {
+              {arraySlider.map((sale, id) => {
                 return (
                   <ItemCardSlider
-                    a={a}
+                    sale={sale}
                     arrayPos={arrayPos}
                     setArrayPos={setArrayPos}
                     resetTimeout={resetTimeout}
@@ -85,6 +85,7 @@ export const SliderMain = ({ salesDefault, cards }) => {
               }
               byId={false}
               price={arraySlider[arrayPos[3]]?.price}
+              blockchain={arraySlider[arrayPos[3]]?.blockchain}
             />
           </div>
         </>
@@ -103,7 +104,7 @@ const ItemCardSlider = ({
   setArrayPos,
   resetTimeout,
   cards,
-  a,
+  sale,
 }) => {
   const [hover, setHover] = React.useState(false);
   return (
@@ -145,7 +146,7 @@ const ItemCardSlider = ({
           alt=""
         />
         <img
-          src={cards[a.nftId].properties.image.value}
+          src={cards[sale.nftId].properties.image.value}
           className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
           alt=""
         />
