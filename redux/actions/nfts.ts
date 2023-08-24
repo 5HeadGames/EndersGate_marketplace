@@ -100,6 +100,7 @@ export const onLoadSales = createAsyncThunk(
       rentsListed = [],
       rentsInRent = [],
       allRents = [],
+      rentsFinished = [],
       dailyVolume = 0,
       cardsSold = 0;
     try {
@@ -198,12 +199,20 @@ export const onLoadSales = createAsyncThunk(
         (sale: Sale) => sale.status === "1",
       );
 
+      const rentFinishedPartial = allRentsSorted?.filter(
+        (sale: Sale) => sale.status === "2",
+      );
+
       rentCreatedPartial.forEach((rent: Sale) => {
         rentsListed = [...rentsListed, rent];
       });
 
       rentInRentPartial.forEach((rent: Sale) => {
         rentsInRent = [...rentsInRent, rent];
+      });
+
+      rentFinishedPartial.forEach((rent: Sale) => {
+        rentsFinished = [...rentsFinished, rent];
       });
 
       const listsCreatedPartial = allSalesSorted
@@ -240,8 +249,6 @@ export const onLoadSales = createAsyncThunk(
         cardsSoldPartial.toString(),
       ) as any;
 
-      console.log({ allRentsSorted, rentsListed, rentsInRent });
-
       return {
         allSales: allSalesSorted,
         saleCreated: listsCreated,
@@ -249,6 +256,7 @@ export const onLoadSales = createAsyncThunk(
         allRents: allRentsSorted,
         rentsListed,
         rentsInRent,
+        rentsFinished,
         totalSales: listsCreated.length,
         dailyVolume: dailyVolume.toString(),
         cardsSold: cardsSold.toString(),
@@ -960,5 +968,20 @@ export const cancelRent = createAsyncThunk(
     const { rent } = getAddresses(blockchain);
     const rentContract = getContractCustom("Rent", rent, provider);
     return rentContract.methods.cancelRent(tokenId).send({ from: user });
+  },
+);
+
+export const redeemRent = createAsyncThunk(
+  actionTypes.REDEEM_RENT_NFT,
+  async function prepare(args: {
+    tokenId: number | string;
+    provider: any;
+    user: any;
+    blockchain: any;
+  }) {
+    const { tokenId, provider, user, blockchain } = args;
+    const { rent } = getAddresses(blockchain);
+    const rentContract = getContractCustom("Rent", rent, provider);
+    return rentContract.methods.redeemRent(tokenId).send({ from: user });
   },
 );

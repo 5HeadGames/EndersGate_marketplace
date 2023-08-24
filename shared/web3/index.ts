@@ -1,7 +1,6 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import contracts from "shared/contracts";
-import { useBlockchain } from "@shared/context/useBlockchain";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 import {
   onLoadSales,
@@ -10,7 +9,6 @@ import {
   removeAll,
 } from "@redux/actions";
 import { findSum } from "@shared/components/common/specialFields/SpecialFields";
-// import Moralis from "moralis";
 
 export const loginMetamaskWallet = async () => {
   const provider = await (window as any).ethereum;
@@ -351,5 +349,18 @@ export const isPack = (address: string) => {
   return (
     address === getAddressesMatic().pack ||
     address === getAddressesFindora().pack
+  );
+};
+
+export const getRentsPendingByUser = ({ user, rents }) => {
+  return rents.filter((rent) => {
+    return !getRentAvailable(rent) && rent.status === "1";
+  });
+};
+
+export const getRentAvailable = (rent) => {
+  return (
+    (parseInt(rent.duration) + parseInt(rent.startedAt)) * 1000 >=
+    Number(new Date())
   );
 };

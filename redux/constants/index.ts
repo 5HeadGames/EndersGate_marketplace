@@ -44,6 +44,7 @@ export const RENT_NFT = "rent_nft";
 export const RENT_BATCH_NFT = "rent_batch_nft";
 export const LIST_NFT = "list_nft";
 export const CANCEL_RENT_NFT = "cancel_rent_nft";
+export const REDEEM_RENT_NFT = "redeem_rent_nft";
 
 export const BUY_NFT_FINDORA = "buy_nft_findora";
 export const SELL_NFT_FINDORA = "sell_nft_findora";
