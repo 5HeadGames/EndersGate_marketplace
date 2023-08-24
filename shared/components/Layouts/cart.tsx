@@ -207,7 +207,7 @@ export const Cart = ({
       items={cart.length}
       setSideBar={setCartOpen}
     >
-      {/* <div className="w-full py-2 flex gap-4 justify-center">
+      <div className="w-full py-2 flex gap-4 justify-center">
         <div
           onClick={() => setCartSelected("rents")}
           className={clsx(
@@ -226,7 +226,7 @@ export const Cart = ({
         >
           Sales
         </div>
-      </div> */}
+      </div>
       {cart.length ? (
         <div className="flex flex-col items-center border border-overlay-border rounded-md md:min-w-[500px] md:w-max py-2">
           <div className="flex justify-between gap-4 w-full">

@@ -37,7 +37,7 @@ import { toast } from "react-hot-toast";
 
 const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const NFTs = useAppSelector((state) => state.nfts);
-  const [state, setState] = React.useState("sell");
+  const [state, setState] = React.useState("choose");
   const router = useRouter();
 
   const cards = convertArrayCards();
@@ -344,7 +344,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
       dispatch(onLoadSales());
       show();
       dispatch(onGetAssets({ address: user, blockchain }));
-      // setState("choose");
+      setState("choose");
 
       setSellNFTData({
         startingPrice: 0,
@@ -369,10 +369,10 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
           {cards[id]?.properties?.name?.value}
         </h1>
         <div className="flex flex-col md:px-6 py-10 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-          {/* <ChevronLeftIcon
+          <ChevronLeftIcon
             onClick={() => setState("choose")}
             className="absolute md:top-3 left-2 top-2 text-overlay-border text-sm w-6 text-white cursor-pointer"
-          /> */}
+          />
 
           <p className="absolute md:top-3 md:right-6 top-2 right-4 text-overlay-border text-sm">
             SELL PANEL

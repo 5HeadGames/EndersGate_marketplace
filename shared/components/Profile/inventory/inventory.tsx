@@ -21,7 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
   { title: "Packs", value: "Packs" },
-  // { title: "Rented Cards", value: "Rented Cards" },
+  { title: "Rented Cards", value: "Rented Cards" },
 ];
 
 const Inventory = () => {
