@@ -803,6 +803,14 @@ const TokenInfo = ({ id, blockchain, NFTs, endersGate }) => {
           </div>
           <div className="w-full flex justify-between py-2 border-b border-overlay-border sm:px-6 px-2">
             <p className="text-lg font-[400] text-primary-disabled ">
+              Balance Wrapped (Rented):
+            </p>
+            <p className="text-primary-disabled  font-[400] text-lg">
+              {NFTs.balanceWrapped[id]?.balance}
+            </p>
+          </div>
+          <div className="w-full flex justify-between py-2 border-b border-overlay-border sm:px-6 px-2">
+            <p className="text-lg font-[400] text-primary-disabled ">
               Token Standard:
             </p>
             <p className="text-primary-disabled  font-[400] text-lg">ERC1155</p>
