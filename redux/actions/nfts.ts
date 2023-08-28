@@ -123,12 +123,10 @@ export const onLoadSales = createAsyncThunk(
           addresses.marketplace,
           CHAIN_NAME_BY_ID[blockchain],
         );
-        console.log(marketplace);
+
         const lastSale = Number(
           await marketplace.methods.tokenIdTracker().call(),
         );
-
-        console.log(lastSale);
 
         if (lastSale > 0) {
           const rawSales = await marketplace.methods
@@ -149,30 +147,32 @@ export const onLoadSales = createAsyncThunk(
         }
 
         /* RENTS */
-        if (CHAIN_NAME_BY_ID[blockchain] === "matic") {
-          // const rent = getContract(
-          //   "Rent",
-          //   addresses.rent,
-          //   CHAIN_NAME_BY_ID[blockchain],
-          // );
-          // const lastRent = Number(await rent.methods.tokenIdTracker().call());
-          // if (lastRent > 0) {
-          // const rawRents = [];
-          // await rent.methods
-          //   .getRents(new Array(lastRent).fill(0).map((a, i) => i))
-          //   .call();
-          // rawRents.forEach((sale: any[], i) => {
-          //   const rentFormated = parseRent(sale);
-          //   allRents.push({
-          //     rentId: i,
-          //     rent: true,
-          //     blockchain: CHAIN_NAME_BY_ID[blockchain],
-          //     ...rentFormated,
-          //   });
-          // });
-          // }
-        }
+        // if (CHAIN_NAME_BY_ID[blockchain] === "matic") {
+        //   // const rent = getContract(
+        //   //   "Rent",
+        //   //   addresses.rent,
+        //   //   CHAIN_NAME_BY_ID[blockchain],
+        //   // );
+        //   // const lastRent = Number(await rent.methods.tokenIdTracker().call());
+        //   // if (lastRent > 0) {
+        //   // const rawRents = [];
+        //   // await rent.methods
+        //   //   .getRents(new Array(lastRent).fill(0).map((a, i) => i))
+        //   //   .call();
+        //   // rawRents.forEach((sale: any[], i) => {
+        //   //   const rentFormated = parseRent(sale);
+        //   //   allRents.push({
+        //   //     rentId: i,
+        //   //     rent: true,
+        //   //     blockchain: CHAIN_NAME_BY_ID[blockchain],
+        //   //     ...rentFormated,
+        //   //   });
+        //   // });
+        //   // }
+        // }
       }
+
+      console.log("allSales");
 
       /* SALES */
       const allSalesSorted = allSales
@@ -272,7 +272,7 @@ export const onGetAssets = createAsyncThunk(
     try {
       if (!address) throw new Error("No address provided");
 
-      const { endersGate, pack, rent } = getAddresses(blockchain);
+      const { endersGate, pack } = getAddresses(blockchain);
 
       const cardsContract = getContract("EndersGate", endersGate, blockchain);
       const packsContract = getContract("EndersPack", pack, blockchain);
@@ -294,18 +294,18 @@ export const onGetAssets = createAsyncThunk(
           cardsIds,
         )
         .call();
-      let balanceWrapped = [];
+      // let balanceWrapped = [];
 
-      if (blockchain === "matic") {
-        const rentContract = getContract("Rent", rent, blockchain);
+      // if (blockchain === "matic") {
+      //   const rentContract = getContract("Rent", rent, blockchain);
 
-        balanceWrapped = await rentContract.methods
-          .balanceOfBatch(
-            cardsIds.map(() => address),
-            cardsIds,
-          )
-          .call();
-      }
+      //   balanceWrapped = await rentContract.methods
+      //     .balanceOfBatch(
+      //       cardsIds.map(() => address),
+      //       cardsIds,
+      //     )
+      //     .call();
+      // }
 
       return {
         balanceCards: cardsIds.map((id, i) => ({
@@ -316,10 +316,10 @@ export const onGetAssets = createAsyncThunk(
           id,
           balance: balancePacks[i],
         })),
-        balanceWrapped: cardsIds.map((id, i) => ({
-          id,
-          balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
-        })),
+        // balanceWrapped: cardsIds.map((id, i) => ({
+        //   id,
+        //   balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
+        // })),
       };
     } catch (err) {
       console.log({ err });
