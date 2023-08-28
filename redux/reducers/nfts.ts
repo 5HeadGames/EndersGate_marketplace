@@ -23,7 +23,7 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
       (state: typeof INITIAL_STATE, action) => {
         state.balanceCards = action.payload.balanceCards;
         state.balancePacks = action.payload.balancePacks;
-        state.balanceWrapped = action.payload.balanceWrapped;
+        // state.balanceWrapped = action.payload.balanceWrapped;
       },
     )
     .addCase(
