@@ -10,6 +10,7 @@ import ExchangeERC1155 from "./ExchangeERC1155.json";
 import ERC721Seadrop from "./ERC721SeaDrop.json";
 import Shop from "./ClockSaleOwnable.json";
 import Rent from "./RentMultiTokens.json";
+import RentNative from "./RentNativeTokens.json";
 import Comics from "./Comics.json";
 
 const contracts = {
@@ -26,5 +27,6 @@ const contracts = {
   Shop,
   ShopFindora,
   Rent,
+  RentNative,
 };
 export default contracts;

@@ -23,7 +23,7 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
       (state: typeof INITIAL_STATE, action) => {
         state.balanceCards = action.payload.balanceCards;
         state.balancePacks = action.payload.balancePacks;
-        // state.balanceWrapped = action.payload.balanceWrapped;
+        state.balanceWrapped = action.payload.balanceWrapped;
       },
     )
     .addCase(
@@ -32,11 +32,11 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
         state.saleCreated = action.payload.saleCreated;
         state.saleSuccessfull = action.payload.saleSuccessful;
         state.totalSales = action.payload.totalSales;
-        // state.rentsListed = action.payload.rentsListed;
-        // state.rentsInRent = action.payload.rentsInRent;
+        state.rentsListed = action.payload.rentsListed;
+        state.rentsInRent = action.payload.rentsInRent;
         state.dailyVolume = Number(action.payload.dailyVolume);
         state.cardsSold = Number(action.payload.cardsSold);
-        // state.allRents = action.payload.allRents;
+        state.allRents = action.payload.allRents;
         state.allSales = action.payload.allSales;
       },
     )

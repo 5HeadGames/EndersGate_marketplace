@@ -8,8 +8,8 @@ const FiltersBoard = ({
   setFilters,
   setCardType,
   cardType,
-  // listingType,
-  // setListingType,
+  listingType,
+  setListingType,
   type,
   setType,
   setPage,
@@ -443,7 +443,7 @@ const FiltersBoard = ({
               </div>
             </div>
           </div>
-          {/* <div className="flex flex-col gap-2 lg:w-full w-48">
+          <div className="flex flex-col gap-2 lg:w-full w-48">
             <h2 className="text-lg font-bold text-white lg:text-left text-center">
               Listing Type
             </h2>
@@ -484,7 +484,7 @@ const FiltersBoard = ({
                 </div>
               ))}
             </div>
-          </div> */}
+          </div>
           <div className="flex flex-col gap-2 lg:w-full w-48">
             <h2 className="text-lg font-bold text-white lg:text-left text-center">
               NFT Type

@@ -147,29 +147,29 @@ export const onLoadSales = createAsyncThunk(
         }
 
         /* RENTS */
-        // if (CHAIN_NAME_BY_ID[blockchain] === "matic") {
-        //   // const rent = getContract(
-        //   //   "Rent",
-        //   //   addresses.rent,
-        //   //   CHAIN_NAME_BY_ID[blockchain],
-        //   // );
-        //   // const lastRent = Number(await rent.methods.tokenIdTracker().call());
-        //   // if (lastRent > 0) {
-        //   // const rawRents = [];
-        //   // await rent.methods
-        //   //   .getRents(new Array(lastRent).fill(0).map((a, i) => i))
-        //   //   .call();
-        //   // rawRents.forEach((sale: any[], i) => {
-        //   //   const rentFormated = parseRent(sale);
-        //   //   allRents.push({
-        //   //     rentId: i,
-        //   //     rent: true,
-        //   //     blockchain: CHAIN_NAME_BY_ID[blockchain],
-        //   //     ...rentFormated,
-        //   //   });
-        //   // });
-        //   // }
-        // }
+        if (CHAIN_NAME_BY_ID[blockchain] === "matic") {
+          // const rent = getContract(
+          //   "Rent",
+          //   addresses.rent,
+          //   CHAIN_NAME_BY_ID[blockchain],
+          // );
+          // const lastRent = Number(await rent.methods.tokenIdTracker().call());
+          // if (lastRent > 0) {
+          // const rawRents = [];
+          // await rent.methods
+          //   .getRents(new Array(lastRent).fill(0).map((a, i) => i))
+          //   .call();
+          // rawRents.forEach((sale: any[], i) => {
+          //   const rentFormated = parseRent(sale);
+          //   allRents.push({
+          //     rentId: i,
+          //     rent: true,
+          //     blockchain: CHAIN_NAME_BY_ID[blockchain],
+          //     ...rentFormated,
+          //   });
+          // });
+          // }
+        }
       }
 
       console.log("allSales");
@@ -183,29 +183,29 @@ export const onLoadSales = createAsyncThunk(
         .concat();
 
       /* RENTS */
-      // const allRentsSorted = allRents
-      //   .sort((a, b) => a.startedAt - b.startedAt)
-      //   .map((rent: Sale, id) => {
-      //     return { id: id, ...rent };
-      //   });
+      const allRentsSorted = allRents
+        .sort((a, b) => a.startedAt - b.startedAt)
+        .map((rent: Sale, id) => {
+          return { id: id, ...rent };
+        });
 
-      // const rentCreatedPartial = allRentsSorted?.filter(
-      //   (sale: Sale) => sale.status === "0",
-      // );
-      // const rentInRentPartial = allRentsSorted?.filter(
-      //   (sale: Sale) => sale.status === "1",
-      // );
+      const rentCreatedPartial = allRentsSorted?.filter(
+        (sale: Sale) => sale.status === "0",
+      );
+      const rentInRentPartial = allRentsSorted?.filter(
+        (sale: Sale) => sale.status === "1",
+      );
 
-      // rentCreatedPartial.forEach((rent: Sale) => {
-      //   rentsListed = [...rentsListed, rent];
-      // });
+      rentCreatedPartial.forEach((rent: Sale) => {
+        rentsListed = [...rentsListed, rent];
+      });
 
-      // rentInRentPartial.forEach((rent: Sale) => {
-      //   rentsInRent = [...rentsInRent, rent];
-      // });
+      rentInRentPartial.forEach((rent: Sale) => {
+        rentsInRent = [...rentsInRent, rent];
+      });
 
       const listsCreatedPartial = allSalesSorted
-        // .concat(allRentsSorted)
+        .concat(allRentsSorted)
         ?.filter(
           (sale: Sale | Rent) =>
             sale.status === "0" &&
@@ -215,7 +215,7 @@ export const onLoadSales = createAsyncThunk(
         );
 
       const listsSuccessfulPartial = allSalesSorted
-        // .concat(allRentsSorted)
+        .concat(allRentsSorted)
         ?.filter((sale: Sale) => sale.status === "1");
 
       listsCreatedPartial.forEach((sale: Sale) => {
@@ -242,9 +242,9 @@ export const onLoadSales = createAsyncThunk(
         allSales: allSalesSorted,
         saleCreated: listsCreated,
         saleSuccessful: listsSuccessful,
-        // allRents: allRentsSorted,
-        // rentsListed,
-        // rentsInRent,
+        allRents: allRentsSorted,
+        rentsListed,
+        rentsInRent,
         totalSales: listsCreated.length,
         dailyVolume: dailyVolume.toString(),
         cardsSold: cardsSold.toString(),
@@ -272,7 +272,7 @@ export const onGetAssets = createAsyncThunk(
     try {
       if (!address) throw new Error("No address provided");
 
-      const { endersGate, pack } = getAddresses(blockchain);
+      const { endersGate, pack, rent } = getAddresses(blockchain);
 
       const cardsContract = getContract("EndersGate", endersGate, blockchain);
       const packsContract = getContract("EndersPack", pack, blockchain);
@@ -294,18 +294,16 @@ export const onGetAssets = createAsyncThunk(
           cardsIds,
         )
         .call();
-      // let balanceWrapped = [];
+      let balanceWrapped = [];
 
-      // if (blockchain === "matic") {
-      //   const rentContract = getContract("Rent", rent, blockchain);
+      const rentContract = getContract("Rent", rent, blockchain);
 
-      //   balanceWrapped = await rentContract.methods
-      //     .balanceOfBatch(
-      //       cardsIds.map(() => address),
-      //       cardsIds,
-      //     )
-      //     .call();
-      // }
+      balanceWrapped = await rentContract.methods
+        .balanceOfBatch(
+          cardsIds.map(() => address),
+          cardsIds,
+        )
+        .call();
 
       return {
         balanceCards: cardsIds.map((id, i) => ({
@@ -316,10 +314,10 @@ export const onGetAssets = createAsyncThunk(
           id,
           balance: balancePacks[i],
         })),
-        // balanceWrapped: cardsIds.map((id, i) => ({
-        //   id,
-        //   balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
-        // })),
+        balanceWrapped: cardsIds.map((id, i) => ({
+          id,
+          balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
+        })),
       };
     } catch (err) {
       console.log({ err });
@@ -456,6 +454,8 @@ export const listRentERC1155 = createAsyncThunk(
     tokens: string[];
     address: string;
     provider: any;
+    blockchain: any;
+
     // user: any;
   }) {
     const {
@@ -466,14 +466,42 @@ export const listRentERC1155 = createAsyncThunk(
       tokens,
       // user,
       provider,
+      blockchain,
     } = args;
     try {
-      const { rent } = getAddressesMatic();
+      const { rent } = getAddresses(blockchain);
 
       const rentContract = getContractCustom("Rent", rent, provider);
 
       const { transactionHash } = await rentContract.methods
         .createRent(address, tokenId, pricePerDay, tokens)
+        .send({ from: from });
+
+      return { from, tokenId, pricePerDay, address };
+    } catch (err) {
+      console.log({ err });
+    }
+  },
+);
+
+export const listRentERC1155Native = createAsyncThunk(
+  actionTypes.LIST_NFT,
+  async function prepare(args: {
+    from: string;
+    tokenId: number | string;
+    pricePerDay: number | string;
+    address: string;
+    provider: any;
+    blockchain: any;
+  }) {
+    const { from, tokenId, pricePerDay, address, provider, blockchain } = args;
+    try {
+      const { rent } = getAddresses(blockchain);
+
+      const rentContract = getContractCustom("RentNative", rent, provider);
+
+      await rentContract.methods
+        .createRent(address, tokenId, pricePerDay)
         .send({ from: from });
 
       return { from, tokenId, pricePerDay, address };
@@ -838,6 +866,56 @@ export const rentBatchERC1155 = createAsyncThunk(
             .send({ from: account });
         }
       }
+      dispatch(onLoadSales());
+    } catch (err) {
+      console.log({ err });
+      return { err };
+    }
+    return { account, provider };
+  },
+);
+
+export const rentBatchERC1155Native = createAsyncThunk(
+  actionTypes.RENT_BATCH_NFT,
+  async function prepare(args: {
+    blockchain: string;
+    account: any;
+    provider: any;
+    setMessageBuy: any;
+    daysOfRent: any;
+    cartRent: any[];
+    dispatch: any;
+  }) {
+    const {
+      account,
+      provider,
+      blockchain,
+      setMessageBuy,
+      daysOfRent,
+      cartRent,
+      dispatch,
+    } = args;
+
+    try {
+      const { rent } = getAddresses(blockchain);
+
+      const rentContract = await getContractCustom(
+        "RentNative",
+        rent,
+        provider,
+      );
+
+      setMessageBuy(`Processing your purchase...`);
+
+      const { tokensId } = {
+        tokensId: cartRent.map((item) => item.rentId),
+      };
+
+      let price = "0";
+
+      await rentContract.methods
+        .rentBatch(tokensId, daysOfRent)
+        .send({ from: account, value: price });
       dispatch(onLoadSales());
     } catch (err) {
       console.log({ err });

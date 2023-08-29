@@ -1,38 +1,25 @@
 import React from "react";
 import {
-  AppstoreOutlined,
   CaretDownOutlined,
   CaretLeftOutlined,
-  CaretUpOutlined,
   LeftOutlined,
   RightOutlined,
   SearchOutlined,
-  UnorderedListOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
-
 import NftCard from "shared/components/Marketplace/itemCard";
 import FiltersBoard from "./filters/filters";
 import { DropdownActions } from "../common/dropdownActions/dropdownActions";
-import { Dropdown } from "../common/dropdown/dropdown";
 import clsx from "clsx";
 import { Typography } from "../common/typography";
-import { getAddressesMatic, getContract, isPack } from "@shared/web3";
-import { onLoadSales } from "@redux/actions";
+import { getAddressesMatic, isPack } from "@shared/web3";
 import { convertArrayCards } from "../common/convertCards";
 import packs from "../../packs.json";
-import { useAppDispatch, useAppSelector } from "@redux/store";
-import Link from "next/link";
+import { useAppSelector } from "@redux/store";
 import Web3 from "web3";
-import Styles from "./itemCard/styles.module.scss";
 import { Icons } from "@shared/const/Icons";
-import { AddressText } from "../common/specialFields/SpecialFields";
 import TransactionsBoard from "../Dashboard/TransactionsBoard/TransactionsBoard";
 import { useStats } from "@shared/hooks/useStats";
-import { Newsletter } from "../common/footerComponents/newsletter";
-import { JoinTheCommunity } from "../common/footerComponents/joinTheCommunity";
-import { GetStarted } from "../common/footerComponents/getStarted";
-import Partners from "../common/footerComponents/partners";
 import { XIcon } from "@heroicons/react/solid";
 import { OpenseaApiService } from "@shared/api/opensea/openseaServices";
 import { filterCards, filterPacks } from "@shared/utils/filtersCards";
@@ -375,8 +362,8 @@ const MarketplaceComponent = () => {
               type={type}
               setType={setType}
               setPriceSettings={setPriceSettings}
-              // listingType={listingType}
-              // setListingType={setListingType}
+              listingType={listingType}
+              setListingType={setListingType}
             />
           </div>
           <div className="w-full xl:mt-0 mt-6 flex flex-col pb-10">
