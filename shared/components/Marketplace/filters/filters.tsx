@@ -454,7 +454,11 @@ const FiltersBoard = ({
               ].map((item, index) => (
                 <div
                   onClick={() => {
-                    setListingType(item.value);
+                    if (listingType !== item.value) {
+                      setListingType(item.value);
+                    } else {
+                      setListingType("all");
+                    }
                   }}
                   className={clsx(
                     "flex items-center justify-between  w-full  cursor-pointer",

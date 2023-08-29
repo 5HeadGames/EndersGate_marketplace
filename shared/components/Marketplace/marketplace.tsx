@@ -39,7 +39,7 @@ const MarketplaceComponent = () => {
   const [openFilters, setOpenFilters] = React.useState(true);
 
   const [columnSelected, setColumnSelected] = React.useState("forever");
-  const [listingType, setListingType] = React.useState("sale");
+  const [listingType, setListingType] = React.useState("all");
   const { search: searched } = useRouter().query;
   const cards = convertArrayCards();
 
@@ -254,7 +254,8 @@ const MarketplaceComponent = () => {
     .filter((sale) => {
       return (
         (sale.rent && listingType === "rent") ||
-        (!sale.rent && listingType === "sale")
+        (!sale.rent && listingType === "sale") ||
+        listingType === "all"
       );
     })
     .filter((sale, i) => {

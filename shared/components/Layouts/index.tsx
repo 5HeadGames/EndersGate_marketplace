@@ -26,7 +26,7 @@ import { Cart } from "./cart";
 import ChainSelect from "./chainSelect";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
-import { CHAIN_IDS_BY_NAME } from "../chains";
+import { getRentsPendingByUser } from "@shared/web3";
 
 type ButtonsTypes = { logout: boolean; userData: boolean };
 
@@ -37,7 +37,7 @@ const navItems = [
     icon: <AreaChartOutlined />,
   },
   { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
-  // { name: "COMICS", link: "/comics", icon: <ShopOutlined /> },
+  { name: "COMICS", link: "/comics", icon: <ShopOutlined /> },
   { name: "SHOP", link: "/shop", icon: <ShopOutlined /> },
 ];
 
@@ -78,15 +78,26 @@ export const Logo = () => (
   </Link>
 );
 
-export const NavbarItem = ({ name, link, route }) => {
+export const NavbarItem = ({ name, link, route, notification }) => {
   return (
     <Link href={link}>
       <a
-        className={clsx("py-2 relative", "text-md font-[500] text-white", {
-          "opacity-50": link !== route,
-        })}
+        className={clsx(
+          "py-2 relative",
+          "text-md font-[500] text-white opacity-50",
+          {
+            "!opacity-100": link === route || notification,
+          },
+        )}
         href={link}
       >
+        {notification ? (
+          <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9.5px] bg-red-primary">
+            {notification}
+          </div>
+        ) : (
+          ""
+        )}
         {name}
       </a>
     </Link>
@@ -124,6 +135,7 @@ export default function AppLayout({ children }) {
   const { provider, providerName, cart, cartRent, isLogged } = useSelector(
     (state: any) => state.layout,
   );
+  const { allRents } = useSelector((state: any) => state.nfts);
 
   const { blockchain, updateBlockchain } = useBlockchain();
 
@@ -205,8 +217,11 @@ export default function AppLayout({ children }) {
     localStorage.removeItem("loginTime");
   };
 
+  const userRentsNotificationArray =
+    getRentsPendingByUser({ user: ethAddress, rents: allRents }) || [];
+
   const profileItems = [
-    { name: "INVENTORY", link: "/profile", icon: <ShopOutlined /> },
+    { name: "INVENTORY", link: "/profile" },
     {
       name: "ACTIVITY",
       link: "/profile/activity",
@@ -215,11 +230,11 @@ export default function AppLayout({ children }) {
       name: "MY SALES",
       link: "/profile/sales",
     },
-    // {
-    //   name: "MY RENTS",
-    //   link: "/profile/rents",
-    //   notification: 0,
-    // },
+    {
+      name: "MY RENTS",
+      link: "/profile/rents",
+      notification: userRentsNotificationArray.length,
+    },
     {
       name: "SWAP",
       link: "/profile/swap",
@@ -296,6 +311,7 @@ export default function AppLayout({ children }) {
                   name={item.name}
                   link={item.link}
                   route={router.asPath}
+                  notification={false}
                 />
               </>
             );
@@ -325,6 +341,7 @@ export default function AppLayout({ children }) {
               <Dropdown
                 classTitle={"text-white opacity-50 hover:opacity-100 font-bold"}
                 title={"MY ACCOUNT"}
+                notification={userRentsNotificationArray.length}
               >
                 <div className="flex flex-col items-center px-4 border border-overlay-border rounded-xl">
                   {profileItems.map((item, index) => {
@@ -347,6 +364,7 @@ export default function AppLayout({ children }) {
                             name={item.name}
                             link={item.link}
                             route={router.asPath}
+                            notification={item.notification}
                           />
                         )}
                       </>
@@ -365,6 +383,7 @@ export default function AppLayout({ children }) {
                   : router.asPath
               }
               route={router.asPath}
+              notification={false}
             />
           )}
         </div>

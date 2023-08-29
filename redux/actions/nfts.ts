@@ -18,6 +18,8 @@ import {
   TESTNET_CHAIN_IDS,
 } from "@shared/components/chains";
 import { findSum } from "@shared/components/common/specialFields/SpecialFields";
+import { removeAllRent } from "./layout";
+import { toast } from "react-hot-toast";
 
 const getCardSold = (successfulSales: Sale[]) => {
   return successfulSales?.reduce(
@@ -98,6 +100,7 @@ export const onLoadSales = createAsyncThunk(
       rentsListed = [],
       rentsInRent = [],
       allRents = [],
+      rentsFinished = [],
       dailyVolume = 0,
       cardsSold = 0;
     try {
@@ -148,27 +151,27 @@ export const onLoadSales = createAsyncThunk(
 
         /* RENTS */
         if (CHAIN_NAME_BY_ID[blockchain] === "matic") {
-          // const rent = getContract(
-          //   "Rent",
-          //   addresses.rent,
-          //   CHAIN_NAME_BY_ID[blockchain],
-          // );
-          // const lastRent = Number(await rent.methods.tokenIdTracker().call());
-          // if (lastRent > 0) {
-          // const rawRents = [];
-          // await rent.methods
-          //   .getRents(new Array(lastRent).fill(0).map((a, i) => i))
-          //   .call();
-          // rawRents.forEach((sale: any[], i) => {
-          //   const rentFormated = parseRent(sale);
-          //   allRents.push({
-          //     rentId: i,
-          //     rent: true,
-          //     blockchain: CHAIN_NAME_BY_ID[blockchain],
-          //     ...rentFormated,
-          //   });
-          // });
-          // }
+          const rent = getContract(
+            "Rent",
+            addresses.rent,
+            CHAIN_NAME_BY_ID[blockchain],
+          );
+          const lastRent = Number(await rent.methods.tokenIdTracker().call());
+          if (lastRent > 0) {
+            const rawRents = await rent.methods
+              .getRents(new Array(lastRent).fill(0).map((a, i) => i))
+              .call();
+
+            rawRents.forEach((sale: any[], i) => {
+              const rentFormated = parseRent(sale);
+              allRents.push({
+                rentId: i,
+                rent: true,
+                blockchain: CHAIN_NAME_BY_ID[blockchain],
+                ...rentFormated,
+              });
+            });
+          }
         }
       }
 
@@ -196,12 +199,20 @@ export const onLoadSales = createAsyncThunk(
         (sale: Sale) => sale.status === "1",
       );
 
+      const rentFinishedPartial = allRentsSorted?.filter(
+        (sale: Sale) => sale.status === "2",
+      );
+
       rentCreatedPartial.forEach((rent: Sale) => {
         rentsListed = [...rentsListed, rent];
       });
 
       rentInRentPartial.forEach((rent: Sale) => {
         rentsInRent = [...rentsInRent, rent];
+      });
+
+      rentFinishedPartial.forEach((rent: Sale) => {
+        rentsFinished = [...rentsFinished, rent];
       });
 
       const listsCreatedPartial = allSalesSorted
@@ -245,6 +256,7 @@ export const onLoadSales = createAsyncThunk(
         allRents: allRentsSorted,
         rentsListed,
         rentsInRent,
+        rentsFinished,
         totalSales: listsCreated.length,
         dailyVolume: dailyVolume.toString(),
         cardsSold: cardsSold.toString(),
@@ -867,6 +879,9 @@ export const rentBatchERC1155 = createAsyncThunk(
         }
       }
       dispatch(onLoadSales());
+      setMessageBuy("");
+      dispatch(removeAllRent());
+      toast.success("You have rented your NFT(s) successfully");
     } catch (err) {
       console.log({ err });
       return { err };
@@ -1031,5 +1046,20 @@ export const cancelRent = createAsyncThunk(
     const { rent } = getAddresses(blockchain);
     const rentContract = getContractCustom("Rent", rent, provider);
     return rentContract.methods.cancelRent(tokenId).send({ from: user });
+  },
+);
+
+export const redeemRent = createAsyncThunk(
+  actionTypes.REDEEM_RENT_NFT,
+  async function prepare(args: {
+    tokenId: number | string;
+    provider: any;
+    user: any;
+    blockchain: any;
+  }) {
+    const { tokenId, provider, user, blockchain } = args;
+    const { rent } = getAddresses(blockchain);
+    const rentContract = getContractCustom("Rent", rent, provider);
+    return rentContract.methods.redeemRent(tokenId).send({ from: user });
   },
 );

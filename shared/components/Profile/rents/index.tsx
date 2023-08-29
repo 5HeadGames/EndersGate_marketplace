@@ -9,14 +9,14 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import Styles from "./styles.module.scss";
 import packs from "../../../packs.json";
-import { getAddresses, getAddressesMatic, switchChain } from "@shared/web3";
+import { getAddresses, getRentAvailable, switchChain } from "@shared/web3";
 
 import { useModal } from "@shared/hooks/modal";
 import {
-  onCancelSale,
   onLoadSales,
   onGetAssets,
   cancelRent,
+  redeemRent,
 } from "@redux/actions";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import { useWeb3React } from "@web3-react/core";
@@ -30,7 +30,10 @@ const Rents = () => {
   const nfts = useAppSelector((state) => state.nfts);
   const { account: user, provider } = useWeb3React();
 
+  const [typeOfRequest, setTypeOfRequest] = React.useState("");
+
   const [cancel, setCancel] = React.useState({ id: -1, blockchain: "" });
+  const [redeem, setRedeem] = React.useState({ id: -1, blockchain: "" });
   const { Modal, show, hide, isShow } = useModal();
   const dispatch = useAppDispatch();
 
@@ -73,6 +76,40 @@ const Rents = () => {
     hide();
   };
 
+  const handleRedeemRent = async () => {
+    try {
+      setIsLoading(true);
+      const changed = await switchChain(CHAIN_IDS_BY_NAME[cancel.blockchain]);
+      if (!changed) {
+        throw new Error(
+          "An error occurred while changing the network, please try again.",
+        );
+      }
+      updateBlockchain(cancel.blockchain);
+      const tx = await dispatch(
+        redeemRent({
+          tokenId: cancel.id,
+          provider: provider.provider,
+          user: user,
+          blockchain: cancel.blockchain,
+        }),
+      );
+      if ((tx as any).error) {
+        throw Error(
+          "An error has occurred while cancelling the sale, please try again",
+        );
+      }
+      dispatch(onLoadSales());
+      dispatch(onGetAssets({ address: user, blockchain }));
+      toast.success("Your sale has been redeemed successfully");
+    } catch (err) {
+      toast.error(err.message);
+    }
+    setIsLoading(false);
+
+    hide();
+  };
+
   React.useEffect(() => {
     const arrayPacks = [];
     nfts.allRents.forEach((sale, index) => {
@@ -96,7 +133,7 @@ const Rents = () => {
             type="subTitle"
             className="text-white text-center text-xl font-bold"
           >
-            Do you want to cancel this listing?
+            Do you want to {typeOfRequest} this listing?
           </Typography>
           {isLoading ? (
             <div className="flex justify-center items-center">
@@ -120,7 +157,12 @@ const Rents = () => {
                 size="small"
                 className="hover:text-red-primary !font-bold !hover:border-red-primary text-overlay bg-red-primary rounded-xl"
                 onClick={() => {
-                  handleCancelRent();
+                  switch (typeOfRequest) {
+                    case "cancel":
+                      return handleCancelRent();
+                    case "redeem":
+                      return handleRedeemRent();
+                  }
                 }}
               >
                 Confirm
@@ -166,7 +208,14 @@ const Rents = () => {
                     >
                       {sale && (
                         <Rent
-                          {...{ sale, pack, setCancelId: setCancel, show }}
+                          {...{
+                            sale,
+                            pack,
+                            setCancelId: setCancel,
+                            setRedeemId: setCancel,
+                            setTypeOfRequest,
+                            show,
+                          }}
                         />
                       )}
                     </tr>
@@ -193,18 +242,26 @@ const Rents = () => {
 
 export default Rents;
 
-const Rent = ({ sale: rent, pack, setCancelId, show }) => {
+const Rent = ({
+  sale: rent,
+  pack,
+  setCancelId,
+  setRedeemId,
+  show,
+  setTypeOfRequest,
+}) => {
   const cards = convertArrayCards();
 
-  const StatusInfo = ({ status }) => {
-    console.log(status);
+  const StatusInfo = ({ status, rent }) => {
     switch (status) {
       case "0":
         return "Rent Listed";
       case "1":
-        return "NFT In Rent";
+        return !getRentAvailable(rent)
+          ? "NFT avaiable to Redeem"
+          : "NFT In Rent";
       case "2":
-        return "Rent FInished";
+        return "Rent Finished";
       case "3":
         return "Rent Cancelled";
     }
@@ -257,7 +314,7 @@ const Rent = ({ sale: rent, pack, setCancelId, show }) => {
         <div className="flex flex-col items-center just">
           {
             <h2 className="text-white font-bold text-sm">
-              {StatusInfo({ status: rent.status })}
+              {StatusInfo({ status: rent.status, rent })}
             </h2>
           }
         </div>
@@ -265,7 +322,7 @@ const Rent = ({ sale: rent, pack, setCancelId, show }) => {
 
       <td className="py-4 px-4">
         <div className="flex flex-col items-center just">
-          {rent.status === "0" && (
+          {rent.status === "0" ? (
             <Button
               decoration="line-white"
               className="text-white hover:text-overlay rounded-xl"
@@ -275,11 +332,32 @@ const Rent = ({ sale: rent, pack, setCancelId, show }) => {
                   id: rent.rentId,
                   blockchain: rent.blockchain,
                 });
+                setTypeOfRequest("cancel");
                 show();
               }}
             >
               Cancel
             </Button>
+          ) : rent.status === "1" ? (
+            <Button
+              decoration="line-white"
+              className="text-white hover:text-overlay rounded-xl"
+              size="small"
+              onClick={() => {
+                setRedeemId({
+                  id: rent.rentId,
+                  blockchain: rent.blockchain,
+                });
+                setTypeOfRequest("redeem");
+
+                show();
+              }}
+              disabled={getRentAvailable(rent)}
+            >
+              Redeem
+            </Button>
+          ) : (
+            ""
           )}
         </div>
       </td>
