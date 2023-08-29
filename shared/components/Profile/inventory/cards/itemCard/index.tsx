@@ -340,7 +340,7 @@ export const CardInventory = (props) => {
                         props.card ? `/card/${props.id}` : `/pack/${props.id}`
                       }
                     >
-                      Sell / Rent
+                      {props.rented ? "View Detail" : "Sell / Rent"}
                     </Link>
                   </Button>
 

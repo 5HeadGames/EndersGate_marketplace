@@ -69,7 +69,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               <ChevronLeftIcon className="w-8 h-8" />
             </div>
           </div>
-          <div className="w-full flex xl:flex-row flex-col  gap-4 justify-center">
+          <div className="w-full flex xl:flex-row flex-col gap-4 justify-center items-start">
             <div className="flex flex-col gap-2">
               <div className="flex relative items-center justify-center xl:min-w-[500px] sm:min-w-[320px] min-w-full sm:min-h-[675px] min-h-[350px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer overflow-hidden border border-gray-500">
                 <div
@@ -138,68 +138,72 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col xl:w-[500px] gap-6 w-full py-10">
-              {state == "choose" ? (
-                <div className="flex flex-col">
-                  <div className="flex flex-col items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative px-2">
-                    <div
-                      className={clsx(
-                        "hover:opacity-75 opacity-100",
-                        "w-full relative cursor-pointer",
-                      )}
-                      onClick={() => setState("sell")}
-                    >
-                      <div className="absolute top-0 bottom-0 right-0 left-0 m-auto flex flex-col items-center justify-center">
-                        <h2 className="text-2xl font-bold text-white pb-2">
-                          Sell Card
-                        </h2>
-                        <p className="text-sm font-bold text-white">
-                          Peer to Peer Card Sales:
-                        </p>
-                        <span className="text-sm text-overlay-border font-[500]">
-                          Exchange cards with other payers.
-                        </span>
+            <div className="flex flex-col xl:w-[500px] gap-6 w-full pb-10">
+              {NFTs.balanceCards[id]?.balance > 0 && (
+                <>
+                  {state == "choose" ? (
+                    <div className="flex flex-col">
+                      <div className="flex flex-col items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative px-2">
+                        <div
+                          className={clsx(
+                            "hover:opacity-75 opacity-100",
+                            "w-full relative cursor-pointer",
+                          )}
+                          onClick={() => setState("sell")}
+                        >
+                          <div className="absolute top-0 bottom-0 right-0 left-0 m-auto flex flex-col items-center justify-center">
+                            <h2 className="text-2xl font-bold text-white pb-2">
+                              Sell Card
+                            </h2>
+                            <p className="text-sm font-bold text-white">
+                              Peer to Peer Card Sales:
+                            </p>
+                            <span className="text-sm text-overlay-border font-[500]">
+                              Exchange cards with other payers.
+                            </span>
+                          </div>
+                          <img src="/images/bg_sale.png" alt="rent" />
+                        </div>
+                        <div
+                          className={clsx(
+                            "hover:opacity-75 opacity-100",
+                            "w-full relative cursor-pointer",
+                          )}
+                          onClick={() => setState("rent")}
+                        >
+                          <div className="absolute top-0 bottom-0 right-0 left-0 m-auto flex flex-col items-center justify-center">
+                            <h2 className="text-2xl font-bold text-white pb-2">
+                              Rent Card
+                            </h2>
+                            <p className="text-sm font-bold text-white">
+                              Peer to Peer Card Rentals:
+                            </p>
+                            <span className="text-sm text-overlay-border font-[500]">
+                              Rent out the card for a fixed period of time.
+                            </span>
+                          </div>
+                          <img src="/images/bg_rent.png" alt="rent" />
+                        </div>
                       </div>
-                      <img src="/images/bg_sale.png" alt="rent" />
                     </div>
-                    <div
-                      className={clsx(
-                        "hover:opacity-75 opacity-100",
-                        "w-full relative cursor-pointer",
-                      )}
-                      onClick={() => setState("rent")}
-                    >
-                      <div className="absolute top-0 bottom-0 right-0 left-0 m-auto flex flex-col items-center justify-center">
-                        <h2 className="text-2xl font-bold text-white pb-2">
-                          Rent Card
-                        </h2>
-                        <p className="text-sm font-bold text-white">
-                          Peer to Peer Card Rentals:
-                        </p>
-                        <span className="text-sm text-overlay-border font-[500]">
-                          Rent out the card for a fixed period of time.
-                        </span>
-                      </div>
-                      <img src="/images/bg_rent.png" alt="rent" />
-                    </div>
-                  </div>
-                </div>
-              ) : state === "sell" ? (
-                <SellPanel
-                  id={id}
-                  blockchain={blockchain}
-                  NFTs={NFTs}
-                  setState={setState}
-                  show={show}
-                />
-              ) : (
-                <RentPanel
-                  id={id}
-                  blockchain={blockchain}
-                  NFTs={NFTs}
-                  setState={setState}
-                  show={show}
-                />
+                  ) : state === "sell" ? (
+                    <SellPanel
+                      id={id}
+                      blockchain={blockchain}
+                      NFTs={NFTs}
+                      setState={setState}
+                      show={show}
+                    />
+                  ) : (
+                    <RentPanel
+                      id={id}
+                      blockchain={blockchain}
+                      NFTs={NFTs}
+                      setState={setState}
+                      show={show}
+                    />
+                  )}
+                </>
               )}
               <TokenInfo
                 id={id}
@@ -612,7 +616,9 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
           listRentERC1155Native({
             address: endersGate,
             from: user,
-            pricePerDay: (sellNFTData.pricePerDay * 10 ** 6).toString(),
+            pricePerDay: Web3.utils
+              .toWei(sellNFTData.pricePerDay.toString(), "ether")
+              .toString(),
             tokenId: tokenId,
             provider: provider.provider,
             blockchain,
@@ -641,6 +647,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
             tokenId: tokenId,
             tokens: tokensSelected,
             provider: provider.provider,
+            blockchain,
           }),
         );
       }
@@ -795,7 +802,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
 const TokenInfo = ({ id, blockchain, NFTs, endersGate }) => {
   return (
     <div className="flex flex-col">
-      <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
+      <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl relative">
         <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
           TOKEN INFO
         </p>

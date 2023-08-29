@@ -86,6 +86,20 @@ export const parseRent = (Rent: any[]) => {
   };
 };
 
+export const parseRentNative = (Rent: any[]) => {
+  return {
+    seller: Rent[0],
+    buyer: Rent[1],
+    nft: Rent[2],
+    nftId: Rent[3],
+    amount: Rent[4],
+    price: Rent[5],
+    duration: Rent[6],
+    startedAt: Rent[7],
+    status: Rent[8],
+  };
+};
+
 export const onLoadSales = createAsyncThunk(
   actionTypes.GET_LISTED_NFTS,
   async function prepare() {
@@ -104,7 +118,6 @@ export const onLoadSales = createAsyncThunk(
       dailyVolume = 0,
       cardsSold = 0;
     try {
-      console.log(blockchains);
       for (let i = 0; i < blockchains.length; i++) {
         const blockchain = blockchains[i];
 
@@ -172,10 +185,31 @@ export const onLoadSales = createAsyncThunk(
               });
             });
           }
+        } else {
+          const rent = getContract(
+            "RentNative",
+            addresses.rent,
+            CHAIN_NAME_BY_ID[blockchain],
+          );
+          const lastRent = Number(await rent.methods.tokenIdTracker().call());
+          if (lastRent > 0) {
+            const rawRents = await rent.methods
+              .getRents(new Array(lastRent).fill(0).map((a, i) => i))
+              .call();
+            console.log(rawRents, "RENTs");
+
+            rawRents.forEach((sale: any[], i) => {
+              const rentFormated = parseRentNative(sale);
+              allRents.push({
+                rentId: i,
+                rent: true,
+                blockchain: CHAIN_NAME_BY_ID[blockchain],
+                ...rentFormated,
+              });
+            });
+          }
         }
       }
-
-      console.log("allSales");
 
       /* SALES */
       const allSalesSorted = allSales
@@ -835,7 +869,7 @@ export const rentBatchERC1155 = createAsyncThunk(
         const preprice =
           (cartRent
             ?.map((item, i) => {
-              return (parseInt(item.price) / 10 ** 6) * item.quantity;
+              return (parseInt(item.price) / 10 ** 6) * daysOfRent;
             })
             .reduce((item, acc) => {
               return item + acc;
@@ -879,13 +913,14 @@ export const rentBatchERC1155 = createAsyncThunk(
         }
       }
       dispatch(onLoadSales());
-      setMessageBuy("");
       dispatch(removeAllRent());
       toast.success("You have rented your NFT(s) successfully");
     } catch (err) {
       console.log({ err });
+      setMessageBuy("");
       return { err };
     }
+    setMessageBuy("");
     return { account, provider };
   },
 );
@@ -926,7 +961,14 @@ export const rentBatchERC1155Native = createAsyncThunk(
         tokensId: cartRent.map((item) => item.rentId),
       };
 
-      let price = "0";
+      const price = cartRent
+        ?.map((item, i) => {
+          return BigInt(item.price) * BigInt(daysOfRent);
+        })
+        .reduce((item, acc) => {
+          return BigInt(item) + BigInt(acc);
+        })
+        .toString();
 
       await rentContract.methods
         .rentBatch(tokensId, daysOfRent)
@@ -934,6 +976,7 @@ export const rentBatchERC1155Native = createAsyncThunk(
       dispatch(onLoadSales());
     } catch (err) {
       console.log({ err });
+      setMessageBuy("");
       return { err };
     }
     return { account, provider };

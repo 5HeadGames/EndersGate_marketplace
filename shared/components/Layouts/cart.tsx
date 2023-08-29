@@ -226,18 +226,28 @@ export const Cart = ({
           onClick={() => setCartSelected("rents")}
           className={clsx(
             { "bg-white font-bold !text-overlay": cartSelected !== "sales" },
-            "text-white text-center rounded-xl p-2 border border-white cursor-pointer min-w-[33%] transition-all duration-500",
+            "text-white text-center rounded-xl p-2 border border-white cursor-pointer min-w-[33%] transition-all duration-500 relative",
           )}
         >
+          {cartRent.length > 0 && (
+            <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary text-white">
+              {cartRent.length}
+            </div>
+          )}
           Rents
         </div>
         <div
           onClick={() => setCartSelected("sales")}
           className={clsx(
             { "bg-white font-bold !text-overlay": cartSelected === "sales" },
-            "text-white text-center rounded-xl p-2 border border-white cursor-pointer min-w-[33%] transition-all duration-500",
+            "text-white text-center rounded-xl p-2 border border-white cursor-pointer min-w-[33%] transition-all duration-500 relative",
           )}
         >
+          {cartSales.length > 0 && (
+            <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary text-white">
+              {cartSales.length}
+            </div>
+          )}
           Sales
         </div>
       </div>
@@ -338,21 +348,22 @@ const TotalPrice = ({
           {isRentCart
             ? formatPrice(
                 cart
-                  ?.map((item: any, i) =>
-                    (parseInt(item.price) * daysOfRent).toString(),
+                  ?.map(
+                    (item: any, i) => BigInt(item.price) * BigInt(daysOfRent),
                   )
                   .reduce((item: any, acc: any) => {
-                    return findSum(item, acc) as any;
+                    return BigInt(item) + BigInt(acc);
                   }),
                 blockchain,
               )
             : formatPrice(
                 cart
-                  ?.map((item: any, i) =>
-                    (parseInt(item.price) * item.quantity).toString(),
+                  ?.map(
+                    (item: any, i) =>
+                      BigInt(item.price) * BigInt(item.quantity),
                   )
                   .reduce((item: any, acc: any) => {
-                    return findSum(item, acc) as any;
+                    return BigInt(item) + BigInt(acc);
                   }),
                 blockchain,
               )}
@@ -369,7 +380,10 @@ const TotalPrice = ({
             return intersection;
           }).length > 0 && (
           <h3 className="text-[14px] font-[700] text-white">
-            {isRentCart ? priceMatic * daysOfRent : priceMatic} MATIC
+            {isRentCart
+              ? (priceMatic * daysOfRent).toFixed(4)
+              : priceMatic.toFixed(4)}{" "}
+            MATIC
           </h3>
         )}
       </div>

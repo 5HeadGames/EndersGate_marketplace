@@ -15,7 +15,7 @@ export const DropdownCart: React.FC<any> = ({
         <Dialog
           as="div"
           static
-          className="fixed w-screen h-[calc(100vh-56px)] top-[56px] !right-0  z-40  bg-overlay-opacity overflow-auto"
+          className="fixed w-screen h-[calc(100vh-56px)] top-[56px] !right-0  z-40  bg-overlay-opacity overflow-x-hidden overflow-y-auto"
           open={sidebarOpen}
           onClose={() => setSideBar(false)}
           initialFocus={initialFocus}

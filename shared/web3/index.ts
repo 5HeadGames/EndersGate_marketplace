@@ -297,7 +297,6 @@ export const buyNFTsMatic = async ({
           .send({ from: ethAddress });
       }
 
-      // }
       dispatch(removeAll());
     }
   } catch (err) {}

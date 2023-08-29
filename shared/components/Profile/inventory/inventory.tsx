@@ -217,6 +217,7 @@ const Inventory = () => {
                     balance={card.balance}
                     type={cards[card.id].typeCard}
                     card={true}
+                    rented
                     byId
                   />
                 );

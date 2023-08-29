@@ -23,6 +23,7 @@ import { toast } from "react-hot-toast";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { ModalRent } from "./ModalRent";
+import { StatusInfo } from "@shared/components/Profile/rents";
 
 const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   const { account: user, provider } = useWeb3React();
@@ -362,22 +363,28 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                           />
                         </div>
                       </div>
-                      <div className="flex flex-col gap-4 w-full items-center md:pl-10 md:pr-16 pr-4">
-                        <Button
-                          decoration="fill"
-                          className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
-                          onClick={() => {
-                            show();
-                          }}
-                        >
-                          Rent Now
-                        </Button>
-                        {/* <Button
-                          decoration="line-white"
-                          className="bg-dark md:text-lg text-md md:w-48 w-32 py-[6px] rounded-lg text-white hover:text-overlay border-none"
-                        >
-                          Make Offer
-                        </Button> */}
+                      <div
+                        className={clsx(
+                          { "justify-center px-8": rent.status != 0 },
+                          { "md:pr-16 pr-4 md:pl-10": rent.status == 0 },
+                          "flex flex-col gap-4 w-full items-center",
+                        )}
+                      >
+                        {rent.status == 0 ? (
+                          <Button
+                            decoration="fill"
+                            className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                            onClick={() => {
+                              show();
+                            }}
+                          >
+                            Rent Now
+                          </Button>
+                        ) : (
+                          <h2 className="text-white font-bold text-xl">
+                            {StatusInfo({ status: rent.status, rent })}
+                          </h2>
+                        )}
                       </div>
                     </div>
                     <div className="flex flex-row gap-4 w-full justify-between">

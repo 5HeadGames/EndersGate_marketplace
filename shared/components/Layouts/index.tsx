@@ -37,7 +37,7 @@ const navItems = [
     icon: <AreaChartOutlined />,
   },
   { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
-  { name: "COMICS", link: "/comics", icon: <ShopOutlined /> },
+  // { name: "COMICS", link: "/comics", icon: <ShopOutlined /> },
   { name: "SHOP", link: "/shop", icon: <ShopOutlined /> },
 ];
 
@@ -252,11 +252,11 @@ export default function AppLayout({ children }) {
   ];
 
   return (
-    <Layout
+    <div
       style={{
         height: "100vh",
-        // overflow: "auto",
       }}
+      className="overflow-x-hidden"
     >
       <nav
         className={clsx(
@@ -450,6 +450,6 @@ export default function AppLayout({ children }) {
       </div>
       {!router.asPath.includes("/comics") &&
         !router.asPath.includes("/pack_opening") && <Footer />}
-    </Layout>
+    </div>
   );
 }

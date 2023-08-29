@@ -33,7 +33,6 @@ const Rents = () => {
   const [typeOfRequest, setTypeOfRequest] = React.useState("");
 
   const [cancel, setCancel] = React.useState({ id: -1, blockchain: "" });
-  const [redeem, setRedeem] = React.useState({ id: -1, blockchain: "" });
   const { Modal, show, hide, isShow } = useModal();
   const dispatch = useAppDispatch();
 
@@ -187,6 +186,7 @@ const Rents = () => {
           <div className="w-full overflow-x-auto border border-overlay-border rounded-xl py-4">
             <table className="w-full min-w-max">
               <thead className="text-white font-bold">
+                <th className="text-center px-8">CHAIN</th>
                 <th className="text-center px-8">NFT</th>
                 <th className="text-center px-8">RENT ID</th>
                 <th className="text-center px-8">PRICE</th>
@@ -196,9 +196,9 @@ const Rents = () => {
                 <th className="text-center"></th>
               </thead>
               <tbody>
-                {rents.map((sale, i) => {
-                  const { pack: packsAddress } = getAddresses(sale.blockchain);
-                  const pack = sale.nft == packsAddress;
+                {rents.map((rent, i) => {
+                  const { pack: packsAddress } = getAddresses(rent.blockchain);
+                  const pack = rent.nft == packsAddress;
                   return (
                     <tr
                       className={clsx({
@@ -206,10 +206,10 @@ const Rents = () => {
                           i < rents.length - 1,
                       })}
                     >
-                      {sale && (
+                      {rent && (
                         <Rent
                           {...{
-                            sale,
+                            rent,
                             pack,
                             setCancelId: setCancel,
                             setRedeemId: setCancel,
@@ -242,8 +242,23 @@ const Rents = () => {
 
 export default Rents;
 
+export const StatusInfo = ({ status, rent }) => {
+  switch (status) {
+    case "0":
+      return "Rent Listed";
+    case "1":
+      return !getRentAvailable(rent)
+        ? "NFT available to Redeem"
+        : "NFT In Rent";
+    case "2":
+      return "Rent Finished";
+    case "3":
+      return "Rent Cancelled";
+  }
+};
+
 const Rent = ({
-  sale: rent,
+  rent,
   pack,
   setCancelId,
   setRedeemId,
@@ -252,23 +267,19 @@ const Rent = ({
 }) => {
   const cards = convertArrayCards();
 
-  const StatusInfo = ({ status, rent }) => {
-    switch (status) {
-      case "0":
-        return "Rent Listed";
-      case "1":
-        return !getRentAvailable(rent)
-          ? "NFT avaiable to Redeem"
-          : "NFT In Rent";
-      case "2":
-        return "Rent Finished";
-      case "3":
-        return "Rent Cancelled";
-    }
-  };
-
   return (
     <>
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center gap-y-2 w-full">
+          <div className="rounded-full flex flex-col text-gray-100 relative overflow-hidden h-10 w-10">
+            <img
+              src={`/images/${rent.blockchain}.png`}
+              className={`w-full`}
+              alt=""
+            />
+          </div>
+        </div>
+      </td>
       <td className="py-4 px-4">
         <div className="flex flex-col items-center gap-y-2 w-full">
           <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
