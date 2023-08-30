@@ -118,8 +118,8 @@ export const onLoadSales = createAsyncThunk(
       dailyVolume = 0,
       cardsSold = 0;
     try {
-      for (let i = 0; i < blockchains.length; i++) {
-        const blockchain = blockchains[i];
+      for (const element of blockchains) {
+        const blockchain = element;
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
         console.log(
@@ -186,6 +186,7 @@ export const onLoadSales = createAsyncThunk(
             });
           }
         } else {
+          console.log(addresses);
           const rent = getContract(
             "RentNative",
             addresses.rent,
