@@ -399,7 +399,7 @@ export const onExchangeERC721to1155 = createAsyncThunk(
         provider,
       );
 
-      const { transactionHash } = await marketplaceContract.methods
+      await marketplaceContract.methods
         .exchangeAllERC1155(nfts)
         .send({ from: from });
 
@@ -436,7 +436,7 @@ export const onApproveERC1155 = createAsyncThunk(
         provider,
       );
 
-      const { transactionHash } = await marketplaceContract.methods
+      await marketplaceContract.methods
         .setApprovalForAll(exchange, true)
         .send({ from: from });
 
@@ -480,7 +480,7 @@ export const sellERC1155 = createAsyncThunk(
         provider,
       );
 
-      const { transactionHash } = await marketplaceContract.methods
+      await marketplaceContract.methods
         .createSale(address, tokenId, startingPrice, tokens, amount, duration)
         .send({ from: from });
 
@@ -520,7 +520,7 @@ export const listRentERC1155 = createAsyncThunk(
 
       const rentContract = getContractCustom("Rent", rent, provider);
 
-      const { transactionHash } = await rentContract.methods
+      await rentContract.methods
         .createRent(address, tokenId, pricePerDay, tokens)
         .send({ from: from });
 
@@ -581,7 +581,7 @@ export const buyFromShop = createAsyncThunk(
       const { shop: shopAddress, MATICUSD: NATIVE_TO_USD } =
         getAddresses(blockchain);
 
-      const shop = await getContractCustom("Shop", shopAddress, provider);
+      const shop = getContractCustom("Shop", shopAddress, provider);
       const tokensAllowed = getTokensAllowed();
 
       setMessageBuy(`Processing your purchase...`);
@@ -671,28 +671,16 @@ export const buyFromShopNative = createAsyncThunk(
     setMessageBuy: any;
     cartShop: any[];
   }) {
-    const {
-      account,
-      tokenSelected,
-      provider,
-      blockchain,
-      setMessageBuy,
-      cartShop,
-    } = args;
+    const { account, provider, blockchain, setMessageBuy, cartShop } = args;
 
     try {
       const { shop: shopAddress } = getAddresses(blockchain);
 
-      const shop = await getContractCustom(
-        "ShopFindora",
-        shopAddress,
-        provider,
-      );
+      const shop = getContractCustom("ShopFindora", shopAddress, provider);
       setMessageBuy(`Processing your purchase...`);
 
-      const { amounts, token, tokensId, bid } = {
+      const { amounts, tokensId, bid } = {
         amounts: cartShop.map((item) => item.quantity),
-        token: tokenSelected,
         tokensId: cartShop.map((item) => item.id),
         bid: cartShop
           .map((item) => (item.price * item.quantity).toString())
@@ -844,7 +832,7 @@ export const rentBatchERC1155 = createAsyncThunk(
     try {
       const { rent, MATICUSD: NATIVE_TO_USD } = getAddresses(blockchain);
 
-      const rentContract = await getContractCustom("Rent", rent, provider);
+      const rentContract = getContractCustom("Rent", rent, provider);
       const tokensAllowed = getTokensAllowed();
 
       setMessageBuy(`Processing your purchase...`);
@@ -950,11 +938,7 @@ export const rentBatchERC1155Native = createAsyncThunk(
     try {
       const { rent } = getAddresses(blockchain);
 
-      const rentContract = await getContractCustom(
-        "RentNative",
-        rent,
-        provider,
-      );
+      const rentContract = getContractCustom("RentNative", rent, provider);
 
       setMessageBuy(`Processing your purchase...`);
 
@@ -1016,7 +1000,7 @@ export const sellERC1155Findora = createAsyncThunk(
         provider,
       );
 
-      const { transactionHash } = await marketplaceContract.methods
+      await marketplaceContract.methods
         .createSale(address, tokenId, startingPrice, amount, duration)
         .send({ from: from });
 
@@ -1066,7 +1050,6 @@ export const onCancelSale = createAsyncThunk(
     blockchain: any;
   }) {
     const { tokenId, provider, user, blockchain } = args;
-    // const relation = user.relation("events");
 
     const { marketplace } = getAddresses(blockchain);
     const marketplaceContract = getContractCustom(

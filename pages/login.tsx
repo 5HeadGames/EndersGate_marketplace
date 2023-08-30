@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { useRouter } from "next/router";
-
 import { useAppDispatch, store } from "redux/store";
 import { Button } from "shared/components/common/button";
 import clsx from "clsx";

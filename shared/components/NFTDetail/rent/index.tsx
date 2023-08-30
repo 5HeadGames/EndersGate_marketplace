@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import Web3 from "web3";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -214,7 +215,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                         }
                         className={clsx(
                           Styles.animatedImageMain,
-                          { ["hidden"]: flippedCard },
+                          { hidden: flippedCard },
 
                           {
                             "rounded-full":
@@ -236,7 +237,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                         ]?.typeCard.toLowerCase()}.png`}
                         className={clsx(
                           Styles.animatedImageMain,
-                          { ["hidden"]: !flippedCard },
+                          { hidden: !flippedCard },
                           {
                             "rounded-full":
                               cards[rent.nftId]?.typeCard == "avatar",
