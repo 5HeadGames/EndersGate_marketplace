@@ -35,6 +35,7 @@ import { ChevronLeftIcon, ExclamationCircleIcon } from "@heroicons/react/solid";
 import { useModal } from "@shared/hooks/modal";
 import { CongratsListing } from "./Congrats";
 import { toast } from "react-hot-toast";
+import ChainSelect from "@shared/components/Layouts/chainSelect";
 
 const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const NFTs = useAppSelector((state) => state.nfts);
@@ -57,6 +58,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         <CongratsListing
           hide={hide}
           name={cards[id]?.properties?.name?.value}
+          image={cards[id]?.properties?.image?.value}
         />
       </Modal>
       {id !== undefined ? (
@@ -69,8 +71,8 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               <ChevronLeftIcon className="w-8 h-8" />
             </div>
           </div>
-          <div className="w-full flex xl:flex-row flex-col gap-4 justify-center items-start">
-            <div className="flex flex-col gap-2">
+          <div className="w-full flex xl:flex-row flex-col gap-4 justify-center xl:items-start items-center">
+            <div className="flex flex-col gap-2 xl:w-auto w-full">
               <div className="flex relative items-center justify-center xl:min-w-[500px] sm:min-w-[320px] min-w-full sm:min-h-[675px] min-h-[350px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer overflow-hidden border border-gray-500">
                 <div
                   className="absolute top-2 right-2 z-10 text-white text-2xl p-1"
@@ -140,7 +142,10 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
             </div>
             <div className="flex flex-col xl:w-[500px] gap-6 w-full pb-10">
               {NFTs.balanceCards[id]?.balance > 0 && (
-                <>
+                <div className="flex flex-col">
+                  <h1 className="text-primary uppercase md:text-4xl text-3xl font-bold">
+                    {cards[id]?.properties?.name?.value}
+                  </h1>
                   {state == "choose" ? (
                     <div className="flex flex-col">
                       <div className="flex flex-col items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative px-2">
@@ -203,7 +208,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       show={show}
                     />
                   )}
-                </>
+                </div>
               )}
               <TokenInfo
                 id={id}
@@ -370,18 +375,18 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
   return (
     <div className="flex flex-col  w-full">
       <div className="flex flex-col">
-        <h1 className="text-primary uppercase md:text-4xl text-3xl font-bold">
-          {cards[id]?.properties?.name?.value}
-        </h1>
         <div className="flex flex-col md:px-6 py-10 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
           <ChevronLeftIcon
             onClick={() => setState("choose")}
             className="absolute md:top-3 left-2 top-2 text-overlay-border text-sm w-6 text-white cursor-pointer"
           />
 
-          <p className="absolute md:top-3 md:right-6 top-2 right-4 text-overlay-border text-sm">
+          <p className="absolute md:bottom-3 md:right-6 bottom-2 right-4 text-overlay-border text-[10px]">
             SELL PANEL
           </p>
+          <div className="absolute md:top-3 right-2 top-2">
+            <ChainSelect />
+          </div>
 
           <div className="flex flex-row xl:gap-32 gap-16 w-full">
             <div className="flex flex-col gap-4 w-full items-center sm:px-8">
@@ -601,7 +606,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
           .isApprovedForAll(user, rent)
           .call();
         if (isApprovedForAll === false) {
-          setMessage("Allowing us to sell your tokens");
+          setMessage("Allowing us to list your tokens");
           await approveERC1155({
             provider: provider.provider,
             from: user,
@@ -610,7 +615,6 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
           });
         }
         setMessage("Listing your tokens");
-        console.log("a?");
 
         await dispatch(
           listRentERC1155Native({
@@ -670,15 +674,16 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
   return (
     <div className="flex flex-col  w-full">
       <div className="flex flex-col">
-        <h1 className="text-primary uppercase md:text-4xl text-3xl font-bold">
-          {cards[id]?.properties?.name?.value}
-        </h1>
-        <div className="flex flex-col md:px-6 py-10 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
+        <div className="flex flex-col px-6 py-10  border border-overlay-border bg-secondary rounded-xl mt-4 relative">
           <ChevronLeftIcon
             onClick={() => setState("choose")}
             className="absolute md:top-3 left-2 top-2 text-overlay-border text-sm w-6 text-white cursor-pointer"
           />
-          <p className="absolute md:top-3 md:right-6 top-2 right-4 text-overlay-border text-sm">
+          <div className="absolute md:top-3 right-2 top-2">
+            <ChainSelect />
+          </div>
+
+          <p className="absolute md:bottom-3 md:right-4 bottom-2 right-4 text-overlay-border text-[10px]">
             RENT PANEL
           </p>
 

@@ -2,7 +2,7 @@ import { XIcon } from "@heroicons/react/solid";
 import { Image } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
-export const CongratsListing = ({ hide, name }) => {
+export const CongratsListing = ({ hide, name, image }) => {
   const router = useRouter();
 
   return (
@@ -16,10 +16,10 @@ export const CongratsListing = ({ hide, name }) => {
         alt=""
       />
       <Image
-        src="/images/comics.svg"
+        src={image}
         className="absolute"
         width={"275px"}
-        top={"-175px"}
+        top={"-250px"}
         alt=""
       />
       <div className="absolute h-full w-full rounded-2xl bg-gradient-to-b from-transparent to-overlay px-2 from-0% to-30% "></div>
@@ -36,7 +36,7 @@ export const CongratsListing = ({ hide, name }) => {
           Success!
         </h2>{" "}
         <p className="text-center text-white text-lg py-4">
-          You've successfully listed {name} NFT/s on the EndersGate Marketplace!
+          You've successfully listed {name} on the EndersGate Marketplace!
         </p>
         <a
           href={`https://twitter.com/intent/tweet?text=I'm so excited to announce that I just have listed a ${name} from Enders Gate! Get yours on: https://marketplace.endersgate.gg`}
