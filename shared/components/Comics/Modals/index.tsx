@@ -210,7 +210,7 @@ export const Modals = ({
               tokenSelected,
               setTokenSelected,
               priceMatic,
-              isMatic: true,
+              isMatic: false,
               buy: preBuy
                 ? () => {
                     hide();
