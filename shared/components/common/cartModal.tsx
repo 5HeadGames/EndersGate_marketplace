@@ -201,11 +201,12 @@ export const useCartModal = () => {
                                       cart
                                         ?.map((item: any, i: any) =>
                                           (
-                                            parseInt(item.price) * item.quantity
+                                            BigInt(item.price) *
+                                            BigInt(item.quantity)
                                           ).toString(),
                                         )
                                         .reduce((item: any, acc: any) => {
-                                          return findSum(item, acc);
+                                          return BigInt(item) + BigInt(acc);
                                         }),
                                       blockchain,
                                     )}
@@ -228,11 +229,12 @@ export const useCartModal = () => {
                                   cart
                                     ?.map((item: any, i: any) =>
                                       (
-                                        parseInt(item.price) * item.quantity
+                                        BigInt(item.price) *
+                                        BigInt(item.quantity)
                                       ).toString(),
                                     )
                                     .reduce((item: any, acc: any) => {
-                                      return findSum(item, acc);
+                                      return BigInt(item) + BigInt(acc);
                                     }),
                                   blockchain,
                                 )}

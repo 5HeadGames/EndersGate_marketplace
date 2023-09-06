@@ -112,6 +112,7 @@ const Shop = () => {
       const created = allSales
         .filter((sale) => sale.status === "0")
         .map((sale) => {
+          console.log("sale price", sale.price);
           return {
             ...sale,
             name: packs[sale.nftId]?.name,
@@ -203,19 +204,19 @@ const Shop = () => {
     const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
     const priceMATIC = await Aggregator.methods.latestAnswer().call();
     const price =
-      (parseFloat(
+      BigInt(
         cartShop
           ?.map((item, i) => {
-            return (parseInt(item.price) / 10 ** 6) * item.quantity;
+            return (
+              (BigInt(item.price) / BigInt(10 ** 6)) * BigInt(item.quantity)
+            );
           })
           .reduce((item, acc) => {
-            return item + acc;
-          }),
-      ) *
-        10 ** 8) /
-      priceMATIC;
-
-    setPriceNative((price + price * 0.05).toFixed(2).toString());
+            return BigInt(item) + BigInt(acc);
+          }) * BigInt(10 ** 8),
+      ) / BigInt(priceMATIC);
+    console.log(price);
+    setPriceNative((price + (price * BigInt(5)) / BigInt(100)).toString());
   };
 
   React.useEffect(() => {
