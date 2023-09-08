@@ -35,6 +35,8 @@ const Inventory = () => {
   const { ethAddress } = useSelector((state: any) => state.layout.user);
   const { blockchain } = useBlockchain();
 
+  console.log(inventoryCards);
+
   const cards = convertArrayCards();
 
   React.useEffect(() => {

@@ -13,7 +13,6 @@ import { useCartComicsModal } from "./Modals/ModalCartComics";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { CHAINS, CHAIN_IDS_BY_NAME, NATIVE_CURRENCY_BY_ID } from "../chains";
 import { formatPrice } from "@shared/utils/formatPrice";
-import { findSum } from "../common/specialFields/SpecialFields";
 
 function Comics() {
   const { Modal, show, isShow, hide } = useCartComicsModal();

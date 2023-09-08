@@ -367,7 +367,9 @@ export const isPack = (address: string) => {
 
 export const getRentsPendingByUser = ({ user, rents }) => {
   return rents.filter((rent) => {
-    return !getRentAvailable(rent) && rent.status === "1";
+    return (
+      !getRentAvailable(rent) && rent.status === "1" && rent.seller == user
+    );
   });
 };
 

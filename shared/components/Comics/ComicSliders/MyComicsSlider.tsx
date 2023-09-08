@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 import comicsByID from "@shared/comicsByNFTId.json";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Zoom } from "swiper";
+import { Zoom } from "swiper";
 import "swiper/css";
 
 function MyComics({ balance }) {
@@ -63,7 +63,10 @@ function MyComics({ balance }) {
             })
             .map((item) => (
               <SwiperSlide className="w-full sm:min-w-[450px] min-w-[300px]">
-                <Flex key={Math.random().toString()} className="w-full">
+                <Flex
+                  key={Math.random().toString()}
+                  className="w-full flex items-center justify-center"
+                >
                   <Link href={`/comics/${item.nameLink}/${item.issue}`}>
                     <Image
                       className="images-width-comic-series cursor-pointer w-full"

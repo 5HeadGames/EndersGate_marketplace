@@ -220,6 +220,12 @@ export default function AppLayout({ children }) {
   const userRentsNotificationArray =
     getRentsPendingByUser({ user: ethAddress, rents: allRents }) || [];
 
+  console.log(
+    "a",
+    ethAddress,
+    getRentsPendingByUser({ user: ethAddress, rents: allRents }),
+  );
+
   const profileItems = [
     { name: "INVENTORY", link: "/profile" },
     {
