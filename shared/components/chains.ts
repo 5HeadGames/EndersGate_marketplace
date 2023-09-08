@@ -12,6 +12,12 @@ const FINDORA: any = {
   decimals: 18,
 };
 
+const ETH: any = {
+  name: "Ethereum",
+  symbol: "ETH",
+  decimals: 18,
+};
+
 interface BasicChainInformation {
   urls: string[];
   name: string;
@@ -92,6 +98,15 @@ export const CHAINS: {
     blockExplorerUrls: ["https://mumbai.polygonscan.com"],
     blockExplorer: "https://mumbai.polygonscan.com",
   },
+};
+
+export const NATIVE_CURRENCY_BY_ID = {
+  1204: FINDORA,
+  1205: FINDORA,
+  137: MATIC,
+  80001: MATIC,
+  1: ETH,
+  11155111: ETH,
 };
 
 export const CHAIN_IDS_BY_NAME: {
