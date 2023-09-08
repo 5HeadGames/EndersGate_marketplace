@@ -4,20 +4,23 @@
     "name": "Humans vs Ogres Issue #1",
     "nameLink": "HvsO",
     "issue": 1,
-    "comic_banner": "https://bafybeicku2srofgncroohp2xvfd6phe2yp4pwf3i3z7aq36hrrrxo7l3sy.ipfs.nftstorage.link/"
+    "comic_banner": "https://bafybeicku2srofgncroohp2xvfd6phe2yp4pwf3i3z7aq36hrrrxo7l3sy.ipfs.nftstorage.link/",
+    "image": "https://bafybeicafdbizjwthvopchg4ftfd3g3omaqk3huqggbhbcw3ybeyykwe44.ipfs.dweb.link/HumansVsOgres1.webp"
   },
   {
     "id": 2,
     "name": "Humans vs Ogres Issue #2",
     "nameLink": "HvsO",
-    "issue": 1,
-    "comic_banner": "https://bafybeicku2srofgncroohp2xvfd6phe2yp4pwf3i3z7aq36hrrrxo7l3sy.ipfs.nftstorage.link/"
+    "issue": 2,
+    "comic_banner": "https://bafybeicku2srofgncroohp2xvfd6phe2yp4pwf3i3z7aq36hrrrxo7l3sy.ipfs.nftstorage.link/",
+    "image": "https://bafybeifq6v425pkeiy6y2unudh5vycts6ueumr6te3gmvvmlcfzblu6snm.ipfs.dweb.link/HumansVsOgres2-1.webp"
   },
   {
     "id": 3,
     "name": "Ascended vs Sentinels Issue #1",
     "nameLink": "AvsS",
-    "issue": 1,
-    "comic_banner": "https://bafybeibvopnjeon5z56tzhwqhmjr2n26yjosdzjdf66nebzmmp6cstsfxm.ipfs.nftstorage.link/"
+    "issue": 3,
+    "comic_banner": "https://bafybeibvopnjeon5z56tzhwqhmjr2n26yjosdzjdf66nebzmmp6cstsfxm.ipfs.nftstorage.link/",
+    "image": "https://bafybeibvopnjeon5z56tzhwqhmjr2n26yjosdzjdf66nebzmmp6cstsfxm.ipfs.nftstorage.link/"
   }
 ]

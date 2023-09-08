@@ -69,6 +69,7 @@ export const getBalance = async (address: string, blockchain: string) => {
 };
 
 export const getAddresses = (blockchain) => {
+  console.log(blockchain);
   switch (blockchain) {
     case "matic":
       return getAddressesMatic();
@@ -76,6 +77,8 @@ export const getAddresses = (blockchain) => {
       return getAddressesEth();
     case "findora":
       return getAddressesFindora();
+    default:
+      return undefined;
   }
 };
 
@@ -104,7 +107,16 @@ export const getAddressesEth = () => {
     : testAddresses;
 };
 
-export const getTokensAllowed = () => {
+export const getTokensAllowed = (blockchain) => {
+  switch (blockchain) {
+    case "matic":
+      return getTokensAllowedMatic();
+    case "eth":
+      return getTokensAllowedEth();
+  }
+};
+
+export const getTokensAllowedMatic = () => {
   const testAddresses = require("../../Contracts/tokensAllowed.mumbai.json");
   const addresses = require("../../Contracts/tokensAllowed.matic.json");
 
@@ -201,14 +213,16 @@ export const createEvent = ({
 export const loadSale = async function prepare({ tokenId, blockchain }: any) {
   const addresses = getAddresses(blockchain);
   const marketplace = getContract(
-    blockchain === "matic" ? "ClockSale" : "ClockSaleFindora",
+    !getNativeBlockchain(blockchain) ? "ClockSale" : "ClockSaleFindora",
     addresses.marketplace,
     blockchain,
   );
   const saleFormated = (
     await marketplace.methods.getSales([tokenId]).call()
   ).map((sale) =>
-    blockchain === "matic" ? parseSaleTokens(sale) : parseSaleNative(sale),
+    !getNativeBlockchain(blockchain)
+      ? parseSaleTokens(sale)
+      : parseSaleNative(sale),
   )[0];
   return saleFormated;
 };
@@ -253,7 +267,7 @@ export const buyNFTsMatic = async ({
     let price: any = 0;
 
     const ERC20 = getContractCustom("ERC20", token, provider);
-    const addresses = getTokensAllowed();
+    const addresses = getTokensAllowedMatic();
     if (
       tokenSelected ===
       addresses.filter((item) => item.name === "MATIC")[0].address
@@ -362,4 +376,17 @@ export const getRentAvailable = (rent) => {
     (parseInt(rent.duration) + parseInt(rent.startedAt)) * 1000 >=
     Number(new Date())
   );
+};
+
+export const getNativeBlockchain = (blockchain) => {
+  switch (blockchain) {
+    case "matic":
+      return false;
+    case "eth":
+      return false;
+    case "findora":
+      return true;
+    default:
+      return undefined;
+  }
 };

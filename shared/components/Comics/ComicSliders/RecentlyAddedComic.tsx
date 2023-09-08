@@ -18,7 +18,7 @@ import { useModal } from "@shared/hooks/modal";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
-function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
+function RecentlyAddedComic({ price, getPriceMatic, balance, showCart }) {
   const settings = {
     infinite: false,
     speed: 500,
@@ -46,7 +46,8 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
       name: "HvsO ISSUES #1",
       nameComic: "Humans vs Ogres Issue #1",
       nameLink: "HvsO_1",
-      photo: "/images/HumansVsOgres1.webp",
+      photo:
+        "https://bafybeicafdbizjwthvopchg4ftfd3g3omaqk3huqggbhbcw3ybeyykwe44.ipfs.dweb.link/HumansVsOgres1.webp",
       issues: [
         { id: 1, name: "Humans vs Ogres Issue #1" },
         { id: 2, name: "Humans vs Ogres Issue #2" },
@@ -58,7 +59,8 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
       name: "HvsO ISSUES #2",
       nameComic: "Humans vs Ogres Issue #1",
       nameLink: "HvsO_2",
-      photo: "/images/HvOIssue_2.webp",
+      photo:
+        "https://bafybeifq6v425pkeiy6y2unudh5vycts6ueumr6te3gmvvmlcfzblu6snm.ipfs.dweb.link/HumansVsOgres2-1.webp",
       issues: [
         { id: 1, name: "Humans vs Ogres Issue #1" },
         { id: 2, name: "Humans vs Ogres Issue #2" },
@@ -96,14 +98,14 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
       if (valid) {
         setNftModal({
           ...item,
-          priceUSD: priceUSD,
+          price: price,
           quantity: 1,
           balance: 1,
         });
       } else {
         setNftModal({
           ...item,
-          priceUSD: priceUSD,
+          price: price,
           quantity: issues[id].quantity,
           balance: 0,
         });
@@ -183,7 +185,7 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
                         ...nftModal,
                         name: issue.name,
                         idNFT: issue.id,
-                        priceUSD: priceUSD,
+                        price: price,
                         quantity: 1,
                       }),
                     );
@@ -222,9 +224,9 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
             i.name && (
               <SliderItem
                 issues={issues}
-                id={id}
+                id={i.id}
                 i={i}
-                priceUSD={priceUSD}
+                price={price}
                 onClickItem={onClickItem}
                 setIssues={setIssues}
               />
@@ -238,7 +240,7 @@ function RecentlyAddedComic({ priceUSD, getPriceMatic, balance, showCart }) {
 }
 export default RecentlyAddedComic;
 
-const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
+const SliderItem = ({ price, onClickItem, id, i, setIssues, issues }) => {
   const { addToast } = useToasts();
 
   const [hoverBuy, setHoverBuy] = React.useState([false, false, false, false]);
@@ -293,62 +295,32 @@ const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
             },
             {
               "hover:bg-red-500 bg-green-button hover:transition-all transition-all duration-500 hover:duration-500":
-                cartComics.filter((e) => e.name === i.name).length > 0,
+                cartComics.filter((e) => e.id === i.id).length > 0,
             },
             {
               "bg-overlay hover:bg-overlay-2 hover:transition-all transition-all duration-500 hover:duration-500":
-                cartComics.filter((e) => e.name === i.name).length === 0,
+                cartComics.filter((e) => e.id === i.id).length === 0,
             },
           )}
           onClick={(e) => {
             e.preventDefault();
           }}
         >
-          {cartComics.filter((e) => e.name === i.name).length > 0 ? (
+          {cartComics.filter((e) => e.id === i.id).length > 0 ? (
             hoverBuy[id] ? (
               <XIcon
                 className="!w-6 text-white"
                 onClick={(e) => {
                   e.preventDefault();
-                  if (cartComics.filter((e) => e.name === i.name).length > 0) {
-                    dispatch(
-                      removeFromCartComics({
-                        id: i.id,
-                      }),
-                    );
-                  } else {
-                    dispatch(
-                      addCartComics({
-                        ...i,
-                        priceUSD: priceUSD,
-                        quantity: issues[id].quantity,
-                      }),
-                    );
-                  }
+                  dispatch(
+                    removeFromCartComics({
+                      id: i.id,
+                    }),
+                  );
                 }}
               />
             ) : (
-              <CheckIcon
-                className="!w-6 text-white"
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (cartComics.filter((e) => e.name === i.name).length > 0) {
-                    dispatch(
-                      removeFromCartComics({
-                        id: i.transactionId,
-                      }),
-                    );
-                  } else {
-                    dispatch(
-                      addCartComics({
-                        ...i,
-                        priceUSD: priceUSD,
-                        quantity: issues[id].quantity,
-                      }),
-                    );
-                  }
-                }}
-              />
+              <CheckIcon className="!w-6 text-white" />
             )
           ) : (
             <>
@@ -364,7 +336,7 @@ const SliderItem = ({ priceUSD, onClickItem, id, i, setIssues, issues }) => {
                             ...i,
                             name: issue.name,
                             idNFT: issue.id,
-                            priceUSD: priceUSD,
+                            price: price,
                             quantity: issues[id].quantity,
                           }),
                         );

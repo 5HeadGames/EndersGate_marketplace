@@ -10,13 +10,6 @@ import { Navigation, Zoom } from "swiper";
 import "swiper/css";
 
 function MyComics({ balance }) {
-  const settings = {
-    loop: true,
-    speed: 500,
-    slidesToShow: 2,
-    slidesToScroll: 1,
-  };
-
   return (
     <div>
       <Flex mt={20} mb={10} justifyContent={"center"} id="my_comics">
@@ -107,26 +100,3 @@ function MyComics({ balance }) {
 }
 
 export default MyComics;
-//  slidesPerView={2}
-//                   onSlideChange={() => console.log("slide change")}
-//                   onSwiper={(swiper) => console.log(swiper)}
-//                   zoom={true}
-//                   navigation={{
-//                     enabled: true,
-//                     nextEl: ".swiper-button-next",
-//                     prevEl: ".swiper-button-prev",
-//                   }}
-//                   initialSlide={0}
-//                   modules={[Zoom, Navigation]}
-//                   className="mySwiper w-full"
-//                   spaceBetween={10}
-//                   breakpoints={{
-//                     700: {
-//                       slidesPerView: 2,
-//                       centeredSlides: false,
-//                     },
-//                     100: {
-//                       slidesPerView: 1,
-//                       centeredSlides: true,
-//                     },
-//                   }}

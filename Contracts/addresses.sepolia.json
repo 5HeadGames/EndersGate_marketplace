@@ -1,4 +1,21 @@
 {
   "comics": "0xE9Ab657D8B80834F89710f69193d2Aa45E0aed4a",
-  "MATICUSD": "0x694AA1769357215DE4FAC081bf1f309aDC325306"
+  "MATICUSD": "0x694AA1769357215DE4FAC081bf1f309aDC325306",
+  "endersGate": "",
+  "ipfs": "",
+  "packIpfs": "",
+  "pack": "",
+  "library": "",
+  "marketplace": "",
+  "marketplaceOwnable": "",
+  "usdc": "",
+  "busd": "",
+  "common_pack": "",
+  "rare_pack": "",
+  "epic_pack": "",
+  "legendary_pack": "",
+  "exchange": "",
+  "shop": "",
+  "battlePass": "",
+  "rent": ""
 }

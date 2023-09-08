@@ -2,9 +2,10 @@ import { createReducer } from "@reduxjs/toolkit";
 import * as actions from "../actions";
 
 const INITIAL_STATE = {
-  balanceCards: [],
+  balanceComics: [],
   balancePacks: [],
   balanceWrapped: [],
+  balanceComics: [],
   allSales: [],
   saleCreated: [],
   saleSuccessfull: [],
@@ -22,9 +23,10 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
     .addCase(
       actions.onGetAssets.fulfilled,
       (state: typeof INITIAL_STATE, action) => {
-        state.balanceCards = action.payload.balanceCards;
+        state.balanceComics = action.payload.balanceCards;
         state.balancePacks = action.payload.balancePacks;
         state.balanceWrapped = action.payload.balanceWrapped;
+        state.balanceComics = action.payload.balanceComics;
       },
     )
     .addCase(
@@ -40,12 +42,6 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
         state.cardsSold = Number(action.payload.cardsSold);
         state.allRents = action.payload.allRents;
         state.allSales = action.payload.allSales;
-      },
-    )
-    .addCase(
-      actions.sellERC1155.fulfilled,
-      (state: typeof INITIAL_STATE, action) => {
-        //state.saleCreated.push(action.payload);
       },
     );
 });

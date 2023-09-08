@@ -14,7 +14,12 @@ import Tilt from "react-parallax-tilt";
 import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetAssets } from "@redux/actions";
-import { getAddressesMatic, getContractCustom } from "@shared/web3";
+import {
+  getAddresses,
+  getAddressesMatic,
+  getContractCustom,
+  getNativeBlockchain,
+} from "@shared/web3";
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import Link from "next/link";
@@ -32,7 +37,7 @@ export const CardInventory = (props) => {
     (state: any) => state.layout.user,
   );
 
-  const { endersGate, pack } = getAddressesMatic();
+  const { endersGate, pack, comics } = getAddresses(blockchain);
 
   const dispatch = useDispatch();
 
@@ -46,19 +51,12 @@ export const CardInventory = (props) => {
   });
 
   const getAssets = async () => {
-    await dispatch(onGetAssets({ address: account, blockchain }));
+    dispatch(onGetAssets({ address: account, blockchain }));
   };
 
   const transferNft = async () => {
     const web3 = new Web3(provider);
     if (!web3) return;
-    const contractSelected = getContractCustom(
-      "EndersGate",
-      endersGate,
-      provider,
-    );
-
-    const PacksContract = getContractCustom("EndersPack", pack, provider);
 
     if (nftSendData.quantity === 0) {
       return alert("Your quantity of tokens to transfer must be higher than 0");
@@ -66,38 +64,67 @@ export const CardInventory = (props) => {
     setLoading(true);
 
     try {
-      if (!props.card) {
-        await PacksContract.methods
-          .safeTransferFrom(
-            account,
-            nftSendData.address,
-            props.id,
-            nftSendData.quantity,
-            "0x00",
-          )
-          .send({
-            from: account,
-          });
-      } else {
-        await contractSelected.methods
-          .safeTransferFrom(
-            account,
-            nftSendData.address,
-            props.id,
-            nftSendData.quantity,
-            "0x00",
-          )
-          .send({
-            from: account,
-          });
+      switch (props.typeNFT) {
+        case "pack":
+          const PacksContract = getContractCustom("EndersPack", pack, provider);
+          await PacksContract.methods
+            .safeTransferFrom(
+              account,
+              nftSendData.address,
+              props.id,
+              nftSendData.quantity,
+              "0x00",
+            )
+            .send({
+              from: account,
+            });
+          break;
+        case "card":
+          const CardsContract = getContractCustom(
+            "EndersGate",
+            endersGate,
+            provider,
+          );
+          await CardsContract.methods
+            .safeTransferFrom(
+              account,
+              nftSendData.address,
+              props.id,
+              nftSendData.quantity,
+              "0x00",
+            )
+            .send({
+              from: account,
+            });
+          break;
+        case "comic":
+          const ComicsContract = getContractCustom(
+            getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+            comics,
+            provider,
+          );
+          await ComicsContract.methods
+            .safeTransferFrom(
+              account,
+              nftSendData.address,
+              props.id,
+              nftSendData.quantity,
+              "0x00",
+            )
+            .send({
+              from: account,
+            });
+          break;
+        default:
+          return;
       }
       setLoading(false);
       alert("Your token was succesfully transfered");
+      getAssets();
     } catch (err) {
       console.log({ err });
       alert("Your token couldn't be transfered");
     }
-    getAssets();
     setTransfer(false);
     setLoading(false);
   };
@@ -250,31 +277,33 @@ export const CardInventory = (props) => {
               )}
               style={{ minHeight: "100vh" }}
             >
-              <div className="flex justify-end items-center w-full mb-2">
-                <Button
-                  variant="contained"
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                    border: "solid 1px",
-                    borderColor: "white",
-                    py: 1,
-                    px: 1,
-                    fontSize: "10px",
-                    lineHeight: "9px",
-                    height: "20px",
-                    color: "white",
-                    outline: "none",
-                    ring: "none",
-                    borderRadius: "16px",
-                  }}
-                  onClick={() => setIsFlipped((prev) => !prev)}
-                >
-                  Flip Card <ReloadOutlined />
-                </Button>
-              </div>
+              {props.typeNFT === "card" && (
+                <div className="flex justify-end items-center w-full mb-2">
+                  <Button
+                    variant="contained"
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "10px",
+                      border: "solid 1px",
+                      borderColor: "white",
+                      py: 1,
+                      px: 1,
+                      fontSize: "10px",
+                      lineHeight: "9px",
+                      height: "20px",
+                      color: "white",
+                      outline: "none",
+                      ring: "none",
+                      borderRadius: "16px",
+                    }}
+                    onClick={() => setIsFlipped((prev) => !prev)}
+                  >
+                    Flip Card <ReloadOutlined />
+                  </Button>
+                </div>
+              )}
               <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
                 <Tilt>
                   <img
@@ -335,11 +364,7 @@ export const CardInventory = (props) => {
                       ring: "none",
                     }}
                   >
-                    <Link
-                      href={
-                        props.card ? `/card/${props.id}` : `/pack/${props.id}`
-                      }
-                    >
+                    <Link href={`/${props.typeNFT}/${props.id}`}>
                       {props.rented ? "View Detail" : "Sell / Rent"}
                     </Link>
                   </Button>
@@ -384,10 +409,10 @@ export const CardInventory = (props) => {
             <img
               src={props.icon || Icons.logo}
               className={props.icon ? "h-64" : "h-24"}
+              alt="eg_icon"
             />
           </div>
           <h2 className="text-sm font-thin text-gray-500 text-center">
-            {" "}
             <span className="font-bold text-white">{props.name}</span> #
             {props.id !== undefined ? props.id : "12345"}
           </h2>

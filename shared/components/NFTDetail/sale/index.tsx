@@ -12,7 +12,7 @@ import {
 import { Button } from "../../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import { AddressText } from "../../common/specialFields/SpecialFields";
-import { getAddresses, getTokensAllowed, switchChain } from "@shared/web3";
+import { getAddresses, getTokensAllowedMatic, switchChain } from "@shared/web3";
 import packs from "../../../packs.json";
 import { useModal } from "@shared/hooks/modal";
 import { convertArrayCards } from "../../common/convertCards";
@@ -137,7 +137,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     Math.floor(new Date().getTime() / 1000) >=
       parseInt(sale?.duration) + parseInt(sale?.startedAt);
 
-  const tokensAllowed = getTokensAllowed();
+  const tokensAllowed = getTokensAllowedMatic();
 
   return (
     <>

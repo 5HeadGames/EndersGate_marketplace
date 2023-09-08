@@ -9,7 +9,8 @@ import {
   getAddresses,
   getContract,
   getContractCustom,
-  getTokensAllowed,
+  getNativeBlockchain,
+  getTokensAllowedMatic,
   switchChain,
 } from "@shared/web3";
 import {
@@ -45,7 +46,7 @@ const Shop = () => {
   const { addToast } = useToasts();
   const [priceNative, setPriceNative] = React.useState("0");
 
-  const tokensAllowed = getTokensAllowed();
+  const tokensAllowed = getTokensAllowedMatic();
 
   const { Modal, show, isShow, hide } = useCartModal();
 
@@ -89,7 +90,7 @@ const Shop = () => {
     try {
       // Use web3 to get the user's accounts.
       const shop = getContract(
-        blockchain === "matic" ? "Shop" : "ShopFindora",
+        !getNativeBlockchain(blockchain) ? "Shop" : "ShopFindora",
         shopAddress,
         blockchain,
       );
@@ -100,10 +101,9 @@ const Shop = () => {
         .call();
 
       const allSales = rawSales.map((sale, i) => {
-        const saleFormatted =
-          blockchain === "matic"
-            ? parseSaleTokens(sale)
-            : parseSaleNative(sale);
+        const saleFormatted = !getNativeBlockchain(blockchain)
+          ? parseSaleTokens(sale)
+          : parseSaleNative(sale);
         return {
           id: i,
           ...saleFormatted,
@@ -164,7 +164,7 @@ const Shop = () => {
         return;
       }
       let tx;
-      if (blockchain === "matic") {
+      if (!getNativeBlockchain(blockchain)) {
         tx = await dispatch(
           buyFromShop({
             blockchain,
@@ -220,7 +220,7 @@ const Shop = () => {
   };
 
   React.useEffect(() => {
-    if (cartShop.length > 0 && blockchain === "matic") {
+    if (cartShop.length > 0 && !getNativeBlockchain(blockchain)) {
       getPriceMatic();
     } else {
       setPriceNative("0");
@@ -260,7 +260,7 @@ const Shop = () => {
             tokenSelected={tokenSelected}
             priceMatic={priceNative}
             buy={buyPacks}
-            isMatic={blockchain === "matic"}
+            isMatic={!getNativeBlockchain(blockchain)}
             itemsCart={cartShop.map((item, index) => {
               return (
                 <div

@@ -10,6 +10,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
 import { Icons } from "@shared/const/Icons";
+import { getNativeBlockchain } from "@shared/web3";
 
 export const useCartModal = () => {
   const { providerName } = useSelector((state: any) => state.layout.user);
@@ -124,7 +125,7 @@ export const useCartModal = () => {
                             return item;
                           })}
                         </div>
-                        {blockchain === "matic" && (
+                        {!getNativeBlockchain(blockchain) && (
                           <>
                             <div className="text-md text-white font-bold w-full text-center">
                               Chose currency
@@ -187,7 +188,7 @@ export const useCartModal = () => {
                                 className="text-sm font-[700] text-white flex gap-1 items-center justify-center"
                                 style={{ fontSize: "14px" }}
                               >
-                                {blockchain === "matic" ? (
+                                {!getNativeBlockchain(blockchain) ? (
                                   <>
                                     {priceMatic}{" "}
                                     {
@@ -219,7 +220,7 @@ export const useCartModal = () => {
                                 />
                               </h3>
                             )}
-                            {blockchain === "matic" && (
+                            {!getNativeBlockchain(blockchain) && (
                               <h3
                                 className="text-sm font-[700] text-white opacity-50"
                                 style={{ fontSize: "14px" }}
@@ -261,21 +262,22 @@ export const useCartModal = () => {
                             Checkout
                           </div>
                         </div>
-                        {providerName === "magic" && blockchain === "matic" && (
-                          <div
-                            className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
-                            onClick={() => {
-                              showWallet();
-                            }}
-                          >
-                            <img
-                              src="icons/wallet.png"
-                              className="w-8 pb-2"
-                              alt=""
-                            />{" "}
-                            Add funds to your wallet
-                          </div>
-                        )}
+                        {providerName === "magic" &&
+                          !getNativeBlockchain(blockchain) && (
+                            <div
+                              className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
+                              onClick={() => {
+                                showWallet();
+                              }}
+                            >
+                              <img
+                                src="icons/wallet.png"
+                                className="w-8 pb-2"
+                                alt=""
+                              />{" "}
+                              Add funds to your wallet
+                            </div>
+                          )}
                       </div>
                     ) : (
                       <div className="h-full flex flex-col items-center justify-center text-white font-bold gap-4 text-md text-center w-64 p-4 border border-transparent-color-gray-200 rounded-xl">

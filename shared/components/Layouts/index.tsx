@@ -37,7 +37,7 @@ const navItems = [
     icon: <AreaChartOutlined />,
   },
   { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
-  // { name: "COMICS", link: "/comics", icon: <ShopOutlined /> },
+  { name: "COMICS", link: "/comics", icon: <ShopOutlined /> },
   { name: "SHOP", link: "/shop", icon: <ShopOutlined /> },
 ];
 
@@ -162,7 +162,7 @@ export default function AppLayout({ children }) {
       const typeOfConnection = localStorage.getItem("typeOfConnection");
       const chain = localStorage.getItem("chain");
       if (authStillValid()) {
-        await updateBlockchain(chain || "matic");
+        updateBlockchain(chain || "matic");
         WALLETS.forEach(async (wallet) => {
           if (wallet.title === typeOfConnection) {
             await wallet.connection.connector.activate();

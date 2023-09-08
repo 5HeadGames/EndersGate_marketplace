@@ -74,7 +74,7 @@ export const CHAINS: {
       process.env.NEXT_PUBLIC_POLYGON_PROVIDER || "",
       "https://polygon-rpc.com",
     ].filter((url) => url !== ""),
-    rpcUrls: ["https://endpoints.omniatech.io/v1/matic/mumbai/public	"],
+    rpcUrls: ["https://endpoints.omniatech.io/v1/matic/mumbai/public"],
 
     name: "Polygon Mainnet",
     nativeCurrency: MATIC,
@@ -99,7 +99,7 @@ export const CHAIN_IDS_BY_NAME: {
 } = {
   findora: process.env.NEXT_PUBLIC_ENV === "production" ? 1204 : 1205,
   matic: process.env.NEXT_PUBLIC_ENV === "production" ? 137 : 80001,
-  ethereum: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
+  eth: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
 };
 
 export const CHAIN_NAME_BY_ID: {
@@ -109,8 +109,8 @@ export const CHAIN_NAME_BY_ID: {
   1205: "findora",
   137: "matic",
   80001: "matic",
-  1: "ethereum",
-  11155111: "ethereum",
+  1: "eth",
+  11155111: "eth",
 };
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(

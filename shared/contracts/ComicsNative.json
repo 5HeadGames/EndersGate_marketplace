@@ -11,21 +11,6 @@
           "internalType": "string",
           "name": "_symbol",
           "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "_wcurrency",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_priceFeedW",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_decimals",
-          "type": "uint256"
         }
       ],
       "stateMutability": "nonpayable",
@@ -280,34 +265,11 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "priceUSD",
+          "name": "price",
           "type": "uint256"
         }
       ],
       "name": "addComic",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_token",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "priceFeed",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "decimals",
-          "type": "uint256"
-        }
-      ],
-      "name": "addToken",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -422,11 +384,6 @@
           "type": "address"
         },
         {
-          "internalType": "address",
-          "name": "tokenToPay",
-          "type": "address"
-        },
-        {
           "internalType": "uint256",
           "name": "id",
           "type": "uint256"
@@ -458,11 +415,6 @@
           "internalType": "uint256[]",
           "name": "amounts",
           "type": "uint256[]"
-        },
-        {
-          "internalType": "address",
-          "name": "tokenToPay",
-          "type": "address"
         }
       ],
       "name": "buyBatch",
@@ -500,7 +452,7 @@
         },
         {
           "internalType": "uint256",
-          "name": "priceUSD",
+          "name": "price",
           "type": "uint256"
         },
         {
@@ -515,45 +467,13 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "decimalsByToken",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "decimalsUSD",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "uint256",
           "name": "id",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "priceUSD",
+          "name": "price",
           "type": "uint256"
         }
       ],
@@ -600,7 +520,7 @@
             },
             {
               "internalType": "uint256",
-              "name": "priceUSD",
+              "name": "price",
               "type": "uint256"
             },
             {
@@ -609,7 +529,7 @@
               "type": "bool"
             }
           ],
-          "internalType": "struct EndersComicsMultiTokens.Comic",
+          "internalType": "struct EndersComicsNative.Comic",
           "name": "",
           "type": "tuple"
         }
@@ -619,11 +539,6 @@
     },
     {
       "inputs": [
-        {
-          "internalType": "address",
-          "name": "tokenToGet",
-          "type": "address"
-        },
         {
           "internalType": "uint256",
           "name": "id",
@@ -754,25 +669,6 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "_token",
-          "type": "address"
-        }
-      ],
-      "name": "isTokenAllowed",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
           "name": "_to",
           "type": "address"
         },
@@ -828,25 +724,6 @@
           "internalType": "string",
           "name": "",
           "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "priceFeedsByToken",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -1055,19 +932,6 @@
           "internalType": "string",
           "name": "",
           "type": "string"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "wcurrency",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
         }
       ],
       "stateMutability": "view",

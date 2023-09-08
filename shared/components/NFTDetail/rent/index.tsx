@@ -8,7 +8,7 @@ import { onLoadSales, onGetAssets, rentERC1155 } from "@redux/actions";
 import { Button } from "../../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import { AddressText } from "../../common/specialFields/SpecialFields";
-import { getAddresses, getTokensAllowed, switchChain } from "@shared/web3";
+import { getAddresses, getTokensAllowedMatic, switchChain } from "@shared/web3";
 import packs from "../../../packs.json";
 import { useModal } from "@shared/hooks/modal";
 import { convertArrayCards } from "../../common/convertCards";
@@ -113,7 +113,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
     setRentNFTDays(0);
   };
 
-  const tokensAllowed = getTokensAllowed();
+  const tokensAllowed = getTokensAllowedMatic();
 
   return (
     <>

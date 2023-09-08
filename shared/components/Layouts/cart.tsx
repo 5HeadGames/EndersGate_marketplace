@@ -13,7 +13,8 @@ import {
   buyNFTsNative,
   getAddresses,
   getContractCustom,
-  getTokensAllowed,
+  getNativeBlockchain,
+  getTokensAllowedMatic,
 } from "@shared/web3";
 import { useSelector } from "react-redux";
 import React from "react";
@@ -37,7 +38,7 @@ export const Cart = ({
 
   const { addToast } = useToasts();
   const dispatch = useAppDispatch();
-  const tokensAllowed = getTokensAllowed();
+  const tokensAllowed = getTokensAllowedMatic();
   const { showWallet } = useMagicLink();
   const { ethAddress } = useSelector((state: any) => state.layout.user);
   const {
@@ -64,7 +65,7 @@ export const Cart = ({
   const cards = convertArrayCards();
 
   React.useEffect(() => {
-    if (cart.length > 0 && blockchain === "matic") {
+    if (cart.length > 0 && !getNativeBlockchain(blockchain)) {
       getPriceMatic();
     } else {
       setPriceMatic("0");
@@ -110,7 +111,7 @@ export const Cart = ({
   };
 
   const buyNFTs = () => {
-    if (blockchain === "matic") {
+    if (!getNativeBlockchain(blockchain)) {
       if (!tokenSelected) {
         return toast.error("Please select a token as a payment");
       }
@@ -139,7 +140,7 @@ export const Cart = ({
   };
 
   const rentNFTs = () => {
-    if (blockchain === "matic") {
+    if (!getNativeBlockchain(blockchain)) {
       if (!tokenSelected) {
         return toast.error("Please select a token as a payment");
       }
@@ -180,7 +181,7 @@ export const Cart = ({
     );
 
   const magicFundOption = providerName === "magic" &&
-    blockchain === "matic" && (
+    !getNativeBlockchain(blockchain) && (
       <div className="text-[12px] text-white pt-4 font-bold">
         Don't have crypto? Click{" "}
         <span
@@ -400,7 +401,7 @@ const TokenSelection = ({
 }) => {
   return (
     <>
-      {blockchain === "matic" && (
+      {!getNativeBlockchain(blockchain) && (
         <>
           <h2 className="text-xs pb-2 text-green-button font-bold">
             Select a currency to make the payment
