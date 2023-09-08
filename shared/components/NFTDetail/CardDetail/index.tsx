@@ -142,7 +142,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
               </div>
             </div>
             <div className="flex flex-col xl:w-[500px] gap-6 w-full pb-10">
-              {NFTs.balanceComics[id]?.balance > 0 && (
+              {NFTs.balanceCards[id]?.balance > 0 && (
                 <div className="flex flex-col">
                   <h1 className="text-primary uppercase md:text-4xl text-3xl font-bold">
                     {cards[id]?.properties?.name?.value}

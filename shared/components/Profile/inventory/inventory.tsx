@@ -24,7 +24,7 @@ const navItems = [
 
 const Inventory = () => {
   const nfts = useAppSelector((state) => state.nfts);
-  const inventoryCards = nfts.balanceComics;
+  const inventoryCards = nfts.balanceCards;
   const inventoryRented = nfts.balanceWrapped;
   const inventoryComics = nfts.balanceComics;
   console.log(inventoryComics, "comics");

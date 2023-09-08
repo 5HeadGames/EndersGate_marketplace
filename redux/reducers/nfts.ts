@@ -2,7 +2,7 @@ import { createReducer } from "@reduxjs/toolkit";
 import * as actions from "../actions";
 
 const INITIAL_STATE = {
-  balanceComics: [],
+  balanceCards: [],
   balancePacks: [],
   balanceWrapped: [],
   balanceComics: [],
@@ -23,7 +23,7 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
     .addCase(
       actions.onGetAssets.fulfilled,
       (state: typeof INITIAL_STATE, action) => {
-        state.balanceComics = action.payload.balanceCards;
+        state.balanceCards = action.payload.balanceCards;
         state.balancePacks = action.payload.balancePacks;
         state.balanceWrapped = action.payload.balanceWrapped;
         state.balanceComics = action.payload.balanceComics;
