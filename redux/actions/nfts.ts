@@ -7,10 +7,11 @@ import {
   getAddressesMatic,
   getContract,
   getContractCustom,
-  getTokensAllowed,
+  getTokensAllowedMatic,
   getAddresses,
   getAddressesFindora,
   getNativeBlockchain,
+  getTokensAllowed,
 } from "@shared/web3";
 import cards from "../../cards.json";
 import {
@@ -117,7 +118,8 @@ export const onLoadSales = createAsyncThunk(
       allRents = [],
       rentsFinished = [],
       dailyVolume = 0,
-      cardsSold = 0;
+      cardsSold = 0,
+      comicsSupply = 0;
     try {
       for (const element of blockchains) {
         const blockchain = element;
@@ -126,9 +128,7 @@ export const onLoadSales = createAsyncThunk(
 
         /* SALES */
         const marketplace = getContract(
-          CHAIN_NAME_BY_ID[blockchain] === "matic"
-            ? "ClockSale"
-            : "ClockSaleFindora",
+          !getNativeBlockchain(blockchain) ? "ClockSale" : "ClockSaleFindora",
           addresses.marketplace,
           CHAIN_NAME_BY_ID[blockchain],
         );
@@ -138,15 +138,18 @@ export const onLoadSales = createAsyncThunk(
         );
 
         if (lastSale > 0) {
+          const arraySales = new Array(lastSale)
+            .fill(0)
+            .map((a, i) => i.toString());
+
           const rawSales = await marketplace.methods
-            .getSales(new Array(lastSale).fill(0).map((a, i) => i))
+            .getSales(arraySales)
             .call();
 
           rawSales.forEach((sale: any[], i) => {
-            const saleFormated =
-              CHAIN_NAME_BY_ID[blockchain] === "matic"
-                ? parseSaleTokens(sale)
-                : parseSaleNative(sale);
+            const saleFormated = !getNativeBlockchain(blockchain)
+              ? parseSaleTokens(sale)
+              : parseSaleNative(sale);
             allSales.push({
               saleId: i,
               blockchain: CHAIN_NAME_BY_ID[blockchain],
@@ -156,7 +159,7 @@ export const onLoadSales = createAsyncThunk(
         }
 
         /* RENTS */
-        if (CHAIN_NAME_BY_ID[blockchain] === "matic") {
+        if (!getNativeBlockchain(blockchain)) {
           const rent = getContract(
             "Rent",
             addresses.rent,
@@ -286,6 +289,7 @@ export const onLoadSales = createAsyncThunk(
         totalSales: listsCreated.length,
         dailyVolume: dailyVolume.toString(),
         cardsSold: cardsSold.toString(),
+        currentComicsSupply: comicsSupply,
       };
     } catch (err) {
       console.log(err.message, err);
@@ -300,6 +304,7 @@ export const onLoadSales = createAsyncThunk(
       totalSales: 0,
       dailyVolume: 0,
       cardsSold: 0,
+      currentComicsSupply: 0,
     };
   },
 );
@@ -354,54 +359,121 @@ export const onGetAssets = createAsyncThunk(
   async function prepare({ address, blockchain }: any) {
     try {
       if (!address) throw new Error("No address provided");
-
-      const { endersGate, pack, rent } = getAddresses(blockchain);
-
-      const cardsContract = getContract("EndersGate", endersGate, blockchain);
-      const packsContract = getContract("EndersPack", pack, blockchain);
-
       const packsIds = [0, 1, 2, 3];
       const cardsIds = Object.values(cards)
         .reduce((acc: any[], cur) => acc.concat(cur), [])
         .map((card, i) => i);
+      if (blockchain !== "eth") {
+        const { endersGate, pack, rent, comics } = getAddresses(blockchain);
 
-      const balancePacks = await packsContract.methods
-        .balanceOfBatch(
-          packsIds.map(() => address),
-          packsIds,
-        )
-        .call();
-      const balanceCards = await cardsContract.methods
-        .balanceOfBatch(
-          cardsIds.map(() => address),
-          cardsIds,
-        )
-        .call();
-      let balanceWrapped = [];
+        const cardsContract = getContract("EndersGate", endersGate, blockchain);
+        const packsContract = getContract("EndersPack", pack, blockchain);
+        const rentContract = getContract("Rent", rent, blockchain);
+        const comicsContract = getContract(
+          getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+          comics,
+          blockchain,
+        );
+        const comicsLength = await comicsContract.methods
+          .comicIdCounter()
+          .call();
 
-      const rentContract = getContract("Rent", rent, blockchain);
+        const comicsIds = new Array(parseInt(comicsLength))
+          .fill(1)
+          .map((a, i) => i + 1);
 
-      balanceWrapped = await rentContract.methods
-        .balanceOfBatch(
-          cardsIds.map(() => address),
-          cardsIds,
-        )
-        .call();
+        console.log(comicsLength, comicsIds, "aver");
 
-      return {
-        balanceCards: cardsIds.map((id, i) => ({
-          id,
-          balance: balanceCards[i],
-        })),
-        balancePacks: packsIds.map((id, i) => ({
-          id,
-          balance: balancePacks[i],
-        })),
-        balanceWrapped: cardsIds.map((id, i) => ({
-          id,
-          balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
-        })),
-      };
+        const balancePacks = await packsContract.methods
+          .balanceOfBatch(
+            packsIds.map(() => address),
+            packsIds,
+          )
+          .call();
+        const balanceCards = await cardsContract.methods
+          .balanceOfBatch(
+            cardsIds.map(() => address),
+            cardsIds,
+          )
+          .call();
+
+        const balanceComics = await comicsContract.methods
+          .balanceOfBatch(
+            comicsIds.map(() => address),
+            comicsIds,
+          )
+          .call();
+
+        let balanceWrapped = [];
+
+        balanceWrapped = await rentContract.methods
+          .balanceOfBatch(
+            cardsIds.map(() => address),
+            cardsIds,
+          )
+          .call();
+
+        return {
+          balanceCards: cardsIds.map((id, i) => ({
+            id,
+            balance: balanceCards[i],
+          })),
+          balancePacks: packsIds.map((id, i) => ({
+            id,
+            balance: balancePacks[i],
+          })),
+          balanceWrapped: cardsIds.map((id, i) => ({
+            id,
+            balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
+          })),
+          balanceComics: comicsIds.map((id, i) => ({
+            id,
+            balance: balanceComics[i],
+          })),
+        };
+      } else {
+        const { comics } = getAddresses(blockchain);
+        const comicsContract = getContract(
+          getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+          comics,
+          blockchain,
+        );
+        const comicsLength = await comicsContract.methods
+          .comicIdCounter()
+          .call();
+
+        const comicsIds = new Array(parseInt(comicsLength))
+          .fill(1)
+          .map((a, i) => i + 1);
+
+        console.log(comicsLength, comicsIds, "aver");
+        const balanceComics = await comicsContract.methods
+          .balanceOfBatch(
+            comicsIds.map(() => address),
+            comicsIds,
+          )
+          .call();
+        return {
+          balanceCards: cardsIds.map((id, i) => ({
+            id,
+            balance: 0,
+          })),
+          balancePacks: packsIds.map((id, i) => ({
+            id,
+            balance: 0,
+          })),
+          balanceWrapped: [
+            cardsIds.map((id, i) => ({
+              id,
+              balance: 0,
+            })),
+          ],
+          balanceComics: comicsIds.map((id, i) => ({
+            id,
+            balance: balanceComics[i],
+          })),
+        };
+      }
     } catch (err) {
       console.log({ err });
       throw err;
@@ -1101,7 +1173,7 @@ export const onCancelSale = createAsyncThunk(
 
     const { marketplace } = getAddresses(blockchain);
     const marketplaceContract = getContractCustom(
-      blockchain === "matic" ? "ClockSale" : "ClockSaleFindora",
+      !getNativeBlockchain(blockchain) ? "ClockSale" : "ClockSaleFindora",
       marketplace,
       provider,
     );

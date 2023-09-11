@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   balanceCards: [],
   balancePacks: [],
   balanceWrapped: [],
+  balanceComics: [],
   allSales: [],
   saleCreated: [],
   saleSuccessfull: [],
@@ -27,6 +28,7 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
         state.balanceCards = action.payload.balanceCards;
         state.balancePacks = action.payload.balancePacks;
         state.balanceWrapped = action.payload.balanceWrapped;
+        state.balanceComics = action.payload.balanceComics;
       },
     )
     .addCase(
