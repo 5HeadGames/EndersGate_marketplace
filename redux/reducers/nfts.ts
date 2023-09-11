@@ -13,6 +13,8 @@ const INITIAL_STATE = {
   rentsInRent: [],
   rentsFinished: [],
   totalSales: 0,
+  comicsCurrentSupply: 0,
+  comicsLimit: 500,
   dailyVolume: 0,
   cardsSold: 0,
 };
@@ -43,9 +45,10 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
       },
     )
     .addCase(
-      actions.sellERC1155.fulfilled,
+      actions.onLoadComics.fulfilled,
       (state: typeof INITIAL_STATE, action) => {
-        //state.saleCreated.push(action.payload);
+        console.log(action.payload.comicsCurrentSupply);
+        state.comicsCurrentSupply = action.payload.comicsCurrentSupply;
       },
     );
 });

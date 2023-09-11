@@ -12,10 +12,12 @@ import Shop from "./ClockSaleOwnable.json";
 import Rent from "./RentMultiTokens.json";
 import RentNative from "./RentNativeTokens.json";
 import Comics from "./Comics.json";
+import ComicsNative from "./ComicsNative.json";
 
 const contracts = {
   ClockSaleFindora,
   Comics,
+  ComicsNative,
   ClockSale,
   EndersGate,
   EndersPack,

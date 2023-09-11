@@ -39,6 +39,7 @@ export const GET_LISTED_NFTS = "get_listed_nfts";
 export const GET_LISTED_NFT = "get_listed_nft";
 export const GET_ASSETS = "get_assets";
 export const GET_VOLUME = "get_volume";
+export const GET_COMICS = "get_comics";
 
 export const RENT_NFT = "rent_nft";
 export const RENT_BATCH_NFT = "rent_batch_nft";

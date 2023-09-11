@@ -14,6 +14,11 @@ export const DropdownChain: React.FC<any> = () => {
 
   const blockchains = [
     {
+      name: "ETHEREUM",
+      value: "eth",
+      image: "/images/eth.png",
+    },
+    {
       name: "MATIC",
       value: "matic",
       image: "/images/matic.png",

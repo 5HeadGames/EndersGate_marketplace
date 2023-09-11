@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { InputModal } from "@shared/components/common/form/inputModal";
 import { useModal } from "@shared/hooks/modal";
 import GooglePlaceAPI from "@shared/components/common/google-place-api";
+import { useSelector } from "react-redux";
 
 export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -27,6 +28,10 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
     }
     setIsLoading(false);
   };
+
+  const { comicsCurrentSupply, comicsLimit } = useSelector(
+    (state: any) => state.nfts,
+  );
 
   const ModalAddress = (
     <Modal isShow={isShow} noClose={noClose} withoutX>
@@ -69,6 +74,14 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
           <p className="text-center text-white text-md py-4">
             Where do you want us to ship your physical comics to?
           </p>
+          <div className="flex flex-col pb-6">
+            <h2 className="text-green-button text-center font-bold text-2xl">
+              LIMITED: {comicsLimit - comicsCurrentSupply}/{comicsLimit} Left
+            </h2>
+            <span className="text-yellow-600 text-center text-sm">
+              Split across 3 Blockchains
+            </span>
+          </div>
           <div className="flex flex-col items-center justify-center gap-5 w-full">
             <InputModal
               type="text"

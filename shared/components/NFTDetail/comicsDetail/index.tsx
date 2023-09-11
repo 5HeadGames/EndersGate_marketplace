@@ -32,18 +32,17 @@ import { AddressText } from "../../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { ChevronLeftIcon, ExclamationCircleIcon } from "@heroicons/react/solid";
+import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { useModal } from "@shared/hooks/modal";
 import { CongratsListing } from "./Congrats";
 import { toast } from "react-hot-toast";
+import comics from "@shared/comicsByNFTId.json";
 import ChainSelect from "@shared/components/Layouts/chainSelect";
 
-const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
+const ComicDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const NFTs = useAppSelector((state) => state.nfts);
-  const [state, setState] = React.useState("choose");
+  // const [state, setState] = React.useState("choose");
   const router = useRouter();
-
-  const cards = convertArrayCards();
 
   const { Modal, show, hide, isShow } = useModal();
 
@@ -51,15 +50,17 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
 
   const { blockchain } = useBlockchain();
 
-  const { endersGate } = getAddresses(blockchain);
+  const { comics: comicsAddress } = getAddresses(blockchain);
+
+  console.log();
 
   return (
     <>
       <Modal isShow={isShow} withoutX>
         <CongratsListing
           hide={hide}
-          name={cards[id]?.properties?.name?.value}
-          image={cards[id]?.properties?.image?.value}
+          name={comics.find((comic) => comic.id == id)?.name}
+          image={comics.find((comic) => comic.id == id)?.image}
         />
       </Modal>
       {id !== undefined ? (
@@ -93,61 +94,35 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                   </svg>
                 </div>
                 <img
-                  src={cards[id].properties.image?.value}
+                  src={comics.find((comic) => comic.id == id)?.image}
                   className="absolute xl:top-[-20%] top-[-25%] bottom-0 xl:left-[-55%] left-[-35%] right-0 margin-auto opacity-50 xl:min-w-[1050px] min-w-[175%]"
                   alt=""
                 />
 
                 <div className="sm:sticky sm:top-20 h-min w-auto">
-                  <ReactCardFlip
-                    isFlipped={flippedCard}
-                    flipDirection="horizontal"
-                  >
-                    <Tilt className="flex items-center justify-center">
-                      <img
-                        src={cards[id].properties.image?.value || Icons.logo}
-                        className={clsx(
-                          Styles.animatedImageMain,
-                          { ["hidden"]: flippedCard },
+                  <img
+                    src={
+                      comics.find((comic) => comic.id == id)?.image ||
+                      Icons.logo
+                    }
+                    className={clsx(
+                      Styles.animatedImageMain,
+                      { ["hidden"]: flippedCard },
 
-                          {
-                            "rounded-full": cards[id].typeCard == "avatar",
-                          },
-                          {
-                            "rounded-md": cards[id].typeCard != "avatar",
-                          },
-                        )}
-                        alt=""
-                      />
-                    </Tilt>
-
-                    <Tilt className="flex items-center justify-center">
-                      <img
-                        src={`/images/${cards[id].typeCard.toLowerCase()}.png`}
-                        className={clsx(
-                          Styles.animatedImageMain,
-                          { ["hidden"]: !flippedCard },
-                          {
-                            "rounded-full": cards[id].typeCard == "avatar",
-                          },
-                          {
-                            "rounded-md": cards[id].typeCard != "avatar",
-                          },
-                        )}
-                        alt=""
-                      />
-                    </Tilt>
-                  </ReactCardFlip>
+                      "rounded-md",
+                    )}
+                    alt=""
+                  />
                 </div>
               </div>
             </div>
             <div className="flex flex-col xl:w-[500px] gap-6 w-full pb-10">
-              {NFTs.balanceCards[id]?.balance > 0 && (
+              <h1 className="text-primary uppercase md:text-4xl text-3xl font-bold">
+                {comics.find((comic) => comic.id == id)?.name}
+              </h1>
+              {NFTs.balanceComics[id]?.balance > 0 && (
                 <div className="flex flex-col">
-                  <h1 className="text-primary uppercase md:text-4xl text-3xl font-bold">
-                    {cards[id]?.properties?.name?.value}
-                  </h1>
-                  {state == "choose" ? (
+                  {/* {state == "choose" ? (
                     <div className="flex flex-col">
                       <div className="flex flex-col items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative px-2">
                         <div
@@ -208,14 +183,14 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                       setState={setState}
                       show={show}
                     />
-                  )}
+                  )} */}
                 </div>
               )}
               <TokenInfo
                 id={id}
                 blockchain={blockchain}
                 NFTs={NFTs}
-                endersGate={endersGate}
+                comics={comicsAddress}
               />
             </div>
           </div>
@@ -233,8 +208,6 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
   const { account: user, provider } = useWeb3React();
 
   const dispatch = useAppDispatch();
-
-  const cards = convertArrayCards();
 
   const { updateBlockchain } = useBlockchain();
 
@@ -806,7 +779,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
   );
 };
 
-const TokenInfo = ({ id, blockchain, NFTs, endersGate }) => {
+const TokenInfo = ({ id, blockchain, NFTs, comics }) => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl relative">
@@ -836,15 +809,7 @@ const TokenInfo = ({ id, blockchain, NFTs, endersGate }) => {
               Balance:
             </p>
             <p className="text-primary-disabled  font-[400] text-lg">
-              {NFTs.balanceCards[id]?.balance}
-            </p>
-          </div>
-          <div className="w-full flex justify-between py-2 border-b border-overlay-border sm:px-6 px-2">
-            <p className="text-lg font-[400] text-primary-disabled ">
-              Balance Wrapped (Rented):
-            </p>
-            <p className="text-primary-disabled  font-[400] text-lg">
-              {NFTs.balanceWrapped[id]?.balance}
+              {NFTs.balanceComics[id]?.balance}
             </p>
           </div>
           <div className="w-full flex justify-between py-2 border-b border-overlay-border sm:px-6 px-2">
@@ -861,13 +826,13 @@ const TokenInfo = ({ id, blockchain, NFTs, endersGate }) => {
               href={
                 CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.blockExplorer +
                 "/address/" +
-                endersGate
+                comics
               }
               target="_blank"
               rel="noreferrer"
               className="text-red-primary font-[400] text-lg flex items-center gap-1"
             >
-              <AddressText text={endersGate}></AddressText>{" "}
+              <AddressText text={comics}></AddressText>{" "}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -902,4 +867,4 @@ const TokenInfo = ({ id, blockchain, NFTs, endersGate }) => {
   );
 };
 
-export default NFTDetailIDComponent;
+export default ComicDetailIDComponent;

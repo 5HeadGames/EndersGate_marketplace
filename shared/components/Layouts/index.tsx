@@ -8,7 +8,12 @@ import { useRouter } from "next/dist/client/router";
 import clsx from "clsx";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppDispatch } from "redux/store";
-import { onGetAssets, onLoadSales, onUpdateUser } from "redux/actions";
+import {
+  onGetAssets,
+  onLoadComics,
+  onLoadSales,
+  onUpdateUser,
+} from "redux/actions";
 import {
   AreaChartOutlined,
   SearchOutlined,
@@ -162,7 +167,7 @@ export default function AppLayout({ children }) {
       const typeOfConnection = localStorage.getItem("typeOfConnection");
       const chain = localStorage.getItem("chain");
       if (authStillValid()) {
-        await updateBlockchain(chain || "matic");
+        updateBlockchain(chain || "matic");
         WALLETS.forEach(async (wallet) => {
           if (wallet.title === typeOfConnection) {
             await wallet.connection.connector.activate();
@@ -187,6 +192,7 @@ export default function AppLayout({ children }) {
 
   const loadSales = async () => {
     await dispatch(onLoadSales());
+    await dispatch(onLoadComics());
   };
 
   React.useEffect(() => {

@@ -10,6 +10,7 @@ import {
   getTokensAllowed,
   getAddresses,
   getAddressesFindora,
+  getNativeBlockchain,
 } from "@shared/web3";
 import cards from "../../cards.json";
 import {
@@ -122,15 +123,7 @@ export const onLoadSales = createAsyncThunk(
         const blockchain = element;
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
-        console.log(
-          addresses,
-          addresses.marketplace,
-          "addresses",
-          CHAIN_NAME_BY_ID[blockchain],
-          CHAIN_NAME_BY_ID[blockchain] === "matic"
-            ? "ClockSale"
-            : "ClockSaleFindora",
-        );
+
         /* SALES */
         const marketplace = getContract(
           CHAIN_NAME_BY_ID[blockchain] === "matic"
@@ -186,7 +179,6 @@ export const onLoadSales = createAsyncThunk(
             });
           }
         } else {
-          console.log(addresses);
           const rent = getContract(
             "RentNative",
             addresses.rent,
@@ -197,7 +189,6 @@ export const onLoadSales = createAsyncThunk(
             const rawRents = await rent.methods
               .getRents(new Array(lastRent).fill(0).map((a, i) => i))
               .call();
-            console.log(rawRents, "RENTs");
 
             rawRents.forEach((sale: any[], i) => {
               const rentFormated = parseRentNative(sale);
@@ -310,6 +301,51 @@ export const onLoadSales = createAsyncThunk(
       dailyVolume: 0,
       cardsSold: 0,
     };
+  },
+);
+
+export const onLoadComics = createAsyncThunk(
+  actionTypes.GET_COMICS,
+  async function prepare() {
+    try {
+      const blockchains =
+        process.env.NEXT_PUBLIC_ENV === "production"
+          ? MAINNET_CHAIN_IDS
+          : TESTNET_CHAIN_IDS;
+
+      let comicsCurrentSupply = 0;
+
+      for (const element of blockchains) {
+        const blockchain = element;
+
+        const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
+
+        const comics = getContract(
+          getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+          addresses.comics,
+          CHAIN_NAME_BY_ID[blockchain],
+        );
+
+        const comic = await comics.methods
+          .getComic(await comics.methods.comicIdCounter().call())
+          .call();
+
+        const supplyBlockchain = Number(
+          await comics.methods.totalSupply(comic.comicId).call(),
+        );
+
+        console.log(comicsCurrentSupply, supplyBlockchain, comic);
+
+        comicsCurrentSupply = comicsCurrentSupply + supplyBlockchain;
+      }
+
+      return {
+        comicsCurrentSupply,
+      };
+    } catch (err) {
+      console.log({ err });
+      throw err;
+    }
   },
 );
 
@@ -582,7 +618,7 @@ export const buyFromShop = createAsyncThunk(
         getAddresses(blockchain);
 
       const shop = getContractCustom("Shop", shopAddress, provider);
-      const tokensAllowed = getTokensAllowed();
+      const tokensAllowed = getTokensAllowed(blockchain);
 
       setMessageBuy(`Processing your purchase...`);
 
@@ -594,7 +630,7 @@ export const buyFromShop = createAsyncThunk(
 
       let price = "0";
       const ERC20 = getContractCustom("ERC20", token, provider);
-      const addressesAllowed = getTokensAllowed();
+      const addressesAllowed = getTokensAllowed(blockchain);
       if (
         tokenSelected ===
         addressesAllowed.filter((item) => item.name === "MATIC")[0].address
@@ -708,8 +744,10 @@ export const buyERC1155 = createAsyncThunk(
     nftContract: string;
     provider: any;
     user: any;
+    blockchain: any;
   }) {
-    const { seller, tokenId, token, amount, bid, provider, user } = args;
+    const { seller, tokenId, token, amount, bid, provider, user, blockchain } =
+      args;
 
     try {
       const { marketplace } = getAddressesMatic();
@@ -719,7 +757,7 @@ export const buyERC1155 = createAsyncThunk(
         provider,
       );
       const ERC20 = getContractCustom("ERC20", token, provider);
-      const addresses = getTokensAllowed();
+      const addresses = getTokensAllowed(blockchain);
       if (
         token === addresses.filter((item) => item.name === "MATIC")[0].address
       ) {
@@ -765,14 +803,24 @@ export const rentERC1155 = createAsyncThunk(
     nftContract: string;
     provider: any;
     user: any;
+    blockchain: string;
   }) {
-    const { seller, tokenId, token, daysOfRent, bid, provider, user } = args;
+    const {
+      seller,
+      tokenId,
+      token,
+      daysOfRent,
+      bid,
+      provider,
+      user,
+      blockchain,
+    } = args;
 
     try {
       const { rent } = getAddressesMatic();
       const rentContract = getContractCustom("Rent", rent, provider);
       const ERC20 = getContractCustom("ERC20", token, provider);
-      const addresses = getTokensAllowed();
+      const addresses = getTokensAllowed(blockchain);
 
       if (
         token === addresses.filter((item) => item.name === "MATIC")[0].address
@@ -833,7 +881,7 @@ export const rentBatchERC1155 = createAsyncThunk(
       const { rent, MATICUSD: NATIVE_TO_USD } = getAddresses(blockchain);
 
       const rentContract = getContractCustom("Rent", rent, provider);
-      const tokensAllowed = getTokensAllowed();
+      const tokensAllowed = getTokensAllowed(blockchain);
 
       setMessageBuy(`Processing your purchase...`);
 
@@ -844,7 +892,7 @@ export const rentBatchERC1155 = createAsyncThunk(
 
       let price = "0";
       const ERC20 = getContractCustom("ERC20", token, provider);
-      const addressesAllowed = getTokensAllowed();
+      const addressesAllowed = getTokensAllowed(blockchain);
       if (
         tokenSelected ===
         addressesAllowed.filter((item) => item.name === "MATIC")[0].address

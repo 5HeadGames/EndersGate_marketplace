@@ -45,13 +45,13 @@ const Shop = () => {
   const { addToast } = useToasts();
   const [priceNative, setPriceNative] = React.useState("0");
 
-  const tokensAllowed = getTokensAllowed();
+  const { blockchain, updateBlockchain } = useBlockchain();
+
+  const tokensAllowed = getTokensAllowed(blockchain);
 
   const { Modal, show, isShow, hide } = useCartModal();
 
   const { cartShop } = useSelector((state: any) => state.layout);
-
-  const { blockchain, updateBlockchain } = useBlockchain();
 
   const { shop: shopAddress, MATICUSD } = getAddresses(blockchain);
 
@@ -112,7 +112,6 @@ const Shop = () => {
       const created = allSales
         .filter((sale) => sale.status === "0")
         .map((sale) => {
-          console.log("sale price", sale.price);
           return {
             ...sale,
             name: packs[sale.nftId]?.name,

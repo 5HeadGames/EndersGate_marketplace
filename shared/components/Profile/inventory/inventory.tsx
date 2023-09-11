@@ -5,15 +5,12 @@ import React from "react";
 import { useAppSelector } from "redux/store";
 import { SearchOutlined } from "@ant-design/icons";
 import Styles from "./styles.module.scss";
-import { getBalance } from "@shared/web3";
-import Link from "next/link";
+import comics from "@shared/comicsByNFTId.json";
 import { Images } from "@shared/const/Images";
 import { convertArrayCards } from "@shared/components/common/convertCards";
-import { useWeb3React } from "@web3-react/core";
 import { Dropdown } from "@shared/components/common/dropdown/dropdown";
 import { XIcon } from "@heroicons/react/solid";
 import { CardInventory } from "@shared/components/Profile/inventory/cards/itemCard/index";
-import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { onGetAssets } from "@redux/actions";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
   { title: "Packs", value: "Packs" },
+  { title: "Comics", value: "Comics" },
   { title: "Rented Cards", value: "Rented Cards" },
 ];
 
@@ -28,12 +26,16 @@ const Inventory = () => {
   const nfts = useAppSelector((state) => state.nfts);
   const inventoryCards = nfts.balanceCards;
   const inventoryRented = nfts.balanceWrapped;
+  const inventoryComics = nfts.balanceComics;
+  console.log(inventoryComics, "comics");
   const [inventoryPacks, setInventoryPacks] = React.useState([]);
   const [columnSelected, setColumnSelected] = React.useState("Trading Cards");
   const [search, setSearch] = React.useState("");
   const dispatch = useDispatch();
   const { ethAddress } = useSelector((state: any) => state.layout.user);
   const { blockchain } = useBlockchain();
+
+  console.log(inventoryCards);
 
   const cards = convertArrayCards();
 
@@ -158,7 +160,7 @@ const Inventory = () => {
                     name={cards[card.id]?.properties?.name?.value}
                     balance={card.balance}
                     type={cards[card.id].typeCard}
-                    card={true}
+                    typeNFT={"card"}
                     byId
                   />
                 );
@@ -182,7 +184,7 @@ const Inventory = () => {
                     icon={pack.image}
                     name={pack.name}
                     balance={nfts.balancePacks[pack.id].balance}
-                    card={false}
+                    typeNFT={"pack"}
                     byId
                   />
                 );
@@ -216,7 +218,7 @@ const Inventory = () => {
                     name={cards[card.id]?.properties?.name?.value}
                     balance={card.balance}
                     type={cards[card.id].typeCard}
-                    card={true}
+                    typeNFT={"card"}
                     rented
                     byId
                   />
@@ -226,6 +228,40 @@ const Inventory = () => {
             <div className="h-72 flex flex-col items-center justify-center text-white font-bold gap-4 relative">
               <img src={Icons.logoCard} className="w-24 h-24" alt="" />
               You don't own Rented EG NFTs Cards
+            </div>
+          )
+        ) : columnSelected === "Comics" ? (
+          inventoryComics.filter(
+            (comic) =>
+              comics[comic.id]?.name
+                .toLowerCase()
+                .includes(search.toLowerCase()) && comic.balance > 0,
+          ).length > 0 ? (
+            inventoryComics
+              .filter(
+                (comic) =>
+                  comics[comic.id]?.name
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) && comic.balance > 0,
+              )
+              .map((comic) => {
+                return (
+                  <CardInventory
+                    key={comic.id}
+                    id={comic.id}
+                    icon={comics.find(({ id }) => id == comic.id)?.image}
+                    name={comics.find(({ id }) => id == comic.id)?.name}
+                    balance={comic.balance}
+                    typeNFT={"comic"}
+                    rented
+                    byId
+                  />
+                );
+              })
+          ) : (
+            <div className="h-72 flex flex-col items-center justify-center text-white font-bold gap-4 relative">
+              <img src={Icons.logoCard} className="w-24 h-24" alt="" />
+              You don't own EG Comics
             </div>
           )
         ) : (
