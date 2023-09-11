@@ -274,7 +274,7 @@ const CartComic = ({
               <h2
                 className="text-sm font-bold text-white py-4 px-4 cursor-pointer"
                 onClick={() => {
-                  dispatch(removeAll());
+                  dispatch(removeAllComics());
                 }}
               >
                 Clear all

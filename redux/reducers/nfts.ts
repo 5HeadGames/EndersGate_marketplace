@@ -6,6 +6,8 @@ const INITIAL_STATE = {
   balancePacks: [],
   balanceWrapped: [],
   balanceComics: [],
+  comicsLimit: 500,
+  currentComicsSupply: 0,
   allSales: [],
   saleCreated: [],
   saleSuccessfull: [],
@@ -42,6 +44,7 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
         state.cardsSold = Number(action.payload.cardsSold);
         state.allRents = action.payload.allRents;
         state.allSales = action.payload.allSales;
+        state.currentComicsSupply = action.payload.currentComicsSupply;
       },
     );
 });

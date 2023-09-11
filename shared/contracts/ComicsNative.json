@@ -267,6 +267,11 @@
           "internalType": "uint256",
           "name": "price",
           "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "limit",
+          "type": "uint256"
         }
       ],
       "name": "addComic",
@@ -456,6 +461,11 @@
           "type": "uint256"
         },
         {
+          "internalType": "uint256",
+          "name": "limit",
+          "type": "uint256"
+        },
+        {
           "internalType": "bool",
           "name": "exists",
           "type": "bool"
@@ -473,7 +483,17 @@
         },
         {
           "internalType": "uint256",
+          "name": "comicId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
           "name": "price",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "limit",
           "type": "uint256"
         }
       ],
@@ -524,6 +544,11 @@
               "type": "uint256"
             },
             {
+              "internalType": "uint256",
+              "name": "limit",
+              "type": "uint256"
+            },
+            {
               "internalType": "bool",
               "name": "exists",
               "type": "bool"
@@ -532,6 +557,41 @@
           "internalType": "struct EndersComicsNative.Comic",
           "name": "",
           "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getComics",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "comicId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "limit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "exists",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct EndersComicsNative.Comic[]",
+          "name": "",
+          "type": "tuple[]"
         }
       ],
       "stateMutability": "view",

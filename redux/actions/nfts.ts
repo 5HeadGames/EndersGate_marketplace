@@ -117,26 +117,38 @@ export const onLoadSales = createAsyncThunk(
       allRents = [],
       rentsFinished = [],
       dailyVolume = 0,
-      cardsSold = 0;
+      cardsSold = 0,
+      comicsSupply = 0;
     try {
       for (const element of blockchains) {
         const blockchain = element;
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
-        console.log(
-          addresses,
-          addresses.marketplace,
-          "addresses",
+
+        /* COMICS */
+        const comics = getContract(
+          getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+          addresses.comics,
           CHAIN_NAME_BY_ID[blockchain],
-          CHAIN_NAME_BY_ID[blockchain] === "matic"
-            ? "ClockSale"
-            : "ClockSaleFindora",
         );
+
+        const comic = await comics.methods
+          .getComic(await comics.methods.comicIdCounter().call())
+          .call();
+
+        console.log(
+          await comics.methods.totalSupply(comic.comicId).call(),
+          comicsSupply,
+          "supply before",
+        );
+
+        comicsSupply =
+          comicsSupply +
+          Number(await comics.methods.totalSupply(comic.comicId).call());
+
         /* SALES */
         const marketplace = getContract(
-          CHAIN_NAME_BY_ID[blockchain] === "matic"
-            ? "ClockSale"
-            : "ClockSaleFindora",
+          !getNativeBlockchain(blockchain) ? "ClockSale" : "ClockSaleFindora",
           addresses.marketplace,
           CHAIN_NAME_BY_ID[blockchain],
         );
@@ -146,15 +158,18 @@ export const onLoadSales = createAsyncThunk(
         );
 
         if (lastSale > 0) {
+          const arraySales = new Array(lastSale)
+            .fill(0)
+            .map((a, i) => i.toString());
+
           const rawSales = await marketplace.methods
-            .getSales(new Array(lastSale).fill(0).map((a, i) => i))
+            .getSales(arraySales)
             .call();
 
           rawSales.forEach((sale: any[], i) => {
-            const saleFormated =
-              CHAIN_NAME_BY_ID[blockchain] === "matic"
-                ? parseSaleTokens(sale)
-                : parseSaleNative(sale);
+            const saleFormated = !getNativeBlockchain(blockchain)
+              ? parseSaleTokens(sale)
+              : parseSaleNative(sale);
             allSales.push({
               saleId: i,
               blockchain: CHAIN_NAME_BY_ID[blockchain],
@@ -164,7 +179,7 @@ export const onLoadSales = createAsyncThunk(
         }
 
         /* RENTS */
-        if (CHAIN_NAME_BY_ID[blockchain] === "matic") {
+        if (!getNativeBlockchain(blockchain)) {
           const rent = getContract(
             "Rent",
             addresses.rent,
@@ -187,7 +202,6 @@ export const onLoadSales = createAsyncThunk(
             });
           }
         } else {
-          console.log(addresses);
           const rent = getContract(
             "RentNative",
             addresses.rent,
@@ -198,7 +212,6 @@ export const onLoadSales = createAsyncThunk(
             const rawRents = await rent.methods
               .getRents(new Array(lastRent).fill(0).map((a, i) => i))
               .call();
-            console.log(rawRents, "RENTs");
 
             rawRents.forEach((sale: any[], i) => {
               const rentFormated = parseRentNative(sale);
@@ -296,6 +309,7 @@ export const onLoadSales = createAsyncThunk(
         totalSales: listsCreated.length,
         dailyVolume: dailyVolume.toString(),
         cardsSold: cardsSold.toString(),
+        currentComicsSupply: comicsSupply,
       };
     } catch (err) {
       console.log(err.message, err);
@@ -310,6 +324,7 @@ export const onLoadSales = createAsyncThunk(
       totalSales: 0,
       dailyVolume: 0,
       cardsSold: 0,
+      currentComicsSupply: 0,
     };
   },
 );
