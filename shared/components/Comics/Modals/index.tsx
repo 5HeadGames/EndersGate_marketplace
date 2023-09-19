@@ -30,6 +30,7 @@ import { Button } from "@shared/components/common/button";
 import { Image } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useBlockchain } from "@shared/context/useBlockchain";
 
 export const Modals = ({
   priceUSD,
@@ -241,6 +242,7 @@ const CartComic = ({
 }) => {
   const dispatch = useDispatch();
   const { providerName } = useSelector((state: any) => state.layout.user);
+  const { blockchain } = useBlockchain();
 
   const { showWallet } = useMagicLink();
   return (
@@ -398,6 +400,17 @@ const CartComic = ({
               </div>
             </div>
             {providerName === "magic" && (
+              <div
+                className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
+                onClick={() => {
+                  showWallet();
+                }}
+              >
+                <img src="icons/wallet.png" className="w-8 pb-2" alt="" /> Add
+                funds to your wallet
+              </div>
+            )}
+            {blockchain == "findora" && (
               <div
                 className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
                 onClick={() => {

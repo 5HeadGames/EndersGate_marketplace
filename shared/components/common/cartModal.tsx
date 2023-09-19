@@ -244,6 +244,22 @@ export const useCartModal = () => {
                           </div>
                         </div>
 
+                        {blockchain === "findora" && (
+                          <a
+                            className="text-[12px] text-white pt-4 font-bold flex flex-col items-center justify-center gap-2 cursor-pointer"
+                            href="https://rialtobridge.io/"
+                            target={"_blank"}
+                            rel="noreferrer"
+                          >
+                            <img
+                              src="images/Railtobridge_Icon.webp"
+                              className="h-10"
+                              alt=""
+                            />{" "}
+                            Add funds to your wallet in Rialto Bridge
+                          </a>
+                        )}
+
                         {messageBuy !== "" ? (
                           <div className="py-2 text-lg text-white font-bold text-center w-full">
                             {messageBuy}
