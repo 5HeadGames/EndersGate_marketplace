@@ -60,7 +60,9 @@ const Shop = () => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    setTokenSelected(tokensAllowed[0].address);
+    if (tokensAllowed) {
+      setTokenSelected(tokensAllowed[0].address);
+    }
   }, [tokensAllowed]);
 
   const packs = [
