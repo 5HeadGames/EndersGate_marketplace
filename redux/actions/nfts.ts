@@ -127,7 +127,9 @@ export const onLoadSales = createAsyncThunk(
 
         /* SALES */
         const marketplace = getContract(
-          !getNativeBlockchain(blockchain) ? "ClockSale" : "ClockSaleFindora",
+          CHAIN_NAME_BY_ID[blockchain] === "matic"
+            ? "ClockSale"
+            : "ClockSaleFindora",
           addresses.marketplace,
           CHAIN_NAME_BY_ID[blockchain],
         );
@@ -137,18 +139,15 @@ export const onLoadSales = createAsyncThunk(
         );
 
         if (lastSale > 0) {
-          const arraySales = new Array(lastSale)
-            .fill(0)
-            .map((a, i) => i.toString());
-
           const rawSales = await marketplace.methods
-            .getSales(arraySales)
+            .getSales(new Array(lastSale).fill(0).map((a, i) => i))
             .call();
 
           rawSales.forEach((sale: any[], i) => {
-            const saleFormated = !getNativeBlockchain(blockchain)
-              ? parseSaleTokens(sale)
-              : parseSaleNative(sale);
+            const saleFormated =
+              CHAIN_NAME_BY_ID[blockchain] === "matic"
+                ? parseSaleTokens(sale)
+                : parseSaleNative(sale);
             allSales.push({
               saleId: i,
               blockchain: CHAIN_NAME_BY_ID[blockchain],
@@ -158,7 +157,7 @@ export const onLoadSales = createAsyncThunk(
         }
 
         /* RENTS */
-        if (!getNativeBlockchain(blockchain)) {
+        if (CHAIN_NAME_BY_ID[blockchain] === "matic") {
           const rent = getContract(
             "Rent",
             addresses.rent,
@@ -181,6 +180,7 @@ export const onLoadSales = createAsyncThunk(
             });
           }
         } else {
+          console.log(addresses);
           const rent = getContract(
             "RentNative",
             addresses.rent,
@@ -191,6 +191,7 @@ export const onLoadSales = createAsyncThunk(
             const rawRents = await rent.methods
               .getRents(new Array(lastRent).fill(0).map((a, i) => i))
               .call();
+            console.log(rawRents, "RENTs");
 
             rawRents.forEach((sale: any[], i) => {
               const rentFormated = parseRentNative(sale);
