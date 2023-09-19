@@ -49,7 +49,7 @@ const ProfileLayout = ({ children }) => {
               <h2 className="text-white font-bold md:text-2xl text-lg">
                 {"EG Enthusiast"}
               </h2>
-              <h2 className="text-green-button md:text-[12px] text-[10px]">
+              <h2 className="text-green-button font-bold md:text-[12px] text-[10px]">
                 (<AddressText text={user} />)
               </h2>
             </div>
