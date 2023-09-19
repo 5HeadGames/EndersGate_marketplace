@@ -118,8 +118,7 @@ export const onLoadSales = createAsyncThunk(
       allRents = [],
       rentsFinished = [],
       dailyVolume = 0,
-      cardsSold = 0,
-      comicsSupply = 0;
+      cardsSold = 0;
     try {
       for (const element of blockchains) {
         const blockchain = element;
@@ -289,7 +288,6 @@ export const onLoadSales = createAsyncThunk(
         totalSales: listsCreated.length,
         dailyVolume: dailyVolume.toString(),
         cardsSold: cardsSold.toString(),
-        currentComicsSupply: comicsSupply,
       };
     } catch (err) {
       console.log(err.message, err);
@@ -304,7 +302,6 @@ export const onLoadSales = createAsyncThunk(
       totalSales: 0,
       dailyVolume: 0,
       cardsSold: 0,
-      currentComicsSupply: 0,
     };
   },
 );
