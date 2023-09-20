@@ -9,7 +9,7 @@ import Styles from "../styles.module.scss";
 import Tilt from "react-parallax-tilt";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import packs from "../../../packs.json";
-import { getTokensAllowed } from "@shared/web3";
+import { getTokensAllowedMatic } from "@shared/web3";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 import { multiply } from "@shared/components/utils";
 
@@ -25,7 +25,7 @@ export const ModalSale = ({
   tokenSelected,
 }) => {
   const cards: any[] = convertArrayCards();
-  const tokensAllowed = getTokensAllowed();
+  const tokensAllowed = getTokensAllowedMatic();
 
   return (
     <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-12 border border-overlay-border w-auto relative">

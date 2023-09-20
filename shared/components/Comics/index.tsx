@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import NftMainBanner from "./NftMainBanner";
 import NftFooter from "./NftFooter";
@@ -5,10 +6,13 @@ import ComicButtons from "./ComicSliders/ComicButtons";
 import { Flex } from "@chakra-ui/react";
 import { ShopOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
-import { getAddressesEth, getContractCustom } from "@shared/web3";
+import { getAddresses, getContract, getNativeBlockchain } from "@shared/web3";
 import { useModalAddressUser } from "./Modals/ModalAdddressUser";
 import { Modals } from "./Modals";
 import { useCartComicsModal } from "./Modals/ModalCartComics";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { CHAINS, CHAIN_IDS_BY_NAME, NATIVE_CURRENCY_BY_ID } from "../chains";
+import { formatPrice } from "@shared/utils/formatPrice";
 
 function Comics() {
   const { Modal, show, isShow, hide } = useCartComicsModal();
@@ -40,17 +44,24 @@ function Comics() {
     (state: any) => state.layout.user,
   );
 
-  const [priceMatic, setPriceMatic] = React.useState("0");
-  const [basePriceMATIC, setBasePriceMatic] = React.useState("0");
-  const [priceUSD, setPriceUSD] = React.useState("0");
+  const [priceNative, setPriceNative] = React.useState("0");
+  const [basePrice, setBasePriceMatic] = React.useState("0");
+  const [price, setPrice] = React.useState("0");
   const [balance, setComicsOwned] = React.useState([]);
 
-  const { providerEth, cartComics } = useSelector((state: any) => state.layout);
+  const { cartComics } = useSelector((state: any) => state.layout);
 
-  const { comics: comicsAddress, MATICUSD } = getAddressesEth();
+  const { blockchain } = useBlockchain();
+
+  const { comics: comicsAddress, MATICUSD: NATIVEUSD } =
+    getAddresses(blockchain);
 
   const getComicsNFTs = async () => {
-    const comics = getContractCustom("Comics", comicsAddress, providerEth);
+    const comics = getContract(
+      getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+      comicsAddress,
+      blockchain,
+    );
     const nftsId = await comics.methods.comicIdCounter().call();
     const balances = await comics.methods
       .balanceOfBatch(
@@ -66,54 +77,87 @@ function Comics() {
     );
   };
 
-  const getPriceUSD = async () => {
-    const comics = getContractCustom("Comics", comicsAddress, providerEth);
-    const priceUSD = await comics.methods
+  const getPrice = async () => {
+    const comics = getContract(
+      getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+      comicsAddress,
+      blockchain,
+    );
+    const price = await comics.methods
       .comics(await comics.methods.comicIdCounter().call())
       .call();
-    const Aggregator = getContractCustom("Aggregator", MATICUSD, providerEth);
-    const priceMATIC = await Aggregator.methods.latestAnswer().call();
-    setBasePriceMatic(priceMATIC);
-    setPriceUSD(priceUSD.priceUSD);
+    if (getNativeBlockchain(blockchain)) {
+      setPrice(price.price);
+    } else {
+      const Aggregator = getContract("Aggregator", NATIVEUSD, blockchain);
+      const priceMATIC = await Aggregator.methods.latestAnswer().call();
+      setBasePriceMatic(priceMATIC);
+      setPrice(price.priceUSD);
+    }
   };
 
-  const getPriceMatic = async () => {
+  const getPriceNative = async () => {
     try {
-      const price =
-        (parseFloat(
-          cartComics
-            ?.map((item, i) => {
-              return (parseInt(priceUSD) / 10 ** 6) * item.quantity;
-            })
-            ?.reduce((item, acc) => {
-              return item + acc;
-            }),
-        ) *
-          10 ** 8) /
-        parseInt(basePriceMATIC);
-      setPriceMatic((price + price * 0.000005).toFixed(8).toString());
+      if (!getNativeBlockchain(blockchain)) {
+        const Aggregator = getContract("Aggregator", NATIVEUSD, blockchain);
+        const priceNative = await Aggregator.methods.latestAnswer().call();
+        const price =
+          (parseFloat(
+            cartComics
+              ?.map((item) => {
+                return (parseInt(item.price) / 10 ** 6) * item.quantity;
+              })
+              ?.reduce((item, acc) => {
+                return item + acc;
+              }),
+          ) *
+            10 ** 8) /
+          Number(priceNative);
+
+        setPriceNative(
+          (price + price * (5 / 1000000)).toFixed(5).toString() +
+            " " +
+            NATIVE_CURRENCY_BY_ID[CHAIN_IDS_BY_NAME[blockchain]].symbol,
+        );
+      } else {
+        const price = cartComics
+          ?.map((item) => {
+            return BigInt(item.price) * BigInt(item.quantity);
+          })
+          ?.reduce((item, acc) => {
+            return BigInt(item) + BigInt(acc);
+          });
+
+        setPriceNative(formatPrice(price, blockchain));
+      }
     } catch (e) {}
   };
 
   React.useEffect(() => {
-    getPriceUSD();
-  }, [comicsAddress, providerEth]);
+    if (comicsAddress) {
+      getPrice();
+    }
+  }, [comicsAddress, blockchain]);
 
   React.useEffect(() => {
-    if (account) {
+    if (
+      account &&
+      comicsAddress &&
+      getNativeBlockchain(blockchain) !== undefined
+    ) {
       getComicsNFTs();
     }
-  }, [account]);
+  }, [account, comicsAddress, blockchain]);
 
   React.useEffect(() => {
     if (cartComics.length > 0) {
-      if (basePriceMATIC && priceUSD) {
-        getPriceMatic();
+      if ((basePrice && price) || getNativeBlockchain(blockchain)) {
+        getPriceNative();
       }
     } else {
-      setPriceMatic("0");
+      setPriceNative("0");
     }
-  }, [cartComics, priceUSD]);
+  }, [cartComics, price, blockchain]);
 
   return (
     <Flex
@@ -129,11 +173,11 @@ function Comics() {
     >
       <Modals
         {...{
-          priceUSD,
-          priceMatic,
+          price,
+          priceNative,
           setComicsOwned,
           ModalAddress,
-          getPriceMatic,
+          getPriceNative,
           Modal,
           hide,
           hideAddress,
@@ -147,9 +191,9 @@ function Comics() {
       />
       <NftMainBanner />
       <ComicButtons
-        getPriceMatic={getPriceMatic}
+        getPriceMatic={getPriceNative}
         showCart={show}
-        priceUSD={priceUSD}
+        price={price}
         balance={balance}
       />
       {/* <Comic /> */}

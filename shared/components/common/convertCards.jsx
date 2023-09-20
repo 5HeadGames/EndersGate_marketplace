@@ -11,7 +11,6 @@ export const convertArrayCards = () => {
   Object.keys(cards).forEach((key, index) => {
     cards[key]?.forEach((card, index) => {
       if (card.properties?.id?.value !== undefined) {
-        // console.log(key, "if");
         newArray[parseInt(card.properties.id.value)] = {
           ...card,
           typeCard: key,

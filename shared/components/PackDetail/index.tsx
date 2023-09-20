@@ -19,7 +19,8 @@ import { Icons } from "@shared/const/Icons";
 import {
   getAddressesMatic,
   getContractCustom,
-  getTokensAllowed,
+  getNativeBlockchain,
+  getTokensAllowedMatic,
 } from "@shared/web3";
 import { Typography } from "../common/typography";
 import packs from "../../packs.json";
@@ -156,10 +157,10 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
   };
 
   React.useEffect(() => {
-    setTokensSelected(getTokensAllowed().map((item) => item.address));
+    setTokensSelected(getTokensAllowedMatic().map((item) => item.address));
   }, []);
 
-  const tokensAllowed = getTokensAllowed();
+  const tokensAllowed = getTokensAllowedMatic();
 
   return (
     <>
@@ -209,7 +210,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                         <div className="flex gap-4 w-full justify-between items-center">
                           <label className="text-primary font-bold whitespace-nowrap">
                             Price per NFT (
-                            {blockchain === "findora" ? "WFRA" : "USD"})
+                            {getNativeBlockchain(blockchain) ? "WFRA" : "USD"})
                           </label>
                           <input
                             type="number"
@@ -275,7 +276,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                             }}
                           />
                         </div>
-                        {blockchain === "findora" ? (
+                        {getNativeBlockchain(blockchain) ? (
                           ""
                         ) : (
                           <>

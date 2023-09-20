@@ -3,41 +3,31 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  editCartComics,
-  removeAll,
-  removeAllComics,
-  removeFromCartComics,
-} from "@redux/actions";
+import { onLoadComics, removeAllComics } from "@redux/actions";
 import Web3 from "web3";
 import clsx from "clsx";
-import comic from "../../../comics.json";
 
 import { XIcon } from "@heroicons/react/solid";
 import {
-  getAddressesEth,
-  getContractCustom,
+  getAddresses,
+  getContract,
+  getNativeBlockchain,
   getTokensAllowed,
-  getTokensAllowedEth,
-  switchChain,
+  getContractCustom,
 } from "@shared/web3";
-import { findSum, nFormatter } from "../../common/specialFields/SpecialFields";
+import { findSum } from "../../common/specialFields/SpecialFields";
 import { getDatabase, ref, set } from "firebase/database";
 import { toast } from "react-hot-toast";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Button } from "@shared/components/common/button";
 import { Image } from "@chakra-ui/react";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useBlockchain } from "@shared/context/useBlockchain";
 
 export const Modals = ({
-  priceUSD,
-  priceMatic,
+  priceNative,
   setComicsOwned,
   ModalAddress,
-  getPriceMatic,
   Modal,
   hide,
   hideAddress,
@@ -55,20 +45,24 @@ export const Modals = ({
   const [messageBuy, setMessageBuy] = React.useState("");
   const [congrats, setCongrats] = React.useState(false);
 
-  const tokensAllowed = getTokensAllowedEth();
+  const { blockchain, updateBlockchain } = useBlockchain();
 
-  const { networkEth, providerEth, provider, cartComics } = useSelector(
-    (state: any) => state.layout,
-  );
+  const tokensAllowed = getTokensAllowed(blockchain);
 
-  const { comics: comicsAddress, MATICUSD } = getAddressesEth();
+  const { cartComics, provider } = useSelector((state: any) => state.layout);
+
+  const { comics: comicsAddress, MATICUSD } = getAddresses(blockchain);
 
   const db = getDatabase();
 
   const dispatch = useDispatch();
 
   const getComicsNFTs = async () => {
-    const comics = getContractCustom("Comics", comicsAddress, providerEth);
+    const comics = getContract(
+      getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+      comicsAddress,
+      blockchain,
+    );
     const nftsId = await comics.methods.comicIdCounter().call();
     const balances = await comics.methods
       .balanceOfBatch(
@@ -76,6 +70,8 @@ export const Modals = ({
         new Array(parseInt(nftsId)).fill(1).map((i, id) => id + 1),
       )
       .call();
+
+    dispatch(onLoadComics());
 
     setComicsOwned(
       balances.map((i, id) => {
@@ -86,97 +82,98 @@ export const Modals = ({
 
   const buyComics = async () => {
     try {
-      const changed = await switchChain(networkEth);
-      if (!changed) {
-        throw new Error(
-          "An error occurred while changing the network, please try again.",
-        );
-      }
+      updateBlockchain(blockchain);
+      const comics = getContractCustom(
+        getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+        comicsAddress,
+        provider,
+      );
 
-      const comics = getContractCustom("Comics", comicsAddress, provider);
-      if (tokenSelected === "") {
-        return;
-      }
       setMessageBuy(`Processing your purchase...`);
       const { ids, amounts, token } = {
-        ids: cartComics.map((item) => item.idNFT),
+        ids: cartComics.map((item) => item.idNFT.toString()),
         amounts: cartComics.map((item) => item.quantity.toString()),
         token: tokenSelected,
       };
 
       let price = "0";
-      const ERC20 = getContractCustom("ERC20", token, providerEth);
-      const addressesAllowed = getTokensAllowed();
-      if (
-        tokenSelected ===
-        addressesAllowed.filter((item) => item.name === "MATIC")[0].address
-      ) {
-        const Aggregator = getContractCustom(
-          "Aggregator",
-          MATICUSD,
-          providerEth,
-        );
+      if (!getNativeBlockchain(blockchain)) {
+        const ERC20 = getContractCustom("ERC20", token, provider);
+        const addressesAllowed = getTokensAllowed(blockchain);
+        if (tokenSelected === "") return;
+        if (tokenSelected === addressesAllowed[0]?.address) {
+          const Aggregator = getContract("Aggregator", MATICUSD, blockchain);
 
-        const priceMATIC = await Aggregator.methods.latestAnswer().call();
-        const preprice =
-          (parseFloat(
-            cartComics
-              ?.map((item, i) => {
-                return (parseInt(item.priceUSD) / 10 ** 6) * item.quantity;
-              })
-              .reduce((item, acc) => {
-                return item + acc;
-              }),
-          ) *
-            10 ** 8) /
-          priceMATIC;
+          const priceMATIC = await Aggregator.methods.latestAnswer().call();
 
-        price = Web3.utils.toWei(
-          (preprice + preprice * 0.00005).toFixed(10).toString(),
-          "ether",
-        );
+          const preprice =
+            (parseFloat(
+              cartComics
+                ?.map((item) => {
+                  return (parseInt(item.price) / 10 ** 6) * item.quantity;
+                })
+                ?.reduce((item, acc) => {
+                  return item + acc;
+                }),
+            ) *
+              10 ** 8) /
+            priceMATIC;
 
-        await comics.methods
-          .buyBatch(account, ids, amounts, token)
-          .send({ from: account, value: price });
-      } else {
-        const allowance = await ERC20.methods
-          .allowance(account, comicsAddress)
-          .call();
+          price = Web3.utils.toWei(preprice.toString(), "ether");
 
-        if (allowance < 1000000000000) {
-          setMessageBuy(
-            `Increasing the allowance of ${
-              tokensAllowed.filter((item) => item.address == tokenSelected)[0]
-                .name
-            } 1/2`,
-          );
-          await ERC20.methods
-            .increaseAllowance(
-              comicsAddress,
-              "1000000000000000000000000000000000000000000000000",
-            )
-            .send({
-              from: account,
-            });
-          setMessageBuy("Buying your NFT(s) 2/2");
           await comics.methods
             .buyBatch(account, ids, amounts, token)
-
-            .send({ from: account });
+            .send({ from: account, value: price });
         } else {
-          setMessageBuy("Buying your NFT(s). ");
-          await comics.methods
-            .buyBatch(account, ids, amounts, token)
+          const allowance = await ERC20.methods
+            .allowance(account, comicsAddress)
+            .call();
 
-            .send({ from: account });
+          if (allowance < 1000000000000) {
+            setMessageBuy(
+              `Increasing the allowance of ${
+                tokensAllowed.filter((item) => item.address == tokenSelected)[0]
+                  .name
+              } 1/2`,
+            );
+            await ERC20.methods
+              .increaseAllowance(
+                comicsAddress,
+                "1000000000000000000000000000000000000000000000000",
+              )
+              .send({
+                from: account,
+              });
+            setMessageBuy("Buying your NFT(s) 2/2");
+            await comics.methods
+              .buyBatch(account, ids, amounts, token)
+
+              .send({ from: account });
+          } else {
+            setMessageBuy("Buying your NFT(s). ");
+            await comics.methods
+              .buyBatch(account, ids, amounts, token)
+
+              .send({ from: account });
+          }
         }
+      } else {
+        price = cartComics
+          ?.map((item, i) => {
+            return BigInt(item.price) * BigInt(item.quantity);
+          })
+          .reduce((item, acc) => {
+            return BigInt(item) + BigInt(acc);
+          });
+        await comics.methods
+          .buyBatch(account, ids, amounts)
+          .send({ from: account, value: price.toString() });
       }
       set(ref(db, "comics/" + account), dataAddress);
       setPreBuy(true);
       await getComicsNFTs();
-      hideAddress();
       dispatch(removeAllComics());
+      hideAddress();
       setCongrats(true);
     } catch (error) {
       console.log(error);
@@ -186,7 +183,9 @@ export const Modals = ({
   };
 
   React.useEffect(() => {
-    setTokenSelected(tokensAllowed[0].address);
+    if (tokensAllowed) {
+      setTokenSelected(tokensAllowed[0].address);
+    }
   }, [tokensAllowed]);
 
   return (
@@ -201,7 +200,7 @@ export const Modals = ({
         }}
       >
         {congrats ? (
-          <Congrats hide={hide} />
+          <Congrats hide={hide} setCongrats={setCongrats} />
         ) : (
           <CartComic
             {...{
@@ -210,8 +209,7 @@ export const Modals = ({
               tokensAllowed,
               tokenSelected,
               setTokenSelected,
-              priceMatic,
-              isMatic: false,
+              priceNative,
               buy: preBuy
                 ? () => {
                     hide();
@@ -235,8 +233,7 @@ const CartComic = ({
   tokensAllowed,
   tokenSelected,
   setTokenSelected,
-  priceMatic,
-  isMatic,
+  priceNative,
   buy,
   messageBuy,
 }) => {
@@ -271,7 +268,7 @@ const CartComic = ({
               <h2
                 className="text-sm font-bold text-white py-4 px-4 cursor-pointer"
                 onClick={() => {
-                  dispatch(removeAll());
+                  dispatch(removeAllComics());
                 }}
               >
                 Clear all
@@ -302,78 +299,81 @@ const CartComic = ({
                 </div>
               </div>
             </div>
-            <div className="text-md text-white font-bold w-full text-center">
-              Chose currency
-            </div>
-            <div className="flex  gap-4 pb-4 w-full flex-wrap items-center justify-center shadow-inner">
-              {tokensAllowed.map((item: any, index: any) => {
-                return (
-                  <div
-                    className={clsx(
-                      "w-24 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
+            {getNativeBlockchain(blockchain) === false ? (
+              <>
+                <div className="text-md text-white font-bold w-full text-center">
+                  Chose currency
+                </div>
+                <div className="flex  gap-4 pb-4 w-full flex-wrap items-center justify-center shadow-inner">
+                  {tokensAllowed.map((item: any, index: any) => {
+                    return (
+                      <div
+                        className={clsx(
+                          "w-24 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
 
-                      {
-                        "bg-transparent-color-gray-200 border-none":
-                          tokenSelected !== item.address,
-                      },
-                      {
-                        "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
-                          tokenSelected === item.address,
-                      },
-                    )}
-                    onClick={() => {
-                      setTokenSelected(item.address);
-                    }}
-                  >
-                    <img src={item.logo} className="w-6 h-6" alt="" />
-                    <h2 className="text-white text-sm font-bold">
-                      {item.name}
-                    </h2>
-                  </div>
-                );
-              })}
-            </div>
+                          {
+                            "bg-transparent-color-gray-200 border-none":
+                              tokenSelected !== item.address,
+                          },
+                          {
+                            "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
+                              tokenSelected === item.address,
+                          },
+                        )}
+                        onClick={() => {
+                          setTokenSelected(item.address);
+                        }}
+                      >
+                        <img src={item.logo} className="w-6 h-6" alt="" />
+                        <h2 className="text-white text-sm font-bold">
+                          {item.name}
+                        </h2>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            ) : (
+              ""
+            )}
             <div className="flex gap-6 justify-between w-full text-md text-xl py-2 px-8 border-y border-transparent-color-gray-200 bg-transparent">
               <div className="flex gap-1 items-center">
                 <h3 className="text-sm  text-white font-[700]">Total price:</h3>
               </div>
               <div className="flex flex-col gap items-end">
-                {tokensAllowed.filter(
-                  (item: any) => item.name === "MATIC" || item.name === "ETH",
-                ).length > 0 && (
-                  <h3
-                    className="text-sm font-[700] text-white flex gap-1 items-center justify-center"
-                    style={{ fontSize: "14px" }}
-                  >
-                    {priceMatic} {isMatic ? "MATIC" : "ETH"}{" "}
-                    <img
-                      src={
-                        isMatic
-                          ? "icons/polygon-matic-logo.png"
-                          : "icons/eth.png"
-                      }
-                      className="w-3 h-3"
-                      alt=""
-                    />
-                  </h3>
-                )}
                 <h3
-                  className="text-sm font-[700] text-white opacity-50"
+                  className="text-sm font-[700] text-white flex gap-1 items-center justify-center"
                   style={{ fontSize: "14px" }}
                 >
-                  ($
-                  {parseInt(
-                    cart
-                      ?.map((item: any, i: any) =>
-                        (parseInt(item.priceUSD) * item.quantity).toString(),
-                      )
-                      .reduce((item: any, acc: any) => {
-                        return findSum(item, acc);
-                      }),
-                  ) /
-                    10 ** 6}
-                  )
+                  {priceNative}
+                  <img
+                    src={
+                      `images/${blockchain}.png`
+                      // :"icons/eth.png"
+                    }
+                    className="w-3 h-3"
+                    alt=""
+                  />
                 </h3>
+                {!getNativeBlockchain(blockchain) && (
+                  <h3
+                    className="text-sm font-[700] text-white opacity-50"
+                    style={{ fontSize: "14px" }}
+                  >
+                    ($
+                    {parseInt(
+                      cart
+                        ?.map((item: any, i: any) =>
+                          (parseInt(item.price) * item.quantity).toString(),
+                        )
+                        .reduce((item: any, acc: any) => {
+                          return findSum(item, acc);
+                        }),
+                    ) /
+                      10 ** 6}
+                    )
+                  </h3>
+                )}
               </div>
             </div>
 
@@ -433,7 +433,7 @@ const CartComic = ({
   );
 };
 
-const Congrats = ({ hide }) => {
+const Congrats = ({ hide, setCongrats }) => {
   const router = useRouter();
 
   return (
@@ -458,6 +458,7 @@ const Congrats = ({ hide }) => {
         <XIcon
           className="text-white w-5 cursor-pointer p-[2px] rounded-full bg-overlay border border-white"
           onClick={() => {
+            setCongrats(false);
             hide();
           }}
         />
@@ -485,6 +486,7 @@ const Congrats = ({ hide }) => {
           className="h-12 cursor-pointer"
           alt=""
           onClick={() => {
+            setCongrats(false);
             hide();
             router.push("/comics#my_comics");
           }}

@@ -2,7 +2,7 @@ import React from "react";
 import { Flex } from "@chakra-ui/react";
 import RecentlyAddedComic from "./RecentlyAddedComic";
 
-const ComicButtons = ({ priceUSD, getPriceMatic, balance, showCart }) => {
+const ComicButtons = ({ price, getPriceMatic, balance, showCart }) => {
   const [element] = React.useState("recentlyAddedComic");
 
   const map = {
@@ -10,7 +10,7 @@ const ComicButtons = ({ priceUSD, getPriceMatic, balance, showCart }) => {
       <RecentlyAddedComic
         getPriceMatic={getPriceMatic}
         showCart={showCart}
-        priceUSD={priceUSD}
+        price={price}
         balance={balance}
       />
     ),

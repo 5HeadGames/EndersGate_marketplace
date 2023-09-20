@@ -11,6 +11,7 @@ import packs from "../../../packs.json";
 import { Tooltip } from "@mui/material";
 import { Button } from "@shared/components/common/button/button";
 import { authStillValid } from "@shared/components/utils";
+import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
 
 const ProfileLayout = ({ children }) => {
   const { ethAddress: user } = useSelector((state: any) => state.layout.user);
@@ -44,9 +45,14 @@ const ProfileLayout = ({ children }) => {
             alt=""
           />{" "}
           <div className="flex mt-2 gap-5 items-center">
-            <h2 className="text-white font-bold md:text-2xl text-lg">
-              {"EG Enthusiast"}
-            </h2>
+            <div className="flex flex-col justify-center items-center">
+              <h2 className="text-white font-bold md:text-2xl text-lg">
+                {"EG Enthusiast"}
+              </h2>
+              <h2 className="text-green-button font-bold md:text-[12px] text-[10px]">
+                (<AddressText text={user} />)
+              </h2>
+            </div>
             {providerName === "magic" && (
               <Button
                 type="submit"

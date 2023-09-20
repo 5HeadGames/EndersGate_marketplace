@@ -9,7 +9,9 @@ import {
   getAddresses,
   getContract,
   getContractCustom,
+  getNativeBlockchain,
   getTokensAllowed,
+  getTokensAllowedMatic,
   switchChain,
 } from "@shared/web3";
 import {
@@ -45,20 +47,22 @@ const Shop = () => {
   const { addToast } = useToasts();
   const [priceNative, setPriceNative] = React.useState("0");
 
-  const tokensAllowed = getTokensAllowed();
+  const { blockchain, updateBlockchain } = useBlockchain();
+
+  const tokensAllowed = getTokensAllowed(blockchain);
 
   const { Modal, show, isShow, hide } = useCartModal();
 
   const { cartShop } = useSelector((state: any) => state.layout);
-
-  const { blockchain, updateBlockchain } = useBlockchain();
 
   const { shop: shopAddress, MATICUSD } = getAddresses(blockchain);
 
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    setTokenSelected(tokensAllowed[0].address);
+    if (tokensAllowed) {
+      setTokenSelected(tokensAllowed[0].address);
+    }
   }, [tokensAllowed]);
 
   const packs = [
@@ -89,7 +93,7 @@ const Shop = () => {
     try {
       // Use web3 to get the user's accounts.
       const shop = getContract(
-        blockchain === "matic" ? "Shop" : "ShopFindora",
+        !getNativeBlockchain(blockchain) ? "Shop" : "ShopFindora",
         shopAddress,
         blockchain,
       );
@@ -100,10 +104,9 @@ const Shop = () => {
         .call();
 
       const allSales = rawSales.map((sale, i) => {
-        const saleFormatted =
-          blockchain === "matic"
-            ? parseSaleTokens(sale)
-            : parseSaleNative(sale);
+        const saleFormatted = !getNativeBlockchain(blockchain)
+          ? parseSaleTokens(sale)
+          : parseSaleNative(sale);
         return {
           id: i,
           ...saleFormatted,
@@ -112,7 +115,6 @@ const Shop = () => {
       const created = allSales
         .filter((sale) => sale.status === "0")
         .map((sale) => {
-          console.log("sale price", sale.price);
           return {
             ...sale,
             name: packs[sale.nftId]?.name,
@@ -164,7 +166,7 @@ const Shop = () => {
         return;
       }
       let tx;
-      if (blockchain === "matic") {
+      if (!getNativeBlockchain(blockchain)) {
         tx = await dispatch(
           buyFromShop({
             blockchain,
@@ -220,7 +222,7 @@ const Shop = () => {
   };
 
   React.useEffect(() => {
-    if (cartShop.length > 0 && blockchain === "matic") {
+    if (cartShop.length > 0 && !getNativeBlockchain(blockchain)) {
       getPriceMatic();
     } else {
       setPriceNative("0");
@@ -260,7 +262,7 @@ const Shop = () => {
             tokenSelected={tokenSelected}
             priceMatic={priceNative}
             buy={buyPacks}
-            isMatic={blockchain === "matic"}
+            isMatic={!getNativeBlockchain(blockchain)}
             itemsCart={cartShop.map((item, index) => {
               return (
                 <div

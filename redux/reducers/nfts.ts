@@ -5,6 +5,7 @@ const INITIAL_STATE = {
   balanceCards: [],
   balancePacks: [],
   balanceWrapped: [],
+  balanceComics: [],
   allSales: [],
   saleCreated: [],
   saleSuccessfull: [],
@@ -13,6 +14,8 @@ const INITIAL_STATE = {
   rentsInRent: [],
   rentsFinished: [],
   totalSales: 0,
+  comicsCurrentSupply: 0,
+  comicsLimit: 500,
   dailyVolume: 0,
   cardsSold: 0,
 };
@@ -25,6 +28,7 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
         state.balanceCards = action.payload.balanceCards;
         state.balancePacks = action.payload.balancePacks;
         state.balanceWrapped = action.payload.balanceWrapped;
+        state.balanceComics = action.payload.balanceComics;
       },
     )
     .addCase(
@@ -43,9 +47,10 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
       },
     )
     .addCase(
-      actions.sellERC1155.fulfilled,
+      actions.onLoadComics.fulfilled,
       (state: typeof INITIAL_STATE, action) => {
-        //state.saleCreated.push(action.payload);
+        console.log(action.payload.comicsCurrentSupply);
+        state.comicsCurrentSupply = action.payload.comicsCurrentSupply;
       },
     );
 });

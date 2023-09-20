@@ -6,7 +6,7 @@ import { AddressText } from "@shared/components/common/specialFields/SpecialFiel
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { formatPrice } from "@shared/utils/formatPrice";
-import { getTokensAllowed } from "@shared/web3";
+import { getNativeBlockchain, getTokensAllowedMatic } from "@shared/web3";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -34,8 +34,8 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
         return false;
       }
 
-      if (blockchain === "matic") {
-        let intersection = getTokensAllowed();
+      if (!getNativeBlockchain(blockchain)) {
+        let intersection = getTokensAllowedMatic();
         cartRent.map((item) => {
           intersection = intersection.filter((element) =>
             item?.tokens
@@ -246,7 +246,7 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
                     </div>
                   </div>
                   <div className="flex lg:text-md items-center gap-2 text-sm font-medium">
-                    {getTokensAllowed()
+                    {getTokensAllowedMatic()
                       .filter((item) => {
                         return rent?.tokens
                           ?.map((token) => token.toLowerCase())
