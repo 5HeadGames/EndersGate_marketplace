@@ -7,7 +7,6 @@ import {
   getAddressesMatic,
   getContract,
   getContractCustom,
-  getTokensAllowedMatic,
   getAddresses,
   getAddressesFindora,
   getNativeBlockchain,

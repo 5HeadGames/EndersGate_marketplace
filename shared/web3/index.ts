@@ -77,6 +77,8 @@ export const getAddresses = (blockchain) => {
       return getAddressesEth();
     case "findora":
       return getAddressesFindora();
+    case "imx":
+      return getAddressesIMX();
     default:
       return undefined;
   }
@@ -85,6 +87,14 @@ export const getAddresses = (blockchain) => {
 export const getAddressesMatic = () => {
   const testAddresses = require("../../Contracts/addresses.mumbai.json");
   const addresses = require("../../Contracts/addresses.matic.json");
+  return process.env.NEXT_PUBLIC_ENV === "production"
+    ? addresses
+    : testAddresses;
+};
+
+export const getAddressesIMX = () => {
+  const testAddresses = require("../../Contracts/addresses.imx.json");
+  const addresses = require("../../Contracts/addresses.imx.json");
   return process.env.NEXT_PUBLIC_ENV === "production"
     ? addresses
     : testAddresses;
