@@ -82,9 +82,9 @@ export const CHAINS: {
     blockExplorer: "https://gsc-mainnet.evm.findorascan.io/",
   },
   13472: {
-    urls: [" https://rpc.testnet.immutable.com/"],
+    urls: [" https://rpc.testnet.immutable.com"],
     name: "Inmutable X Testnet",
-    rpcUrls: [" https://rpc.testnet.immutable.com/"],
+    rpcUrls: [" https://rpc.testnet.immutable.com"],
     nativeCurrency: IMX,
     blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
     blockExplorer: "https://explorer.testnet.immutable.com/",

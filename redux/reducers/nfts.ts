@@ -49,7 +49,6 @@ export const nftReducer = createReducer(INITIAL_STATE, (builder) => {
     .addCase(
       actions.onLoadComics.fulfilled,
       (state: typeof INITIAL_STATE, action) => {
-        console.log(action.payload.comicsCurrentSupply);
         state.comicsCurrentSupply = action.payload.comicsCurrentSupply;
       },
     );

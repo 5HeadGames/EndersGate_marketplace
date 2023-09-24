@@ -2,7 +2,6 @@ import { nFormatter } from "@shared/components/common/specialFields/SpecialField
 import Web3 from "web3";
 
 export const formatPrice = (price, blockchain) => {
-  console.log(price);
   switch (blockchain) {
     case "matic":
       return `${nFormatter(parseInt(price) / 10 ** 6)} USD`;
@@ -10,5 +9,7 @@ export const formatPrice = (price, blockchain) => {
       return `${Web3.utils.fromWei(price.toString() || "0", "ether")} ETH`;
     case "findora":
       return `${Web3.utils.fromWei(price.toString() || "0", "ether")} WFRA`;
+    case "imx":
+      return `${Web3.utils.fromWei(price.toString() || "0", "ether")} tIMX`;
   }
 };

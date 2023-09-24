@@ -56,7 +56,9 @@ export const getContractCustom = (
 };
 
 export const getProvider = (blockchain) => {
-  return CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0];
+  return new Web3.providers.HttpProvider(
+    CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0],
+  );
 };
 
 export const getBalance = async (address: string, blockchain: string) => {
@@ -69,7 +71,6 @@ export const getBalance = async (address: string, blockchain: string) => {
 };
 
 export const getAddresses = (blockchain) => {
-  console.log(blockchain);
   switch (blockchain) {
     case "matic":
       return getAddressesMatic();
@@ -397,6 +398,8 @@ export const getNativeBlockchain = (blockchain) => {
     case "eth":
       return false;
     case "findora":
+      return true;
+    case "imx":
       return true;
     default:
       return undefined;

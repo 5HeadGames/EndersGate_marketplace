@@ -8,7 +8,7 @@ import {
   sellERC1155,
   onLoadSales,
   onGetAssets,
-  sellERC1155Findora,
+  sellERC1155Native,
   listRentERC1155,
   listRentERC1155Native,
 } from "@redux/actions";
@@ -30,7 +30,7 @@ import Tilt from "react-parallax-tilt";
 import { useWeb3React } from "@web3-react/core";
 import { AddressText } from "../../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
+import { CHAINS, CHAIN_IDS_BY_NAME, NATIVE_CURRENCY_BY_ID } from "../../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { ChevronLeftIcon, ExclamationCircleIcon } from "@heroicons/react/solid";
 import { useModal } from "@shared/hooks/modal";
@@ -281,6 +281,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
       }
       updateBlockchain(blockchain);
       const tokenId = id;
+      console.log(blockchain);
       const { endersGate, marketplace } = getAddresses(blockchain);
       const endersgateInstance = getContractCustom(
         "EndersGate",
@@ -303,13 +304,14 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
         }
         setMessage("Listing your tokens");
         const tx = await dispatch(
-          sellERC1155Findora({
+          sellERC1155Native({
             address: endersGate,
             from: user,
             startingPrice: Web3.utils.toWei(
               sellNFTData.startingPrice.toString(),
               "ether",
             ),
+            blockchain,
             amount: sellNFTData.amount,
             tokenId: tokenId,
             duration: sellNFTData.duration.toString(),
@@ -394,7 +396,11 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
               <div className="flex gap-4 w-full justify-between items-center">
                 <label className="text-primary font-bold whitespace-nowrap">
                   Price per NFT (
-                  {getNativeBlockchain(blockchain) ? "WFRA" : "USD"})
+                  {getNativeBlockchain(blockchain)
+                    ? NATIVE_CURRENCY_BY_ID[CHAIN_IDS_BY_NAME[blockchain]]
+                        ?.symbol
+                    : "USD"}
+                  )
                 </label>
                 <input
                   type="number"
@@ -694,7 +700,11 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
               <div className="flex gap-4 w-full justify-between items-center">
                 <label className="text-primary font-bold whitespace-nowrap">
                   Price per Day Rented (
-                  {getNativeBlockchain(blockchain) ? "WFRA" : "USD"})
+                  {getNativeBlockchain(blockchain)
+                    ? NATIVE_CURRENCY_BY_ID[CHAIN_IDS_BY_NAME[blockchain]]
+                        ?.symbol
+                    : "USD"}
+                  )
                 </label>
                 <input
                   type="number"

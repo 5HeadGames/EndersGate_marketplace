@@ -48,7 +48,7 @@ export const CANCEL_RENT_NFT = "cancel_rent_nft";
 export const REDEEM_RENT_NFT = "redeem_rent_nft";
 
 export const BUY_NFT_FINDORA = "buy_nft_findora";
-export const SELL_NFT_FINDORA = "sell_nft_findora";
+export const SELL_NFT_NATIVE = "sell_nft_findora";
 
 export const BUY_NFT_SHOP_FINDORA = "buy_nft_shop_findora";
 export const BUY_NFT_SHOP = "buy_nft_shop";

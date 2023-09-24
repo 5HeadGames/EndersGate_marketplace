@@ -120,6 +120,7 @@ export const onLoadSales = createAsyncThunk(
       cardsSold = 0;
     try {
       for (const element of blockchains) {
+        console.log(element);
         const blockchain = element;
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
@@ -136,6 +137,8 @@ export const onLoadSales = createAsyncThunk(
         const lastSale = Number(
           await marketplace.methods.tokenIdTracker().call(),
         );
+
+        console.log(lastSale, element);
 
         if (lastSale > 0) {
           const rawSales = await marketplace.methods
@@ -179,7 +182,6 @@ export const onLoadSales = createAsyncThunk(
             });
           }
         } else {
-          console.log(addresses);
           const rent = getContract(
             "RentNative",
             addresses.rent,
@@ -190,7 +192,6 @@ export const onLoadSales = createAsyncThunk(
             const rawRents = await rent.methods
               .getRents(new Array(lastRent).fill(0).map((a, i) => i))
               .call();
-            console.log(rawRents, "RENTs");
 
             rawRents.forEach((sale: any[], i) => {
               const rentFormated = parseRentNative(sale);
@@ -277,6 +278,8 @@ export const onLoadSales = createAsyncThunk(
         cardsSoldPartial.toString(),
       ) as any;
 
+      console.log(allSalesSorted);
+
       return {
         allSales: allSalesSorted,
         saleCreated: listsCreated,
@@ -336,8 +339,6 @@ export const onLoadComics = createAsyncThunk(
           await comics.methods.totalSupply(comic.comicId).call(),
         );
 
-        console.log(comicsCurrentSupply, supplyBlockchain, comic);
-
         comicsCurrentSupply = comicsCurrentSupply + supplyBlockchain;
       }
 
@@ -378,8 +379,6 @@ export const onGetAssets = createAsyncThunk(
         const comicsIds = new Array(parseInt(comicsLength))
           .fill(1)
           .map((a, i) => i + 1);
-
-        console.log(comicsLength, comicsIds, "aver");
 
         const balancePacks = await packsContract.methods
           .balanceOfBatch(
@@ -443,7 +442,6 @@ export const onGetAssets = createAsyncThunk(
           .fill(1)
           .map((a, i) => i + 1);
 
-        console.log(comicsLength, comicsIds, "aver");
         const balanceComics = await comicsContract.methods
           .balanceOfBatch(
             comicsIds.map(() => address),
@@ -1085,13 +1083,14 @@ export const rentBatchERC1155Native = createAsyncThunk(
   },
 );
 
-export const sellERC1155Findora = createAsyncThunk(
-  actionTypes.SELL_NFT_FINDORA,
+export const sellERC1155Native = createAsyncThunk(
+  actionTypes.SELL_NFT_NATIVE,
   async function prepare(args: {
     from: string;
     tokenId: number | string;
     startingPrice: number | string;
     amount: number | string;
+    blockchain: string;
     duration: string;
     address: string;
     provider: any;
@@ -1104,12 +1103,13 @@ export const sellERC1155Findora = createAsyncThunk(
       amount,
       duration,
       address,
+      blockchain,
       // user,
       provider,
     } = args;
 
     try {
-      const { marketplace } = getAddressesFindora();
+      const { marketplace } = getAddresses(blockchain);
 
       const marketplaceContract = getContractCustom(
         "ClockSaleFindora",
@@ -1129,20 +1129,22 @@ export const sellERC1155Findora = createAsyncThunk(
   },
 );
 
-export const buyERC1155Findora = createAsyncThunk(
+export const buyERC1155Native = createAsyncThunk(
   actionTypes.BUY_NFT_FINDORA,
   async function prepare(args: {
     seller: string;
     tokenId: number | string;
     bid: string | number;
     amount: string | number;
+    blockchain: string;
     nftContract: string;
     provider: any;
     user: any;
   }) {
-    const { seller, tokenId, amount, bid, provider, user } = args;
+    const { seller, tokenId, amount, bid, provider, user, blockchain } = args;
     try {
-      const { marketplace } = getAddressesFindora();
+      const { marketplace } = getAddresses(blockchain);
+
       const marketplaceContract = getContractCustom(
         "ClockSaleFindora",
         marketplace,

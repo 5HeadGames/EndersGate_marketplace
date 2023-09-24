@@ -31,7 +31,7 @@ export const DropdownChain: React.FC<any> = () => {
     {
       name: "INMUTABLE X",
       value: "imx",
-      image: "/images/findora.png",
+      image: "/images/imx.png",
     },
   ];
 

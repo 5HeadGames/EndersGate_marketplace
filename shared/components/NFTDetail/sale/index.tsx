@@ -7,7 +7,7 @@ import {
   buyERC1155,
   onLoadSales,
   onGetAssets,
-  buyERC1155Findora,
+  buyERC1155Native,
 } from "@redux/actions";
 import { Button } from "../../common/button/button";
 import { Icons } from "@shared/const/Icons";
@@ -91,7 +91,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
       const { pack, endersGate } = getAddresses(sale.blockchain);
       if (sale.blockchain !== "matic") {
         await dispatch(
-          buyERC1155Findora({
+          buyERC1155Native({
             seller: sale.seller,
             amount: buyNFTData,
             bid: Web3.utils
