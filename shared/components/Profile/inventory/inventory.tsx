@@ -27,15 +27,12 @@ const Inventory = () => {
   const inventoryCards = nfts.balanceCards;
   const inventoryRented = nfts.balanceWrapped;
   const inventoryComics = nfts.balanceComics;
-  console.log(inventoryComics, "comics");
   const [inventoryPacks, setInventoryPacks] = React.useState([]);
   const [columnSelected, setColumnSelected] = React.useState("Trading Cards");
   const [search, setSearch] = React.useState("");
   const dispatch = useDispatch();
   const { ethAddress } = useSelector((state: any) => state.layout.user);
   const { blockchain } = useBlockchain();
-
-  console.log(inventoryCards);
 
   const cards = convertArrayCards();
 

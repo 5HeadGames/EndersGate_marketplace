@@ -2,7 +2,6 @@ import { nFormatter } from "@shared/components/common/specialFields/SpecialField
 import Web3 from "web3";
 
 export const formatPrice = (price, blockchain) => {
-  console.log(price);
   switch (blockchain) {
     case "matic":
       return `${nFormatter(parseInt(price) / 10 ** 6)} USD`;

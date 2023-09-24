@@ -192,7 +192,7 @@ export default function AppLayout({ children }) {
 
   const loadSales = async () => {
     await dispatch(onLoadSales());
-    await dispatch(onLoadComics());
+    // await dispatch(onLoadComics());
   };
 
   React.useEffect(() => {

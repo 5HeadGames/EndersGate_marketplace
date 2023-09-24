@@ -71,7 +71,7 @@ export const Modals = ({
       )
       .call();
 
-    dispatch(onLoadComics());
+    // dispatch(onLoadComics());
 
     setComicsOwned(
       balances.map((i, id) => {

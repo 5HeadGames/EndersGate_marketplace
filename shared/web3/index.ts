@@ -69,7 +69,6 @@ export const getBalance = async (address: string, blockchain: string) => {
 };
 
 export const getAddresses = (blockchain) => {
-  console.log(blockchain);
   switch (blockchain) {
     case "matic":
       return getAddressesMatic();

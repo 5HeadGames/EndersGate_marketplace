@@ -179,7 +179,6 @@ export const onLoadSales = createAsyncThunk(
             });
           }
         } else {
-          console.log(addresses);
           const rent = getContract(
             "RentNative",
             addresses.rent,
@@ -190,7 +189,6 @@ export const onLoadSales = createAsyncThunk(
             const rawRents = await rent.methods
               .getRents(new Array(lastRent).fill(0).map((a, i) => i))
               .call();
-            console.log(rawRents, "RENTs");
 
             rawRents.forEach((sale: any[], i) => {
               const rentFormated = parseRentNative(sale);
@@ -336,8 +334,6 @@ export const onLoadComics = createAsyncThunk(
           await comics.methods.totalSupply(comic.comicId).call(),
         );
 
-        console.log(comicsCurrentSupply, supplyBlockchain, comic);
-
         comicsCurrentSupply = comicsCurrentSupply + supplyBlockchain;
       }
 
@@ -361,25 +357,21 @@ export const onGetAssets = createAsyncThunk(
         .reduce((acc: any[], cur) => acc.concat(cur), [])
         .map((card, i) => i);
       if (blockchain !== "eth") {
-        const { endersGate, pack, rent, comics } = getAddresses(blockchain);
+        const { endersGate, pack, rent } = getAddresses(blockchain);
 
         const cardsContract = getContract("EndersGate", endersGate, blockchain);
         const packsContract = getContract("EndersPack", pack, blockchain);
         const rentContract = getContract("Rent", rent, blockchain);
-        const comicsContract = getContract(
-          getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
-          comics,
-          blockchain,
-        );
-        const comicsLength = await comicsContract.methods
-          .comicIdCounter()
-          .call();
+        // const comicsContract = getContract(
+        //   getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+        //   comics,
+        //   blockchain,
+        // );
+        // const comicsLength = await comicsContract.methods.comicIdCounter().call();
 
-        const comicsIds = new Array(parseInt(comicsLength))
-          .fill(1)
-          .map((a, i) => i + 1);
-
-        console.log(comicsLength, comicsIds, "aver");
+        // const comicsIds = new Array(parseInt(comicsLength))
+        //   .fill(1)
+        //   .map((a, i) => i + 1);
 
         const balancePacks = await packsContract.methods
           .balanceOfBatch(
@@ -394,12 +386,12 @@ export const onGetAssets = createAsyncThunk(
           )
           .call();
 
-        const balanceComics = await comicsContract.methods
-          .balanceOfBatch(
-            comicsIds.map(() => address),
-            comicsIds,
-          )
-          .call();
+        // const balanceComics = await comicsContract.methods
+        //   .balanceOfBatch(
+        //     comicsIds.map(() => address),
+        //     comicsIds,
+        //   )
+        //   .call();
 
         let balanceWrapped = [];
 
@@ -423,54 +415,54 @@ export const onGetAssets = createAsyncThunk(
             id,
             balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
           })),
-          balanceComics: comicsIds.map((id, i) => ({
-            id,
-            balance: balanceComics[i],
-          })),
-        };
-      } else {
-        const { comics } = getAddresses(blockchain);
-        const comicsContract = getContract(
-          getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
-          comics,
-          blockchain,
-        );
-        const comicsLength = await comicsContract.methods
-          .comicIdCounter()
-          .call();
-
-        const comicsIds = new Array(parseInt(comicsLength))
-          .fill(1)
-          .map((a, i) => i + 1);
-
-        console.log(comicsLength, comicsIds, "aver");
-        const balanceComics = await comicsContract.methods
-          .balanceOfBatch(
-            comicsIds.map(() => address),
-            comicsIds,
-          )
-          .call();
-        return {
-          balanceCards: cardsIds.map((id, i) => ({
-            id,
-            balance: 0,
-          })),
-          balancePacks: packsIds.map((id, i) => ({
-            id,
-            balance: 0,
-          })),
-          balanceWrapped: [
-            cardsIds.map((id, i) => ({
-              id,
-              balance: 0,
-            })),
-          ],
-          balanceComics: comicsIds.map((id, i) => ({
-            id,
-            balance: balanceComics[i],
-          })),
+          // balanceComics: comicsIds.map((id, i) => ({
+          //   id,
+          //   balance: balanceComics[i],
+          // })),
         };
       }
+      // } else {
+      // const { comics } = getAddresses(blockchain);
+      // const comicsContract = getContract(
+      //   getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+      //   comics,
+      //   blockchain,
+      // );
+      // const comicsLength = await comicsContract.methods
+      //   .comicIdCounter()
+      //   .call();
+
+      // const comicsIds = new Array(parseInt(comicsLength))
+      //   .fill(1)
+      //   .map((a, i) => i + 1);
+
+      // const balanceComics = await comicsContract.methods
+      //   .balanceOfBatch(
+      //     comicsIds.map(() => address),
+      //     comicsIds,
+      //   )
+      //   .call();
+      // return {
+      //   balanceCards: cardsIds.map((id, i) => ({
+      //     id,
+      //     balance: 0,
+      //   })),
+      //   balancePacks: packsIds.map((id, i) => ({
+      //     id,
+      //     balance: 0,
+      //   })),
+      //   balanceWrapped: [
+      //     cardsIds.map((id, i) => ({
+      //       id,
+      //       balance: 0,
+      //     })),
+      //   ],
+      //   balanceComics: comicsIds.map((id, i) => ({
+      //     id,
+      //     balance: balanceComics[i],
+      //   })),
+      // };
+      // }
     } catch (err) {
       console.log({ err });
       throw err;
