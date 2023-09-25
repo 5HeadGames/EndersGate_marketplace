@@ -7,11 +7,13 @@ import { Icons } from "@shared/const/Icons";
 
 export const Footer = () => {
   const items = [
-    "JOB APPLICATIONS",
-    "ABOUT",
-    "CONTACT US",
-    "WHITEPAPER",
-    "5HG LEGAL",
+    // "JOB APPLICATIONS",
+    { name: "CONTACT US", link: "mailto:support@5headgames.com" },
+    {
+      name: "WHITEPAPER",
+      link: "https://endersgate.gitbook.io/endersgate/welcome/master",
+    },
+    { name: "5HG LEGAL", link: "https://www.endersgate.gg/legal" },
   ];
   return (
     <div
@@ -21,15 +23,16 @@ export const Footer = () => {
     >
       <img className="h-12" src={Icons.logo5HG} alt="logo" />
       <div className="flex md:flex-row flex-col flex-wrap lg:justify-start justify-center items-center gap-y-4">
-        {items.map((item, i) => (
+        {items.map(({ name, link }, i) => (
           <>
-            <div
+            <a
+              href={link}
               className={clsx(
                 "px-2 text-xl font-bold text-primary-disabled text-center",
               )}
             >
-              {item}
-            </div>
+              {name}
+            </a>
             {i < items.length - 1 && (
               <p
                 className={clsx(
@@ -50,14 +53,14 @@ export const Footer = () => {
         >
           QUALITY BLOCKCHAIN GAMES FOR ALL
         </p>
-        <a
+        {/* <a
           href="https://www.5headgames.com"
           className={clsx(
             "px-2 text-xl font-bold text-primary-disabled hover:text-red-primary",
           )}
         >
           5headgames.com
-        </a>
+        </a> */}
       </div>
       <p className="text-overlay-border text-[11px] text-center">
         ©2022 5HEADGAMES, INC. ALL RIGHTS RESERVED.

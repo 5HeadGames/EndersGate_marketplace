@@ -56,7 +56,7 @@ const Footer = () => {
               flexDir={["column", "column", "row", "row"]}
               className="align-item-center"
             >
-              <Text
+              {/* <Text
                 cursor="pointer"
                 fontSize={["sm", "md", "md", "md"]}
                 color="#B8B8B8"
@@ -64,14 +64,14 @@ const Footer = () => {
                 zIndex="10"
               >
                 JOB APPLICATIONS
-              </Text>
-              <Box
+              </Text> */}
+              {/* <Box
                 display={["none", "none", "block", "block"]}
                 width="3px"
                 h="2rem"
                 mx={6}
                 bg="gray.300"
-              />
+              /> */}
               <Text
                 cursor="pointer"
                 fontSize={["sm", "md", "md", "md"]}
@@ -140,14 +140,14 @@ const Footer = () => {
             >
               QUALITY BLOCKCHAIN GAMES FOR ALL
             </Text>
-            <Text
+            {/* <Text
               fontSize={["8px", "sm", "lg", "lg"]}
               color="#B8B8B8"
               fontWeight="semibold"
               zIndex="10"
             >
               5headgames.com
-            </Text>
+            </Text> */}
 
             <Flex mt={3} className="align-item-center">
               <Text
