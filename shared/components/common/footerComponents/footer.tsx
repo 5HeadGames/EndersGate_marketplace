@@ -8,6 +8,7 @@ import { Icons } from "@shared/const/Icons";
 export const Footer = () => {
   const items = [
     // "JOB APPLICATIONS",
+    { name: "ABOUT", link: "https://www.linkedin.com/company/5headgames" },
     { name: "CONTACT US", link: "mailto:support@5headgames.com" },
     {
       name: "WHITEPAPER",
@@ -51,7 +52,7 @@ export const Footer = () => {
             "px-2 text-xl font-bold text-primary-disabled text-center",
           )}
         >
-          QUALITY BLOCKCHAIN GAMES FOR ALL
+          Entertaiment For Digital Collectors
         </p>
         {/* <a
           href="https://www.5headgames.com"
@@ -62,12 +63,12 @@ export const Footer = () => {
           5headgames.com
         </a> */}
       </div>
-      <p className="text-overlay-border text-[11px] text-center">
-        ©2022 5HEADGAMES, INC. ALL RIGHTS RESERVED.
+      <p className="text-primary-disabled text-[11px] text-center">
+        ©2023 5HEADGAMES, INC. ALL RIGHTS RESERVED.
         <br /> All trademarks referenced herein are the properties of their
         respective owners.{" "}
       </p>
-      <p className="text-overlay-border text-[13px] text-center mt-10">
+      <p className="text-primary-disabled text-[13px] text-center mt-10">
         MARKETPLACE BUILT BY 5HEADGAMES
       </p>
     </div>

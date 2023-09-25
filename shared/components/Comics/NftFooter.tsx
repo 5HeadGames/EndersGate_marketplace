@@ -1,4 +1,4 @@
-import { Flex, Text, Image, Box } from "@chakra-ui/react";
+import { Flex, Text, Image, Box, Link } from "@chakra-ui/react";
 import React from "react";
 
 const Footer = () => {
@@ -72,15 +72,17 @@ const Footer = () => {
                 mx={6}
                 bg="gray.300"
               /> */}
-              <Text
+              <Link
+                href="https://www.linkedin.com/company/5headgames"
                 cursor="pointer"
+                target={"_blank"}
                 fontSize={["sm", "md", "md", "md"]}
                 color="#B8B8B8"
                 fontWeight="semibold"
                 zIndex="10"
               >
                 ABOUT
-              </Text>
+              </Link>
               <Box
                 display={["none", "none", "block", "block"]}
                 width="3px"
@@ -88,7 +90,9 @@ const Footer = () => {
                 mx={6}
                 bg="gray.300"
               />
-              <Text
+              <Link
+                href="mailto:support@5headgames.com"
+                target={"_blank"}
                 cursor="pointer"
                 fontSize={["sm", "md", "md", "md"]}
                 fontWeight="semibold"
@@ -96,7 +100,7 @@ const Footer = () => {
                 zIndex="10"
               >
                 CONTACT US
-              </Text>
+              </Link>
               <Box
                 display={["none", "none", "block", "block"]}
                 width="3px"
@@ -104,7 +108,9 @@ const Footer = () => {
                 mx={6}
                 bg="gray.300"
               />
-              <Text
+              <Link
+                href="https://endersgate.gitbook.io/endersgate/welcome/master"
+                target={"_blank"}
                 cursor="pointer"
                 fontWeight="semibold"
                 fontSize={["sm", "md", "md", "md"]}
@@ -112,7 +118,7 @@ const Footer = () => {
                 zIndex="10"
               >
                 WHITEPAPER
-              </Text>
+              </Link>
               <Box
                 display={["none", "none", "block", "block"]}
                 width="3px"
@@ -120,7 +126,8 @@ const Footer = () => {
                 mx={6}
                 bg="gray.300"
               />
-              <Text
+              <Link
+                href="https://www.endersgate.gg/legal"
                 cursor="pointer"
                 fontWeight="semibold"
                 fontSize={["sm", "md", "md", "md"]}
@@ -128,7 +135,7 @@ const Footer = () => {
                 zIndex="10"
               >
                 5HG LEGAL
-              </Text>
+              </Link>
             </Flex>
 
             <Text

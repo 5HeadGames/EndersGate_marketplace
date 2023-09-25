@@ -1,8 +1,8 @@
 import React from "react";
-import partnersbg from "/icons/partnersbg.svg";
 
 const Partners = () => {
   const partners = [
+    { logo: "/icons/Findora_Logo.svg", link: "https://findora.org/" },
     { logo: "/icons/Chainlink.svg", link: "https://chain.link/" },
     { logo: "/icons/Chainstack.svg", link: "https://chainstack.com/" },
     { logo: "/icons/DappRadar.svg", link: "https://dappradar.com/" },
@@ -16,7 +16,7 @@ const Partners = () => {
       <div className="flex flex-wrap gap-x-10 gap-y-8 items-center justify-center">
         {partners.map(({ logo, link }) => (
           <a href={link} target="_blank" rel="noreferrer">
-            <img alt="" className="w-[11rem]" src={logo} />
+            <img alt="" className="w-[8rem]" src={logo} />
           </a>
         ))}
       </div>
