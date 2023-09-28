@@ -42,7 +42,7 @@ const navItems = [
     icon: <AreaChartOutlined />,
   },
   { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
-  // { name: "COMICS", link: "/comics", icon: <ShopOutlined /> },
+  { name: "COMICS", link: "/comics", icon: <ShopOutlined /> },
   { name: "SHOP", link: "/shop", icon: <ShopOutlined /> },
 ];
 
