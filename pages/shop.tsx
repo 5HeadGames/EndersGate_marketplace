@@ -32,12 +32,12 @@ import { useBlockchain } from "@shared/context/useBlockchain";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { useCartModal } from "@shared/components/common/cartModal";
 import { XIcon } from "@heroicons/react/solid";
+import { useUser } from "@shared/context/useUser";
 
 const Shop = () => {
-  const { ethAddress: account, provider } = useSelector(
-    (state: any) => state.layout.user,
-  );
-  const [contract, setContract] = useState(null);
+  const {
+    user: { ethAddress: account, provider, providerName },
+  } = useUser();
   const [sales, setSales] = useState([]);
   const [counters, setCounters] = useState([1, 1, 1, 1]);
   const [isLoading, setIsLoading] = useState(false);
@@ -126,8 +126,6 @@ const Shop = () => {
 
       setSales(created);
       setCounters(created.map(() => 1));
-      // Update State
-      setContract(shop);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -262,6 +260,7 @@ const Shop = () => {
             priceMatic={priceNative}
             buy={buyPacks}
             isMatic={!getNativeBlockchain(blockchain)}
+            providerName={providerName}
             itemsCart={cartShop.map((item, index) => {
               return (
                 <div

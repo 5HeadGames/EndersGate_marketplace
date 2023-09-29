@@ -27,6 +27,7 @@ import useMagicLink from "@shared/hooks/useMagicLink";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { toast } from "react-hot-toast";
+import { useUser } from "@shared/context/useUser";
 
 export const Cart = ({
   tokenSelected,
@@ -40,15 +41,14 @@ export const Cart = ({
   const dispatch = useAppDispatch();
   const tokensAllowed = getTokensAllowedMatic();
   const { showWallet } = useMagicLink();
-  const { ethAddress } = useSelector((state: any) => state.layout.user);
   const {
-    provider,
-    providerName,
-    cart: cartSales,
-    cartRent,
-  } = useSelector((state: any) => state.layout);
+    user: { ethAddress, provider, providerName },
+  } = useUser();
+  const { cart: cartSales, cartRent } = useSelector(
+    (state: any) => state.layout,
+  );
 
-  const [priceMatic, setPriceMatic] = React.useState("0");
+  const [priceMatic, setPriceMatic] = React.useState(0);
 
   const [daysOfRent, setDaysOfRent] = React.useState(1);
 
@@ -68,14 +68,14 @@ export const Cart = ({
     if (cart.length > 0 && !getNativeBlockchain(blockchain)) {
       getPriceMatic();
     } else {
-      setPriceMatic("0");
+      setPriceMatic(0);
     }
   }, [cart]);
 
   const getPriceMatic = async () => {
     const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
     const priceMATIC = await Aggregator.methods.latestAnswer().call();
-    const price = (
+    const price: any = (
       (parseInt(
         cart
           ?.map((item: any) =>
@@ -87,9 +87,7 @@ export const Cart = ({
       ) *
         10 ** 8) /
       priceMATIC
-    )
-      .toFixed(2)
-      .toString();
+    ).toFixed(2);
 
     setPriceMatic(price);
   };
@@ -381,10 +379,7 @@ const TotalPrice = ({
             return intersection;
           }).length > 0 && (
           <h3 className="text-[14px] font-[700] text-white">
-            {isRentCart
-              ? (priceMatic * daysOfRent).toFixed(4)
-              : priceMatic.toFixed(4)}{" "}
-            MATIC
+            {isRentCart ? priceMatic * daysOfRent : priceMatic} MATIC
           </h3>
         )}
       </div>

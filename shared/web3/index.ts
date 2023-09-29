@@ -52,6 +52,7 @@ export const getContractCustom = (
   provider: any,
 ) => {
   const web3 = getWeb3(provider);
+  console.log(web3, provider);
   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 

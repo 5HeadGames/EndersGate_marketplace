@@ -19,15 +19,6 @@ export const onMessage = createAction(
   },
 );
 
-export const onUpdateUser = createAction(
-  actionTypes.UPDATE_USER_INTERN,
-  function prepare({ ethAddress, email, provider, providerName }: any) {
-    return {
-      payload: { ethAddress, email, provider, providerName },
-    };
-  },
-);
-
 export const onLogged = createAction(
   actionTypes.UPDATE_LOGGED_STATE,
   function prepare({ isLogged }: any) {

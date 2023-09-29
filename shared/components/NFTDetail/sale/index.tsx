@@ -98,6 +98,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
               .toBN(sale.price)
               .mul(Web3.utils.toBN(buyNFTData))
               .toString(),
+            blockchain,
             tokenId: sale.saleId,
             provider: provider.provider,
             nftContract: isPack ? pack : endersGate,

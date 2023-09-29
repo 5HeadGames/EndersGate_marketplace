@@ -1,14 +1,11 @@
 import * as React from "react";
 import clsx from "clsx";
-import { useForm } from "react-hook-form";
-import { InputEmail } from "../form/input-email";
-import { Button } from "../button";
 
 export const GetStarted = () => {
   return (
     <div
       className={clsx(
-        "w-full flex flex-col items-center xl:py-10 py-6 gap-10 px-10 border-t border-overlay-border",
+        "w-full flex flex-col items-center xl:py-10 py-6 gap-10 xl:px-10 px-4 border-t border-overlay-border",
       )}
     >
       <h2 className="text-white text-xl font-bold text-center">
@@ -30,7 +27,9 @@ export const GetStarted = () => {
         </div>
         <div className="flex flex-col items-center text-white gap-2 max-w-[300px] w-full">
           <img src="/icons/getStarted3.svg" className="w-10" alt="" />
-          <h3 className="text-xl font-bold">Explore in the markeplace</h3>
+          <h3 className="text-xl font-bold text-center">
+            Explore in the markeplace
+          </h3>
           <p className="text-md text-center">
             Click the{" "}
             <a className="text-red-primary" href="#browse">

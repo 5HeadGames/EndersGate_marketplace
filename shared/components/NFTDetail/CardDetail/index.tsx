@@ -37,6 +37,7 @@ import { useModal } from "@shared/hooks/modal";
 import { CongratsListing } from "./Congrats";
 import { toast } from "react-hot-toast";
 import ChainSelect from "@shared/components/Layouts/chainSelect";
+import { useUser } from "@shared/context/useUser";
 
 const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const NFTs = useAppSelector((state) => state.nfts);
@@ -230,11 +231,11 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
 };
 
 const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
-  const { account: user, provider } = useWeb3React();
+  const {
+    user: { ethAddress: user, provider },
+  } = useUser();
 
   const dispatch = useAppDispatch();
-
-  const cards = convertArrayCards();
 
   const { updateBlockchain } = useBlockchain();
 
@@ -286,7 +287,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
       const endersgateInstance = getContractCustom(
         "EndersGate",
         endersGate,
-        provider.provider,
+        provider,
       );
 
       if (blockchain !== "matic") {
@@ -296,7 +297,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
         if (isApprovedForAll === false) {
           setMessage("Allowing us to sell your tokens");
           await approveERC1155({
-            provider: provider.provider,
+            provider: provider,
             from: user,
             to: marketplace,
             address: endersGate,
@@ -315,7 +316,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
             amount: sellNFTData.amount,
             tokenId: tokenId,
             duration: sellNFTData.duration.toString(),
-            provider: provider.provider,
+            provider: provider,
             // user: user,
           }),
         );
@@ -329,7 +330,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
         if (isApprovedForAll === false) {
           setMessage("Allowing us to sell your tokens");
           await approveERC1155({
-            provider: provider.provider,
+            provider: provider,
             from: user,
             to: marketplace,
             address: endersGate,
@@ -346,7 +347,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
             tokenId: tokenId,
             tokens: tokensSelected,
             duration: sellNFTData.duration.toString(),
-            provider: provider.provider,
+            provider: provider,
             // user: user,
           }),
         );
@@ -557,7 +558,9 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
 };
 
 const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
-  const { account: user, provider } = useWeb3React();
+  const {
+    user: { ethAddress: user, provider },
+  } = useUser();
 
   const dispatch = useAppDispatch();
 
@@ -606,7 +609,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
       const endersgateInstance = getContractCustom(
         "EndersGate",
         endersGate,
-        provider.provider,
+        provider,
       );
 
       if (blockchain !== "matic") {
@@ -616,7 +619,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
         if (isApprovedForAll === false) {
           setMessage("Allowing us to list your tokens");
           await approveERC1155({
-            provider: provider.provider,
+            provider: provider,
             from: user,
             to: rent,
             address: endersGate,
@@ -632,7 +635,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
               .toWei(sellNFTData.pricePerDay.toString(), "ether")
               .toString(),
             tokenId: tokenId,
-            provider: provider.provider,
+            provider: provider,
             blockchain,
           }),
         );
@@ -643,7 +646,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
         if (isApprovedForAll === false) {
           setMessage("Allowing us to sell your tokens");
           await approveERC1155({
-            provider: provider.provider,
+            provider: provider,
             from: user,
             to: rent,
             address: endersGate,
@@ -658,7 +661,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
             pricePerDay: (sellNFTData.pricePerDay * 10 ** 6).toString(),
             tokenId: tokenId,
             tokens: tokensSelected,
-            provider: provider.provider,
+            provider: provider,
             blockchain,
           }),
         );

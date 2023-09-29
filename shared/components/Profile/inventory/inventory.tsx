@@ -14,6 +14,7 @@ import { CardInventory } from "@shared/components/Profile/inventory/cards/itemCa
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { onGetAssets } from "@redux/actions";
 import { useDispatch, useSelector } from "react-redux";
+import { useUser } from "@shared/context/useUser";
 
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
@@ -27,15 +28,14 @@ const Inventory = () => {
   const inventoryCards = nfts.balanceCards;
   const inventoryRented = nfts.balanceWrapped;
   const inventoryComics = nfts.balanceComics;
-  console.log(inventoryComics, "comics");
   const [inventoryPacks, setInventoryPacks] = React.useState([]);
   const [columnSelected, setColumnSelected] = React.useState("Trading Cards");
   const [search, setSearch] = React.useState("");
   const dispatch = useDispatch();
-  const { ethAddress } = useSelector((state: any) => state.layout.user);
+  const {
+    user: { ethAddress },
+  } = useUser();
   const { blockchain } = useBlockchain();
-
-  console.log(inventoryCards);
 
   const cards = convertArrayCards();
 

@@ -4,7 +4,7 @@ import { Connector } from "@web3-react/types";
 
 import { Connection, ConnectionType } from "utils/connection";
 import { getConnectionName, getConnection } from "utils/connection/utils";
-import { useAppSelector } from "redux/store";
+import { useUser } from "@shared/context/useUser";
 
 const SELECTABLE_WALLETS = [
   ConnectionType.INJECTED,
@@ -34,7 +34,9 @@ const getConnectionOrder = (selectedWallet: ConnectionType) => {
 };
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
-  const { wallet } = useAppSelector((state) => state.layout.user);
+  const {
+    user: { wallet },
+  } = useUser();
   const connections = getConnectionOrder(wallet);
   const connectors: [Connector, Web3ReactHooks][] = connections.map(
     ({ hooks, connector }: any) => [connector, hooks],

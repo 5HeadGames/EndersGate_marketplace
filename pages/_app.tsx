@@ -15,6 +15,7 @@ import { Toaster } from "react-hot-toast";
 import { initializeApp } from "firebase/app";
 import { BlockchainContextProvider } from "@shared/context/useBlockchain";
 import "swiper/css";
+import { UserContextProvider } from "@shared/context/useUser";
 
 const { ToastProvider } = require("react-toast-notifications"); //it throws ts error
 
@@ -61,18 +62,20 @@ const MyApp = ({ Component, pageProps }: AppProps & { Component: any }) => {
         <title>Ender's Gate Marketplace</title>
       </Head>
       <Provider store={store}>
-        <BlockchainContextProvider>
-          <ChakraProvider theme={theme}>
-            <ToastProvider autoDismiss placement="bottom-center">
-              <Web3Provider>
-                <Layout>
-                  <Component {...pageProps} />
-                  <Toaster containerClassName="!z-[100000000]" />
-                </Layout>
-              </Web3Provider>
-            </ToastProvider>
-          </ChakraProvider>
-        </BlockchainContextProvider>
+        <UserContextProvider>
+          <BlockchainContextProvider>
+            <ChakraProvider theme={theme}>
+              <ToastProvider autoDismiss placement="bottom-center">
+                <Web3Provider>
+                  <Layout>
+                    <Component {...pageProps} />
+                    <Toaster containerClassName="!z-[100000000]" />
+                  </Layout>
+                </Web3Provider>
+              </ToastProvider>
+            </ChakraProvider>
+          </BlockchainContextProvider>
+        </UserContextProvider>
       </Provider>
     </>
   );

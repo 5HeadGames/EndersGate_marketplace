@@ -3,19 +3,9 @@ import { ConnectionType } from "@shared/utils/connection";
 import * as actions from "../actions";
 
 interface InitialState {
-  user: {
-    ethAddress: string;
-    email: string;
-    wallet: any;
-    networkId: any;
-  };
   blur: boolean;
   isLogged: boolean;
   message: string;
-  provider: any;
-  providerEth: any;
-  networkEth: any;
-  providerName: string;
   tokenToPay: string;
   cart: any[];
   cartComics: any[];
@@ -26,17 +16,7 @@ interface InitialState {
 const INITIAL_STATE: InitialState = {
   blur: false,
   message: "",
-  user: {
-    ethAddress: "",
-    email: "",
-    wallet: ConnectionType.INJECTED,
-    networkId: process.env.NEXT_PUBLIC_CHAIN_ID,
-  },
   isLogged: false,
-  providerName: "",
-  providerEth: process.env.NEXT_PUBLIC_PROVIDER_ETH,
-  networkEth: process.env.NEXT_PUBLIC_CHAIN_ID_ETH,
-  provider: undefined,
   tokenToPay: "",
   cart: [],
   cartRent: [],
@@ -51,12 +31,6 @@ export const layoutReducer = createReducer(INITIAL_STATE, (builder) => {
     })
     .addCase(actions.onMessage, (state: typeof INITIAL_STATE, action) => {
       state.message = action.payload;
-    })
-    .addCase(actions.onUpdateUser, (state: typeof INITIAL_STATE, action) => {
-      state.user.email = action.payload.email;
-      state.user.ethAddress = action.payload.ethAddress;
-      state.provider = action.payload.provider;
-      state.providerName = action.payload.providerName;
     })
     .addCase(actions.onLogged, (state: typeof INITIAL_STATE, action) => {
       state.isLogged = action.payload.isLogged;

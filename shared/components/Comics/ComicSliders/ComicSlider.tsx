@@ -1,5 +1,7 @@
 import { authStillValid } from "@shared/components/utils";
-import { getAddressesEth, getContractCustom } from "@shared/web3";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { useUser } from "@shared/context/useUser";
+import { getAddresses, getContract } from "@shared/web3";
 import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/router";
 import React from "react";
@@ -10,13 +12,15 @@ import Reader from "./ComicsReader";
 export const ComicSlider = () => {
   const { name: comicName, issue } = useRouter().query;
   const router = useRouter();
-  const { ethAddress: user } = useSelector((state: any) => state.layout.user);
+  const {
+    user: { ethAddress: user },
+  } = useUser();
 
   const { account } = useWeb3React();
 
-  const { providerEth } = useSelector((state: any) => state.layout);
+  const { blockchain } = useBlockchain();
 
-  const { comics: comicsAddress } = getAddressesEth();
+  const { comics: comicsAddress } = getAddresses(blockchain);
 
   const accountUpdate = async () => {
     if (!Boolean(account) && !Boolean(user) && !authStillValid()) {
@@ -39,7 +43,7 @@ export const ComicSlider = () => {
   }, [account, currentComic]);
 
   const getComicID = async () => {
-    const comics = getContractCustom("Comics", comicsAddress, providerEth);
+    const comics = getContract("Comics", comicsAddress, blockchain);
     const nftsId = await comics.methods.comicIdCounter().call();
     const balances = await comics.methods
       .balanceOfBatch(
@@ -56,6 +60,7 @@ export const ComicSlider = () => {
       .map((id) => id.id);
 
     // comic.issue.id corresponds to the ID of the NFT in the smart contract
+    console.log(balanceCheck, balances, nftsId, account, "a?");
     if (!balanceCheck.includes(currentComic?.issues[issue as string]?.id)) {
       return router.push("/login?redirect=true&redirectAddress=/comics");
     }

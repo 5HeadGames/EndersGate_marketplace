@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Magic } from "magic-sdk";
 import { ConnectExtension } from "@magic-ext/connect";
 import Web3 from "web3";
-import { onUpdateUser } from "@redux/actions";
 import { networkConfigs } from "@shared/helpers/networks";
+import { useBlockchain } from "@shared/context/useBlockchain";
+import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 
 const getMagicConfig = (networkId: any) => {
   const network = networkConfigs[networkId];
@@ -19,10 +20,25 @@ export default function useMagicLink(networkId: number = 137) {
   const [web3, setWeb3] = useState<any>(null);
   const [provider, setProvider] = useState<any>(null);
   const [magic, setMagic] = useState<any>(null);
-  const [email, setEmail] = useState<any>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<any>(false);
 
   const [user, setUser] = React.useState(null);
+
+  const { blockchain } = useBlockchain();
+
+  const getMagic = (blockchain: string) => {
+    const key = process.env.NEXT_PUBLIC_MAGIC_KEY
+      ? process.env.NEXT_PUBLIC_MAGIC_KEY
+      : "";
+
+    const magic: any = new Magic(key, {
+      network: getMagicConfig(CHAIN_IDS_BY_NAME[blockchain]),
+      locale: "en_US",
+      extensions: [new ConnectExtension()],
+    });
+
+    return magic;
+  };
 
   if (
     typeof window !== "undefined" &&
@@ -30,110 +46,67 @@ export default function useMagicLink(networkId: number = 137) {
     process.env.NEXT_PUBLIC_MAGIC_KEY
   ) {
     // Client-side-only code
-    const key = process.env.NEXT_PUBLIC_MAGIC_KEY
-      ? process.env.NEXT_PUBLIC_MAGIC_KEY
-      : "";
-
-    const chainId = process.env.NEXT_PUBLIC_CHAIN_ID
-      ? process.env.NEXT_PUBLIC_CHAIN_ID
-      : 80001;
-
-    const magic: any = new Magic(key, {
-      network: getMagicConfig(chainId),
-      locale: "en_US",
-      extensions: [new ConnectExtension()],
-    });
+    const magic = getMagic(blockchain);
     setMagic(magic);
     setProvider(magic.rpcProvider);
     setWeb3(new Web3(magic.rpcProvider));
   }
 
+  React.useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      magic == null &&
+      process.env.NEXT_PUBLIC_MAGIC_KEY
+    ) {
+      // Client-side-only code
+      const magic = getMagic(blockchain);
+      setMagic(magic);
+      setProvider(magic.rpcProvider);
+      setWeb3(new Web3(magic.rpcProvider));
+    }
+  }, [blockchain]);
+
   const showWallet = () => {
+    const magic = getMagic(blockchain);
     magic.connect.showWallet().catch((e: any) => {
       console.log(e);
     });
   };
 
-  // React.useEffect(() => {
-  //   if (
-  //     typeof window !== "undefined" &&
-  //     magic == null &&
-  //     process.env.NEXT_PUBLIC_MAGIC_KEY
-  //   ) {
-  //     const key = process.env.NEXT_PUBLIC_MAGIC_KEY
-  //       ? process.env.NEXT_PUBLIC_MAGIC_KEY
-  //       : "";
-
-  //     console.log(getMagicConfig(networkId), "lamama");
-
-  //     const magic: any = new Magic(key, {
-  //       network: getMagicConfig(networkId),
-  //       locale: "en_US",
-  //       extensions: [new ConnectExtension()],
-  //     });
-  //     console.log(magic);
-  //     setMagic(magic);
-  //     setProvider(magic.rpcProvider);
-  //     setWeb3(new Web3(magic.rpcProvider));
-  //   }
-  // }, [networkId]);
-
-  const sendTransaction = async () => {
-    const publicAddress = (await web3.eth.getAccounts())[0];
-    const txnParams = {
-      from: publicAddress,
-      to: publicAddress,
-      value: web3.utils.toWei("0.01", "ether"),
-      gasPrice: web3.utils.toWei("30", "gwei"),
-    };
-    web3.eth
-      .sendTransaction(txnParams as any)
-      .on("transactionHash", (hash: any) => {
-        console.log("the txn hash that was returned to the sdk:", hash);
-      })
-      .then((receipt: any) => {
-        console.log("the txn receipt that was returned to the sdk:", receipt);
-      })
-      .catch((error: any) => {
-        console.log(error);
-      });
-  };
-
-  const login = async (dispatch: any) => {
+  const login = async (updateUser: any) => {
     setLoading(true);
     try {
+      const magic = getMagic(blockchain);
+      const web3 = new Web3(magic.rpcProvider);
       const publicAddress = (await web3.eth.getAccounts())[0];
       setAccount(publicAddress);
       setIsAuthenticated(true);
-      dispatch(
-        onUpdateUser({
-          ethAddress: publicAddress,
-          email,
-          provider: provider,
-          providerName: "magic",
-        }),
-      );
+      updateUser({
+        ethAddress: publicAddress,
+        email: "",
+        provider: provider,
+        providerName: "magic",
+      });
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
   };
 
-  const logout = async (dispatch: any) => {
+  const logout = async (updateUser: any) => {
     setLoading(true);
+    const magic = getMagic(blockchain);
     await magic.connect.disconnect().catch((e: any) => {
       console.log(e);
     });
     setIsAuthenticated(false);
     setAccount(null);
-    dispatch(
-      onUpdateUser({
-        ethAddress: "",
-        providerName: "",
-        email: "",
-        provider: undefined,
-      }),
-    );
+    updateUser({
+      ethAddress: "",
+      providerName: "",
+      email: "",
+      provider: undefined,
+    });
     setLoading(false);
   };
 
@@ -144,45 +117,28 @@ export default function useMagicLink(networkId: number = 137) {
           return user[attr];
         },
         ethAddress: account,
-        email: email,
+        email: "",
         name: "",
         logged: true,
       });
     } else {
       setUser(null);
     }
-    console.log(email, account, isAuthenticated);
-  }, [email, account, isAuthenticated]);
+  }, [account, isAuthenticated]);
 
   return {
     loading,
     login,
-    sendTransaction,
     account,
     magic,
     appKey: process.env.NEXT_PUBLIC_MAGIC_KEY,
     isInitialized: magic !== null,
     logout,
     isAuthenticated,
-    // isUnauthenticated: account == null,
-    // setUserData,
     user,
-    // _setUser: (user: MoralisType.User) => void;
-    // userError: null | Error;
-    // isUserUpdating: boolean;
-    // refetchUserData: () => Promise<MoralisType.User | undefined>;
-    // enableWeb3: (options?: Web3EnableOptions) => Promise<MoralisType.Web3Provider | undefined>;
-    // deactivateWeb3: () => Promise<void>;
     showWallet,
     web3,
     isWeb3Enabled: web3 !== undefined,
-    // web3EnableError: Error | null;
-    // isWeb3EnableLoading: boolean;
-    // chainId;
-    // account;
-    // network;
-    // connector;
-    // connectorType;
     provider: provider,
   };
 }

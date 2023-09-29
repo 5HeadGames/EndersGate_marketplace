@@ -1,10 +1,10 @@
 import { CheckIcon, PlusIcon, SearchIcon, XIcon } from "@heroicons/react/solid";
 import { addCart, addCartRent, removeFromCart } from "@redux/actions";
 import { useAppDispatch } from "@redux/store";
-import { Input } from "@shared/components/common/form/input";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
+import { useUser } from "@shared/context/useUser";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { getNativeBlockchain, getTokensAllowedMatic } from "@shared/web3";
 import clsx from "clsx";
@@ -16,7 +16,8 @@ import { useToasts } from "react-toast-notifications";
 
 export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
   const dispatch = useAppDispatch();
-  const { cartRent, user } = useSelector((state: any) => state.layout);
+  const { cartRent } = useSelector((state: any) => state.layout);
+  const { user } = useUser();
   const [hoverAll, setHoverAll] = React.useState(false);
   const [hoverBuy, setHoverBuy] = React.useState(false);
   const router = useRouter();

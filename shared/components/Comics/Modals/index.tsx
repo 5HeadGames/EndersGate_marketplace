@@ -23,6 +23,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { Image } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useBlockchain } from "@shared/context/useBlockchain";
+import { useUser } from "@shared/context/useUser";
 
 export const Modals = ({
   priceNative,
@@ -37,9 +38,9 @@ export const Modals = ({
   showAddress,
   isShow,
 }) => {
-  const { ethAddress: account } = useSelector(
-    (state: any) => state.layout.user,
-  );
+  const {
+    user: { ethAddress: account },
+  } = useUser();
 
   const [tokenSelected, setTokenSelected] = React.useState("");
   const [messageBuy, setMessageBuy] = React.useState("");
@@ -71,7 +72,7 @@ export const Modals = ({
       )
       .call();
 
-    dispatch(onLoadComics());
+    // dispatch(onLoadComics());
 
     setComicsOwned(
       balances.map((i, id) => {
@@ -238,7 +239,9 @@ const CartComic = ({
   messageBuy,
 }) => {
   const dispatch = useDispatch();
-  const { providerName } = useSelector((state: any) => state.layout.user);
+  const {
+    user: { providerName },
+  } = useUser();
   const { blockchain } = useBlockchain();
 
   const { showWallet } = useMagicLink();

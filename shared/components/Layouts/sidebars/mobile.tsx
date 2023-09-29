@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useWeb3React } from "@web3-react/core";
 import ChainSelect from "../chainSelect";
 import { useSelector } from "react-redux";
+import { useUser } from "@shared/context/useUser";
 
 interface LayoutDashboardProps {
   title?: string;
@@ -37,7 +38,9 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
   const router = useRouter();
   // const { user } = useMoralis();
 
-  const { ethAddress: user } = useSelector((state: any) => state.layout.user);
+  const {
+    user: { ethAddress: user },
+  } = useUser();
 
   const [set, setSet] = React.useState(false);
 

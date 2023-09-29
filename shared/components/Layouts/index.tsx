@@ -1,26 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import Link from "next/link";
-import { Layout } from "antd";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { Icons } from "@shared/const/Icons";
 import { useRouter } from "next/dist/client/router";
 import clsx from "clsx";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppDispatch } from "redux/store";
-import {
-  onGetAssets,
-  onLoadComics,
-  onLoadSales,
-  onUpdateUser,
-} from "redux/actions";
+import { onLoadSales } from "redux/actions";
 import {
   AreaChartOutlined,
   SearchOutlined,
   ShopOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import { useWeb3React } from "@web3-react/core";
 import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
 import { Dropdown } from "../common/dropdown/dropdown";
@@ -32,6 +25,7 @@ import ChainSelect from "./chainSelect";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
 import { getRentsPendingByUser } from "@shared/web3";
+import { useUser } from "@shared/context/useUser";
 
 type ButtonsTypes = { logout: boolean; userData: boolean };
 
@@ -123,7 +117,6 @@ export default function AppLayout({ children }) {
   const [cartOpen, setCartOpen] = React.useState(false);
   const [tokenSelected, setTokenSelected] = React.useState("");
   const refSidebarMobile = React.useRef(null);
-  const [relogin, setRelogin] = React.useState(false);
   const [disabled, setDisabled] = React.useState<ButtonsTypes>({
     logout: false,
     userData: false,
@@ -132,14 +125,14 @@ export default function AppLayout({ children }) {
 
   const router = useRouter();
 
-  const { account } = useWeb3React();
-
   const { logout, login } = useMagicLink();
 
-  const { ethAddress } = useSelector((state: any) => state.layout.user);
-  const { provider, providerName, cart, cartRent, isLogged } = useSelector(
-    (state: any) => state.layout,
-  );
+  const { updateUser } = useUser();
+
+  const {
+    user: { ethAddress, providerName },
+  } = useUser();
+  const { cart, cartRent } = useSelector((state: any) => state.layout);
   const { allRents } = useSelector((state: any) => state.nfts);
 
   const { blockchain, updateBlockchain } = useBlockchain();
@@ -147,20 +140,6 @@ export default function AppLayout({ children }) {
   const dispatch = useAppDispatch();
 
   let isFullscreen;
-
-  React.useEffect(() => {
-    if (relogin) {
-      dispatch(
-        onUpdateUser({
-          ethAddress: account,
-          email: "",
-          provider: provider?.provider,
-          providerName: "web3react",
-        }),
-      );
-      dispatch(onGetAssets({ address: account, blockchain }));
-    }
-  }, [account, relogin, isLogged, blockchain]);
 
   const reconnect = async () => {
     try {
@@ -171,15 +150,15 @@ export default function AppLayout({ children }) {
         WALLETS.forEach(async (wallet) => {
           if (wallet.title === typeOfConnection) {
             await wallet.connection.connector.activate();
-            setRelogin(true);
           }
         });
         if (typeOfConnection === "magic") {
-          login(dispatch);
+          login(updateUser);
         }
       } else {
         localStorage.removeItem("typeOfConnection");
         localStorage.removeItem("loginTime");
+        localStorage.removeItem("chain");
       }
     } catch (err) {
       toast.error(err.message);
@@ -192,7 +171,6 @@ export default function AppLayout({ children }) {
 
   const loadSales = async () => {
     await dispatch(onLoadSales());
-    await dispatch(onLoadComics());
   };
 
   React.useEffect(() => {
@@ -207,20 +185,20 @@ export default function AppLayout({ children }) {
     if (providerName === "magic") {
       const toggleLogout = handleDisabled("logout");
       toggleLogout(true);
-      logout(dispatch);
+      logout(updateUser);
       toggleLogout(false);
-    } else if (providerName === "web3react") {
-      dispatch(
-        onUpdateUser({
-          ethAddress: "",
-          email: "",
-          provider: "",
-          providerName: "",
-        }),
-      );
+    } else {
+      updateUser({
+        ethAddress: "",
+        email: "",
+        provider: "",
+        providerName: "",
+      });
     }
     localStorage.removeItem("typeOfConnection");
     localStorage.removeItem("loginTime");
+    localStorage.removeItem("chain");
+    router.push("/");
   };
 
   const userRentsNotificationArray =

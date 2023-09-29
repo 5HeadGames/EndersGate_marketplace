@@ -7,14 +7,16 @@ import clsx from "clsx";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { WALLETS } from "@shared/utils/connection/utils";
 import { LoadingOutlined } from "@ant-design/icons";
-import { onGetAssets, onLogged, onUpdateUser } from "@redux/actions";
+import { onGetAssets, onLogged } from "@redux/actions";
 import { switchChain } from "@shared/web3";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 import { useWeb3React } from "@web3-react/core";
+import { useUser } from "@shared/context/useUser";
 
 const Login = () => {
   const [loading, setLoading] = React.useState(false);
+  const [isLogged, setIsLogged] = React.useState(false);
   const { login, isAuthenticated } = useMagicLink(
     store.getState()["networks"].networkId,
   );
@@ -27,11 +29,12 @@ const Login = () => {
 
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { updateUser } = useUser();
 
   const handleLogin = async () => {
     setLoading(true);
     try {
-      await login(dispatch);
+      await login(updateUser);
       localStorage.setItem("typeOfConnection", "magic");
       localStorage.setItem("loginTime", new Date().getTime().toString());
       const queryAddress: any = query.redirectAddress?.toString();
@@ -56,7 +59,7 @@ const Login = () => {
       await connection.connector.activate();
       localStorage.setItem("typeOfConnection", title);
       localStorage.setItem("loginTime", new Date().getTime().toString());
-      dispatch(onLogged({ isLogged: true }));
+      setIsLogged(true);
     } catch (err) {
       console.log({ err });
       setLoading(false);
@@ -64,7 +67,7 @@ const Login = () => {
   };
 
   React.useEffect(() => {
-    if (account) {
+    if (account && isLogged) {
       const queryAddress: any = query?.redirectAddress?.toString();
       setTimeout(async () => {
         try {
@@ -72,14 +75,12 @@ const Login = () => {
         } catch (e) {
           console.log(e.message);
         }
-        dispatch(
-          onUpdateUser({
-            ethAddress: account,
-            email: "",
-            provider: provider?.provider,
-            providerName: "web3react",
-          }),
-        );
+        updateUser({
+          ethAddress: account,
+          email: "",
+          provider: provider?.provider,
+          providerName: "web3react",
+        });
         dispatch(onGetAssets({ address: account, blockchain }));
         if (query.redirect === "true" && query.redirectAddress != null) {
           router.push(queryAddress !== undefined ? queryAddress : "/");
@@ -89,7 +90,7 @@ const Login = () => {
         setLoading(false);
       }, 1000);
     }
-  }, [account]);
+  }, [account, isLogged]);
 
   return (
     <div className="max-w-[100vw] h-screen overflow-hidden">

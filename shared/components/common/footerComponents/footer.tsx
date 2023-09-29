@@ -7,29 +7,33 @@ import { Icons } from "@shared/const/Icons";
 
 export const Footer = () => {
   const items = [
-    "JOB APPLICATIONS",
-    "ABOUT",
-    "CONTACT US",
-    "WHITEPAPER",
-    "5HG LEGAL",
+    // "JOB APPLICATIONS",
+    { name: "ABOUT", link: "https://www.linkedin.com/company/5headgames" },
+    { name: "CONTACT US", link: "mailto:support@5headgames.com" },
+    {
+      name: "WHITEPAPER",
+      link: "https://endersgate.gitbook.io/endersgate/welcome/master",
+    },
+    { name: "5HG LEGAL", link: "https://www.endersgate.gg/legal" },
   ];
   return (
     <div
       className={clsx(
-        "w-full flex flex-col items-center py-16 gap-6 px-10 border-t border-overlay-border bg-overlay",
+        "w-full flex flex-col items-center py-16 gap-6 xl:px-10 px-4 border-t border-overlay-border bg-overlay",
       )}
     >
       <img className="h-12" src={Icons.logo5HG} alt="logo" />
       <div className="flex md:flex-row flex-col flex-wrap lg:justify-start justify-center items-center gap-y-4">
-        {items.map((item, i) => (
+        {items.map(({ name, link }, i) => (
           <>
-            <div
+            <a
+              href={link}
               className={clsx(
                 "px-2 text-xl font-bold text-primary-disabled text-center",
               )}
             >
-              {item}
-            </div>
+              {name}
+            </a>
             {i < items.length - 1 && (
               <p
                 className={clsx(
@@ -48,23 +52,23 @@ export const Footer = () => {
             "px-2 text-xl font-bold text-primary-disabled text-center",
           )}
         >
-          QUALITY BLOCKCHAIN GAMES FOR ALL
+          Entertaiment For Digital Collectors
         </p>
-        <a
+        {/* <a
           href="https://www.5headgames.com"
           className={clsx(
             "px-2 text-xl font-bold text-primary-disabled hover:text-red-primary",
           )}
         >
           5headgames.com
-        </a>
+        </a> */}
       </div>
-      <p className="text-overlay-border text-[11px] text-center">
-        ©2022 5HEADGAMES, INC. ALL RIGHTS RESERVED.
+      <p className="text-primary-disabled text-[11px] text-center">
+        ©2023 5HEADGAMES, INC. ALL RIGHTS RESERVED.
         <br /> All trademarks referenced herein are the properties of their
         respective owners.{" "}
       </p>
-      <p className="text-overlay-border text-[13px] text-center mt-10">
+      <p className="text-primary-disabled text-[13px] text-center mt-10">
         MARKETPLACE BUILT BY 5HEADGAMES
       </p>
     </div>

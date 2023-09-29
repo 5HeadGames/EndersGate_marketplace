@@ -19,7 +19,7 @@ const ETH: any = {
 };
 
 const IMX: any = {
-  name: "Inmmutable X",
+  name: "Inmutable X Token",
   symbol: "tIMX",
   decimals: 18,
 };
@@ -57,8 +57,8 @@ export function getAddChainParameters(
   }
 }
 
-export const MAINNET_CHAIN_IDS = [137, 1204, 13472];
-export const TESTNET_CHAIN_IDS = [80001, 1205, 13472];
+export const MAINNET_CHAIN_IDS = [137, 1204];
+export const TESTNET_CHAIN_IDS = [80001, 1205];
 
 export const CHAINS: {
   [chainId: number]: any;
@@ -121,7 +121,6 @@ export const NATIVE_CURRENCY_BY_ID = {
   80001: MATIC,
   1: ETH,
   11155111: ETH,
-  13472: IMX,
 };
 
 export const CHAIN_IDS_BY_NAME: {
@@ -130,7 +129,6 @@ export const CHAIN_IDS_BY_NAME: {
   findora: process.env.NEXT_PUBLIC_ENV === "production" ? 1204 : 1205,
   matic: process.env.NEXT_PUBLIC_ENV === "production" ? 137 : 80001,
   eth: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
-  imx: 13472,
 };
 
 export const CHAIN_NAME_BY_ID: {
@@ -142,7 +140,6 @@ export const CHAIN_NAME_BY_ID: {
   80001: "matic",
   1: "eth",
   11155111: "eth",
-  13472: "imx",
 };
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(

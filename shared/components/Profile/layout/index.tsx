@@ -1,7 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { Icons } from "@shared/const/Icons";
-import { LoginOutlined } from "@ant-design/icons";
+import { EditOutlined, LoginOutlined } from "@ant-design/icons";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import Web3 from "web3";
 import { useSelector } from "react-redux";
@@ -12,21 +12,61 @@ import { Tooltip } from "@mui/material";
 import { Button } from "@shared/components/common/button/button";
 import { authStillValid } from "@shared/components/utils";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
+import { XIcon } from "@heroicons/react/solid";
+import { useForm } from "react-hook-form";
+import { Input } from "@shared/components/common/form/input";
+import { child, get, getDatabase, ref, set } from "firebase/database";
+import { toast } from "react-hot-toast";
+import { useUser } from "@shared/context/useUser";
 
 const ProfileLayout = ({ children }) => {
-  const { ethAddress: user } = useSelector((state: any) => state.layout.user);
-  const { providerName } = useSelector((state: any) => state.layout);
+  const {
+    user: { ethAddress: user, providerName },
+  } = useUser();
   const { showWallet } = useMagicLink();
   const { account } = useWeb3React();
+  const { register, handleSubmit } = useForm();
   const router = useRouter();
+  const [editable, setEditable] = React.useState(false);
+  const [userName, setUserName] = React.useState("EG Enthusiast");
+  const db = getDatabase();
 
   React.useEffect(() => {
     if (!account && !user && !authStillValid()) {
-      router.push("/login?redirect=true&redirectAddress=/inventory");
+      router.push("/login?redirect=true&redirectAddress=/profile");
     }
   }, [account, user]);
 
   const profileImage = Icons.logo;
+
+  const handleUserForm = (data: any) => {
+    set(ref(db, "profile/" + user), data)
+      .then(() => {
+        toast.success("Your Alias has been changed successfully!");
+        setUserName(data.username);
+        setEditable(false);
+      })
+      .catch((e) => {
+        toast.error("An error has ocurred, please try again");
+
+        console.log(e);
+      });
+  };
+
+  React.useEffect(() => {
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `profile/${user}`))
+      .then((userData) => {
+        if (userData.exists()) {
+          setUserName(userData.val().username);
+        } else {
+          setUserName("EG Enthusiast");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [user]);
 
   return (
     <div className="flex flex-col py-8">
@@ -38,7 +78,7 @@ const ProfileLayout = ({ children }) => {
             alt=""
           />
         </div>
-        <div className="absolute bottom-[-120px] sm:left-[120px] left-0 sm:right-auto right-0 mx-auto flex flex-col gap-2 items-center justify-center">
+        <div className="absolute bottom-[-140px] sm:left-[120px] left-0 sm:right-auto right-0 mx-auto flex flex-col gap-2 items-center justify-center">
           <img
             className="md:w-40 w-32 rounded-full border-t border-overlay-border p-2 bg-overlay"
             src={profileImage}
@@ -46,9 +86,43 @@ const ProfileLayout = ({ children }) => {
           />{" "}
           <div className="flex mt-2 gap-5 items-center">
             <div className="flex flex-col justify-center items-center">
-              <h2 className="text-white font-bold md:text-2xl text-lg">
-                {"EG Enthusiast"}
-              </h2>
+              {!editable ? (
+                <h2 className="text-white font-bold md:text-2xl text-lg flex justify-center items-center gap-2 py-1 w-60">
+                  <EditOutlined
+                    className="cursor-pointer text-lg"
+                    onClick={() => {
+                      setEditable(true);
+                    }}
+                  />{" "}
+                  {userName}
+                </h2>
+              ) : (
+                <form
+                  onSubmit={handleSubmit(handleUserForm)}
+                  className="flex gap-1 items-center justify-center text-white font-bold mb-2 w-60"
+                >
+                  <XIcon
+                    className="cursor-pointer w-6"
+                    onClick={() => {
+                      setEditable(false);
+                    }}
+                  />{" "}
+                  <Input
+                    register={register}
+                    name="username"
+                    type="text"
+                    withoutX
+                    classNameContainer="text-[10px] bg-overlay rounded-xl border border-overlay-border px-2"
+                    placeholder={userName}
+                  />
+                  <Button
+                    type="submit"
+                    className="text-[10px] px-2 py-2 bg-green-button rounded-xl text-overlay hover:text-green-button hover:bg-overlay hover:border-green-button transition-all duration-500"
+                  >
+                    Save
+                  </Button>
+                </form>
+              )}
               <h2 className="text-green-button font-bold md:text-[12px] text-[10px]">
                 (<AddressText text={user} />)
               </h2>

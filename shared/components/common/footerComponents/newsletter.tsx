@@ -14,7 +14,7 @@ export const Newsletter = () => {
   return (
     <div
       className={clsx(
-        "w-full flex flex-col items-center xl:py-10 py-6 gap-4 px-10 border-t border-overlay-border bg-overlay-3",
+        "w-full flex flex-col items-center xl:py-10 py-6 gap-4 xl:px-10 px-4 border-t border-overlay-border bg-overlay-3",
       )}
     >
       <img src="/icons/5HGNewsletter.svg" className="w-40 mb-6" alt="" />
@@ -23,7 +23,7 @@ export const Newsletter = () => {
         releases, NFT drops & more!
       </p>
       <form
-        className="flex items-center justify-center gap-4 w-full"
+        className="flex sm:flex-row flex-col items-center justify-center gap-4 w-full"
         onSubmit={handleSubmit((data) => console.log(data))}
       >
         <InputEmail

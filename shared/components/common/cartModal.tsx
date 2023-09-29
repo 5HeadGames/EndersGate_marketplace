@@ -12,8 +12,6 @@ import { Icons } from "@shared/const/Icons";
 import { getNativeBlockchain } from "@shared/web3";
 
 export const useCartModal = () => {
-  const { providerName } = useSelector((state: any) => state.layout.user);
-
   const { showWallet } = useMagicLink();
 
   const dispatch = useDispatch();
@@ -40,6 +38,7 @@ export const useCartModal = () => {
       tokenSelected,
       setTokenSelected,
       buy,
+      providerName,
       blockchain,
       isShow,
     }) => {
@@ -277,7 +276,7 @@ export const useCartModal = () => {
                             Checkout
                           </div>
                         </div>
-                        {providerName === "magic" &&
+                        {providerName == "magic" &&
                           !getNativeBlockchain(blockchain) && (
                             <div
                               className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
