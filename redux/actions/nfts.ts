@@ -138,8 +138,6 @@ export const onLoadSales = createAsyncThunk(
           await marketplace.methods.tokenIdTracker().call(),
         );
 
-        console.log(lastSale, element);
-
         if (lastSale > 0) {
           const rawSales = await marketplace.methods
             .getSales(new Array(lastSale).fill(0).map((a, i) => i))
@@ -293,7 +291,7 @@ export const onLoadSales = createAsyncThunk(
         cardsSold: cardsSold.toString(),
       };
     } catch (err) {
-      console.log(err.message, err);
+      console.log(err.message, err, "error");
     }
     return {
       allSales: [],

@@ -57,6 +57,7 @@ export const getContractCustom = (
 };
 
 export const getProvider = (blockchain) => {
+  console.log(CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0]);
   return new Web3.providers.HttpProvider(
     CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0],
   );
@@ -167,6 +168,7 @@ export const switchChain = async (network) => {
     const chainId = await (window as any).ethereum.request({
       method: "eth_chainId",
     });
+    console.log(chainId, network, "a");
     if (chainId !== network) {
       await (window as any).ethereum.request({
         method: "wallet_switchEthereumChain",
