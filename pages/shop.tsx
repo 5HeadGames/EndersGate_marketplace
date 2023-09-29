@@ -36,7 +36,7 @@ import { useUser } from "@shared/context/useUser";
 
 const Shop = () => {
   const {
-    user: { ethAddress: account, provider },
+    user: { ethAddress: account, provider, providerName },
   } = useUser();
   const [sales, setSales] = useState([]);
   const [counters, setCounters] = useState([1, 1, 1, 1]);
@@ -261,6 +261,7 @@ const Shop = () => {
             priceMatic={priceNative}
             buy={buyPacks}
             isMatic={!getNativeBlockchain(blockchain)}
+            providerName={providerName}
             itemsCart={cartShop.map((item, index) => {
               return (
                 <div

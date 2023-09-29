@@ -10,13 +10,8 @@ import { formatPrice } from "@shared/utils/formatPrice";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
 import { Icons } from "@shared/const/Icons";
 import { getNativeBlockchain } from "@shared/web3";
-import { useUser } from "@shared/context/useUser";
 
 export const useCartModal = () => {
-  const {
-    user: { providerName },
-  } = useUser();
-
   const { showWallet } = useMagicLink();
 
   const dispatch = useDispatch();
@@ -43,6 +38,7 @@ export const useCartModal = () => {
       tokenSelected,
       setTokenSelected,
       buy,
+      providerName,
       blockchain,
       isShow,
     }) => {
@@ -280,7 +276,7 @@ export const useCartModal = () => {
                             Checkout
                           </div>
                         </div>
-                        {providerName === "magic" &&
+                        {providerName == "magic" &&
                           !getNativeBlockchain(blockchain) && (
                             <div
                               className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
