@@ -1,7 +1,6 @@
 import { CheckIcon, PlusIcon, SearchIcon, XIcon } from "@heroicons/react/solid";
 import { addCart, addCartRent, removeFromCart } from "@redux/actions";
 import { useAppDispatch } from "@redux/store";
-import { Input } from "@shared/components/common/form/input";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";

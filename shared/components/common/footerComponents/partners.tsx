@@ -6,8 +6,13 @@ const Partners = () => {
     { logo: "/icons/Chainlink.svg", link: "https://chain.link/" },
     { logo: "/icons/Chainstack.svg", link: "https://chainstack.com/" },
     { logo: "/icons/DappRadar.svg", link: "https://dappradar.com/" },
+    {
+      logo: "/icons/Tsuburaya_Logo_Blue.png",
+      link: "https://tsuburaya-prod.com/",
+    },
     { logo: "/icons/Polygon.svg", link: "https://polygon.technology/" },
     { logo: "/icons/XP.Network.svg", link: "https://xp.network/" },
+    { logo: "/icons/magic-link.png", link: "https://magic.link/" },
   ];
   return (
     <div className="py-10 xl:px-10 px-4 flex flex-col items-center border-t border-overlay-border bg-overlay-3">
