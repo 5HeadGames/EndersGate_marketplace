@@ -17,6 +17,7 @@ import { Input } from "@shared/components/common/form/input";
 import { useModal } from "@shared/hooks/modal";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { useUser } from "@shared/context/useUser";
 
 function RecentlyAddedComic({ price, getPriceMatic, balance, showCart }) {
   const settings = {
@@ -81,9 +82,9 @@ function RecentlyAddedComic({ price, getPriceMatic, balance, showCart }) {
 
   const dispatch = useDispatch();
 
-  const { ethAddress: account } = useSelector(
-    (state: any) => state.layout.user,
-  );
+  const {
+    user: { ethAddress: account },
+  } = useUser();
 
   const { currentComicsSupply, comicsLimit } = useSelector(
     (state: any) => state.nfts,
@@ -263,9 +264,9 @@ const SliderItem = ({ price, onClickItem, id, i, setIssues, issues }) => {
 
   const dispatch = useDispatch();
 
-  const { ethAddress: account } = useSelector(
-    (state: any) => state.layout.user,
-  );
+  const {
+    user: { ethAddress: account },
+  } = useUser();
 
   const { cartComics } = useSelector((state: any) => state.layout);
 

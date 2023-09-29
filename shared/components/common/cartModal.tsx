@@ -10,9 +10,12 @@ import { formatPrice } from "@shared/utils/formatPrice";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
 import { Icons } from "@shared/const/Icons";
 import { getNativeBlockchain } from "@shared/web3";
+import { useUser } from "@shared/context/useUser";
 
 export const useCartModal = () => {
-  const { providerName } = useSelector((state: any) => state.layout.user);
+  const {
+    user: { providerName },
+  } = useUser();
 
   const { showWallet } = useMagicLink();
 

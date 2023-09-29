@@ -27,6 +27,7 @@ import useMagicLink from "@shared/hooks/useMagicLink";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { toast } from "react-hot-toast";
+import { useUser } from "@shared/context/useUser";
 
 export const Cart = ({
   tokenSelected,
@@ -40,13 +41,12 @@ export const Cart = ({
   const dispatch = useAppDispatch();
   const tokensAllowed = getTokensAllowedMatic();
   const { showWallet } = useMagicLink();
-  const { ethAddress } = useSelector((state: any) => state.layout.user);
   const {
-    provider,
-    providerName,
-    cart: cartSales,
-    cartRent,
-  } = useSelector((state: any) => state.layout);
+    user: { ethAddress, provider, providerName },
+  } = useUser();
+  const { cart: cartSales, cartRent } = useSelector(
+    (state: any) => state.layout,
+  );
 
   const [priceMatic, setPriceMatic] = React.useState("0");
 

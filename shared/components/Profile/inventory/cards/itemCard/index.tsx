@@ -28,9 +28,10 @@ import {
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import Link from "next/link";
+import { useUser } from "@shared/context/useUser";
 
 export const CardInventory = (props) => {
-  const { classes, ...rest } = props;
+  const { classes } = props;
   const [isFlipped, setIsFlipped] = React.useState(false);
   const [isShow, setIsShow] = React.useState(false);
   const [transfer, setTransfer] = React.useState(false);
@@ -38,9 +39,9 @@ export const CardInventory = (props) => {
 
   const { blockchain } = useBlockchain();
 
-  const { ethAddress: account, provider } = useSelector(
-    (state: any) => state.layout.user,
-  );
+  const {
+    user: { ethAddress: account, provider },
+  } = useUser();
 
   const { endersGate, pack, comics } = getAddresses(blockchain);
 
@@ -62,7 +63,6 @@ export const CardInventory = (props) => {
   const transferNft = async () => {
     const web3 = new Web3(provider);
     if (!web3) return;
-
     if (nftSendData.quantity === 0) {
       return alert("Your quantity of tokens to transfer must be higher than 0");
     }

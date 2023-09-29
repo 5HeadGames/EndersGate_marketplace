@@ -7,6 +7,7 @@ import { PackOpeningComponent } from "@shared/components/PackOpening/PackOpening
 import { onGetAssets } from "@redux/actions";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { CHAIN_IDS_BY_NAME, CHAINS } from "@shared/components/chains";
+import { useUser } from "@shared/context/useUser";
 
 const Packs = () => {
   const [contract, setContract] = useState(null);
@@ -18,10 +19,9 @@ const Packs = () => {
   const { blockchain } = useBlockchain();
 
   const { endersGate, pack } = getAddresses(blockchain);
-
-  const { ethAddress, provider } = useSelector(
-    (state: any) => state.layout.user,
-  );
+  const {
+    user: { ethAddress, provider },
+  } = useUser();
 
   React.useEffect(() => {
     if (NFTContract && provider) {

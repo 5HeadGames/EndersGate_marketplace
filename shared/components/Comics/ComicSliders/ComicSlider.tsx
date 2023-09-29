@@ -1,5 +1,6 @@
 import { authStillValid } from "@shared/components/utils";
 import { useBlockchain } from "@shared/context/useBlockchain";
+import { useUser } from "@shared/context/useUser";
 import { getAddresses, getContract } from "@shared/web3";
 import { useWeb3React } from "@web3-react/core";
 import { useRouter } from "next/router";
@@ -11,7 +12,9 @@ import Reader from "./ComicsReader";
 export const ComicSlider = () => {
   const { name: comicName, issue } = useRouter().query;
   const router = useRouter();
-  const { ethAddress: user } = useSelector((state: any) => state.layout.user);
+  const {
+    user: { ethAddress: user },
+  } = useUser();
 
   const { account } = useWeb3React();
 
@@ -21,7 +24,6 @@ export const ComicSlider = () => {
 
   const accountUpdate = async () => {
     if (!Boolean(account) && !Boolean(user) && !authStillValid()) {
-      console.log(account, user, !authStillValid());
       return router.push("/login?redirect=true&redirectAddress=/comics");
     } else if (account) {
       await getComicID();

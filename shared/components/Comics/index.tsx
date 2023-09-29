@@ -13,6 +13,7 @@ import { useCartComicsModal } from "./Modals/ModalCartComics";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { CHAINS, CHAIN_IDS_BY_NAME, NATIVE_CURRENCY_BY_ID } from "../chains";
 import { formatPrice } from "@shared/utils/formatPrice";
+import { useUser } from "@shared/context/useUser";
 
 function Comics() {
   const { Modal, show, isShow, hide } = useCartComicsModal();
@@ -40,10 +41,9 @@ function Comics() {
     noClose: true,
   });
 
-  const { ethAddress: account } = useSelector(
-    (state: any) => state.layout.user,
-  );
-
+  const {
+    user: { ethAddress: account },
+  } = useUser();
   const [priceNative, setPriceNative] = React.useState("0");
   const [basePrice, setBasePriceMatic] = React.useState("0");
   const [price, setPrice] = React.useState("0");

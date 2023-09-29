@@ -17,10 +17,12 @@ import { useForm } from "react-hook-form";
 import { Input } from "@shared/components/common/form/input";
 import { child, get, getDatabase, ref, set } from "firebase/database";
 import { toast } from "react-hot-toast";
+import { useUser } from "@shared/context/useUser";
 
 const ProfileLayout = ({ children }) => {
-  const { ethAddress: user } = useSelector((state: any) => state.layout.user);
-  const { providerName } = useSelector((state: any) => state.layout);
+  const {
+    user: { ethAddress: user, providerName },
+  } = useUser();
   const { showWallet } = useMagicLink();
   const { account } = useWeb3React();
   const { register, handleSubmit } = useForm();

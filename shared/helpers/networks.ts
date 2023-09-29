@@ -29,6 +29,20 @@ export const networkConfigs = {
     blockExplorerURl: "https://gsc-testnet.evm.findorascan.io/",
     currencySymbol: "WFRA",
   },
+
+  1: {
+    name: "Ethereum Mainnet",
+    rpc: process.env["NEXT_PUBLIC_PROVIDER_ETH"] || publicRpc["polygon"],
+    blockExplorerURl: "https://etherescan.io/",
+    currencySymbol: "ETH",
+  },
+
+  11155111: {
+    name: "Ethereum Sepolia Testnet",
+    rpc: process.env["NEXT_PUBLIC_PROVIDER_ETH"] || publicRpc["polygon"],
+    blockExplorerURl: "https://sepolia.etherescan.io/",
+    currencySymbol: "ETH",
+  },
 };
 
 export const getNativeByChain = (chainId) =>

@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Magic } from "magic-sdk";
 import { ConnectExtension } from "@magic-ext/connect";
 import Web3 from "web3";
-import { onUpdateUser } from "@redux/actions";
 import { networkConfigs } from "@shared/helpers/networks";
+import { useUser } from "@shared/context/useUser";
+import { useBlockchain } from "@shared/context/useBlockchain";
 
 const getMagicConfig = (networkId: any) => {
   const network = networkConfigs[networkId];
@@ -23,6 +24,8 @@ export default function useMagicLink(networkId: number = 137) {
   const [isAuthenticated, setIsAuthenticated] = useState<any>(false);
 
   const [user, setUser] = React.useState(null);
+
+  const { blockchain } = useBlockchain();
 
   if (
     typeof window !== "undefined" &&
@@ -48,35 +51,30 @@ export default function useMagicLink(networkId: number = 137) {
     setWeb3(new Web3(magic.rpcProvider));
   }
 
+  React.useEffect(() => {
+    const key = process.env.NEXT_PUBLIC_MAGIC_KEY
+      ? process.env.NEXT_PUBLIC_MAGIC_KEY
+      : "";
+
+    const chainId = process.env.NEXT_PUBLIC_CHAIN_ID
+      ? process.env.NEXT_PUBLIC_CHAIN_ID
+      : 80001;
+
+    const magic: any = new Magic(key, {
+      network: getMagicConfig(chainId),
+      locale: "en_US",
+      extensions: [new ConnectExtension()],
+    });
+    setMagic(magic);
+    setProvider(magic.rpcProvider);
+    setWeb3(new Web3(magic.rpcProvider));
+  }, [blockchain]);
+
   const showWallet = () => {
     magic.connect.showWallet().catch((e: any) => {
       console.log(e);
     });
   };
-
-  // React.useEffect(() => {
-  //   if (
-  //     typeof window !== "undefined" &&
-  //     magic == null &&
-  //     process.env.NEXT_PUBLIC_MAGIC_KEY
-  //   ) {
-  //     const key = process.env.NEXT_PUBLIC_MAGIC_KEY
-  //       ? process.env.NEXT_PUBLIC_MAGIC_KEY
-  //       : "";
-
-  //     console.log(getMagicConfig(networkId), "lamama");
-
-  //     const magic: any = new Magic(key, {
-  //       network: getMagicConfig(networkId),
-  //       locale: "en_US",
-  //       extensions: [new ConnectExtension()],
-  //     });
-  //     console.log(magic);
-  //     setMagic(magic);
-  //     setProvider(magic.rpcProvider);
-  //     setWeb3(new Web3(magic.rpcProvider));
-  //   }
-  // }, [networkId]);
 
   const sendTransaction = async () => {
     const publicAddress = (await web3.eth.getAccounts())[0];
@@ -99,41 +97,37 @@ export default function useMagicLink(networkId: number = 137) {
       });
   };
 
-  const login = async (dispatch: any) => {
+  const login = async (updateUser: any) => {
     setLoading(true);
     try {
       const publicAddress = (await web3.eth.getAccounts())[0];
       setAccount(publicAddress);
       setIsAuthenticated(true);
-      dispatch(
-        onUpdateUser({
-          ethAddress: publicAddress,
-          email,
-          provider: provider,
-          providerName: "magic",
-        }),
-      );
+      updateUser({
+        ethAddress: publicAddress,
+        email,
+        provider: provider,
+        providerName: "magic",
+      });
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
   };
 
-  const logout = async (dispatch: any) => {
+  const logout = async (updateUser: any) => {
     setLoading(true);
     await magic.connect.disconnect().catch((e: any) => {
       console.log(e);
     });
     setIsAuthenticated(false);
     setAccount(null);
-    dispatch(
-      onUpdateUser({
-        ethAddress: "",
-        providerName: "",
-        email: "",
-        provider: undefined,
-      }),
-    );
+    updateUser({
+      ethAddress: "",
+      providerName: "",
+      email: "",
+      provider: undefined,
+    });
     setLoading(false);
   };
 
