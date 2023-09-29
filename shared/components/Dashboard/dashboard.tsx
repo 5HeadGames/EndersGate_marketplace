@@ -1,20 +1,11 @@
 import React from "react";
-
-import { useAppDispatch, useAppSelector } from "@redux/store";
-import Table from "./tableItems/table";
-import TransactionsBoard from "./TransactionsBoard/TransactionsBoard";
-import { getAddressesMatic, getContract } from "@shared/web3";
-import cardsJson from "../../../cards.json";
-import { TimeConverter } from "../common/unixDateConverter/unixConverter";
-import Web3 from "web3";
+import { useAppSelector } from "@redux/store";
+import { getAddressesMatic } from "@shared/web3";
 import packs from "../../packs.json";
-import Styles from "../Marketplace/itemCard/styles.module.scss";
 import { useStats } from "@shared/hooks/useStats";
 import NFTCard from "../Marketplace/itemCard";
 import Link from "next/link";
-import clsx from "clsx";
 import { Icons } from "@shared/const/Icons";
-import { AddressText } from "../common/specialFields/SpecialFields";
 import { convertArrayCards } from "../common/convertCards";
 import { Dropdown } from "../common/dropdown/dropdown";
 import { Newsletter } from "../common/footerComponents/newsletter";
@@ -22,34 +13,29 @@ import { JoinTheCommunity } from "../common/footerComponents/joinTheCommunity";
 import { GetStarted } from "../common/footerComponents/getStarted";
 import Partners from "../common/footerComponents/partners";
 import { Button } from "../common/button/button";
-import NFTCardSlider from "../Marketplace/itemCard/cardSliderMain";
 import { SliderMain } from "./sliderMain";
 import { Zoom, Navigation } from "swiper";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 
 const DashboardComponent = () => {
-  const [columnSelected, setColumnSelected] = React.useState("last_7d");
-  const [listedSelected, setListedSelected] = React.useState("trading_cards");
-  const [soldSelected, setSoldSelected] = React.useState("trading_cards");
   const { nfts } = useAppSelector((state) => state);
   const cards = convertArrayCards();
 
   const { recentlyListed, recentlySold } = useStats({
     nfts,
-    listedSelected,
-    soldSelected,
-    columnSelected,
+    listedSelected: "trading_cards",
+    soldSelected: "trading_cards",
+    columnSelected: "last_7d",
   });
 
   const { recentlyListed: recentlyListedCards } = useStats({
     nfts,
     listedSelected: "trading_cards",
     soldSelected: "trading_cards",
-    columnSelected,
+    columnSelected: "last_7d",
   });
 
   const { pack } = getAddressesMatic();

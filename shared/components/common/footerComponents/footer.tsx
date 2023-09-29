@@ -19,7 +19,7 @@ export const Footer = () => {
   return (
     <div
       className={clsx(
-        "w-full flex flex-col items-center py-16 gap-6 px-10 border-t border-overlay-border bg-overlay",
+        "w-full flex flex-col items-center py-16 gap-6 xl:px-10 px-4 border-t border-overlay-border bg-overlay",
       )}
     >
       <img className="h-12" src={Icons.logo5HG} alt="logo" />

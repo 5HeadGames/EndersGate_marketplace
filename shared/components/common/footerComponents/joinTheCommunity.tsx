@@ -37,7 +37,7 @@ export const JoinTheCommunity = () => {
   return (
     <div
       className={clsx(
-        "w-full flex flex-col items-center xl:py-10 py-6 gap-4 px-10 border-t border-overlay-border bg-overlay-3",
+        "w-full flex flex-col items-center xl:py-10 py-6 gap-4 xl:px-10 px-4 border-t border-overlay-border bg-overlay-3",
       )}
     >
       <h2 className="font-bold text-xl text-white">Join the community</h2>
