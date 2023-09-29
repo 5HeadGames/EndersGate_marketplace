@@ -5,6 +5,7 @@ import { Input } from "@shared/components/common/form/input";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
+import { useUser } from "@shared/context/useUser";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { getNativeBlockchain, getTokensAllowedMatic } from "@shared/web3";
 import clsx from "clsx";
@@ -17,7 +18,8 @@ import { useToasts } from "react-toast-notifications";
 
 export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
   const dispatch = useAppDispatch();
-  const { cart, user } = useSelector((state: any) => state.layout);
+  const { cart } = useSelector((state: any) => state.layout);
+  const { user } = useUser();
   const [hoverAll, setHoverAll] = React.useState(false);
   const [hoverBuy, setHoverBuy] = React.useState(false);
   const [quantity, setQuantity] = React.useState(1);

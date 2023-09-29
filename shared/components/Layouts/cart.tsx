@@ -48,7 +48,7 @@ export const Cart = ({
     (state: any) => state.layout,
   );
 
-  const [priceMatic, setPriceMatic] = React.useState("0");
+  const [priceMatic, setPriceMatic] = React.useState(0);
 
   const [daysOfRent, setDaysOfRent] = React.useState(1);
 
@@ -68,14 +68,14 @@ export const Cart = ({
     if (cart.length > 0 && !getNativeBlockchain(blockchain)) {
       getPriceMatic();
     } else {
-      setPriceMatic("0");
+      setPriceMatic(0);
     }
   }, [cart]);
 
   const getPriceMatic = async () => {
     const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
     const priceMATIC = await Aggregator.methods.latestAnswer().call();
-    const price = (
+    const price: any = (
       (parseInt(
         cart
           ?.map((item: any) =>
@@ -87,9 +87,7 @@ export const Cart = ({
       ) *
         10 ** 8) /
       priceMATIC
-    )
-      .toFixed(2)
-      .toString();
+    ).toFixed(2);
 
     setPriceMatic(price);
   };
@@ -381,10 +379,7 @@ const TotalPrice = ({
             return intersection;
           }).length > 0 && (
           <h3 className="text-[14px] font-[700] text-white">
-            {isRentCart
-              ? (priceMatic * daysOfRent).toFixed(4)
-              : priceMatic.toFixed(4)}{" "}
-            MATIC
+            {isRentCart ? priceMatic * daysOfRent : priceMatic} MATIC
           </h3>
         )}
       </div>

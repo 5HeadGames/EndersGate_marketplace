@@ -16,6 +16,7 @@ import { useUser } from "@shared/context/useUser";
 
 const Login = () => {
   const [loading, setLoading] = React.useState(false);
+  const [isLogged, setIsLogged] = React.useState(false);
   const { login, isAuthenticated } = useMagicLink(
     store.getState()["networks"].networkId,
   );
@@ -58,7 +59,7 @@ const Login = () => {
       await connection.connector.activate();
       localStorage.setItem("typeOfConnection", title);
       localStorage.setItem("loginTime", new Date().getTime().toString());
-      dispatch(onLogged({ isLogged: true }));
+      setIsLogged(true);
     } catch (err) {
       console.log({ err });
       setLoading(false);
@@ -66,7 +67,7 @@ const Login = () => {
   };
 
   React.useEffect(() => {
-    if (account) {
+    if (account && isLogged) {
       const queryAddress: any = query?.redirectAddress?.toString();
       setTimeout(async () => {
         try {
@@ -89,7 +90,7 @@ const Login = () => {
         setLoading(false);
       }, 1000);
     }
-  }, [account]);
+  }, [account, isLogged]);
 
   return (
     <div className="max-w-[100vw] h-screen overflow-hidden">

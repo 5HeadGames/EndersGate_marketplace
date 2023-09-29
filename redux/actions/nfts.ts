@@ -420,6 +420,27 @@ export const onGetAssets = createAsyncThunk(
           //   balance: balanceComics[i],
           // })),
         };
+      } else {
+        return {
+          balanceCards: cardsIds.map((id, i) => ({
+            id,
+            balance: 0,
+          })),
+          balancePacks: packsIds.map((id, i) => ({
+            id,
+            balance: 0,
+          })),
+          balanceWrapped: [
+            cardsIds.map((id, i) => ({
+              id,
+              balance: 0,
+            })),
+          ],
+          balanceComics: cardsIds.map((id, i) => ({
+            id,
+            balance: 0,
+          })),
+        };
       }
       // } else {
       // const { comics } = getAddresses(blockchain);

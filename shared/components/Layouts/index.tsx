@@ -187,7 +187,7 @@ export default function AppLayout({ children }) {
       toggleLogout(true);
       logout(updateUser);
       toggleLogout(false);
-    } else if (providerName === "web3react") {
+    } else {
       updateUser({
         ethAddress: "",
         email: "",

@@ -11,7 +11,7 @@ const UserContext = createContext<UserContextData>({} as UserContextData);
 
 export const UserContextProvider = ({ children }: any) => {
   const [user, setUser] = React.useState({
-    ethAddress: "account",
+    ethAddress: "",
     email: "",
     provider: undefined,
     providerName: "",

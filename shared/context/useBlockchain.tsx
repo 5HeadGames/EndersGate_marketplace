@@ -3,6 +3,7 @@ import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 import { switchChain } from "@shared/web3";
 import React, { createContext, useContext, useCallback, useMemo } from "react";
 import { toast } from "react-hot-toast";
+import { useUser } from "./useUser";
 
 export interface BlockchainContextData {
   blockchain: any;
@@ -16,13 +17,20 @@ const blockchainContext = createContext<BlockchainContextData>(
 export const BlockchainContextProvider = ({ children }: any) => {
   const [blockchain, setBlockchain] = React.useState("matic");
 
+  const {
+    user: { providerName },
+  } = useUser();
+
   const _updateBlockchain = useCallback(async (blockchain: any) => {
     try {
-      const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
-      if (!changed) {
-        throw Error(
-          "An error has occurred while switching chain, please try again.",
-        );
+      if (providerName == "magic") {
+      } else {
+        const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+        if (!changed) {
+          throw Error(
+            "An error has occurred while switching chain, please try again.",
+          );
+        }
       }
       localStorage.setItem("chain", blockchain);
       setBlockchain(blockchain);
