@@ -11,7 +11,12 @@ import {
 } from "@chakra-ui/react";
 import ReactCardFlip from "react-card-flip";
 import Tilt from "react-parallax-tilt";
-import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
+import {
+  LoadingOutlined,
+  ReloadOutlined,
+  RightOutlined,
+  RightSquareOutlined,
+} from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { onGetAssets } from "@redux/actions";
 import {
@@ -46,7 +51,7 @@ export const CardInventory = (props) => {
     name: "",
     type: "",
     address: "",
-    quantity: 0,
+    quantity: undefined,
     balance: 0,
   });
 
@@ -121,6 +126,14 @@ export const CardInventory = (props) => {
       setLoading(false);
       alert("Your token was succesfully transfered");
       getAssets();
+      setNftSendData({
+        id: 0,
+        name: "",
+        type: "",
+        address: "",
+        quantity: undefined,
+        balance: 0,
+      });
     } catch (err) {
       console.log({ err });
       alert("Your token couldn't be transfered");
@@ -170,22 +183,32 @@ export const CardInventory = (props) => {
                     w: "max",
                   }}
                 >
-                  <div className="flex flex-col items-center relative w-full rounded-xl bg-overlay border border-white">
+                  <div
+                    className={clsx(
+                      "flex flex-col items-center relative w-full ",
+                      { "pt-[90px]": loading },
+                    )}
+                  >
                     {loading ? (
-                      <div className="text-white text-3xl text-center flex items-center justify-center h-64 w-96">
-                        <LoadingOutlined />
-                      </div>
+                      <>
+                        <img
+                          src="./images/inventory/transferArrow.png"
+                          className="h-24 absolute top-0 z-[1000] right-0"
+                          alt=""
+                        />
+                        <div className="text-white text-3xl text-center flex flex-col items-center justify-center h-52 w-96 gap-2 relative rounded-xl bg-overlay border border-white">
+                          <p className="text-center font-bold text-green-button text-sm absolute top-2 mx-auto left-0 right-0 flex items-center justify-center gap-2">
+                            Check your wallet extension{" "}
+                          </p>
+                          <h2 className="text-white font-bold text-center text-lg">
+                            Transfer in Progress...
+                          </h2>
+                          <LoadingOutlined />
+                        </div>
+                      </>
                     ) : (
-                      <div className="relative flex flex-col items-center">
-                        <h4
-                          // style={{
-                          //   margin: "0",
-                          //   fontSize: "20px",
-                          //   color: "white",
-                          //   textAlign: "center",
-                          // }}
-                          className="text-white text-xl text-center relative Poppins font-black py-2 border-b border-white px-4 w-full"
-                        >
+                      <div className="relative flex flex-col items-center rounded-xl bg-overlay border border-white">
+                        <h4 className="text-white text-xl text-center relative Poppins font-black py-2 border-b border-white px-4 w-full">
                           Transfer
                         </h4>
                         <div className="flex flex-col w-full items-center">
@@ -219,7 +242,7 @@ export const CardInventory = (props) => {
                               value={
                                 nftSendData.quantity !== null
                                   ? nftSendData.quantity
-                                  : 0
+                                  : undefined
                               }
                               min={1}
                               placeholder="Quantity"

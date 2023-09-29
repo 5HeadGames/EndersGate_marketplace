@@ -31,7 +31,7 @@ const ProfileLayout = ({ children }) => {
 
   React.useEffect(() => {
     if (!account && !user && !authStillValid()) {
-      router.push("/login?redirect=true&redirectAddress=/inventory");
+      router.push("/login?redirect=true&redirectAddress=/profile");
     }
   }, [account, user]);
 
