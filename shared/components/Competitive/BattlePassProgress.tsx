@@ -2,16 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 
-import { getTokensAllowed } from "../../common/getAddresses";
-
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  addPassCart,
-  editPassCart,
-  removePassAll,
-  removePassFromCart,
-} from "@/redux/actions";
+// import {
+//   addPassCart,
+//   editPassCart,
+//   removePassAll,
+//   removePassFromCart,
+// } from "@/redux/actions";
 
 export const BattlePassProgress = ({ show, priceUSD }: any) => {
   const dispatch = useDispatch();
@@ -83,23 +81,23 @@ export const BattlePassProgress = ({ show, priceUSD }: any) => {
                     src="/assets/getBattlePass_btn.png"
                     className="cursor-pointer w-full pt-2"
                     onClick={() => {
-                      dispatch(removePassAll());
-                      dispatch(
-                        addPassCart({
-                          id: 1,
-                          seller: "0x2A441a7B86eF3466C4B78cB5A8c08c836794E2Ab",
-                          nft: "0x516F333056A89104d0029F13D84A5e28f3ea6C76",
-                          nftId: "1",
-                          amount: "1000000000000",
-                          priceUSD: priceUSD,
-                          tokens: getTokensAllowed().map((i) => i.address),
-                          status: "0",
-                          name: "EG Battle Pass",
-                          color: "#E9D880",
-                          quantity: 1,
-                        }),
-                      );
-                      show();
+                      // dispatch(removePassAll());
+                      // dispatch(
+                      //   addPassCart({
+                      //     id: 1,
+                      //     seller: "0x2A441a7B86eF3466C4B78cB5A8c08c836794E2Ab",
+                      //     nft: "0x516F333056A89104d0029F13D84A5e28f3ea6C76",
+                      //     nftId: "1",
+                      //     amount: "1000000000000",
+                      //     priceUSD: priceUSD,
+                      //     tokens: getTokensAllowed().map((i) => i.address),
+                      //     status: "0",
+                      //     name: "EG Battle Pass",
+                      //     color: "#E9D880",
+                      //     quantity: 1,
+                      //   }),
+                      // );
+                      // show();
                     }}
                     alt=""
                   />
