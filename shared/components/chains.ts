@@ -57,8 +57,8 @@ export function getAddChainParameters(
   }
 }
 
-export const MAINNET_CHAIN_IDS = [137, 1204, 13472];
-export const TESTNET_CHAIN_IDS = [80001, 1205, 13472];
+export const MAINNET_CHAIN_IDS = [137, 1204];
+export const TESTNET_CHAIN_IDS = [80001, 1205];
 
 export const CHAINS: {
   [chainId: number]: any;
