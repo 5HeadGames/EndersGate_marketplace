@@ -3,9 +3,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useWeb3React } from "@web3-react/core";
-import ChainSelect from "../chainSelect";
-import { useSelector } from "react-redux";
 import { useUser } from "@shared/context/useUser";
 
 interface LayoutDashboardProps {

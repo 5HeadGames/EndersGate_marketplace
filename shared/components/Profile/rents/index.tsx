@@ -19,16 +19,18 @@ import {
   redeemRent,
 } from "@redux/actions";
 import { convertArrayCards } from "@shared/components/common/convertCards";
-import { useWeb3React } from "@web3-react/core";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { toast } from "react-hot-toast";
 import { LoadingOutlined } from "@ant-design/icons";
 import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { useUser } from "@shared/context/useUser";
 
 const Rents = () => {
   const nfts = useAppSelector((state) => state.nfts);
-  const { account: user, provider } = useWeb3React();
+  const {
+    user: { ethAddress: user, provider },
+  } = useUser();
 
   const [typeOfRequest, setTypeOfRequest] = React.useState("");
 

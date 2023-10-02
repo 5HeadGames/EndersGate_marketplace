@@ -27,7 +27,6 @@ import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
 import Styles from "../styles.module.scss";
 import Tilt from "react-parallax-tilt";
-import { useWeb3React } from "@web3-react/core";
 import { AddressText } from "../../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
@@ -38,6 +37,7 @@ import { CongratsListing } from "./Congrats";
 import { toast } from "react-hot-toast";
 import comics from "@shared/comicsByNFTId.json";
 import ChainSelect from "@shared/components/Layouts/chainSelect";
+import { useUser } from "@shared/context/useUser";
 
 const ComicDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
   const NFTs = useAppSelector((state) => state.nfts);
@@ -205,7 +205,9 @@ const ComicDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
 };
 
 const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
-  const { account: user, provider } = useWeb3React();
+  const {
+    user: { ethAddress: user, provider },
+  } = useUser();
 
   const dispatch = useAppDispatch();
 
@@ -524,7 +526,9 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
 };
 
 const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
-  const { account: user, provider } = useWeb3React();
+  const {
+    user: { ethAddress: user, provider },
+  } = useUser();
 
   const dispatch = useAppDispatch();
 

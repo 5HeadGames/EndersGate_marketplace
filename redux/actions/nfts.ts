@@ -560,6 +560,9 @@ export const onApproveERC1155 = createAsyncThunk(
 
       return { from, exchange, pack };
     } catch (err) {
+      toast.error(
+        "An error has occurred, please try again or check your console",
+      );
       return { err };
     }
   },
@@ -605,6 +608,9 @@ export const sellERC1155 = createAsyncThunk(
       return true;
     } catch (err) {
       console.log({ err });
+      toast.error(
+        "An error has occurred, please try again or check your console",
+      );
       return false;
     }
   },
@@ -672,6 +678,9 @@ export const listRentERC1155Native = createAsyncThunk(
       return { from, tokenId, pricePerDay, address };
     } catch (err) {
       console.log({ err });
+      toast.error(
+        "An error has occurred, please try again or check your console",
+      );
     }
   },
 );
@@ -771,8 +780,12 @@ export const buyFromShop = createAsyncThunk(
             .send({ from: account });
         }
       }
+      toast.success("Congrats! Your packs have been successfully purchased");
     } catch (err) {
       console.log({ err });
+      toast.error(
+        "An error has occurred, please try again or check your console",
+      );
       return { err };
     }
     return { account, provider };
@@ -808,8 +821,12 @@ export const buyFromShopNative = createAsyncThunk(
       await shop.methods
         .buyBatch(tokensId, amounts)
         .send({ from: account, value: bid });
+      toast.success("Congrats! Your packs have been successfully purchased");
     } catch (err) {
       console.log({ err });
+      toast.error(
+        "An error has occurred, please try again or check your console",
+      );
     }
     return { account, provider };
   },
@@ -867,9 +884,16 @@ export const buyERC1155 = createAsyncThunk(
           .buy(tokenId, amount, token)
           .send({ from: user });
       }
+      toast.success(
+        "Congrats! You've received your NFTs, please check your inventory",
+      );
     } catch (err) {
       console.log({ err });
+      toast.error(
+        "An error has occurred, please try again or check your console",
+      );
     }
+
     return { seller, tokenId, amount, bid, provider };
   },
 );
@@ -929,8 +953,14 @@ export const rentERC1155 = createAsyncThunk(
           .rent(tokenId, daysOfRent, token)
           .send({ from: user });
       }
+      toast.success(
+        "Congrats! You've received your Rented NFTs, please check Rented Cards section in your inventory",
+      );
     } catch (err) {
       console.log({ err });
+      toast.error(
+        "An error has occurred, please try again or check your console",
+      );
     }
     return { seller, tokenId, daysOfRent, bid, provider };
   },
@@ -1033,13 +1063,20 @@ export const rentBatchERC1155 = createAsyncThunk(
       }
       dispatch(onLoadSales());
       dispatch(removeAllRent());
-      toast.success("You have rented your NFT(s) successfully");
+      toast.success(
+        "Congrats! You've received your Rented NFTs, please check Rented Cards section in your inventory",
+      );
+      dispatch(removeAllRent());
     } catch (err) {
       console.log({ err });
+      toast.error(
+        "An error has occurred, please try again or check your console",
+      );
       setMessageBuy("");
       return { err };
     }
     setMessageBuy("");
+
     return { account, provider };
   },
 );
@@ -1089,11 +1126,20 @@ export const rentBatchERC1155Native = createAsyncThunk(
         .rentBatch(tokensId, daysOfRent)
         .send({ from: account, value: price });
       dispatch(onLoadSales());
+      toast.success(
+        "Congrats! You've received your Rented NFTs, please check Rented Cards section in your inventory",
+      );
+      dispatch(removeAllRent());
     } catch (err) {
       console.log({ err });
       setMessageBuy("");
+      toast.error(
+        "An error has occurred, please try again or check your console",
+      );
       return { err };
     }
+    setMessageBuy("");
+
     return { account, provider };
   },
 );
@@ -1137,6 +1183,9 @@ export const sellERC1155Findora = createAsyncThunk(
       return true;
     } catch (err) {
       console.log({ err });
+      toast.error(
+        "An error has occurred, please try again or check your console",
+      );
       return false;
     }
   },
