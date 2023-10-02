@@ -11,7 +11,8 @@ const AnimatedPackCard = (props: any) => {
   const { style, ...mouseHandlers } = use3dEffect(ref);
 
   const FlipCard = () => {
-    setIsFlipped(!isFlipped);
+    console.log(isFlipped);
+    setIsFlipped((prev) => !prev);
   };
 
   const cardsBacks = {
@@ -36,7 +37,10 @@ const AnimatedPackCard = (props: any) => {
     >
       <div
         style={{ position: "relative", zIndex: 100, height: "100%" }}
-        className={clsx(!isFlipped ? "card" : "card flipped", props.className)}
+        className={clsx(
+          !isFlipped ? "cardEG" : "cardEG flipped",
+          props.className,
+        )}
       >
         <div onClick={FlipCard} className="card-block card-front animation">
           <img

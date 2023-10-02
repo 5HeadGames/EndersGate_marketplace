@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { Magic } from "magic-sdk";
 import { ConnectExtension } from "@magic-ext/connect";
 import Web3 from "web3";
-import { networkConfigs } from "@shared/helpers/networks";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/components/chains";
 
 const getMagicConfig = (networkId: any) => {
-  const network = networkConfigs[networkId];
+  const network = CHAINS[networkId];
   return {
-    rpcUrl: network["rpc"],
+    rpcUrl: network.urls[0],
     chainId: networkId,
   };
 };

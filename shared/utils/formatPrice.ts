@@ -9,5 +9,7 @@ export const formatPrice = (price, blockchain) => {
       return `${Web3.utils.fromWei(price.toString() || "0", "ether")} ETH`;
     case "findora":
       return `${Web3.utils.fromWei(price.toString() || "0", "ether")} WFRA`;
+    case "imx":
+      return `${Web3.utils.fromWei(price.toString() || "0", "ether")} tIMX`;
   }
 };

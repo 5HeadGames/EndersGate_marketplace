@@ -215,7 +215,6 @@ const Shop = () => {
             return BigInt(item) + BigInt(acc);
           }) * BigInt(10 ** 8),
       ) / BigInt(priceMATIC);
-    console.log(price);
     setPriceNative((price + (price * BigInt(5)) / BigInt(100)).toString());
   };
 

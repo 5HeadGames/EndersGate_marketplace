@@ -28,11 +28,11 @@ export const DropdownChain: React.FC<any> = () => {
       value: "findora",
       image: "/images/findora.png",
     },
-    // {
-    //   name: "INMUTABLE X",
-    //   value: "imx",
-    //   image: "/images/findora.png",
-    // },
+    {
+      name: "INMUTABLE X",
+      value: "imx",
+      image: "/images/imx.png",
+    },
   ];
 
   return (

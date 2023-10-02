@@ -120,6 +120,7 @@ export const onLoadSales = createAsyncThunk(
       cardsSold = 0;
     try {
       for (const element of blockchains) {
+        console.log(element);
         const blockchain = element;
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
@@ -275,6 +276,8 @@ export const onLoadSales = createAsyncThunk(
         cardsSoldPartial.toString(),
       ) as any;
 
+      console.log(allSalesSorted);
+
       return {
         allSales: allSalesSorted,
         saleCreated: listsCreated,
@@ -288,7 +291,7 @@ export const onLoadSales = createAsyncThunk(
         cardsSold: cardsSold.toString(),
       };
     } catch (err) {
-      console.log(err.message, err);
+      console.log(err.message, err, "error");
     }
     return {
       allSales: [],
@@ -357,21 +360,23 @@ export const onGetAssets = createAsyncThunk(
         .reduce((acc: any[], cur) => acc.concat(cur), [])
         .map((card, i) => i);
       if (blockchain !== "eth") {
-        const { endersGate, pack, rent } = getAddresses(blockchain);
+        const { endersGate, pack, rent, comics } = getAddresses(blockchain);
 
         const cardsContract = getContract("EndersGate", endersGate, blockchain);
         const packsContract = getContract("EndersPack", pack, blockchain);
         const rentContract = getContract("Rent", rent, blockchain);
-        // const comicsContract = getContract(
-        //   getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
-        //   comics,
-        //   blockchain,
-        // );
-        // const comicsLength = await comicsContract.methods.comicIdCounter().call();
+        const comicsContract = getContract(
+          getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+          comics,
+          blockchain,
+        );
+        const comicsLength = await comicsContract.methods
+          .comicIdCounter()
+          .call();
 
-        // const comicsIds = new Array(parseInt(comicsLength))
-        //   .fill(1)
-        //   .map((a, i) => i + 1);
+        const comicsIds = new Array(parseInt(comicsLength))
+          .fill(1)
+          .map((a, i) => i + 1);
 
         const balancePacks = await packsContract.methods
           .balanceOfBatch(
@@ -386,12 +391,12 @@ export const onGetAssets = createAsyncThunk(
           )
           .call();
 
-        // const balanceComics = await comicsContract.methods
-        //   .balanceOfBatch(
-        //     comicsIds.map(() => address),
-        //     comicsIds,
-        //   )
-        //   .call();
+        const balanceComics = await comicsContract.methods
+          .balanceOfBatch(
+            comicsIds.map(() => address),
+            comicsIds,
+          )
+          .call();
 
         let balanceWrapped = [];
 
@@ -415,12 +420,32 @@ export const onGetAssets = createAsyncThunk(
             id,
             balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
           })),
-          // balanceComics: comicsIds.map((id, i) => ({
-          //   id,
-          //   balance: balanceComics[i],
-          // })),
+          balanceComics: comicsIds.map((id, i) => ({
+            id,
+            balance: balanceComics[i],
+          })),
         };
       } else {
+        const { comics } = getAddresses(blockchain);
+        const comicsContract = getContract(
+          getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+          comics,
+          blockchain,
+        );
+        const comicsLength = await comicsContract.methods
+          .comicIdCounter()
+          .call();
+
+        const comicsIds = new Array(parseInt(comicsLength))
+          .fill(1)
+          .map((a, i) => i + 1);
+
+        const balanceComics = await comicsContract.methods
+          .balanceOfBatch(
+            comicsIds.map(() => address),
+            comicsIds,
+          )
+          .call();
         return {
           balanceCards: cardsIds.map((id, i) => ({
             id,
@@ -436,54 +461,12 @@ export const onGetAssets = createAsyncThunk(
               balance: 0,
             })),
           ],
-          balanceComics: cardsIds.map((id, i) => ({
+          balanceComics: comicsIds.map((id, i) => ({
             id,
-            balance: 0,
+            balance: balanceComics[i],
           })),
         };
       }
-      // } else {
-      // const { comics } = getAddresses(blockchain);
-      // const comicsContract = getContract(
-      //   getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
-      //   comics,
-      //   blockchain,
-      // );
-      // const comicsLength = await comicsContract.methods
-      //   .comicIdCounter()
-      //   .call();
-
-      // const comicsIds = new Array(parseInt(comicsLength))
-      //   .fill(1)
-      //   .map((a, i) => i + 1);
-
-      // const balanceComics = await comicsContract.methods
-      //   .balanceOfBatch(
-      //     comicsIds.map(() => address),
-      //     comicsIds,
-      //   )
-      //   .call();
-      // return {
-      //   balanceCards: cardsIds.map((id, i) => ({
-      //     id,
-      //     balance: 0,
-      //   })),
-      //   balancePacks: packsIds.map((id, i) => ({
-      //     id,
-      //     balance: 0,
-      //   })),
-      //   balanceWrapped: [
-      //     cardsIds.map((id, i) => ({
-      //       id,
-      //       balance: 0,
-      //     })),
-      //   ],
-      //   balanceComics: comicsIds.map((id, i) => ({
-      //     id,
-      //     balance: balanceComics[i],
-      //   })),
-      // };
-      // }
     } catch (err) {
       console.log({ err });
       throw err;
@@ -1144,13 +1127,14 @@ export const rentBatchERC1155Native = createAsyncThunk(
   },
 );
 
-export const sellERC1155Findora = createAsyncThunk(
-  actionTypes.SELL_NFT_FINDORA,
+export const sellERC1155Native = createAsyncThunk(
+  actionTypes.SELL_NFT_NATIVE,
   async function prepare(args: {
     from: string;
     tokenId: number | string;
     startingPrice: number | string;
     amount: number | string;
+    blockchain: string;
     duration: string;
     address: string;
     provider: any;
@@ -1163,12 +1147,13 @@ export const sellERC1155Findora = createAsyncThunk(
       amount,
       duration,
       address,
+      blockchain,
       // user,
       provider,
     } = args;
 
     try {
-      const { marketplace } = getAddressesFindora();
+      const { marketplace } = getAddresses(blockchain);
 
       const marketplaceContract = getContractCustom(
         "ClockSaleFindora",
@@ -1191,20 +1176,22 @@ export const sellERC1155Findora = createAsyncThunk(
   },
 );
 
-export const buyERC1155Findora = createAsyncThunk(
+export const buyERC1155Native = createAsyncThunk(
   actionTypes.BUY_NFT_FINDORA,
   async function prepare(args: {
     seller: string;
     tokenId: number | string;
     bid: string | number;
     amount: string | number;
+    blockchain: string;
     nftContract: string;
     provider: any;
     user: any;
   }) {
-    const { seller, tokenId, amount, bid, provider, user } = args;
+    const { seller, tokenId, amount, bid, provider, user, blockchain } = args;
     try {
-      const { marketplace } = getAddressesFindora();
+      const { marketplace } = getAddresses(blockchain);
+
       const marketplaceContract = getContractCustom(
         "ClockSaleFindora",
         marketplace,

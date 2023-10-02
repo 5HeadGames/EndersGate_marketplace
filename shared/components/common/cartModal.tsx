@@ -178,7 +178,7 @@ export const useCartModal = () => {
                             </h3>
                           </div>
                           <div className="flex flex-col gap items-end">
-                            {tokensAllowed.filter(
+                            {tokensAllowed?.filter(
                               (item: any) =>
                                 item.name === "MATIC" || item.name === "ETH",
                             ).length > 0 && (

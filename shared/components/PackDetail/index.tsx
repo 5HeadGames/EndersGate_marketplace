@@ -12,7 +12,7 @@ import {
   sellERC1155,
   onLoadSales,
   onGetAssets,
-  sellERC1155Findora,
+  sellERC1155Native,
 } from "@redux/actions";
 import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
@@ -29,7 +29,7 @@ import Styles from "../NFTDetail/styles.module.scss";
 import clsx from "clsx";
 import Tilt from "react-parallax-tilt";
 import { AddressText } from "../common/specialFields/SpecialFields";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
+import { CHAINS, CHAIN_IDS_BY_NAME, NATIVE_CURRENCY_BY_ID } from "../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { useUser } from "@shared/context/useUser";
@@ -99,13 +99,14 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
 
       if (blockchain !== "matic") {
         await dispatch(
-          sellERC1155Findora({
+          sellERC1155Native({
             address: pack,
             from: user,
             startingPrice: Web3.utils.toWei(
               sellNFTData.startingPrice.toString(),
               "ether",
             ),
+            blockchain,
             amount: sellNFTData.amount,
             tokenId: tokenId,
             duration: sellNFTData.duration.toString(),
@@ -212,7 +213,12 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                         <div className="flex gap-4 w-full justify-between items-center">
                           <label className="text-primary font-bold whitespace-nowrap">
                             Price per NFT (
-                            {getNativeBlockchain(blockchain) ? "WFRA" : "USD"})
+                            {getNativeBlockchain(blockchain)
+                              ? NATIVE_CURRENCY_BY_ID[
+                                  CHAIN_IDS_BY_NAME[blockchain]
+                                ]?.symbol
+                              : "USD"}
+                            )
                           </label>
                           <input
                             type="number"

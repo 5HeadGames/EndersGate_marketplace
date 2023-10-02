@@ -504,7 +504,7 @@ select {
 
 /* scroll bar stylings */
 body::-webkit-scrollbar {
-  width: 12px;
+  width: 12px !important;
 }
 body::-webkit-scrollbar-track {
   background: #22223e;
