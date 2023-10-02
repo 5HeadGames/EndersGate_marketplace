@@ -224,6 +224,10 @@ export default function AppLayout({ children }) {
       link: "/profile/swap",
     },
     {
+      name: "COMPETITIONS",
+      link: "/competitive",
+    },
+    {
       name: "MY PACKS",
       link: "/pack_opening",
     },

@@ -429,7 +429,7 @@ const CompetitiveComponent = () => {
           )}
         </div>
       </Modal> */}
-      <div className="bg-[#000000] min-h-screen pt-28 pb-16 flex flex-col gap-16 sm:px-0 px-4 items-center justify-center w-full">
+      <div className="bg-[#000000] min-h-screen flex flex-col gap-16 items-center justify-center w-full pb-16">
         <CompetitiveLanding />
         {/* <BattlePassProgress show={show} priceUSD={priceUSD} /> */}
         <WeeklyTournament lastWinners={lastWinners} />

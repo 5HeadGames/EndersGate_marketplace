@@ -51,28 +51,28 @@ function newLastDate(dayIndex: any) {
 }
 
 const currentRewards = [
-  { name: "Epic Pack", image: "/assets/packs/epic1080.png" },
-  { name: "Rare Pack", image: "/assets/packs/rare1080.png" },
-  { name: "Common Pack", image: "/assets/packs/common1080.png" },
+  { name: "Epic Pack", image: "/images/packs/epic1080.png" },
+  { name: "Rare Pack", image: "/images/packs/rare1080.png" },
+  { name: "Common Pack", image: "/images/packs/common1080.png" },
 ];
 
 const nextRewards = [
-  { name: "Epic Pack", image: "/assets/packs/epic1080.png" },
-  { name: "Rare Pack", image: "/assets/packs/rare1080.png" },
-  { name: "Common Pack", image: "/assets/packs/common1080.png" },
+  { name: "Epic Pack", image: "/images/packs/epic1080.png" },
+  { name: "Rare Pack", image: "/images/packs/rare1080.png" },
+  { name: "Common Pack", image: "/images/packs/common1080.png" },
 ];
 
 export const WeeklyTournament = ({ lastWinners }: any) => {
   return (
     <div className="flex flex-col gap-10 items-center justify-center sm:w-4/5 w-full relative overflow-hidden">
       <img
-        src="/assets/bgBattlePass.png"
+        src="/images/bgBattlePass.png"
         className="w-full h-full absolute"
         alt=""
       />
       <div className="flex flex-col gap-2 items-center justify-center w-full rounded-2xl p-2 py-4 border-2 border-white relative">
         <img
-          src="/assets/weekly_tournament.png"
+          src="/images/weekly_tournament.png"
           className="w-auto sm:h-8 h-6"
           alt=""
         />
@@ -92,7 +92,7 @@ export const WeeklyTournament = ({ lastWinners }: any) => {
               </div>
               <div className="flex flex-col items-center justify-center gap-2 w-full opacity-25 relative h-full py-10">
                 <img
-                  src="/assets/battlepass_free.png"
+                  src="/images/battlepass_free.png"
                   className="w-44"
                   alt=""
                 />
