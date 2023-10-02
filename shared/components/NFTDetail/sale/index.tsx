@@ -19,7 +19,6 @@ import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
 import Styles from "../styles.module.scss";
 import Tilt from "react-parallax-tilt";
-import { useWeb3React } from "@web3-react/core";
 import { DropdownActions } from "../../common/dropdownActions/dropdownActions";
 import ReactCardFlip from "react-card-flip";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
@@ -28,9 +27,12 @@ import { toast } from "react-hot-toast";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { ModalSale } from "./ModalSale";
+import { useUser } from "@shared/context/useUser";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
-  const { account: user, provider } = useWeb3React();
+  const {
+    user: { ethAddress: user, provider },
+  } = useUser();
 
   const [sale, setSale] = React.useState<any>();
   const [buyNFTData, setBuyNFTData] = React.useState(0);
@@ -99,7 +101,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
               .mul(Web3.utils.toBN(buyNFTData))
               .toString(),
             tokenId: sale.saleId,
-            provider: provider.provider,
+            provider: provider,
             nftContract: isPack ? pack : endersGate,
             user: user,
           }),
@@ -115,7 +117,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
               .toString(),
             tokenId: sale.saleId,
             token: tokenSelected.address,
-            provider: provider.provider,
+            provider: provider,
             nftContract: isPack ? pack : endersGate,
             user: user,
             blockchain,

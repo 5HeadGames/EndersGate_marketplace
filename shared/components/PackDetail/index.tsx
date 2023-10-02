@@ -28,14 +28,16 @@ import { approveERC1155 } from "@shared/web3";
 import Styles from "../NFTDetail/styles.module.scss";
 import clsx from "clsx";
 import Tilt from "react-parallax-tilt";
-import { useWeb3React } from "@web3-react/core";
 import { AddressText } from "../common/specialFields/SpecialFields";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
+import { useUser } from "@shared/context/useUser";
 
 const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
-  const { account: user, provider } = useWeb3React();
+  const {
+    user: { ethAddress: user, provider },
+  } = useUser();
   const NFTs = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();

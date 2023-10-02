@@ -20,10 +20,13 @@ import { formatPrice } from "@shared/utils/formatPrice";
 import { toast } from "react-hot-toast";
 import { LoadingOutlined } from "@ant-design/icons";
 import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { useUser } from "@shared/context/useUser";
 
 const Sales = () => {
   const nfts = useAppSelector((state) => state.nfts);
-  const { account: user, provider } = useWeb3React();
+  const {
+    user: { ethAddress: user, provider },
+  } = useUser();
 
   const [cancel, setCancel] = React.useState({ id: -1, blockchain: "" });
   const { Modal, show, hide, isShow } = useModal();

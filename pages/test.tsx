@@ -5,8 +5,6 @@ import { useForm } from "react-hook-form";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 export default function Home() {
-  const { account } = useWeb3React();
-  const [login, setLogin] = React.useState(false);
   const {
     register,
     handleSubmit,

@@ -22,6 +22,7 @@ import {
 import { useToasts } from "react-toast-notifications";
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
+import { useUser } from "@shared/context/useUser";
 
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
@@ -29,7 +30,9 @@ const navItems = [
 ];
 
 const SwapComponent = () => {
-  const { account: user, provider } = useWeb3React();
+  const {
+    user: { ethAddress: user, provider },
+  } = useUser();
 
   const dispatch = useDispatch();
   const { Modal, show, hide, isShow } = useModal();

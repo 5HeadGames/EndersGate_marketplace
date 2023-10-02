@@ -15,7 +15,6 @@ import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
 import Styles from "../styles.module.scss";
 import Tilt from "react-parallax-tilt";
-import { useWeb3React } from "@web3-react/core";
 import { DropdownActions } from "../../common/dropdownActions/dropdownActions";
 import ReactCardFlip from "react-card-flip";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
@@ -25,9 +24,12 @@ import { formatPrice } from "@shared/utils/formatPrice";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { ModalRent } from "./ModalRent";
 import { StatusInfo } from "@shared/components/Profile/rents";
+import { useUser } from "@shared/context/useUser";
 
 const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
-  const { account: user, provider } = useWeb3React();
+  const {
+    user: { ethAddress: user, provider },
+  } = useUser();
 
   const [rent, setRent] = React.useState<any>();
   const [rentNFTDays, setRentNFTDays] = React.useState(0);

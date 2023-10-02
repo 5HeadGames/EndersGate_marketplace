@@ -27,7 +27,6 @@ import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
 import Styles from "../styles.module.scss";
 import Tilt from "react-parallax-tilt";
-import { useWeb3React } from "@web3-react/core";
 import { AddressText } from "../../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
