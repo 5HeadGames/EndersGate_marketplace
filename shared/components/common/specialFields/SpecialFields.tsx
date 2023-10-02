@@ -89,3 +89,7 @@ export function findSum(str1, str2) {
 
   return str;
 }
+
+export const AddressTextLeaderBoard: React.FC<any> = ({ text }) => {
+  return <>{text.substring(0, 4) + "..." + text.substring(37)}</>;
+};
