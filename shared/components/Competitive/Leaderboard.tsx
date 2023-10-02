@@ -145,7 +145,7 @@ export const Leaderboard = ({ setLastWinners }: any) => {
   console.log();
 
   return (
-    <div className="flex flex-col gap-10 sm:w-4/5 w-full relative">
+    <div className="flex flex-col gap-10 sm:w-4/5 w-full relative px-4">
       <div className="bg-[#000000] text-white border border-[#c4ac6a] p-2 text-center">
         Play with honor. Cheaters will be filtered out from the leaderboard.
       </div>

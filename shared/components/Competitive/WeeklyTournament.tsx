@@ -64,7 +64,7 @@ const nextRewards = [
 
 export const WeeklyTournament = ({ lastWinners }: any) => {
   return (
-    <div className="flex flex-col gap-10 items-center justify-center sm:w-4/5 w-full relative overflow-hidden">
+    <div className="flex flex-col gap-10 items-center justify-center sm:w-4/5 w-full relative overflow-hidden px-4">
       <img
         src="/images/bgBattlePass.png"
         className="w-full h-full absolute"
@@ -73,7 +73,7 @@ export const WeeklyTournament = ({ lastWinners }: any) => {
       <div className="flex flex-col gap-2 items-center justify-center w-full rounded-2xl p-2 py-4 border-2 border-white relative">
         <img
           src="/images/weekly_tournament.png"
-          className="w-auto sm:h-8 h-6"
+          className="w-auto sm:h-8 xs:h-6 h-5"
           alt=""
         />
         <h2 className="text-xl text-[#b8b8b8] text-center">
