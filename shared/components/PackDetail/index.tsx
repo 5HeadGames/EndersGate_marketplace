@@ -80,7 +80,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
       const endersgateInstance = getContractCustom(
         "EndersPack",
         pack,
-        provider.provider,
+        provider,
       );
 
       const isApprovedForAll = await endersgateInstance.methods
@@ -89,7 +89,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
       if (isApprovedForAll === false) {
         setMessage("Allowing us to sell your tokens");
         await approveERC1155({
-          provider: provider.provider,
+          provider: provider,
           from: user,
           to: marketplace,
           address: pack,
@@ -110,7 +110,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
             amount: sellNFTData.amount,
             tokenId: tokenId,
             duration: sellNFTData.duration.toString(),
-            provider: provider.provider,
+            provider: provider,
             // user: user,
           }),
         );
@@ -121,7 +121,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
         if (isApprovedForAll === false) {
           setMessage("Allowing us to sell your tokens");
           await approveERC1155({
-            provider: provider.provider,
+            provider: provider,
             from: user,
             to: marketplace,
             address: pack,
@@ -138,7 +138,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
             tokenId: tokenId,
             tokens: tokensSelected,
             duration: sellNFTData.duration.toString(),
-            provider: provider.provider,
+            provider: provider,
             // user: user,
           }),
         );

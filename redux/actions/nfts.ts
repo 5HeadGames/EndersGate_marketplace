@@ -957,6 +957,53 @@ export const rentERC1155 = createAsyncThunk(
   },
 );
 
+export const rentERC1155Native = createAsyncThunk(
+  actionTypes.RENT_NFT,
+  async function prepare(args: {
+    seller: string;
+    tokenId: number | string;
+    token: string;
+    bid: string | number;
+    daysOfRent: string | number;
+    nftContract: string;
+    provider: any;
+    user: any;
+    blockchain: string;
+  }) {
+    const {
+      seller,
+      tokenId,
+      token,
+      daysOfRent,
+      bid,
+      provider,
+      user,
+      blockchain,
+    } = args;
+
+    try {
+      const { rent } = getAddresses(blockchain);
+      const rentContract = getContractCustom("RentNative", rent, provider);
+
+      console.log(user, daysOfRent, token, bid);
+
+      await rentContract.methods
+        .rent(tokenId, daysOfRent)
+        .send({ from: user, value: bid });
+
+      toast.success(
+        "Congrats! You've received your Rented NFTs, please check Rented Cards section in your inventory",
+      );
+    } catch (err) {
+      console.log({ err });
+      toast.error(
+        "An error has occurred, please try again or check your console",
+      );
+    }
+    return true;
+  },
+);
+
 export const rentBatchERC1155 = createAsyncThunk(
   actionTypes.RENT_BATCH_NFT,
   async function prepare(args: {

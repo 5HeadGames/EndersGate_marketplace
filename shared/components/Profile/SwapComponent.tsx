@@ -123,11 +123,7 @@ const SwapComponent = () => {
 
       for (const element of packsToExchange) {
         const item = element;
-        const pack = getContractCustom(
-          "ERC721Seadrop",
-          item.address,
-          provider.provider,
-        );
+        const pack = getContractCustom("ERC721Seadrop", item.address, provider);
         const isApproved = await pack.methods
           .isApprovedForAll(user, exchange)
           .call();
@@ -136,7 +132,7 @@ const SwapComponent = () => {
             onApproveERC1155({
               from: user,
               pack: item.address,
-              provider: provider.provider,
+              provider: provider,
               blockchain,
             }),
           );
@@ -152,7 +148,7 @@ const SwapComponent = () => {
           nfts: passPacks
             .filter((item) => balance[item.nameKey] > 0)
             .map((item) => item.address),
-          provider: provider.provider,
+          provider: provider,
           blockchain: blockchain,
         }),
       );

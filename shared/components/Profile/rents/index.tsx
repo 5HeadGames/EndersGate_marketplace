@@ -56,7 +56,7 @@ const Rents = () => {
       const tx = await dispatch(
         cancelRent({
           tokenId: cancel.id,
-          provider: provider.provider,
+          provider: provider,
           user: user,
           blockchain: cancel.blockchain,
         }),
@@ -90,7 +90,7 @@ const Rents = () => {
       const tx = await dispatch(
         redeemRent({
           tokenId: cancel.id,
-          provider: provider.provider,
+          provider: provider,
           user: user,
           blockchain: cancel.blockchain,
         }),

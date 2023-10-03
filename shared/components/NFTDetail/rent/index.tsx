@@ -4,11 +4,21 @@ import Web3 from "web3";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useAppDispatch, useAppSelector } from "redux/store";
-import { onLoadSales, onGetAssets, rentERC1155 } from "@redux/actions";
+import {
+  onLoadSales,
+  onGetAssets,
+  rentERC1155,
+  rentERC1155Native,
+} from "@redux/actions";
 import { Button } from "../../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import { AddressText } from "../../common/specialFields/SpecialFields";
-import { getAddresses, getTokensAllowedMatic, switchChain } from "@shared/web3";
+import {
+  getAddresses,
+  getNativeBlockchain,
+  getTokensAllowedMatic,
+  switchChain,
+} from "@shared/web3";
 import packs from "../../../packs.json";
 import { useModal } from "@shared/hooks/modal";
 import { convertArrayCards } from "../../common/convertCards";
@@ -32,6 +42,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   } = useUser();
 
   const [rent, setRent] = React.useState<any>();
+  const [isLoading, setIsLoading] = React.useState<any>(false);
   const [rentNFTDays, setRentNFTDays] = React.useState(0);
   const { Modal, show, hide, isShow } = useModal();
   const [isPack, setIsPack] = React.useState(false);
@@ -74,6 +85,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   };
 
   const rentNft = async () => {
+    setIsLoading(true);
     if (!user) {
       router.push("/login");
     }
@@ -89,26 +101,46 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
       setMessage("Renting tokens");
       const { pack, endersGate } = getAddresses(rent.blockchain);
 
-      await dispatch(
-        rentERC1155({
-          seller: rent.seller,
-          daysOfRent: rentNFTDays,
-          bid: Web3.utils
-            .toBN(rent.price)
-            .mul(Web3.utils.toBN(rentNFTDays))
-            .toString(),
-          tokenId: rent.rentId,
-          token: tokenSelected.address,
-          provider: provider.provider,
-          nftContract: isPack ? pack : endersGate,
-          user: user,
-          blockchain,
-        }),
-      );
+      if (getNativeBlockchain(blockchain)) {
+        await dispatch(
+          rentERC1155Native({
+            seller: rent.seller,
+            daysOfRent: rentNFTDays,
+            bid: Web3.utils
+              .toBN(rent.price)
+              .mul(Web3.utils.toBN(rentNFTDays))
+              .toString(),
+            tokenId: rent.rentId,
+            token: tokenSelected.address,
+            provider: provider,
+            nftContract: isPack ? pack : endersGate,
+            user: user,
+            blockchain,
+          }),
+        );
+      } else {
+        await dispatch(
+          rentERC1155({
+            seller: rent.seller,
+            daysOfRent: rentNFTDays,
+            bid: Web3.utils
+              .toBN(rent.price)
+              .mul(Web3.utils.toBN(rentNFTDays))
+              .toString(),
+            tokenId: rent.rentId,
+            token: tokenSelected.address,
+            provider: provider,
+            nftContract: isPack ? pack : endersGate,
+            user: user,
+            blockchain,
+          }),
+        );
+      }
     } catch (err) {
       toast.error(err.message);
     }
     setMessage("");
+    setIsLoading(false);
     await getRent();
     hide();
     dispatch(onLoadSales());
@@ -134,6 +166,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
               isPack,
               setTokenSelected,
               tokenSelected,
+              isLoading,
             }}
           />
         )}

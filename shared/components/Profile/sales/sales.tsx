@@ -50,7 +50,7 @@ const Sales = () => {
       const tx = await dispatch(
         onCancelSale({
           tokenId: cancel.id,
-          provider: provider.provider,
+          provider: provider,
           user: user,
           blockchain: cancel.blockchain,
         }),
