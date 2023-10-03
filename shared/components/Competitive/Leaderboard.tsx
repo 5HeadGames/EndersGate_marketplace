@@ -91,8 +91,7 @@ export const Leaderboard = ({ setLastWinners }: any) => {
         }
         return { ...user, wins: wins, losses: losses, points: points };
       })
-      .sort((a: any, b: any) => b.points - a.points)
-      .filter((user: any, i: any) => i < 25);
+      .sort((a: any, b: any) => b.points - a.points || b.level - a.level);
 
     const lastWinners = data
       ?.map((user: any) => {
@@ -131,7 +130,6 @@ export const Leaderboard = ({ setLastWinners }: any) => {
       })
       .sort((a: any, b: any) => b.points - a.points)
       .filter((user: any, i: any) => i < 3);
-
     setData(realData);
     setLastWinners(lastWinners);
   };
@@ -193,13 +191,19 @@ export const Leaderboard = ({ setLastWinners }: any) => {
           </thead>
 
           <tbody>
-            {data.filter((i: any, id) => i.address == account).length ? (
+            {data.find(
+              (user: any) =>
+                user.address.toLowerCase() == account?.toLowerCase(),
+            ) ? (
               data
                 .sort((a: any, b: any) => b.points - a.points)
-                .map((i: any, id: any) => {
-                  return { ...i, rank: id + 1 };
+                .map((user: any, id: any) => {
+                  return { ...user, rank: id + 1 };
                 })
-                .filter((i) => i.address == account)
+                .filter(
+                  (user) =>
+                    user.address.toLowerCase() == account?.toLowerCase(),
+                )
                 .map((user) => (
                   <tr key={user.id} className="bg-[#000000]">
                     <td className="px-2 py-2 whitespace-nowrap text-lg text-center text-[#47e439] border border-[#c4ac6a]">
@@ -210,11 +214,11 @@ export const Leaderboard = ({ setLastWinners }: any) => {
                       <AddressTextLeaderBoard text={account} />)
                     </td>{" "}
                     <td className="px-2 py-2 whitespace-nowrap text-lg text-center text-[#47e439] border border-[#c4ac6a]">
-                      {user.level}
+                      {user.level || 0}
                     </td>
                     <td className="px-2 py-2 whitespace-nowrap text-lg text-center text-[#47e439] border border-[#c4ac6a]">
                       {"1x"}
-                    </td>{" "}
+                    </td>
                     <td className="px-2 py-2 whitespace-nowrap text-lg text-center text-[#47e439] border border-[#c4ac6a]">
                       {user.wins}
                     </td>
@@ -259,7 +263,7 @@ export const Leaderboard = ({ setLastWinners }: any) => {
                       <AddressTextLeaderBoard text={user.address} />
                     </td>{" "}
                     <td className="px-2 py-2 whitespace-nowrap text-lg text-center text-[#b8b8b8] border border-[#c4ac6a]">
-                      {user.level}
+                      {user.level || 0}
                     </td>
                     <td className="px-2 py-2 whitespace-nowrap text-lg text-center text-[#b8b8b8] border border-[#c4ac6a]">
                       -
