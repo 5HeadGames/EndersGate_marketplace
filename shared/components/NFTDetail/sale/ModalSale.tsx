@@ -65,7 +65,7 @@ export const ModalSale = ({
         {/* </div> */}
         <div className="flex flex-col gap-4  justify-between">
           <div className="flex flex-col gap-2 w-full">
-            <div className="flex justify-between items-center sm:flex-row gap-4 flex-col w-96">
+            <div className="flex justify-between items-center sm:flex-row gap-4 flex-col w-full min-w-96">
               <label className="text-primary font-bold text-lg w-full">
                 Amount of NFTs
               </label>
@@ -167,13 +167,13 @@ export const ModalSale = ({
             <img src={Icons.logo} className="md:w-12 md:h-12 w-8 h-8" alt="" />
           </div>
           <div className="py-4">
-            <div className="text-primary text-sm text-center flex flex-col items-center justify-center">
+            <div className="text-primary text-sm text-center flex flex-col items-center justify-center gap-3">
               {message === "Buying tokens" && (
                 <>
-                  <span className="flex gap-4 items-center justify-center">
+                  <span className="flex gap-4 items-center justify-center text-green-button font-bold">
                     {message} <LoadingOutlined />
                   </span>
-                  <span className="flex gap-4 items-center justify-center">
+                  <span className="flex gap-4 items-center justify-center text-white font-bold">
                     Note: If the transaction doesn't appears please open your
                     wallet manually
                   </span>
