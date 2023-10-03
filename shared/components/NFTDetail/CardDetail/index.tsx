@@ -681,6 +681,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
       });
     } catch (err) {
       console.log({ err });
+      toast.error(err.message);
     }
     setMessage(
       "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
