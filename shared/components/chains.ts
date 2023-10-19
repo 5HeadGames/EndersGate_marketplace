@@ -57,30 +57,30 @@ export function getAddChainParameters(
   }
 }
 
-export const MAINNET_CHAIN_IDS = [137, 1204];
-export const TESTNET_CHAIN_IDS = [80001, 1205];
+export const MAINNET_CHAIN_IDS = [137];
+export const TESTNET_CHAIN_IDS = [80001];
 
 export const CHAINS: {
   [chainId: number]: any;
 } = {
-  1205: {
-    urls: [`https://gsc-testnet.prod.findora.org:8545`],
-    name: "Findora GSC Testnet",
-    rpcUrls: ["https://gsc-testnet.prod.findora.org:8545"],
+  // 1205: {
+  //   urls: [`https://gsc-testnet.prod.findora.org:8545`],
+  //   name: "Findora GSC Testnet",
+  //   rpcUrls: ["https://gsc-testnet.prod.findora.org:8545"],
 
-    nativeCurrency: FINDORA,
-    blockExplorerUrls: ["https://gsc-testnet.evm.findorascan.io/"],
-    blockExplorer: "https://gsc-testnet.evm.findorascan.io/",
-  },
-  1204: {
-    urls: ["https://gsc-mainnet.prod.findora.org:8545"],
-    name: "Findora GSC Mainnet",
-    rpcUrls: ["https://gsc-mainnet.prod.findora.org:8545"],
+  //   nativeCurrency: FINDORA,
+  //   blockExplorerUrls: ["https://gsc-testnet.evm.findorascan.io/"],
+  //   blockExplorer: "https://gsc-testnet.evm.findorascan.io/",
+  // },
+  // 1204: {
+  //   urls: ["https://gsc-mainnet.prod.findora.org:8545"],
+  //   name: "Findora GSC Mainnet",
+  //   rpcUrls: ["https://gsc-mainnet.prod.findora.org:8545"],
 
-    nativeCurrency: FINDORA,
-    blockExplorerUrls: ["https://gsc-mainnet.evm.findorascan.io/"],
-    blockExplorer: "https://gsc-mainnet.evm.findorascan.io/",
-  },
+  //   nativeCurrency: FINDORA,
+  //   blockExplorerUrls: ["https://gsc-mainnet.evm.findorascan.io/"],
+  //   blockExplorer: "https://gsc-mainnet.evm.findorascan.io/",
+  // },
   13472: {
     urls: [" https://rpc.testnet.immutable.com"],
     name: "Inmutable X Testnet",
@@ -115,8 +115,8 @@ export const CHAINS: {
 };
 
 export const NATIVE_CURRENCY_BY_ID = {
-  1204: FINDORA,
-  1205: FINDORA,
+  // 1204: FINDORA,
+  // 1205: FINDORA,
   137: MATIC,
   80001: MATIC,
   1: ETH,
@@ -127,7 +127,7 @@ export const NATIVE_CURRENCY_BY_ID = {
 export const CHAIN_IDS_BY_NAME: {
   [chain: string]: any;
 } = {
-  findora: process.env.NEXT_PUBLIC_ENV === "production" ? 1204 : 1205,
+  // findora: process.env.NEXT_PUBLIC_ENV === "production" ? 1204 : 1205,
   matic: process.env.NEXT_PUBLIC_ENV === "production" ? 137 : 80001,
   eth: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
   imx: process.env.NEXT_PUBLIC_ENV === "production" ? 13472 : 13472,
@@ -136,8 +136,8 @@ export const CHAIN_IDS_BY_NAME: {
 export const CHAIN_NAME_BY_ID: {
   [chain: string]: any;
 } = {
-  1204: "findora",
-  1205: "findora",
+  // 1204: "findora",
+  // 1205: "findora",
   137: "matic",
   80001: "matic",
   1: "eth",
