@@ -11,7 +11,6 @@ import {
   getContractCustom,
   getNativeBlockchain,
   getTokensAllowed,
-  getTokensAllowedMatic,
   switchChain,
 } from "@shared/web3";
 import {
@@ -377,7 +376,6 @@ const Shop = () => {
                   alt=""
                 />
               </div>
-              {/* <Link href="/comics"> */}
               <div className="relative md:w-64 sm:w-40 w-24">
                 <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
                   <h2 className="relative  sm:text-xl text-sm text-white">
@@ -484,7 +482,6 @@ const Shop = () => {
                         >
                           <div
                             className={clsx(
-                              // { ["hidden"]: index !== 0 },
                               "flex justify-between w-full px-2 relative shadow-white",
                             )}
                           >
@@ -581,12 +578,18 @@ const Shop = () => {
                                           .indexOf(sale.id),
                                       }),
                                     );
+                                    toast.success(
+                                      "Your item has been edited successfully to the cart",
+                                    );
                                   } else {
                                     dispatch(
                                       addCartShop({
                                         ...sale,
                                         quantity: counters[index],
                                       }),
+                                    );
+                                    toast.success(
+                                      "Your item has been added successfully to the cart",
                                     );
                                   }
                                 } else {
