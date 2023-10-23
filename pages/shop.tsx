@@ -189,6 +189,7 @@ const Shop = () => {
       if (tx.err) {
         throw Error(tx.err.message);
       }
+      console.log(tx.payload);
       dispatch(onGetAssets({ address: account, blockchain }));
       updateSales();
     } catch (error) {

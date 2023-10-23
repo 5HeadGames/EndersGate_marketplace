@@ -696,6 +696,8 @@ export const buyFromShop = createAsyncThunk(
       cartShop,
     } = args;
 
+    let tx;
+
     try {
       const { shop: shopAddress, MATICUSD: NATIVE_TO_USD } =
         getAddresses(blockchain);
@@ -738,7 +740,7 @@ export const buyFromShop = createAsyncThunk(
           (preprice + preprice * 0.05).toString(),
           "ether",
         );
-        await shop.methods
+        tx = await shop.methods
           .buyBatch(tokensId, amounts, token)
           .send({ from: account, value: price });
       } else {
@@ -762,17 +764,18 @@ export const buyFromShop = createAsyncThunk(
               from: account,
             });
           setMessageBuy("Buying your NFT(s) 2/2");
-          await shop.methods
+          tx = await shop.methods
             .buyBatch(tokensId, amounts, tokenSelected)
             .send({ from: account });
         } else {
           setMessageBuy("Buying your NFT(s)");
-          await shop.methods
+          tx = await shop.methods
             .buyBatch(tokensId, amounts, tokenSelected)
             .send({ from: account });
         }
       }
       toast.success("Congrats! Your packs have been successfully purchased");
+      console.log(tx);
     } catch (err) {
       console.log({ err });
       toast.error(
@@ -780,7 +783,7 @@ export const buyFromShop = createAsyncThunk(
       );
       return { err };
     }
-    return { account, provider };
+    return { hash: tx.transactionHash, account, provider };
   },
 );
 
@@ -795,6 +798,7 @@ export const buyFromShopNative = createAsyncThunk(
     cartShop: any[];
   }) {
     const { account, provider, blockchain, setMessageBuy, cartShop } = args;
+    let tx;
 
     try {
       const { shop: shopAddress } = getAddresses(blockchain);
@@ -810,17 +814,19 @@ export const buyFromShopNative = createAsyncThunk(
           .reduce((acc, item) => findSum(acc, item)),
       };
 
-      await shop.methods
+      tx = await shop.methods
         .buyBatch(tokensId, amounts)
         .send({ from: account, value: bid });
       toast.success("Congrats! Your packs have been successfully purchased");
+      console.log(tx);
     } catch (err) {
       console.log({ err });
       toast.error(
         "An error has occurred, please try again or check your console",
       );
+      return { err };
     }
-    return { account, provider };
+    return { hash: tx.transactionHash, account, provider };
   },
 );
 
