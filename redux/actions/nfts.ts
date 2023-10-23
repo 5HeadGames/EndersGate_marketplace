@@ -783,7 +783,7 @@ export const buyFromShop = createAsyncThunk(
       );
       return { err };
     }
-    return { hash: tx.transactionHash, account, provider };
+    return { hash: tx.transactionHash, account, tokenSelected, blockchain };
   },
 );
 
@@ -826,7 +826,7 @@ export const buyFromShopNative = createAsyncThunk(
       );
       return { err };
     }
-    return { hash: tx.transactionHash, account, provider };
+    return { hash: tx.transactionHash, account, blockchain };
   },
 );
 

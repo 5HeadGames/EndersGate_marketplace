@@ -6,11 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import { useRouter } from "next/router";
 import {
+  checkFirebaseInfluencerCode,
   getAddresses,
   getContract,
   getContractCustom,
   getNativeBlockchain,
   getTokensAllowed,
+  sendFirebaseTx,
   switchChain,
 } from "@shared/web3";
 import {
@@ -32,6 +34,7 @@ import { formatPrice } from "@shared/utils/formatPrice";
 import { useCartModal } from "@shared/components/common/cartModal";
 import { XIcon } from "@heroicons/react/solid";
 import { useUser } from "@shared/context/useUser";
+import { useForm } from "react-hook-form";
 
 const Shop = () => {
   const {
@@ -55,6 +58,14 @@ const Shop = () => {
   const { cartShop } = useSelector((state: any) => state.layout);
 
   const { shop: shopAddress, MATICUSD } = getAddresses(blockchain);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    setValue,
+  } = useForm();
 
   const dispatch = useDispatch();
 
@@ -150,7 +161,9 @@ const Shop = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain]);
 
-  const buyPacks = async () => {
+  const buyPacks = async (data) => {
+    const { influencer_code } = data;
+    let validCode = false;
     try {
       const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
       if (!changed) {
@@ -158,11 +171,20 @@ const Shop = () => {
       }
       updateBlockchain(blockchain);
 
+      if (influencer_code) {
+        validCode = await checkFirebaseInfluencerCode({
+          influencer_code,
+          setError,
+        });
+
+        if (!validCode) throw Error("Invalid Referral Code");
+      }
+
       if (tokenSelected === "") {
         addToast("Please Select a Payment Method", { appearance: "error" });
         return;
       }
-      let tx;
+      let tx: any = "";
       if (!getNativeBlockchain(blockchain)) {
         tx = await dispatch(
           buyFromShop({
@@ -186,18 +208,19 @@ const Shop = () => {
           }),
         );
       }
-      if (tx.err) {
-        throw Error(tx.err.message);
-      }
-      console.log(tx.payload);
+      if (tx.payload.err) throw Error(tx.payload.err.message);
+
+      if (validCode) sendFirebaseTx({ tx: tx.payload, influencer_code });
+
       dispatch(onGetAssets({ address: account, blockchain }));
       updateSales();
+      hide();
+      dispatch(removeAll());
     } catch (error) {
       console.log(error);
     }
     setMessageBuy(``);
-    hide();
-    dispatch(removeAll());
+    setValue("influencer_code", "");
   };
 
   const getPriceMatic = async () => {
@@ -225,6 +248,8 @@ const Shop = () => {
       setPriceNative("0");
     }
   }, [cartShop]);
+
+  console.log(errors);
 
   return (
     <>
@@ -261,6 +286,10 @@ const Shop = () => {
             buy={buyPacks}
             isMatic={!getNativeBlockchain(blockchain)}
             providerName={providerName}
+            router={router}
+            register={register}
+            handleSubmit={handleSubmit}
+            errors={errors}
             itemsCart={cartShop.map((item, index) => {
               return (
                 <div
@@ -268,7 +297,6 @@ const Shop = () => {
                   className={clsx(
                     "py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-transparent-color-gray-200 rounded-xl",
                   )}
-                  // onClick={item.onClick}
                 >
                   <div className="flex items-center justify-start gap-2 w-full">
                     <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">

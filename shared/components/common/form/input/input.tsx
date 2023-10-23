@@ -6,6 +6,7 @@ import { InputProps } from "@shared/interfaces/common";
 import { Icons } from "@shared/const/Icons";
 import { Icon } from "../../icon";
 import { XIcon } from "@heroicons/react/solid";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 export const Input: React.FC<
   InputProps & React.InputHTMLAttributes<HTMLInputElement>
@@ -34,6 +35,8 @@ export const Input: React.FC<
   ...props
 }) => {
   //@typescript-eslint/no-unused-vars
+
+  React.useEffect(() => {}, []);
 
   const [showLabel, setShowLabel] = React.useState(false);
   const registerAux = register(name, rules);
@@ -87,11 +90,11 @@ export const Input: React.FC<
             className={clsx(
               styles.text,
               {
-                "border-alert-error focus:border-alert-error placeholder-alert-error focus:ring-transparent":
+                "!border-alert-error focus:border-alert-error !placeholder-alert-error focus:ring-transparent":
                   error || verifyValue === false,
               },
               {
-                "text-alert-error ": error,
+                "!text-alert-error ": error,
               },
               { "pl-21 md:pl-36 pr-4": InputSelect },
               { "pl-14 pr-4": leftImg },
@@ -147,6 +150,11 @@ export const Input: React.FC<
             >
               <XIcon color="#fff" width={"12px"} />
             </div>
+          )}
+          {error && error.message && (
+            <span className="text-[12px] text-alert-error flex gap-1 items-center px-2">
+              <ExclamationCircleOutlined /> {error.message}
+            </span>
           )}
         </div>
       </div>

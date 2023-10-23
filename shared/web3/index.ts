@@ -9,6 +9,7 @@ import {
   removeAll,
 } from "@redux/actions";
 import { findSum } from "@shared/components/common/specialFields/SpecialFields";
+import { child, get, getDatabase, ref, set } from "firebase/database";
 
 export const loginMetamaskWallet = async () => {
   const provider = await (window as any).ethereum;
@@ -406,5 +407,39 @@ export const getNativeBlockchain = (blockchain) => {
       return true;
     default:
       return undefined;
+  }
+};
+
+export const sendFirebaseTx = async ({ tx, influencer_code }) => {
+  const db = getDatabase();
+  const dbRef = ref(db);
+  const txs = (await get(child(dbRef, `tx`))).exists()
+    ? (await get(child(dbRef, `tx`))).val()
+    : [];
+  if (txs.length > 0) {
+    const newArray = Object.keys(txs).map((item) => {
+      return txs[item];
+    });
+    newArray.push({ influencer_code, tx });
+    set(ref(db, "tx"), newArray);
+  } else {
+    txs.push({ influencer_code, tx });
+    console.log(txs, "txs");
+    set(ref(db, "tx"), txs);
+  }
+};
+
+export const checkFirebaseInfluencerCode = async ({
+  influencer_code,
+  setError,
+}) => {
+  const db = getDatabase();
+  const dbRef = ref(db);
+  const code = await get(child(dbRef, `influencer_code/${influencer_code}`));
+  if (code.exists()) {
+    return code.val();
+  } else {
+    setError("influencer_code", { message: "This is an invalid code." });
+    return false;
   }
 };
