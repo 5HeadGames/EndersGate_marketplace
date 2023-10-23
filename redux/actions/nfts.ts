@@ -639,9 +639,10 @@ export const listRentERC1155 = createAsyncThunk(
         .createRent(address, tokenId, pricePerDay, tokens)
         .send({ from: from });
 
-      return { from, tokenId, pricePerDay, address };
+      return true;
     } catch (err) {
       console.log({ err });
+      return false;
     }
   },
 );

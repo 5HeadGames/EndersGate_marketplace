@@ -653,7 +653,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
         }
         setMessage("Listing your tokens");
 
-        await dispatch(
+        const tx = await dispatch(
           listRentERC1155({
             address: endersGate,
             from: user,
@@ -664,21 +664,28 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
             blockchain,
           }),
         );
+        if (!tx.payload) {
+          throw Error(
+            "An error occurred while listing your NFT, please try again",
+          );
+        }
       }
+      show();
+      dispatch(onLoadSales());
+      dispatch(onGetAssets({ address: user, blockchain }));
+
+      setState("choose");
+      setSellNFTData({
+        pricePerDay: 0,
+        amount: 0,
+      });
     } catch (err) {
       console.log({ err });
+      toast.error(err.message);
     }
-    dispatch(onLoadSales());
-    show();
-    dispatch(onGetAssets({ address: user, blockchain }));
     setMessage(
       "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
     );
-    setState("choose");
-    setSellNFTData({
-      pricePerDay: 0,
-      amount: 0,
-    });
   };
 
   return (
