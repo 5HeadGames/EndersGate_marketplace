@@ -11,7 +11,11 @@ import { useModalAddressUser } from "./Modals/ModalAdddressUser";
 import { Modals } from "./Modals";
 import { useCartComicsModal } from "./Modals/ModalCartComics";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { CHAINS, CHAIN_IDS_BY_NAME, NATIVE_CURRENCY_BY_ID } from "../chains";
+import {
+  CHAINS,
+  CHAIN_IDS_BY_NAME,
+  NATIVE_CURRENCY_BY_ID,
+} from "../../utils/chains";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { useUser } from "@shared/context/useUser";
 
@@ -117,7 +121,7 @@ function Comics() {
         setPriceNative(
           (price + price * (5 / 1000000)).toFixed(5).toString() +
             " " +
-            NATIVE_CURRENCY_BY_ID[CHAIN_IDS_BY_NAME[blockchain]].symbol,
+            CHAINS[CHAIN_IDS_BY_NAME[blockchain]].nativeCurrency.symbol,
         );
       } else {
         const price = cartComics

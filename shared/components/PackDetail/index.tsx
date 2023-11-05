@@ -29,7 +29,11 @@ import Styles from "../NFTDetail/styles.module.scss";
 import clsx from "clsx";
 import Tilt from "react-parallax-tilt";
 import { AddressText } from "../common/specialFields/SpecialFields";
-import { CHAINS, CHAIN_IDS_BY_NAME, NATIVE_CURRENCY_BY_ID } from "../chains";
+import {
+  CHAINS,
+  CHAIN_IDS_BY_NAME,
+  NATIVE_CURRENCY_BY_ID,
+} from "../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { useUser } from "@shared/context/useUser";

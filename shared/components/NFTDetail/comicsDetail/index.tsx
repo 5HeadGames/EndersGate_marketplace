@@ -29,7 +29,11 @@ import Styles from "../styles.module.scss";
 import Tilt from "react-parallax-tilt";
 import { AddressText } from "../../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
-import { CHAINS, CHAIN_IDS_BY_NAME, NATIVE_CURRENCY_BY_ID } from "../../chains";
+import {
+  CHAINS,
+  CHAIN_IDS_BY_NAME,
+  NATIVE_CURRENCY_BY_ID,
+} from "../../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { useModal } from "@shared/hooks/modal";
@@ -371,7 +375,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
                 <label className="text-primary font-bold whitespace-nowrap">
                   Price per NFT (
                   {getNativeBlockchain(blockchain)
-                    ? NATIVE_CURRENCY_BY_ID[CHAIN_IDS_BY_NAME[blockchain]]
+                    ? CHAINS[CHAIN_IDS_BY_NAME[blockchain]].nativeCurrency
                         ?.symbol
                     : "USD"}
                   )
@@ -677,7 +681,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
                 <label className="text-primary font-bold whitespace-nowrap">
                   Price per Day Rented (
                   {getNativeBlockchain(blockchain)
-                    ? NATIVE_CURRENCY_BY_ID[CHAIN_IDS_BY_NAME[blockchain]]
+                    ? CHAINS[CHAIN_IDS_BY_NAME[blockchain]].nativeCurrency
                         ?.symbol
                     : "USD"}
                   )

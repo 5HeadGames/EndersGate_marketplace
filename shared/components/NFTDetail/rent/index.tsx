@@ -27,7 +27,7 @@ import Styles from "../styles.module.scss";
 import Tilt from "react-parallax-tilt";
 import { DropdownActions } from "../../common/dropdownActions/dropdownActions";
 import ReactCardFlip from "react-card-flip";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "../../chains";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "../../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
 import { formatPrice } from "@shared/utils/formatPrice";

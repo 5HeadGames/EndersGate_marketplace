@@ -6,7 +6,7 @@ import { getAddresses, getContractCustom } from "@shared/web3";
 import { PackOpeningComponent } from "@shared/components/PackOpening/PackOpeningComponent";
 import { onGetAssets } from "@redux/actions";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { CHAIN_IDS_BY_NAME, CHAINS } from "@shared/components/chains";
+import { CHAIN_IDS_BY_NAME, CHAINS } from "@shared/utils/chains";
 import { useUser } from "@shared/context/useUser";
 
 const Packs = () => {

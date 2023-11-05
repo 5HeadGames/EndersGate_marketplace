@@ -24,6 +24,12 @@ const IMX: any = {
   decimals: 18,
 };
 
+const SKL: any = {
+  name: "Skale Token",
+  symbol: "sFUEL",
+  decimals: 18,
+};
+
 interface BasicChainInformation {
   urls: string[];
   name: string;
@@ -57,9 +63,6 @@ export function getAddChainParameters(
   }
 }
 
-export const MAINNET_CHAIN_IDS = [137];
-export const TESTNET_CHAIN_IDS = [80001];
-
 export const CHAINS: {
   [chainId: number]: any;
 } = {
@@ -81,6 +84,38 @@ export const CHAINS: {
   //   blockExplorerUrls: ["https://gsc-mainnet.evm.findorascan.io/"],
   //   blockExplorer: "https://gsc-mainnet.evm.findorascan.io/",
   // },
+  1351057110: {
+    urls: [
+      "https://staging-v3.skalenodes.com/v1/staging-fast-active-bellatrix",
+    ],
+    name: "Inmutable X Testnet",
+    rpcUrls: [
+      "https://staging-v3.skalenodes.com/v1/staging-fast-active-bellatrix",
+    ],
+    nativeCurrency: SKL,
+    blockExplorerUrls: [
+      "https://staging-fast-active-bellatrix.explorer.staging-v3.skalenodes.com",
+    ],
+    blockExplorer:
+      "https://staging-fast-active-bellatrix.explorer.staging-v3.skalenodes.com",
+    type: "mainnet",
+  },
+  1370526269: {
+    urls: [
+      "https://staging-v3.skalenodes.com/v1/staging-perfect-parallel-gacrux",
+    ],
+    name: "Skale Test Chain 1",
+    rpcUrls: [
+      "https://staging-v3.skalenodes.com/v1/staging-perfect-parallel-gacrux",
+    ],
+    nativeCurrency: IMX,
+    blockExplorerUrls: [
+      "https://staging-perfect-parallel-gacrux.explorer.staging-v3.skalenodes.com/",
+    ],
+    blockExplorer:
+      "https://staging-perfect-parallel-gacrux.explorer.staging-v3.skalenodes.com/",
+    type: "testnet",
+  },
   13472: {
     urls: [" https://rpc.testnet.immutable.com"],
     name: "Inmutable X Testnet",
@@ -88,6 +123,7 @@ export const CHAINS: {
     nativeCurrency: IMX,
     blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
     blockExplorer: "https://explorer.testnet.immutable.com/",
+    type: "testnet",
   },
   137: {
     urls: [
@@ -100,6 +136,7 @@ export const CHAINS: {
     nativeCurrency: MATIC,
     blockExplorerUrls: ["https://polygonscan.com"],
     blockExplorer: "https://polygonscan.com",
+    type: "mainnet",
   },
   80001: {
     urls: [
@@ -111,26 +148,32 @@ export const CHAINS: {
     nativeCurrency: MATIC,
     blockExplorerUrls: ["https://mumbai.polygonscan.com"],
     blockExplorer: "https://mumbai.polygonscan.com",
+    type: "testnet",
   },
 };
 
-export const NATIVE_CURRENCY_BY_ID = {
-  // 1204: FINDORA,
-  // 1205: FINDORA,
-  137: MATIC,
-  80001: MATIC,
-  1: ETH,
-  11155111: ETH,
-  13472: IMX,
-};
+export const MAINNET_CHAIN_IDS = Object.keys(CHAINS)
+  .map((key) => {
+    return CHAINS[key].type == "mainnet" ? key : false;
+  })
+  .filter((chain) => {
+    return chain;
+  });
+export const TESTNET_CHAIN_IDS = Object.keys(CHAINS)
+  .map((key) => {
+    return CHAINS[key].type == "testnet" ? key : false;
+  })
+  .filter((chain) => {
+    return chain;
+  });
 
 export const CHAIN_IDS_BY_NAME: {
   [chain: string]: any;
 } = {
-  // findora: process.env.NEXT_PUBLIC_ENV === "production" ? 1204 : 1205,
   matic: process.env.NEXT_PUBLIC_ENV === "production" ? 137 : 80001,
   eth: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
   imx: process.env.NEXT_PUBLIC_ENV === "production" ? 13472 : 13472,
+  skl: process.env.NEXT_PUBLIC_ENV === "production" ? 1351057110 : 1370526269,
 };
 
 export const CHAIN_NAME_BY_ID: {
@@ -143,7 +186,37 @@ export const CHAIN_NAME_BY_ID: {
   1: "eth",
   11155111: "eth",
   13472: "imx",
+  1351057110: "skl",
+  1370526269: "skl",
 };
+
+export const blockchains = [
+  {
+    name: "ETHEREUM",
+    value: "eth",
+    image: "/images/eth.png",
+  },
+  {
+    name: "MATIC",
+    value: "matic",
+    image: "/images/matic.png",
+  },
+  // {
+  //   name: "FINDORA GSC",
+  //   value: "findora",
+  //   image: "/images/findora.png",
+  // },
+  {
+    name: "INMUTABLE X",
+    value: "imx",
+    image: "/images/imx.png",
+  },
+  {
+    name: "SKALE",
+    value: "skl",
+    image: "/images/skl.svg",
+  },
+];
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(
   CHAINS,

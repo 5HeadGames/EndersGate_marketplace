@@ -1,5 +1,5 @@
 "use client";
-import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import { switchChain } from "@shared/web3";
 import React, { createContext, useContext, useCallback, useMemo } from "react";
 import { toast } from "react-hot-toast";

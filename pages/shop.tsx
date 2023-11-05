@@ -28,7 +28,7 @@ import {
   removeFromCartShop,
 } from "@redux/actions";
 import { toast } from "react-hot-toast";
-import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { useCartModal } from "@shared/components/common/cartModal";
@@ -43,6 +43,7 @@ const Shop = () => {
   const [sales, setSales] = useState([]);
   const [counters, setCounters] = useState([1, 1, 1, 1]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isValidCode, setValidCode] = useState(false);
   const router = useRouter();
   const [tokenSelected, setTokenSelected] = React.useState("");
   const [messageBuy, setMessageBuy] = React.useState("");
@@ -64,7 +65,9 @@ const Shop = () => {
     handleSubmit,
     formState: { errors },
     setError,
+    getValues,
     setValue,
+    clearErrors,
   } = useForm();
 
   const dispatch = useDispatch();
@@ -77,22 +80,22 @@ const Shop = () => {
 
   const packs = [
     {
-      name: "Common Pack",
+      name: "COMMON NFT PACK",
       imagePack: "./images/0.png",
       color: "#FFA6FF",
     },
     {
-      name: "Rare Pack",
+      name: "RARE NFT PACK",
       imagePack: "./images/1.png",
       color: "#E9D880",
     },
     {
-      name: "Epic Pack",
+      name: "EPIC NFT PACK",
       imagePack: "./images/2.png",
       color: "#7FBADD",
     },
     {
-      name: "Legendary Pack",
+      name: "LEGENDARY NFT PACK",
       imagePack: "./images/3.png",
       color: "#8AE98C",
     },
@@ -163,22 +166,11 @@ const Shop = () => {
 
   const buyPacks = async (data) => {
     const { influencer_code } = data;
-    let validCode = false;
     try {
       const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
-      if (!changed) {
-        return;
-      }
+      if (!changed) return;
+      if (!isValidCode) return;
       updateBlockchain(blockchain);
-
-      if (influencer_code) {
-        validCode = await checkFirebaseInfluencerCode({
-          influencer_code,
-          setError,
-        });
-
-        if (!validCode) throw Error("Invalid Referral Code");
-      }
 
       if (tokenSelected === "") {
         addToast("Please Select a Payment Method", { appearance: "error" });
@@ -210,17 +202,16 @@ const Shop = () => {
       }
       if (tx.payload.err) throw Error(tx.payload.err.message);
 
-      if (validCode) sendFirebaseTx({ tx: tx.payload, influencer_code });
-
+      sendFirebaseTx({ tx: tx.payload, influencer_code });
       dispatch(onGetAssets({ address: account, blockchain }));
       updateSales();
       hide();
       dispatch(removeAll());
+      setValue("influencer_code", "");
     } catch (error) {
       console.log(error);
     }
     setMessageBuy(``);
-    setValue("influencer_code", "");
   };
 
   const getPriceMatic = async () => {
@@ -249,8 +240,6 @@ const Shop = () => {
     }
   }, [cartShop]);
 
-  console.log(errors);
-
   return (
     <>
       {isLoading && (
@@ -269,7 +258,7 @@ const Shop = () => {
       )}
       {!isLoading && (
         <div
-          className="w-full h-full relative overflow-hidden shop"
+          className="w-full h-full relative overflow-hidden shop flex flex-col items-center"
           style={{ minHeight: "100vh" }}
         >
           <Modal
@@ -290,6 +279,11 @@ const Shop = () => {
             register={register}
             handleSubmit={handleSubmit}
             errors={errors}
+            isValidCode={isValidCode}
+            getValues={getValues}
+            setValidCode={setValidCode}
+            setError={setError}
+            clearErrors={clearErrors}
             itemsCart={cartShop.map((item, index) => {
               return (
                 <div
@@ -371,12 +365,17 @@ const Shop = () => {
           />
 
           <img
-            src="/images/shop_background.png"
+            src="/images/shop/shop_background.png"
             className="flex absolute z-0 w-full h-full"
-            alt=""
+            alt="bg-shop"
           />
-          <div className="relative border-b border-white Poppins text-white text-4xl text-center font-black py-12 pt-24 w-full">
-            NFT SHOP
+          <img
+            src="/images/shop/bg_top.png"
+            className="w-full h-full relative pt-12"
+            alt="bg-top"
+          />
+          <div className="Poppins relative border-y-4 border-[#B8902E] Poppins text-white text-5xl text-center font-[600] py-12 w-full">
+            CARD SHOP
           </div>
 
           <div className="flex xl:flex-row flex-col xl:justify-between xl:items-end items-center relative w-full pt-6">
@@ -447,198 +446,27 @@ const Shop = () => {
               </div>
             </div>
           </div>
-          <div className="relative w-full flex md:flex-row flex-col md:items-start items-center bgPacksShop">
-            <div
-              className={clsx(
-                sales.length > 0
-                  ? "flex items-center justify-center flex-wrap h-full md:py-4 py-10 md:px-0 mx-4 w-full gap-2"
-                  : "flex items-center justify-center w-full",
-              )}
-            >
-              {sales.length > 0 ? (
-                sales.map((sale, index) => {
-                  return (
-                    <div className="relative shadow-white">
-                      <img
-                        src="./images/box_pack.png"
-                        className="absolute w-full h-full"
-                        alt=""
-                      />
-                      <div className="flex flex-col items-center justify-center h-full py-6 px-4">
-                        <div
-                          className="relative flex items-center justify-center"
-                          style={{
-                            height: "40px",
-                            width: "240px",
-                            flexShrink: 0,
-                          }}
-                        >
-                          <h2
-                            className="Poppins uppercase text-xl text-center relative"
-                            style={{ color: sale.color }}
-                          >
-                            {sale.name}
-                          </h2>
-                        </div>
-                        <h2 className="Poppins uppercase text-md text-center text-white relative">
-                          {sale.priceText}
-                        </h2>
-                        <img
-                          src={sale.imagePack}
-                          alt=""
-                          style={{ flexShrink: 0 }}
-                          className="relative pt-2 w-44"
-                        />
-                        <div
-                          className="relative flex items-center justify-center my-2"
-                          style={{
-                            height: "40px",
-                            width: "160px",
-                            flexShrink: 0,
-                          }}
-                        >
-                          <h2 className=" text-md text-center text-gray-200 relative">
-                            {sale.amount} LEFT
-                          </h2>
-                        </div>
-                        <div
-                          className="relative flex items-center justify-center"
-                          style={{
-                            height: "40px",
-                            width: "160px",
-                            flexShrink: 0,
-                          }}
-                        >
-                          <div
-                            className={clsx(
-                              "flex justify-between w-full px-2 relative shadow-white",
-                            )}
-                          >
-                            <div className="flex gap-1">
-                              <div
-                                className="cursor-pointer text-xl text-white"
-                                onClick={
-                                  counters[index] > 1
-                                    ? () => {
-                                        setCounters((prev) => {
-                                          const newArray = [];
-                                          prev.forEach((previous, index2) => {
-                                            if (index === index2) {
-                                              newArray.push(previous - 1);
-                                            } else {
-                                              newArray.push(previous);
-                                            }
-                                          });
-                                          return newArray;
-                                        });
-                                      }
-                                    : undefined
-                                }
-                              >
-                                -
-                              </div>
-                              <input
-                                className="text-xl text-white text-center bg-transparent w-5 outline-none"
-                                value={counters[index]}
-                                type="number"
-                                min={1}
-                                max={10}
-                                onChange={(e) => {
-                                  if (e.target.value.length < 3) {
-                                    setCounters((prev) => {
-                                      const newArray = [];
-                                      prev.forEach((previous, id) => {
-                                        if (id === index) {
-                                          newArray.push(e.target.value);
-                                        } else {
-                                          newArray.push(previous);
-                                        }
-                                      });
-                                      return newArray;
-                                    });
-                                  }
-                                }}
-                              />
-
-                              <div
-                                className="cursor-pointer text-xl text-white"
-                                onClick={
-                                  counters[index] < 10
-                                    ? () => {
-                                        setCounters((prev) => {
-                                          const newArray = [];
-                                          prev.forEach((previous, index2) => {
-                                            if (index === index2) {
-                                              newArray.push(previous + 1);
-                                            } else {
-                                              newArray.push(previous);
-                                            }
-                                          });
-                                          return newArray;
-                                        });
-                                      }
-                                    : undefined
-                                }
-                              >
-                                +
-                              </div>
-                            </div>
-                            <div
-                              className="text-xl text-white cursor-pointer"
-                              onClick={() => {
-                                if (account) {
-                                  if (
-                                    cartShop
-                                      .map((item) => {
-                                        return item.id;
-                                      })
-                                      .includes(sale.id)
-                                  ) {
-                                    dispatch(
-                                      editCartShop({
-                                        item: {
-                                          ...sale,
-                                          quantity: counters[index],
-                                        },
-                                        id: cartShop
-                                          .map((item) => {
-                                            return item.id;
-                                          })
-                                          .indexOf(sale.id),
-                                      }),
-                                    );
-                                    toast.success(
-                                      "Your item has been edited successfully to the cart",
-                                    );
-                                  } else {
-                                    dispatch(
-                                      addCartShop({
-                                        ...sale,
-                                        quantity: counters[index],
-                                      }),
-                                    );
-                                    toast.success(
-                                      "Your item has been added successfully to the cart",
-                                    );
-                                  }
-                                } else {
-                                  router.push("/login");
-                                }
-                              }}
-                            >
-                              ADD
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="text-white text-xl py-40 w-full text-center relative">
-                  There are not packs to buy now
-                </div>
-              )}
+          <div className="w-4/5 lg:px-0 px-10 flex lg:flex-row flex-col gap-3 pt-10">
+            <div className="relative w-full flex md:flex-row flex-col md:items-start items-center bgPacksShop lg:w-[50%]">
+              <div
+                className={clsx(
+                  "flex flex-col items-center justify-center mx-4 w-full gap-2 border border-white p-4 pt-2",
+                )}
+              >
+                {sales?.map((sale) => {
+                  return <SaleButton sale={sale} />;
+                })}
+              </div>
+            </div>
+            <div className="relative w-full flex md:flex-row flex-col md:items-start items-center bgPacksShop lg:w-[50%]">
+              <div className={clsx("flex w-full")}>
+                <ShopElement
+                  sale={sales[0]}
+                  counters={counters}
+                  setCounters={setCounters}
+                  index={0}
+                />
+              </div>
             </div>
           </div>
           <div className="sm:block hidden pt-56 w-full"></div>
@@ -665,6 +493,220 @@ const Shop = () => {
         </div>
       )}
     </>
+  );
+};
+
+const SaleButton = ({ sale }) => {
+  return (
+    <button
+      className={clsx(
+        "border-b border-white py-2 px-4 w-full text-white font-[500] text-left",
+      )}
+    >
+      {sale?.name}
+    </button>
+  );
+};
+
+const ShopElement = ({ sale, counters, setCounters, index }) => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const {
+    user: { ethAddress: account },
+  } = useUser();
+  const { cartShop } = useSelector((state: any) => state.layout);
+
+  return (
+    <div className="relative flex md:flex-row flex-col border border-white w-full p-3">
+      <div className="flex flex-col items-center justify-center relative h-full py-6 px-4 shadow-white w-2/5">
+        <img
+          src="./images/box_pack.png"
+          className="absolute w-full h-full"
+          alt=""
+        />
+
+        <img
+          src={sale?.imagePack}
+          alt=""
+          style={{ flexShrink: 0 }}
+          className="relative pt-2 w-44"
+        />
+        <div
+          className="relative flex items-center justify-center my-2"
+          style={{
+            height: "40px",
+            width: "160px",
+            flexShrink: 0,
+          }}
+        >
+          <h2 className="Poppins font-[500] text-md text-center text-gray-200 relative">
+            {sale?.amount} LEFT
+          </h2>
+        </div>
+      </div>
+      <div className="flex flex-col items-center gap-1 p-4 w-3/5">
+        <div className="w-full flex flex-col">
+          <h2 className="text-primary-disabled text-sm font-[500] w-full">
+            ELEMENTAL CONFLICT
+          </h2>
+          <h1
+            className={clsx("text-3xl font-[600] uppercase Poppins")}
+            style={{ color: sale?.color }}
+          >
+            {sale?.name}
+          </h1>
+          <img src="/images/shop/line2.png" className="w-full mb-4" alt="" />
+          <p className="Poppins text-primary-disabled text-sm font-[400] relative">
+            This pack contains 5 Cards, Guaranteed 1 Wood, 1 Action Card, 1
+            Reaction Card, and a 33.33% chance to receive a Stone Rarity Card.
+          </p>
+        </div>
+
+        <div
+          className={clsx(
+            "flex justify-between gap-4 w-full relative shadow-white py-4",
+          )}
+        >
+          <div className="flex gap-2">
+            <div
+              className="cursor-pointer text-xl text-white px-4 py-1 font-bold rounded-md border border-white"
+              onClick={
+                counters[index] > 1
+                  ? () => {
+                      setCounters((prev) => {
+                        const newArray = [];
+                        prev.forEach((previous, index2) => {
+                          if (index === index2) {
+                            newArray.push(previous - 1);
+                          } else {
+                            newArray.push(previous);
+                          }
+                        });
+                        return newArray;
+                      });
+                    }
+                  : undefined
+              }
+            >
+              -
+            </div>
+            <input
+              className="text-xl text-white text-center bg-transparent px-4 py-1 font-bold rounded-md border border-white"
+              value={counters[index]}
+              type="number"
+              min={1}
+              max={10}
+              onChange={(e) => {
+                if (e.target.value.length < 3) {
+                  setCounters((prev) => {
+                    const newArray = [];
+                    prev.forEach((previous, id) => {
+                      if (id === index) {
+                        newArray.push(e.target.value);
+                      } else {
+                        newArray.push(previous);
+                      }
+                    });
+                    return newArray;
+                  });
+                }
+              }}
+            />
+
+            <div
+              className="cursor-pointer text-xl text-white px-4 py-1 font-bold rounded-md border border-white"
+              onClick={
+                counters[index] < 10
+                  ? () => {
+                      setCounters((prev) => {
+                        const newArray = [];
+                        prev.forEach((previous, index2) => {
+                          if (index === index2) {
+                            newArray.push(previous + 1);
+                          } else {
+                            newArray.push(previous);
+                          }
+                        });
+                        return newArray;
+                      });
+                    }
+                  : undefined
+              }
+            >
+              +
+            </div>
+          </div>
+        </div>
+        <div className="flex w-full gap-2 relative items-start">
+          <h2 className="Poppins uppercase text-3xl font-[600] text-center text-primary-disabled relative">
+            $25
+            <img
+              src="/images/shop/line_text.png"
+              className="h-full absolute top-0 "
+              alt=""
+            />
+          </h2>
+          <h2 className="Poppins uppercase text-3xl font-[600] text-center text-white relative">
+            $4.99
+          </h2>
+          <div className="flex items-center justify-center relative px-2 ">
+            <img
+              src="/images/shop/bg-off.png"
+              className="absolute h-full rounded-lg top-0 shadow-white"
+              alt=""
+            />
+            <p className="Poppins uppercase text-md text-center text-green-button relative font-[500] h-6">
+              80% off
+            </p>
+          </div>
+        </div>
+        <div
+          className="text-xl text-white cursor-pointer"
+          onClick={() => {
+            if (account) {
+              if (
+                cartShop
+                  .map((item) => {
+                    return item.id;
+                  })
+                  .includes(sale?.id)
+              ) {
+                dispatch(
+                  editCartShop({
+                    item: {
+                      ...sale,
+                      quantity: counters[index],
+                    },
+                    id: cartShop
+                      .map((item) => {
+                        return item.id;
+                      })
+                      .indexOf(sale.id),
+                  }),
+                );
+                toast.success(
+                  "Your item has been edited successfully to the cart",
+                );
+              } else {
+                dispatch(
+                  addCartShop({
+                    ...sale,
+                    quantity: counters[index],
+                  }),
+                );
+                toast.success(
+                  "Your item has been added successfully to the cart",
+                );
+              }
+            } else {
+              router.push("/login");
+            }
+          }}
+        >
+          ADD
+        </div>
+      </div>
+    </div>
   );
 };
 

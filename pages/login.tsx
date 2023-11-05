@@ -10,7 +10,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { onGetAssets, onLogged } from "@redux/actions";
 import { switchChain } from "@shared/web3";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import { useWeb3React } from "@web3-react/core";
 import { useUser } from "@shared/context/useUser";
 

@@ -18,7 +18,8 @@ export interface ButtonProps {
     | "line-white"
     | "line-primary"
     | "fillPrimary"
-    | "greenLine";
+    | "greenLine"
+    | "fillGreen";
   social?: "facebook" | "google";
   icon?: any;
   className?: string;
@@ -74,6 +75,15 @@ export const Button: React.FC<
           {
             "hover:text-primary hover:border-primary hover:bg-transparent":
               decoration === "fillPrimary" && !social && !disabled,
+          },
+          {
+            "shadow-md border border-transparent-color-gray-200 cursor-pointer bg-green-button text-overlay transition-all duration-500":
+              decoration === "fillGreen" && !social && !disabled,
+          },
+
+          {
+            " hover:border-green-button hover:bg-overlay hover:text-green-button ":
+              decoration === "fillGreen" && !social && !disabled,
           },
           {
             "hover:text-primary hover:border-primary hover:bg-transparent":

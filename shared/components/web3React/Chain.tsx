@@ -1,4 +1,4 @@
-import { CHAINS } from "../chains";
+import { CHAINS } from "../../utils/chains";
 
 export function Chain({ chainId }: { chainId: ReturnType<any> }) {
   if (chainId === undefined) return null;

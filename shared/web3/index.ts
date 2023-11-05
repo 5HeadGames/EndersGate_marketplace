@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import contracts from "shared/contracts";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import {
   onLoadSales,
   parseSaleNative,
@@ -432,14 +432,16 @@ export const sendFirebaseTx = async ({ tx, influencer_code }) => {
 export const checkFirebaseInfluencerCode = async ({
   influencer_code,
   setError,
+  clearErrors,
 }) => {
   const db = getDatabase();
   const dbRef = ref(db);
   const code = await get(child(dbRef, `influencer_code/${influencer_code}`));
   if (code.exists()) {
+    clearErrors("influencer_code");
     return code.val();
   } else {
-    setError("influencer_code", { message: "This is an invalid code." });
+    setError("influencer_code", { message: "Invalid Code." });
     return false;
   }
 };

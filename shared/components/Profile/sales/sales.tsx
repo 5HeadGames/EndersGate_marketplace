@@ -19,7 +19,7 @@ import { useBlockchain } from "@shared/context/useBlockchain";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { toast } from "react-hot-toast";
 import { LoadingOutlined } from "@ant-design/icons";
-import { CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import { useUser } from "@shared/context/useUser";
 
 const Sales = () => {

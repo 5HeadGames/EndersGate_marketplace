@@ -3,7 +3,7 @@ import { Magic } from "magic-sdk";
 import { ConnectExtension } from "@magic-ext/connect";
 import Web3 from "web3";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/components/chains";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 
 const getMagicConfig = (networkId: any) => {
   const network = CHAINS[networkId];

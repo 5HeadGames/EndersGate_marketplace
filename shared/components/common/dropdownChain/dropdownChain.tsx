@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import { Image, Text, Tooltip } from "@chakra-ui/react";
 import { useBlockchain } from "@shared/context/useBlockchain";
+import { blockchains } from "@shared/utils/chains";
 
 export const DropdownChain: React.FC<any> = () => {
   const { blockchain, updateBlockchain } = useBlockchain();
@@ -11,29 +12,6 @@ export const DropdownChain: React.FC<any> = () => {
   const handleSelect = (value) => {
     updateBlockchain(value);
   };
-
-  const blockchains = [
-    {
-      name: "ETHEREUM",
-      value: "eth",
-      image: "/images/eth.png",
-    },
-    {
-      name: "MATIC",
-      value: "matic",
-      image: "/images/matic.png",
-    },
-    // {
-    //   name: "FINDORA GSC",
-    //   value: "findora",
-    //   image: "/images/findora.png",
-    // },
-    // {
-    //   name: "INMUTABLE X",
-    //   value: "imx",
-    //   image: "/images/imx.png",
-    // },
-  ];
 
   return (
     <div className="flex justify-center items-center">

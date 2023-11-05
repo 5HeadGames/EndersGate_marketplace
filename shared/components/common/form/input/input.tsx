@@ -152,7 +152,7 @@ export const Input: React.FC<
             </div>
           )}
           {error && error.message && (
-            <span className="text-[12px] text-alert-error flex gap-1 items-center px-2">
+            <span className="text-[12px] text-alert-error font-bold flex gap-1 items-center px-2 pt-1">
               <ExclamationCircleOutlined /> {error.message}
             </span>
           )}

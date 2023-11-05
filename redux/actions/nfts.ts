@@ -17,7 +17,7 @@ import {
   CHAIN_NAME_BY_ID,
   MAINNET_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
-} from "@shared/components/chains";
+} from "@shared/utils/chains";
 import { findSum } from "@shared/components/common/specialFields/SpecialFields";
 import { removeAllRent } from "./layout";
 import { toast } from "react-hot-toast";

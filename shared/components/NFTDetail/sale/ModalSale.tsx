@@ -2,7 +2,7 @@ import { ExclamationCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button } from "@shared/components/common/button/button";
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { formatPrice } from "@shared/utils/formatPrice";
+import { formatPrice, multiply } from "@shared/utils/formatPrice";
 import clsx from "clsx";
 import React from "react";
 import Styles from "../styles.module.scss";
@@ -10,8 +10,7 @@ import Tilt from "react-parallax-tilt";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import packs from "../../../packs.json";
 import { getTokensAllowedMatic } from "@shared/web3";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/components/chains";
-import { multiply } from "@shared/components/utils";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 
 export const ModalSale = ({
   isPack,

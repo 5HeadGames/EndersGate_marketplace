@@ -7,11 +7,12 @@ import useMagicLink from "@shared/hooks/useMagicLink";
 import React, { useCallback, useState, Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { formatPrice } from "@shared/utils/formatPrice";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "../chains";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "../../utils/chains";
 import { Icons } from "@shared/const/Icons";
-import { getNativeBlockchain } from "@shared/web3";
+import { checkFirebaseInfluencerCode, getNativeBlockchain } from "@shared/web3";
 import AccordionMenu from "./Accordion";
 import { Input } from "./form/input";
+import { Button } from "./button";
 
 export const useCartModal = () => {
   const { showWallet } = useMagicLink();
@@ -46,7 +47,12 @@ export const useCartModal = () => {
       register,
       handleSubmit,
       errors,
+      setValidCode,
+      getValues,
+      isValidCode,
       router,
+      setError,
+      clearErrors,
     }) => {
       return (
         <Transition.Root show={isShow} as={Fragment}>
@@ -90,7 +96,7 @@ export const useCartModal = () => {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <div className="inline-block align-bottom text-left rounded-20 shadow-md transform transition-all sm:align-middle w-max sm:max-w-6xl">
+                <div className="inline-block align-bottom text-left rounded-20 shadow-md transform transition-all sm:align-middle  w-max sm:max-w-6xl">
                   <div className="flex flex-col gap-4  bg-overlay p-4 rounded-xl border border-transparent-color-gray-200 relative shadow-inner mt-24">
                     <div className="text-white absolute top-2 right-2">
                       <XIcon
@@ -104,7 +110,7 @@ export const useCartModal = () => {
                     {cart.length ? (
                       <form
                         onSubmit={handleSubmit(buy)}
-                        className="flex flex-col items-center border border-transparent-color-gray-200 rounded-xl md:min-w-[500px] md:w-max py-2"
+                        className="flex flex-col items-center border border-transparent-color-gray-200 rounded-xl xl:min-w-[800px] lg:min-w-[650px] md:min-w-[500px] md:w-max py-2"
                       >
                         <div className="flex justify-between gap-4 w-full">
                           <h2 className="text-lg font-bold text-white opacity-[0.5] py-4 px-4">
@@ -275,31 +281,92 @@ export const useCartModal = () => {
                         ) : (
                           ""
                         )}
-                        {router && router.asPath == "pack" && (
+                        {router && router.asPath == "/shop" && (
                           <>
                             <AccordionMenu title="Promo Code / Referral">
-                              <div className="flex gap-2 w-full px-2">
-                                <Input
-                                  name="influencer_code"
-                                  register={register}
-                                  classNameContainer={clsx(
-                                    "text-sm my-2 px-3 py-1 text-white w-full bg-transparent rounded-md border border-overlay-overlay placeholder:text-white outline-none",
+                              <div className="flex items-start justify-center gap-4 w-full px-14 relative">
+                                {!errors.influencer_code && isValidCode ? (
+                                  <img
+                                    src="/icons/check.png"
+                                    className="w-8 absolute left-3 top-1"
+                                    alt=""
+                                  />
+                                ) : errors.influencer_code && !isValidCode ? (
+                                  <img
+                                    src="/icons/x.png"
+                                    className="w-8 absolute left-3 top-1"
+                                    alt=""
+                                  />
+                                ) : (
+                                  ""
+                                )}
+                                <div className="flex flex-col gap-2 w-full">
+                                  <Input
+                                    name="influencer_code"
+                                    register={register}
+                                    classNameContainer={clsx(
+                                      "text-sm px-3 py-1 text-white w-full bg-transparent rounded-lg border border-overlay-overlay font-bold placeholder:text-white placeholder:font-bold outline-none",
+                                    )}
+                                    disabled={isValidCode}
+                                    withoutX
+                                    placeholder="Put your code here!"
+                                    error={errors && errors.influencer_code}
+                                  ></Input>
+                                  {!errors.influencer_code && isValidCode && (
+                                    <p className="text-green-button text-sm font-bold">
+                                      Code added for a Free “Influencer Name”
+                                      Virtual Collectable Trading Card!
+                                    </p>
                                   )}
-                                  withoutX
-                                  placeholder="Put your code here!"
-                                  error={errors && errors.influencer_code}
-                                ></Input>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={
+                                    isValidCode
+                                      ? () => {
+                                          setValidCode(false);
+                                        }
+                                      : async () => {
+                                          const value =
+                                            getValues("influencer_code");
+                                          const validCode =
+                                            await checkFirebaseInfluencerCode({
+                                              influencer_code: value,
+                                              setError,
+                                              clearErrors,
+                                            });
+                                          if (validCode) {
+                                            setValidCode(true);
+                                          } else {
+                                            setValidCode(false);
+                                          }
+                                        }
+                                  }
+                                  className={clsx(
+                                    {
+                                      "mb-3":
+                                        errors.influencer_code || isValidCode,
+                                    },
+                                    "bg-red-600 py-2 px-6 text-white font-bold rounded-md cursor-pointer border-none outline-none",
+                                  )}
+                                >
+                                  {!isValidCode ? "Apply" : "Remove"}
+                                </button>
                               </div>
                             </AccordionMenu>
                           </>
                         )}
                         <div className="w-full flex items-center justify-center py-2">
-                          <button
+                          <Button
                             type="submit"
-                            className="w-auto px-6 py-2 flex justify-center items-center rounded-xl hover:border-green-button hover:bg-overlay hover:text-green-button border border-transparent-color-gray-200 cursor-pointer bg-green-button font-bold text-overlay transition-all duration-500"
+                            disabled={errors.influencer_code && !isValidCode}
+                            decoration="fillGreen"
+                            className={
+                              "w-auto px-6 py-2 flex justify-center items-center rounded-xl !font-bold"
+                            }
                           >
                             Complete Purchase
-                          </button>
+                          </Button>
                         </div>
                         {providerName == "magic" &&
                           !getNativeBlockchain(blockchain) && (
