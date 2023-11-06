@@ -479,7 +479,7 @@ const SaleButton = ({ sale, saleSelected, setSale }) => {
       <img
         src={sale?.imageList}
         className={clsx(
-          { hidden: sale.name !== saleSelected },
+          { "!hidden": sale.name !== saleSelected },
           "h-[35px] py-2 px-4 relative md:flex hidden",
         )}
         alt={sale?.nameList}
