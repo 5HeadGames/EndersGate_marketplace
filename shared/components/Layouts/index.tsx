@@ -16,7 +16,7 @@ import {
 } from "@ant-design/icons";
 import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
-import { Dropdown } from "../common/dropdown/dropdown";
+import { Dropdown } from "../common/dropdowns/dropdown/dropdown";
 import { useSelector } from "react-redux";
 import { WALLETS } from "@shared/utils/connection/utils";
 import { authStillValid } from "../utils";

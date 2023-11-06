@@ -6,9 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 import { useRouter } from "next/router";
 import {
-  checkFirebaseInfluencerCode,
   getAddresses,
-  getContract,
   getContractCustom,
   getNativeBlockchain,
   getTokensAllowed,
@@ -21,8 +19,6 @@ import {
   buyFromShop,
   buyFromShopNative,
   onGetAssets,
-  parseSaleNative,
-  parseSaleTokens,
   removeAll,
   removeAllShop,
   removeFromCartShop,
@@ -35,12 +31,15 @@ import { useCartModal } from "@shared/components/common/cartModal";
 import { XIcon } from "@heroicons/react/solid";
 import { useUser } from "@shared/context/useUser";
 import { useForm } from "react-hook-form";
+import { packsShop, updateSales } from "@shared/utils/utils";
+import { DropdownShop } from "@shared/components/common/dropdowns/dropdownShop";
 
 const Shop = () => {
   const {
     user: { ethAddress: account, provider, providerName },
   } = useUser();
   const [sales, setSales] = useState([]);
+  const [saleToShow, setSale] = useState(packsShop[0]);
   const [counters, setCounters] = useState([1, 1, 1, 1]);
   const [isLoading, setIsLoading] = useState(false);
   const [isValidCode, setValidCode] = useState(false);
@@ -78,82 +77,17 @@ const Shop = () => {
     }
   }, [tokensAllowed]);
 
-  const packs = [
-    {
-      name: "COMMON NFT PACK",
-      imagePack: "./images/0.png",
-      color: "#FFA6FF",
-    },
-    {
-      name: "RARE NFT PACK",
-      imagePack: "./images/1.png",
-      color: "#E9D880",
-    },
-    {
-      name: "EPIC NFT PACK",
-      imagePack: "./images/2.png",
-      color: "#7FBADD",
-    },
-    {
-      name: "LEGENDARY NFT PACK",
-      imagePack: "./images/3.png",
-      color: "#8AE98C",
-    },
-  ];
-
-  const updateSales = async () => {
-    setIsLoading(true);
-    try {
-      // Use web3 to get the user's accounts.
-      const shop = getContract(
-        !getNativeBlockchain(blockchain) ? "Shop" : "ShopFindora",
-        shopAddress,
-        blockchain,
-      );
-
-      const lastSale = Number(await shop.methods.tokenIdTracker().call());
-      const rawSales = await shop.methods
-        .getSales(new Array(lastSale).fill(0).map((a, i) => i))
-        .call();
-
-      const allSales = rawSales.map((sale, i) => {
-        const saleFormatted = !getNativeBlockchain(blockchain)
-          ? parseSaleTokens(sale)
-          : parseSaleNative(sale);
-        return {
-          id: i,
-          ...saleFormatted,
-        };
-      });
-      const created = allSales
-        .filter((sale) => sale.status === "0")
-        .map((sale) => {
-          return {
-            ...sale,
-            name: packs[sale.nftId]?.name,
-            imagePack: packs[sale.nftId]?.imagePack,
-            color: packs[sale.nftId]?.color,
-            priceText: formatPrice(sale.price, blockchain),
-          };
-        });
-
-      setSales(created);
-      setCounters(created.map(() => 1));
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
-    }
-    setIsLoading(false);
-  };
-
   React.useEffect(() => {
     if (blockchain) {
       try {
         switchChain(CHAIN_IDS_BY_NAME[blockchain]);
-        updateSales();
+        updateSales({
+          setIsLoading,
+          blockchain,
+          shopAddress,
+          setSales,
+          setCounters,
+        });
         dispatch(removeAllShop());
       } catch (err) {
         toast.error(
@@ -204,7 +138,13 @@ const Shop = () => {
 
       sendFirebaseTx({ tx: tx.payload, influencer_code });
       dispatch(onGetAssets({ address: account, blockchain }));
-      updateSales();
+      updateSales({
+        setIsLoading,
+        blockchain,
+        shopAddress,
+        setSales,
+        setCounters,
+      });
       hide();
       dispatch(removeAll());
       setValue("influencer_code", "");
@@ -231,6 +171,10 @@ const Shop = () => {
       ) / BigInt(priceMATIC);
     setPriceNative((price + (price * BigInt(5)) / BigInt(100)).toString());
   };
+
+  React.useEffect(() => {
+    if (sales.length) setSale(sales[0]);
+  }, [sales]);
 
   React.useEffect(() => {
     if (cartShop.length > 0 && !getNativeBlockchain(blockchain)) {
@@ -295,14 +239,14 @@ const Shop = () => {
                   <div className="flex items-center justify-start gap-2 w-full">
                     <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
                       <img
-                        src={packs[item.nftId]?.imagePack}
+                        src={packsShop[item.nftId]?.imagePack}
                         className={`absolute top-[-40%] left-[-40%] right-0 m-auto min-w-[175%]`}
                         alt=""
                       />
                     </div>
                     <div className="flex flex-col gap-1">
                       <h3 className={clsx("text-md font-[700] uppercase")}>
-                        {packs[item.nftId]?.name}
+                        {packsShop[item.nftId]?.name}
                       </h3>
 
                       <div className="flex gap-2 items-end">
@@ -380,42 +324,47 @@ const Shop = () => {
 
           <div className="flex xl:flex-row flex-col xl:justify-between xl:items-end items-center relative w-full pt-6">
             <div className="flex w-full items-center justify-center gap-2">
-              <div className="relative md:w-64 sm:w-40 w-24">
-                <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
-                  <h2 className="relative  sm:text-xl text-sm text-white">
-                    NFT PACKS
-                  </h2>
-                </div>
-                <img
-                  src="./images/bgGold.png"
-                  className="cursor-pointer"
-                  alt=""
-                />
-              </div>
-              <div className="relative md:w-64 sm:w-40 w-28">
-                <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
-                  <h2 className="relative  sm:text-xl text-sm text-white">
-                    AVATAR CARDS
-                  </h2>
-                </div>
-                <img
-                  src="./images/bgNonSelected.png"
-                  className="cursor-pointer"
-                  alt=""
-                />
-              </div>
-              <div className="relative md:w-64 sm:w-40 w-24">
-                <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
-                  <h2 className="relative  sm:text-xl text-sm text-white">
-                    EG COMICS
-                  </h2>
-                </div>
-                <img
-                  src="./images/bgNonSelected.png"
-                  className="cursor-pointer"
-                  alt=""
-                />
-              </div>
+              <DropdownShop>
+                <>
+                  {" "}
+                  <div className="relative sm:w-64 w-40">
+                    <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
+                      <h2 className="relative  sm:text-xl text-md text-white">
+                        NFT PACKS
+                      </h2>
+                    </div>
+                    <img
+                      src="./images/bgGold.png"
+                      className="cursor-pointer"
+                      alt=""
+                    />
+                  </div>
+                  <div className="relative sm:w-64 w-40">
+                    <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
+                      <h2 className="relative  sm:text-xl text-md text-white">
+                        AVATAR CARDS
+                      </h2>
+                    </div>
+                    <img
+                      src="./images/bgNonSelected.png"
+                      className="cursor-pointer"
+                      alt=""
+                    />
+                  </div>
+                  <div className="relative sm:w-64 w-40">
+                    <div className="absolute flex shrink-0 items-center justify-center w-full h-full">
+                      <h2 className="relative  sm:text-xl text-md text-white">
+                        EG COMICS
+                      </h2>
+                    </div>
+                    <img
+                      src="./images/bgNonSelected.png"
+                      className="cursor-pointer"
+                      alt=""
+                    />
+                  </div>
+                </>
+              </DropdownShop>
               {/* </Link> */}
               <div
                 className="p-4 bg-overlay lg:flex hidden items-center justify-center text-white cursor-pointer z-10 relative"
@@ -446,32 +395,38 @@ const Shop = () => {
               </div>
             </div>
           </div>
-          <div className="w-4/5 lg:px-0 px-10 flex lg:flex-row flex-col gap-3 pt-10">
-            <div className="relative w-full flex md:flex-row flex-col md:items-start items-center bgPacksShop lg:w-[50%]">
+          <div className="2xl:w-4/5 w-full 2xl:px-0 xl:px-16 lg:px-10 px-8 flex xl:flex-row xl:items-start xl:justify-start flex-col items-center justify-center xl:gap-10 gap-8 pt-10">
+            <div className="relative w-full flex md:flex-row flex-col md:items-start items-center xl:w-[50%]">
               <div
                 className={clsx(
-                  "flex flex-col items-center justify-center mx-4 w-full gap-2 border border-white p-4 pt-2",
+                  "flex flex-col items-center justify-center w-full gap-2 border border-white p-4 pt-2",
                 )}
               >
                 {sales?.map((sale) => {
-                  return <SaleButton sale={sale} />;
+                  return (
+                    <SaleButton
+                      saleSelected={saleToShow?.name}
+                      sale={sale}
+                      setSale={setSale}
+                    />
+                  );
                 })}
               </div>
             </div>
-            <div className="relative w-full flex md:flex-row flex-col md:items-start items-center bgPacksShop lg:w-[50%]">
+            <div className="relative w-full flex md:flex-row flex-col md:items-start items-center xl:w-[50%]">
               <div className={clsx("flex w-full")}>
                 <ShopElement
-                  sale={sales[0]}
+                  sale={saleToShow}
                   counters={counters}
                   setCounters={setCounters}
-                  index={0}
+                  index={saleToShow.index}
                 />
               </div>
             </div>
           </div>
           <div className="sm:block hidden pt-56 w-full"></div>
           <div
-            className="fixed bottom-4 right-4 p-4 rounded-full bg-overlay lg:hidden flex items-center justify-center hover:bg-primary  text-white cursor-pointer z-10"
+            className="fixed bottom-4 right-4 p-2 py-1 rounded-full bg-yellow-600 lg:hidden flex items-center justify-center hover:bg-primary  text-white cursor-pointer z-10"
             onClick={() => {
               show();
             }}
@@ -479,8 +434,8 @@ const Shop = () => {
             <div className="relative flex items-center justify-center p-2">
               {cartShop.length > 0 && (
                 <p
-                  className="px-1 rounded-full flex items-center justify-center absolute top-2 left-2 bg-primary w-2 h-2"
-                  style={{ fontSize: "10px" }}
+                  className="px-1 rounded-full flex items-center justify-center absolute top-2 left-2 bg-primary"
+                  style={{ fontSize: "14px" }}
                 >
                   {cartShop
                     .map((item) => parseInt(item.quantity))
@@ -496,14 +451,42 @@ const Shop = () => {
   );
 };
 
-const SaleButton = ({ sale }) => {
+const SaleButton = ({ sale, saleSelected, setSale }) => {
   return (
     <button
       className={clsx(
-        "border-b border-white py-2 px-4 w-full text-white font-[500] text-left",
+        "border-b border-white w-full relative flex justify-between items-center",
       )}
+      onClick={() => {
+        setSale(sale);
+      }}
     >
-      {sale?.name}
+      <img
+        src="/images/shop/selected_pack_effect.png"
+        className={clsx("w-full absolute h-full top-0", {
+          hidden: sale.name != saleSelected,
+        })}
+        alt=""
+      />
+      <p
+        className={clsx(
+          { "md:hidden !text-[#F1E298]": sale.name === saleSelected },
+          "py-2 px-5 md:text-xl sm:text-lg text-[14px] text-white text-left RingBearer lowercase",
+        )}
+      >
+        {sale?.nameList}
+      </p>
+      <img
+        src={sale?.imageList}
+        className={clsx(
+          { hidden: sale.name !== saleSelected },
+          "h-[35px] py-2 px-4 relative md:flex hidden",
+        )}
+        alt={sale?.nameList}
+      />
+      <p className="py-2 px-4 text-white text-left sm:text-md text-[12px]">
+        {sale?.currentPrice}
+      </p>
     </button>
   );
 };
@@ -517,8 +500,8 @@ const ShopElement = ({ sale, counters, setCounters, index }) => {
   const { cartShop } = useSelector((state: any) => state.layout);
 
   return (
-    <div className="relative flex md:flex-row flex-col border border-white w-full p-3">
-      <div className="flex flex-col items-center justify-center relative h-full py-6 px-4 shadow-white w-2/5">
+    <div className="relative flex sm:flex-row flex-col border border-white w-full p-3">
+      <div className="flex flex-col items-center justify-center relative h-full py-6 px-4 shadow-white sm:w-2/5 w-full">
         <img
           src="./images/box_pack.png"
           className="absolute w-full h-full"
@@ -544,7 +527,7 @@ const ShopElement = ({ sale, counters, setCounters, index }) => {
           </h2>
         </div>
       </div>
-      <div className="flex flex-col items-center gap-1 p-4 w-3/5">
+      <div className="flex flex-col items-center gap-1 p-4 sm:w-3/5 w-full">
         <div className="w-full flex flex-col">
           <h2 className="text-primary-disabled text-sm font-[500] w-full">
             ELEMENTAL CONFLICT
@@ -638,72 +621,85 @@ const ShopElement = ({ sale, counters, setCounters, index }) => {
           </div>
         </div>
         <div className="flex w-full gap-2 relative items-start">
-          <h2 className="Poppins uppercase text-3xl font-[600] text-center text-primary-disabled relative">
-            $25
-            <img
-              src="/images/shop/line_text.png"
-              className="h-full absolute top-0 "
-              alt=""
-            />
-          </h2>
+          {sale?.previousPrice && (
+            <h2 className="Poppins uppercase text-3xl font-[600] text-center text-primary-disabled relative">
+              {sale?.previousPrice}
+              <img
+                src="/images/shop/line_text.png"
+                className="h-full absolute top-0 "
+                alt=""
+              />
+            </h2>
+          )}
           <h2 className="Poppins uppercase text-3xl font-[600] text-center text-white relative">
-            $4.99
+            {sale?.currentPrice}
           </h2>
-          <div className="flex items-center justify-center relative px-2 ">
-            <img
-              src="/images/shop/bg-off.png"
-              className="absolute h-full rounded-lg top-0 shadow-white"
-              alt=""
-            />
-            <p className="Poppins uppercase text-md text-center text-green-button relative font-[500] h-6">
-              80% off
-            </p>
-          </div>
+          {sale.percentageOff && (
+            <div className="flex items-center justify-center relative px-2 ">
+              <img
+                src="/images/shop/bg-off.png"
+                className="absolute h-full rounded-lg top-0 shadow-white"
+                alt=""
+              />
+              <p className="Poppins uppercase text-md text-center text-green-button relative font-[500] h-6">
+                {sale?.percentageOff}
+              </p>
+            </div>
+          )}
         </div>
-        <div
-          className="text-xl text-white cursor-pointer"
-          onClick={() => {
-            if (account) {
-              if (
-                cartShop
-                  .map((item) => {
-                    return item.id;
-                  })
-                  .includes(sale?.id)
-              ) {
-                dispatch(
-                  editCartShop({
-                    item: {
+        <div className="w-full">
+          <div
+            className="text-xl cursor-pointer relative px-6 py-1 flex items-center justify-center w-fit"
+            onClick={() => {
+              if (account) {
+                if (
+                  cartShop
+                    .map((item) => {
+                      return item.id;
+                    })
+                    .includes(sale?.id)
+                ) {
+                  dispatch(
+                    editCartShop({
+                      item: {
+                        ...sale,
+                        quantity: counters[index],
+                      },
+                      id: cartShop
+                        .map((item) => {
+                          return item.id;
+                        })
+                        .indexOf(sale.id),
+                    }),
+                  );
+                  toast.success(
+                    "Your item has been edited successfully to the cart",
+                  );
+                } else {
+                  dispatch(
+                    addCartShop({
                       ...sale,
                       quantity: counters[index],
-                    },
-                    id: cartShop
-                      .map((item) => {
-                        return item.id;
-                      })
-                      .indexOf(sale.id),
-                  }),
-                );
-                toast.success(
-                  "Your item has been edited successfully to the cart",
-                );
+                    }),
+                  );
+                  toast.success(
+                    "Your item has been added successfully to the cart",
+                  );
+                }
               } else {
-                dispatch(
-                  addCartShop({
-                    ...sale,
-                    quantity: counters[index],
-                  }),
-                );
-                toast.success(
-                  "Your item has been added successfully to the cart",
-                );
+                router.push("/login");
               }
-            } else {
-              router.push("/login");
-            }
-          }}
-        >
-          ADD
+            }}
+          >
+            <img
+              src="/images/shop/button_shop.svg"
+              className="h-full absolute top-0"
+              alt=""
+            />
+            <h2 className="RingBearer text-black relative font-black">
+              {account ? "add to cart" : "login to buy"}
+            </h2>
+          </div>
         </div>
       </div>
     </div>

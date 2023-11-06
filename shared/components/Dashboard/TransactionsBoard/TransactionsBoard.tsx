@@ -10,7 +10,7 @@ import {
 import Web3 from "web3";
 import { getAddressesMatic, getContractWebSocket } from "@shared/web3";
 import contracts from "@shared/contracts";
-import { Dropdown } from "@shared/components/common/dropdown/dropdown";
+import { Dropdown } from "@shared/components/common/dropdowns/dropdown/dropdown";
 import { nFormatter } from "@shared/components/common/specialFields/SpecialFields";
 
 const navItems = [

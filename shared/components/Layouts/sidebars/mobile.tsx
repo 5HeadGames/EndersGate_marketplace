@@ -48,7 +48,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
         <Dialog
           as="div"
           static
-          className="fixed h-[calc(100vh-56px)] top-[56px] w-screen flex z-40 md:hidden bg-overlay"
+          className="fixed h-[calc(100vh-40px)] top-[40px] w-screen flex z-40 lg:hidden bg-overlay"
           open={sidebarOpen}
           onClose={setSet as any}
           initialFocus={initialFocus}

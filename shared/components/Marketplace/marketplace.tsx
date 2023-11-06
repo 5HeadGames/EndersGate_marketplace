@@ -9,7 +9,7 @@ import {
 import { useRouter } from "next/router";
 import NftCard from "shared/components/Marketplace/itemCard";
 import FiltersBoard from "./filters/filters";
-import { DropdownActions } from "../common/dropdownActions/dropdownActions";
+import { DropdownActions } from "../common/dropdowns/dropdownActions/dropdownActions";
 import clsx from "clsx";
 import { Typography } from "../common/typography";
 import { getAddressesMatic, isPack } from "@shared/web3";

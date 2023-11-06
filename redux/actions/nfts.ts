@@ -121,7 +121,7 @@ export const onLoadSales = createAsyncThunk(
     try {
       for (const element of blockchains) {
         console.log(element);
-        const blockchain = element;
+        const blockchain: any = element;
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
 
@@ -319,7 +319,7 @@ export const onLoadComics = createAsyncThunk(
       let comicsCurrentSupply = 0;
 
       for (const element of blockchains) {
-        const blockchain = element;
+        const blockchain: any = element;
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
 

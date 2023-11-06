@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { DropdownCart } from "../common/dropdownCart/dropdownCart";
+import { DropdownCart } from "../common/dropdowns/dropdownCart/dropdownCart";
 import { useAppDispatch } from "redux/store";
 import { rentBatchERC1155, rentBatchERC1155Native } from "redux/actions";
 import { removeFromCart, removeFromCartRent } from "@redux/actions";

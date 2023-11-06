@@ -29,11 +29,7 @@ import Styles from "../NFTDetail/styles.module.scss";
 import clsx from "clsx";
 import Tilt from "react-parallax-tilt";
 import { AddressText } from "../common/specialFields/SpecialFields";
-import {
-  CHAINS,
-  CHAIN_IDS_BY_NAME,
-  NATIVE_CURRENCY_BY_ID,
-} from "../../utils/chains";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { useUser } from "@shared/context/useUser";
@@ -218,9 +214,8 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                           <label className="text-primary font-bold whitespace-nowrap">
                             Price per NFT (
                             {getNativeBlockchain(blockchain)
-                              ? NATIVE_CURRENCY_BY_ID[
-                                  CHAIN_IDS_BY_NAME[blockchain]
-                                ]?.symbol
+                              ? CHAINS[CHAIN_IDS_BY_NAME[blockchain]]
+                                  ?.nativeCurrency.symbol
                               : "USD"}
                             )
                           </label>

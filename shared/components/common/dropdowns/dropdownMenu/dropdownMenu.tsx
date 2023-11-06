@@ -2,9 +2,7 @@ import * as React from "react";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import clsx from "clsx";
-import Link from "next/link";
-import { Typography } from "../typography";
-import Styles from "./styles.module.scss";
+import { Typography } from "../../typography";
 export type navElementsAuth = {
   navElementsLinks: any[];
   className?: string;
@@ -28,7 +26,7 @@ export const DropdownMenu: React.FC<
                 <div
                   className={clsx(
                     { "opacity-50 text-primary": !open },
-                    "flex items-center  gap-2"
+                    "flex items-center  gap-2",
                   )}
                 >
                   <div className="flex items-center text-2xl">{icon}</div>
@@ -55,7 +53,7 @@ export const DropdownMenu: React.FC<
                         href={item.externalLink}
                         onClick={item?.onClick}
                         className={clsx(
-                          "flex cursor-pointer items-start gap-x-2 px-4 py-4 f-14 text-normal text-dark-1 bg-overlay rounded-md"
+                          "flex cursor-pointer items-start gap-x-2 px-4 py-4 f-14 text-normal text-dark-1 bg-overlay rounded-md",
                         )}
                       >
                         <div className="p-2 degradated rounded-md md:flex hidden text-white text-2xl">

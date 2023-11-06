@@ -7,7 +7,7 @@ import NFTCard from "../Marketplace/itemCard";
 import Link from "next/link";
 import { Icons } from "@shared/const/Icons";
 import { convertArrayCards } from "../common/convertCards";
-import { Dropdown } from "../common/dropdown/dropdown";
+import { Dropdown } from "../common/dropdowns/dropdown/dropdown";
 import { Newsletter } from "../common/footerComponents/newsletter";
 import { JoinTheCommunity } from "../common/footerComponents/joinTheCommunity";
 import { GetStarted } from "../common/footerComponents/getStarted";

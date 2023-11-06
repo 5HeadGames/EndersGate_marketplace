@@ -2,15 +2,14 @@ import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import { DotsHorizontalIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
-import { Typography } from "../typography";
+import { Typography } from "../../typography";
 import { Icons } from "@shared/const/Icons";
 import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 
-export const Dropdown: React.FC<any> = ({
-  classTitle,
+export const DropdownActions: React.FC<any> = ({
   title,
-  children,
-  notification,
+  actions,
+  className,
 }) => {
   return (
     <div>
@@ -19,25 +18,17 @@ export const Dropdown: React.FC<any> = ({
           return (
             <>
               <div>
-                <Menu.Button className="inline-flex justify-center w-full font-medium bg-transparent focus:outline-none">
+                <Menu.Button className="inline-flex justify-center w-full font-normal bg-transparent focus:outline-none">
                   <div
                     className={clsx(
-                      "flex justify-center items-center cursor-pointer rounded-md relative",
-                      { "!opacity-100": notification },
-                      classTitle,
+                      className,
+                      "flex justify-center items-center cursor-pointer rounded-md border border-overlay-border bg-overlay-2 p-3 text-red-primary hover:text-orange-500",
                     )}
                   >
                     <Typography
                       type="subTitle"
-                      className="mr-1 whitespace-nowrap relative"
+                      className="mr-2 text-lg whitespace-nowrap"
                     >
-                      {notification ? (
-                        <div className="absolute top-[-8px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9.5px] bg-red-primary">
-                          {notification}
-                        </div>
-                      ) : (
-                        ""
-                      )}
                       {title}
                     </Typography>
                     {open ? <CaretUpOutlined /> : <CaretDownOutlined />}
@@ -54,7 +45,30 @@ export const Dropdown: React.FC<any> = ({
                 leaveTo="transform opacity-0 scale-95"
               >
                 <Menu.Items className="absolute top-0 right-3 z-20 md:mt-7 origin-top-right bg-overlay divide-y shadow-lg rounded-[6px] focus:outline-none">
-                  <div>{children}</div>
+                  <div className="py-2">
+                    {actions.map((item: any, i: number) => {
+                      // const active = router.asPath === subItem.href;
+                      return (
+                        <Menu.Item key={`item-${i}`}>
+                          {() => (
+                            <div
+                              className={clsx(
+                                "flex justify-start items-center py-[10px] px-3 text-primary hover:text-orange-500",
+                                "whitespace-nowrap",
+                              )}
+                              onClick={() => {
+                                item.onClick();
+                              }}
+                            >
+                              <button className={clsx(item.className)}>
+                                {item.label}
+                              </button>
+                            </div>
+                          )}
+                        </Menu.Item>
+                      );
+                    })}
+                  </div>
                 </Menu.Items>
               </Transition>
             </>

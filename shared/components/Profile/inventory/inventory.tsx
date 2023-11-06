@@ -8,7 +8,7 @@ import Styles from "./styles.module.scss";
 import comics from "@shared/comicsByNFTId.json";
 import { Images } from "@shared/const/Images";
 import { convertArrayCards } from "@shared/components/common/convertCards";
-import { Dropdown } from "@shared/components/common/dropdown/dropdown";
+import { Dropdown } from "@shared/components/common/dropdowns/dropdown/dropdown";
 import { XIcon } from "@heroicons/react/solid";
 import { CardInventory } from "@shared/components/Profile/inventory/cards/itemCard/index";
 import { useBlockchain } from "@shared/context/useBlockchain";

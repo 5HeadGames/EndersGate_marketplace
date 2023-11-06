@@ -2,7 +2,6 @@ import React from "react";
 import { ExclamationCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Web3 from "web3";
-
 import { useAppDispatch, useAppSelector } from "redux/store";
 import {
   sellERC1155,
@@ -26,14 +25,8 @@ import { approveERC1155 } from "@shared/web3";
 import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
 import Styles from "../styles.module.scss";
-import Tilt from "react-parallax-tilt";
 import { AddressText } from "../../common/specialFields/SpecialFields";
-import ReactCardFlip from "react-card-flip";
-import {
-  CHAINS,
-  CHAIN_IDS_BY_NAME,
-  NATIVE_CURRENCY_BY_ID,
-} from "../../../utils/chains";
+import { CHAINS, CHAIN_IDS_BY_NAME } from "../../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { useModal } from "@shared/hooks/modal";
