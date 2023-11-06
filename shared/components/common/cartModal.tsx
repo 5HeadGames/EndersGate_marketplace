@@ -96,8 +96,8 @@ export const useCartModal = () => {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <div className="inline-block align-bottom text-left rounded-20 shadow-md transform transition-all sm:align-middle  w-max sm:max-w-6xl">
-                  <div className="flex flex-col gap-4  bg-overlay p-4 rounded-xl border border-transparent-color-gray-200 relative shadow-inner mt-24">
+                <div className="inline-block align-bottom text-left rounded-20 shadow-md transform transition-all sm:align-middle w-max sm:max-w-6xl">
+                  <div className="flex flex-col gap-4 bg-overlay sm:p-4 p-2 rounded-xl border border-transparent-color-gray-200 relative shadow-inner mt-24">
                     <div className="text-white absolute top-2 right-2">
                       <XIcon
                         onClick={hide}
@@ -133,7 +133,7 @@ export const useCartModal = () => {
                             Clear all
                           </h2>
                         </div>
-                        <div className="px-4 py-2 pb-4 gap-2 flex flex-col items-center w-full">
+                        <div className="sm:px-4 px-1 py-2 pb-4 gap-2 flex flex-col items-center w-full">
                           {itemsCart.map((item: any, index: any) => {
                             return item;
                           })}

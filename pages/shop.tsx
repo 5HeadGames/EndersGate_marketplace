@@ -202,7 +202,7 @@ const Shop = () => {
       )}
       {!isLoading && (
         <div
-          className="w-full h-full relative overflow-hidden shop flex flex-col items-center"
+          className="w-full h-full relative overflow-hidden shop flex flex-col items-center pb-16"
           style={{ minHeight: "100vh" }}
         >
           <Modal
@@ -233,11 +233,11 @@ const Shop = () => {
                 <div
                   key={"pack-shop-" + item.nftId}
                   className={clsx(
-                    "py-2 flex items-center justify-between gap-8 text-white cursor-pointer w-full px-2 border border-transparent-color-gray-200 rounded-xl",
+                    "py-2 flex items-center justify-between sm:gap-8 gap-2 text-white cursor-pointer w-full px-2 border border-transparent-color-gray-200 rounded-xl",
                   )}
                 >
                   <div className="flex items-center justify-start gap-2 w-full">
-                    <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
+                    <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 sm:h-20 sm:w-20 w-16 h-16">
                       <img
                         src={packsShop[item.nftId]?.imagePack}
                         className={`absolute top-[-40%] left-[-40%] right-0 m-auto min-w-[175%]`}
@@ -245,14 +245,18 @@ const Shop = () => {
                       />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <h3 className={clsx("text-md font-[700] uppercase")}>
+                      <h3
+                        className={clsx(
+                          "sm:text-md text-sm font-[700] uppercase",
+                        )}
+                      >
                         {packsShop[item.nftId]?.name}
                       </h3>
 
                       <div className="flex gap-2 items-end">
                         <img
                           src={"icons/logo.png"}
-                          className="w-8 h-8"
+                          className="sm:w-8 sm:h-8 w-7 h-7"
                           alt=""
                         />
                         <img
@@ -267,14 +271,14 @@ const Shop = () => {
                     <div className="flex flex-col !shrink-0">
                       <h3
                         className={clsx(
-                          "text-sm font-[700] whitespace-nowrap w-24",
+                          "text-sm font-[700] whitespace-nowrap sm:w-24 w-16",
                         )}
                       >
                         Price:
                       </h3>
                       <h3
                         className={clsx(
-                          "text-sm font-[700] uppercase whitespace-nowrap w-24",
+                          "text-sm font-[700] uppercase whitespace-nowrap sm:w-24 w-16",
                         )}
                       >
                         {formatPrice(item.price, blockchain)}
@@ -318,9 +322,9 @@ const Shop = () => {
             className="w-full h-full relative pt-12"
             alt="bg-top"
           />
-          <div className="Poppins relative border-y-4 border-[#B8902E] Poppins text-white text-5xl text-center font-[600] py-12 w-full">
+          <h1 className="Poppins relative border-y-4 border-[#B8902E] Poppins text-white sm:text-5xl text-4xl text-center font-[600] py-12 w-full">
             CARD SHOP
-          </div>
+          </h1>
 
           <div className="flex xl:flex-row flex-col xl:justify-between xl:items-end items-center relative w-full pt-6">
             <div className="flex w-full items-center justify-center gap-2">
@@ -426,16 +430,16 @@ const Shop = () => {
           </div>
           <div className="sm:block hidden pt-56 w-full"></div>
           <div
-            className="fixed bottom-4 right-4 p-2 py-1 rounded-full bg-yellow-600 lg:hidden flex items-center justify-center hover:bg-primary  text-white cursor-pointer z-10"
+            className="fixed bottom-4 right-4 p-2 py-1 rounded-full bg-overlay lg:hidden flex items-center justify-center hover:bg-primary  text-white cursor-pointer z-10"
             onClick={() => {
               show();
             }}
           >
-            <div className="relative flex items-center justify-center p-2">
+            <div className="relative flex items-center justify-center p-3">
               {cartShop.length > 0 && (
                 <p
-                  className="px-1 rounded-full flex items-center justify-center absolute top-2 left-2 bg-primary"
-                  style={{ fontSize: "14px" }}
+                  className="px-2 py-0.5 rounded-full flex items-center justify-center absolute top-0 left-0 bg-yellow-600 text-white font-bold"
+                  style={{ fontSize: "11px" }}
                 >
                   {cartShop
                     .map((item) => parseInt(item.quantity))
