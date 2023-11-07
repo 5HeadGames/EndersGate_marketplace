@@ -24,6 +24,7 @@ import {
   getAddressesMatic,
   getContractCustom,
   getNativeBlockchain,
+  onlyAcceptsERC20,
 } from "@shared/web3";
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
@@ -104,7 +105,11 @@ export const CardInventory = (props) => {
           break;
         case "comic":
           const ComicsContract = getContractCustom(
-            getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+            getNativeBlockchain(blockchain)
+              ? "ComicsNative"
+              : onlyAcceptsERC20(blockchain)
+              ? "ComicsOnlyMultiToken"
+              : "Comics",
             comics,
             provider,
           );
