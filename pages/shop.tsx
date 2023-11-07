@@ -488,7 +488,7 @@ const SaleButton = ({ sale, saleSelected, setSale }) => {
         )}
         alt={sale?.nameList}
       />
-      <p className="py-2 px-4 text-white text-left sm:text-md text-[12px]">
+      <p className="py-2 px-4 text-white text-left sm:text-lg text-[12px]">
         {sale?.currentPrice}
       </p>
     </button>
