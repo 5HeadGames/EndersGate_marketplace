@@ -240,12 +240,7 @@ export default function AppLayout({ children }) {
   ];
 
   return (
-    <div
-      style={{
-        height: "100vh",
-      }}
-      className="overflow-x-hidden"
-    >
+    <div className="overflow-x-hidden">
       <nav
         className={clsx(
           "fixed top-0 z-[100]",

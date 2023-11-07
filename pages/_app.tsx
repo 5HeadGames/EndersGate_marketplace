@@ -16,6 +16,7 @@ import { initializeApp } from "firebase/app";
 import { BlockchainContextProvider } from "@shared/context/useBlockchain";
 import "swiper/css";
 import { UserContextProvider } from "@shared/context/useUser";
+import ScrollToTop from "@shared/components/common/scrollToTop";
 
 const { ToastProvider } = require("react-toast-notifications"); //it throws ts error
 
@@ -68,6 +69,7 @@ const MyApp = ({ Component, pageProps }: AppProps & { Component: any }) => {
               <ToastProvider autoDismiss placement="bottom-center">
                 <Web3Provider>
                   <Layout>
+                    <ScrollToTop />
                     <Component {...pageProps} />
                     <Toaster containerClassName="!z-[100000000]" />
                   </Layout>

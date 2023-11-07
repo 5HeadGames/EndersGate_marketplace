@@ -93,8 +93,8 @@ const Login = () => {
   }, [account, isLogged]);
 
   return (
-    <div className="max-w-[100vw] h-screen overflow-hidden">
-      <div className="max-w-[100vw] overflow-hidden h-[100vh] w-full flex flex-col items-center justify-center gap-10 py-20">
+    <div className="min-h-screen">
+      <div className="overflow-hidden min-h-[100vh] w-full flex flex-col items-center justify-center gap-10 py-20">
         <div className="absolute h-full overflow-hidden w-full flex items-center justify-center">
           <img
             src="/images/community.svg"
