@@ -544,8 +544,7 @@ const ShopElement = ({ sale, counters, setCounters, index }) => {
           </h1>
           <img src="/images/shop/line2.png" className="w-full mb-4" alt="" />
           <p className="Poppins text-primary-disabled text-sm font-[400] relative">
-            This pack contains 5 Cards, Guaranteed 1 Wood, 1 Action Card, 1
-            Reaction Card, and a 33.33% chance to receive a Stone Rarity Card.
+            {sale?.description}
           </p>
         </div>
 
