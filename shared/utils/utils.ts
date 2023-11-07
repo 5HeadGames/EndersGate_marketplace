@@ -27,7 +27,7 @@ export const packsShop = [
     currentPrice: "$9.99",
     percentageOff: "80% OFF",
     description:
-      "This pack contains 5 Cards, Guaranteed 1 Wood, 1 Action Card, 1 Reaction Card, and a 33.33% chance to receive a Stone Rarity Card.",
+      "This pack contains 5 cards, with guaranteed Stone Rarity Guardians, Action Cards, and Reaction Cards. Plus, there's a 33.33% chance of receiving an Iron or Gold Rarity Guardian Card.",
     index: 1,
   },
   {
@@ -38,7 +38,7 @@ export const packsShop = [
     color: "#7FBADD",
     currentPrice: "$99.99",
     description:
-      "This pack contains 5 Cards, Guaranteed 1 Wood, 1 Action Card, 1 Reaction Card, and a 33.33% chance to receive a Stone Rarity Card.",
+      "This pack contains 5 cards with guaranteed Gold Rarity Guardians, Action Cards, and Reaction Cards. There's a 33.33% chance of receiving a Stone or Iron Rarity Guardian Card and a 20% chance of getting a Legendary Rarity Guardian Card.",
     index: 2,
   },
   {
@@ -49,7 +49,7 @@ export const packsShop = [
     color: "#8AE98C",
     currentPrice: "$199.99",
     description:
-      "This pack contains 5 Cards, Guaranteed 1 Wood, 1 Action Card, 1 Reaction Card, and a 33.33% chance to receive a Stone Rarity Card.",
+      "This pack contains 5 cards with guaranteed Legendary Rarity Guardians, Gold Cards, and Action Cards. Additionally, you have a 30% chance of receiving a Reaction Card, a 20% chance of obtaining a Stone Rarity Guardian Card, and another 30% chance of getting an Iron Rarity Guardian Card.",
     index: 3,
   },
 ];
