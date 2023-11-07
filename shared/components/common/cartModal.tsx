@@ -9,7 +9,11 @@ import { Dialog, Transition } from "@headlessui/react";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../utils/chains";
 import { Icons } from "@shared/const/Icons";
-import { checkFirebaseInfluencerCode, getNativeBlockchain } from "@shared/web3";
+import {
+  checkFirebaseInfluencerCode,
+  getNativeBlockchain,
+  hasAggregatorFeed,
+} from "@shared/web3";
 import AccordionMenu from "./Accordion";
 import { Input } from "./form/input";
 import { Button } from "./button";
@@ -44,15 +48,9 @@ export const useCartModal = () => {
       providerName,
       blockchain,
       isShow,
-      register,
       handleSubmit,
       errors,
-      setValidCode,
-      getValues,
       isValidCode,
-      router,
-      setError,
-      clearErrors,
     }) => {
       return (
         <Transition.Root show={isShow} as={Fragment}>
@@ -144,7 +142,7 @@ export const useCartModal = () => {
                               Chose currency
                             </div>
                             <div className="flex  gap-4 pb-4 w-full flex-wrap items-center justify-center shadow-inner">
-                              {tokensAllowed.map((item: any, index: any) => {
+                              {tokensAllowed?.map((item: any, index: any) => {
                                 return (
                                   <div
                                     className={clsx(
@@ -201,7 +199,7 @@ export const useCartModal = () => {
                                 className="text-sm font-[700] text-white flex gap-1 items-center justify-center"
                                 style={{ fontSize: "14px" }}
                               >
-                                {!getNativeBlockchain(blockchain) ? (
+                                {hasAggregatorFeed(blockchain) ? (
                                   <>
                                     {priceMatic}{" "}
                                     {
@@ -281,7 +279,7 @@ export const useCartModal = () => {
                         ) : (
                           ""
                         )}
-                        {router && router.asPath == "/shop" && (
+                        {/* {router && router.asPath == "/shop" && (
                           <>
                             <AccordionMenu title="Promo Code / Referral">
                               <div className="flex items-start justify-center gap-4 w-full px-14 relative">
@@ -355,7 +353,7 @@ export const useCartModal = () => {
                               </div>
                             </AccordionMenu>
                           </>
-                        )}
+                        )} */}
                         <div className="w-full flex items-center justify-center py-2">
                           <Button
                             type="submit"
@@ -368,22 +366,21 @@ export const useCartModal = () => {
                             Complete Purchase
                           </Button>
                         </div>
-                        {providerName == "magic" &&
-                          !getNativeBlockchain(blockchain) && (
-                            <div
-                              className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
-                              onClick={() => {
-                                showWallet();
-                              }}
-                            >
-                              <img
-                                src="icons/wallet.png"
-                                className="w-8 pb-2"
-                                alt=""
-                              />{" "}
-                              Add funds to your wallet
-                            </div>
-                          )}
+                        {providerName == "magic" && blockchain == "matic" && (
+                          <div
+                            className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
+                            onClick={() => {
+                              showWallet();
+                            }}
+                          >
+                            <img
+                              src="icons/wallet.png"
+                              className="w-8 pb-2"
+                              alt=""
+                            />{" "}
+                            Add funds to your wallet
+                          </div>
+                        )}
                       </form>
                     ) : (
                       <div className="h-full flex flex-col items-center justify-center text-white font-bold gap-4 text-md text-center w-64 p-4 border border-transparent-color-gray-200 rounded-xl">

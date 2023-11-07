@@ -6,7 +6,13 @@ import ComicButtons from "./ComicSliders/ComicButtons";
 import { Flex } from "@chakra-ui/react";
 import { ShopOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
-import { getAddresses, getContract, getNativeBlockchain } from "@shared/web3";
+import {
+  onlyAcceptsERC20,
+  getAddresses,
+  getContract,
+  getNativeBlockchain,
+  hasAggregatorFeed,
+} from "@shared/web3";
 import { useModalAddressUser } from "./Modals/ModalAdddressUser";
 import { Modals } from "./Modals";
 import { useCartComicsModal } from "./Modals/ModalCartComics";
@@ -58,7 +64,11 @@ function Comics() {
 
   const getComicsNFTs = async () => {
     const comics = getContract(
-      getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+      getNativeBlockchain(blockchain)
+        ? "ComicsNative"
+        : onlyAcceptsERC20(blockchain)
+        ? "ComicsOnlyMultiToken"
+        : "Comics",
       comicsAddress,
       blockchain,
     );
@@ -79,14 +89,18 @@ function Comics() {
 
   const getPrice = async () => {
     const comics = getContract(
-      getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+      getNativeBlockchain(blockchain)
+        ? "ComicsNative"
+        : onlyAcceptsERC20(blockchain)
+        ? "ComicsOnlyMultiToken"
+        : "Comics",
       comicsAddress,
       blockchain,
     );
     const price = await comics.methods
       .comics(await comics.methods.comicIdCounter().call())
       .call();
-    if (getNativeBlockchain(blockchain)) {
+    if (hasAggregatorFeed(blockchain)) {
       setPrice(price.price);
     } else {
       const Aggregator = getContract("Aggregator", NATIVEUSD, blockchain);
@@ -98,7 +112,7 @@ function Comics() {
 
   const getPriceNative = async () => {
     try {
-      if (!getNativeBlockchain(blockchain)) {
+      if (!getNativeBlockchain(blockchain) && hasAggregatorFeed(blockchain)) {
         const Aggregator = getContract("Aggregator", NATIVEUSD, blockchain);
         const priceNative = await Aggregator.methods.latestAnswer().call();
         const price =

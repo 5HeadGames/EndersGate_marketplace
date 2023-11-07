@@ -140,6 +140,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
             duration: sellNFTData.duration.toString(),
             provider: provider,
             // user: user,
+            blockchain,
           }),
         );
       }

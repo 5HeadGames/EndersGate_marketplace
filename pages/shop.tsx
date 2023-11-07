@@ -12,6 +12,7 @@ import {
   getTokensAllowed,
   sendFirebaseTx,
   switchChain,
+  hasAggregatorFeed,
 } from "@shared/web3";
 import {
   addCartShop,
@@ -100,16 +101,21 @@ const Shop = () => {
 
   const buyPacks = async (data) => {
     const { influencer_code } = data;
+    console.log("a?");
+
     try {
       const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+      console.log(changed);
       if (!changed) return;
-      if (!isValidCode) return;
+      if (influencer_code && !isValidCode) return;
       updateBlockchain(blockchain);
 
       if (tokenSelected === "") {
         addToast("Please Select a Payment Method", { appearance: "error" });
         return;
       }
+
+      console.log("a");
       let tx: any = "";
       if (!getNativeBlockchain(blockchain)) {
         tx = await dispatch(
@@ -135,8 +141,10 @@ const Shop = () => {
         );
       }
       if (tx.payload.err) throw Error(tx.payload.err.message);
-
-      sendFirebaseTx({ tx: tx.payload, influencer_code });
+      if (influencer_code) {
+        sendFirebaseTx({ tx: tx.payload, influencer_code });
+        setValue("influencer_code", "");
+      }
       dispatch(onGetAssets({ address: account, blockchain }));
       updateSales({
         setIsLoading,
@@ -147,7 +155,6 @@ const Shop = () => {
       });
       hide();
       dispatch(removeAll());
-      setValue("influencer_code", "");
     } catch (error) {
       console.log(error);
     }
@@ -177,7 +184,11 @@ const Shop = () => {
   }, [sales]);
 
   React.useEffect(() => {
-    if (cartShop.length > 0 && !getNativeBlockchain(blockchain)) {
+    if (
+      cartShop.length > 0 &&
+      !getNativeBlockchain(blockchain) &&
+      hasAggregatorFeed(blockchain)
+    ) {
       getPriceMatic();
     } else {
       setPriceNative("0");
@@ -217,17 +228,10 @@ const Shop = () => {
             tokenSelected={tokenSelected}
             priceMatic={priceNative}
             buy={buyPacks}
-            isMatic={!getNativeBlockchain(blockchain)}
             providerName={providerName}
-            router={router}
-            register={register}
             handleSubmit={handleSubmit}
             errors={errors}
             isValidCode={isValidCode}
-            getValues={getValues}
-            setValidCode={setValidCode}
-            setError={setError}
-            clearErrors={clearErrors}
             itemsCart={cartShop.map((item, index) => {
               return (
                 <div

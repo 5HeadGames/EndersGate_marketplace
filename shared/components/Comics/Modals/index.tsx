@@ -14,6 +14,8 @@ import {
   getNativeBlockchain,
   getTokensAllowed,
   getContractCustom,
+  onlyAcceptsERC20,
+  hasAggregatorFeed,
 } from "@shared/web3";
 import { findSum } from "../../common/specialFields/SpecialFields";
 import { getDatabase, ref, set } from "firebase/database";
@@ -60,7 +62,11 @@ export const Modals = ({
 
   const getComicsNFTs = async () => {
     const comics = getContract(
-      getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+      getNativeBlockchain(blockchain)
+        ? "ComicsNative"
+        : onlyAcceptsERC20(blockchain)
+        ? "ComicsOnlyMultiToken"
+        : "Comics",
       comicsAddress,
       blockchain,
     );
@@ -85,7 +91,11 @@ export const Modals = ({
     try {
       updateBlockchain(blockchain);
       const comics = getContractCustom(
-        getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+        getNativeBlockchain(blockchain)
+          ? "ComicsNative"
+          : onlyAcceptsERC20(blockchain)
+          ? "ComicsOnlyMultiToken"
+          : "Comics",
         comicsAddress,
         provider,
       );
@@ -102,7 +112,10 @@ export const Modals = ({
         const ERC20 = getContractCustom("ERC20", token, provider);
         const addressesAllowed = getTokensAllowed(blockchain);
         if (tokenSelected === "") return;
-        if (tokenSelected === addressesAllowed[0]?.address) {
+        if (
+          tokenSelected === addressesAllowed[0]?.address &&
+          hasAggregatorFeed(blockchain)
+        ) {
           const Aggregator = getContract("Aggregator", MATICUSD, blockchain);
 
           const priceMATIC = await Aggregator.methods.latestAnswer().call();

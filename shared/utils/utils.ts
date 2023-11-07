@@ -1,5 +1,9 @@
 import { parseSaleNative, parseSaleTokens } from "@redux/actions";
-import { getContract, getNativeBlockchain } from "@shared/web3";
+import {
+  getContract,
+  getNativeBlockchain,
+  onlyAcceptsERC20,
+} from "@shared/web3";
 import { formatPrice } from "./formatPrice";
 
 /*// NFT SHOP UTILS //*/
@@ -65,7 +69,11 @@ export const updateSales = async ({
   try {
     // Use web3 to get the user's accounts.
     const shop = getContract(
-      !getNativeBlockchain(blockchain) ? "Shop" : "ShopFindora",
+      getNativeBlockchain(blockchain)
+        ? "ShopFindora"
+        : onlyAcceptsERC20(blockchain)
+        ? "ShopOnlyMultiToken"
+        : "Shop",
       shopAddress,
       blockchain,
     );

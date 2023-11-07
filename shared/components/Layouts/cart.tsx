@@ -124,6 +124,7 @@ export const Cart = ({
         tokensAllowed,
         MATICUSD,
         dispatch,
+        blockchain,
       });
     } else {
       buyNFTsNative({
@@ -178,21 +179,20 @@ export const Cart = ({
       ""
     );
 
-  const magicFundOption = providerName === "magic" &&
-    !getNativeBlockchain(blockchain) && (
-      <div className="text-[12px] text-white pt-4 font-bold">
-        Don't have crypto? Click{" "}
-        <span
-          className="text-green-button cursor-pointer"
-          onClick={() => {
-            showWallet();
-          }}
-        >
-          Here
-        </span>{" "}
-        and buy by using Magic Connect on-ramp
-      </div>
-    );
+  const magicFundOption = providerName === "magic" && blockchain == "matic" && (
+    <div className="text-[12px] text-white pt-4 font-bold">
+      Don't have crypto? Click{" "}
+      <span
+        className="text-green-button cursor-pointer"
+        onClick={() => {
+          showWallet();
+        }}
+      >
+        Here
+      </span>{" "}
+      and buy by using Magic Connect on-ramp
+    </div>
+  );
 
   const SelectDaysOfRent = cartSelected === "rents" && (
     <div className="flex gap-4 justify-between items-center md:w-1/2 w-2/3">

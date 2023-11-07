@@ -1,6 +1,6 @@
 import ClockSale from "./ClockSaleMultitoken.json";
 import ClockSaleFindora from "./ClockSaleFindora.json";
-import ShopFindora from "./ClockSaleOwnableFindora.json";
+import ClockSaleOnlyMultiToken from "./ClockSaleOnlyMultiTokens.json";
 import EndersPack from "./EndersPack.json";
 import EndersGate from "./EndersGate.json";
 import GameItems from "./GameItems.json";
@@ -9,16 +9,22 @@ import Aggregator from "./AggregatorV3.json";
 import ExchangeERC1155 from "./ExchangeERC1155.json";
 import ERC721Seadrop from "./ERC721SeaDrop.json";
 import Shop from "./ClockSaleOwnable.json";
+import ShopFindora from "./ClockSaleOwnableFindora.json";
+import ShopOnlyMultiToken from "./ClockSaleOwnableOnlyMultiTokens.json";
 import Rent from "./RentMultiTokens.json";
 import RentNative from "./RentNativeTokens.json";
+import RentOnlyMultiToken from "./EndersRentOnlyMultiTokens.json";
 import Comics from "./Comics.json";
 import ComicsNative from "./ComicsNative.json";
+import ComicsOnlyMultiToken from "./EndersComicsOnlyMultiTokens.json";
 
 const contracts = {
+  ClockSale,
   ClockSaleFindora,
+  ClockSaleOnlyMultiToken,
   Comics,
   ComicsNative,
-  ClockSale,
+  ComicsOnlyMultiToken,
   EndersGate,
   EndersPack,
   GameItems,
@@ -28,7 +34,9 @@ const contracts = {
   ERC721Seadrop,
   Shop,
   ShopFindora,
+  ShopOnlyMultiToken,
   Rent,
   RentNative,
+  RentOnlyMultiToken,
 };
 export default contracts;

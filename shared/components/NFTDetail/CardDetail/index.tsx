@@ -18,7 +18,7 @@ import {
   getAddresses,
   getContractCustom,
   getNativeBlockchain,
-  getTokensAllowedMatic,
+  getTokensAllowed,
   switchChain,
 } from "@shared/web3";
 import { Typography } from "../../common/typography";
@@ -251,10 +251,10 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
   });
 
   React.useEffect(() => {
-    setTokensSelected(getTokensAllowedMatic().map((item) => item.address));
+    setTokensSelected(getTokensAllowed(blockchain).map((item) => item.address));
   }, []);
 
-  const tokensAllowed = getTokensAllowedMatic();
+  const tokensAllowed = getTokensAllowed(blockchain);
 
   const sellNft = async () => {
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
@@ -273,12 +273,16 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
       return alert("You have to put at least one currency to accept");
     }
     try {
+      console.log("starts");
       const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+      console.log(changed);
       if (!changed) {
         throw Error(
           "An error has occurred while switching chain, please try again.",
         );
       }
+      console.log("updates blockchain");
+
       updateBlockchain(blockchain);
       const tokenId = id;
       console.log(blockchain);
@@ -289,7 +293,9 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
         provider,
       );
 
-      if (blockchain !== "matic") {
+      console.log("conditional");
+
+      if (getNativeBlockchain(blockchain)) {
         const isApprovedForAll = await endersgateInstance.methods
           .isApprovedForAll(user, marketplace)
           .call();
@@ -348,6 +354,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
             duration: sellNFTData.duration.toString(),
             provider: provider,
             // user: user,
+            blockchain,
           }),
         );
         if (!tx.payload) {
@@ -579,10 +586,10 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
   });
 
   React.useEffect(() => {
-    setTokensSelected(getTokensAllowedMatic().map((item) => item.address));
+    setTokensSelected(getTokensAllowed(blockchain).map((item) => item.address));
   }, []);
 
-  const tokensAllowed = getTokensAllowedMatic();
+  const tokensAllowed = getTokensAllowed(blockchain);
 
   const listNFTtoRent = async () => {
     if (sellNFTData.amount > NFTs.balanceCards[id].balance) {
@@ -611,7 +618,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
         provider,
       );
 
-      if (blockchain !== "matic") {
+      if (getNativeBlockchain(blockchain)) {
         const isApprovedForAll = await endersgateInstance.methods
           .isApprovedForAll(user, rent)
           .call();

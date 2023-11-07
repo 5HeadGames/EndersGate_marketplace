@@ -83,6 +83,8 @@ export const getAddresses = (blockchain) => {
       return getAddressesFindora();
     case "imx":
       return getAddressesIMX();
+    case "skl":
+      return getAddressesSkale();
     default:
       return undefined;
   }
@@ -121,12 +123,20 @@ export const getAddressesEth = () => {
     : testAddresses;
 };
 
+export const getAddressesSkale = () => {
+  const addresses = require("../../Contracts/addresses.skale.json");
+
+  return addresses;
+};
+
 export const getTokensAllowed = (blockchain) => {
   switch (blockchain) {
     case "matic":
       return getTokensAllowedMatic();
     case "eth":
       return getTokensAllowedEth();
+    case "skl":
+      return getTokensAllowedSkale();
   }
 };
 
@@ -145,6 +155,11 @@ export const getTokensAllowedEth = () => {
   return process.env.NEXT_PUBLIC_ENV === "production"
     ? addresses
     : testAddresses;
+};
+
+export const getTokensAllowedSkale = () => {
+  const addresses = require("../../Contracts/tokensAllowed.skale.json");
+  return addresses;
 };
 
 export const approveERC1155 = async ({
@@ -169,7 +184,6 @@ export const switchChain = async (network) => {
     const chainId = await (window as any).ethereum.request({
       method: "eth_chainId",
     });
-    console.log(chainId, network, "a");
     if (chainId !== network) {
       await (window as any).ethereum.request({
         method: "wallet_switchEthereumChain",
@@ -228,7 +242,11 @@ export const createEvent = ({
 export const loadSale = async function prepare({ tokenId, blockchain }: any) {
   const addresses = getAddresses(blockchain);
   const marketplace = getContract(
-    !getNativeBlockchain(blockchain) ? "ClockSale" : "ClockSaleFindora",
+    getNativeBlockchain(blockchain)
+      ? "ClockSaleFindora"
+      : onlyAcceptsERC20(blockchain)
+      ? "ClockSaleOnlyMultiToken"
+      : "ClockSale",
     addresses.marketplace,
     blockchain,
   );
@@ -253,6 +271,7 @@ export const buyNFTsMatic = async ({
   tokensAllowed,
   MATICUSD,
   dispatch,
+  blockchain,
 }) => {
   if (tokenSelected === "") {
     addToast("Please Select a Payment Method", { appearance: "error" });
@@ -284,8 +303,9 @@ export const buyNFTsMatic = async ({
     const ERC20 = getContractCustom("ERC20", token, provider);
     const addresses = getTokensAllowedMatic();
     if (
+      !onlyAcceptsERC20(blockchain) &&
       tokenSelected ===
-      addresses.filter((item) => item.name === "MATIC")[0].address
+        addresses.filter((item) => item.name === "MATIC")[0].address
     ) {
       const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
       const priceMATIC = await Aggregator.methods.latestAnswer().call();
@@ -404,6 +424,42 @@ export const getNativeBlockchain = (blockchain) => {
     case "findora":
       return true;
     case "imx":
+      return true;
+    case "skl":
+      return false;
+    default:
+      return undefined;
+  }
+};
+
+export const hasAggregatorFeed = (blockchain) => {
+  switch (blockchain) {
+    case "matic":
+      return true;
+    case "eth":
+      return true;
+    case "findora":
+      return false;
+    case "imx":
+      return false;
+    case "skl":
+      return false;
+    default:
+      return undefined;
+  }
+};
+
+export const onlyAcceptsERC20 = (blockchain) => {
+  switch (blockchain) {
+    case "matic":
+      return false;
+    case "eth":
+      return false;
+    case "findora":
+      return false;
+    case "imx":
+      return false;
+    case "skl":
       return true;
     default:
       return undefined;

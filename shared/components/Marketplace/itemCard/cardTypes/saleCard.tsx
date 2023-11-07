@@ -7,7 +7,11 @@ import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { useUser } from "@shared/context/useUser";
 import { formatPrice } from "@shared/utils/formatPrice";
-import { getNativeBlockchain, getTokensAllowedMatic } from "@shared/web3";
+import {
+  getNativeBlockchain,
+  getTokensAllowed,
+  getTokensAllowedMatic,
+} from "@shared/web3";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -40,7 +44,7 @@ export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
       }
 
       if (!getNativeBlockchain(blockchain)) {
-        let intersection = getTokensAllowedMatic();
+        let intersection = getTokensAllowed(blockchain);
         cart.map((item) => {
           intersection = intersection.filter((element) =>
             item?.tokens

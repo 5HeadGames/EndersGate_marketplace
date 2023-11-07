@@ -8,9 +8,11 @@ import {
   getContract,
   getContractCustom,
   getAddresses,
-  getAddressesFindora,
+  // getAddressesFindora,
   getNativeBlockchain,
   getTokensAllowed,
+  onlyAcceptsERC20,
+  hasAggregatorFeed,
 } from "@shared/web3";
 import cards from "../../cards.json";
 import {
@@ -125,11 +127,15 @@ export const onLoadSales = createAsyncThunk(
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
 
+        console.log(CHAIN_NAME_BY_ID[blockchain]);
+
         /* SALES */
         const marketplace = getContract(
-          CHAIN_NAME_BY_ID[blockchain] === "matic"
-            ? "ClockSale"
-            : "ClockSaleFindora",
+          getNativeBlockchain(blockchain)
+            ? "ClockSaleFindora"
+            : onlyAcceptsERC20(blockchain)
+            ? "ClockSaleOnlyMultiToken"
+            : "ClockSale",
           addresses.marketplace,
           CHAIN_NAME_BY_ID[blockchain],
         );
@@ -144,10 +150,9 @@ export const onLoadSales = createAsyncThunk(
             .call();
 
           rawSales.forEach((sale: any[], i) => {
-            const saleFormated =
-              CHAIN_NAME_BY_ID[blockchain] === "matic"
-                ? parseSaleTokens(sale)
-                : parseSaleNative(sale);
+            const saleFormated = !getNativeBlockchain(blockchain)
+              ? parseSaleTokens(sale)
+              : parseSaleNative(sale);
             allSales.push({
               saleId: i,
               blockchain: CHAIN_NAME_BY_ID[blockchain],
@@ -157,9 +162,9 @@ export const onLoadSales = createAsyncThunk(
         }
 
         /* RENTS */
-        if (CHAIN_NAME_BY_ID[blockchain] === "matic") {
+        if (!getNativeBlockchain(blockchain)) {
           const rent = getContract(
-            "Rent",
+            onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
             addresses.rent,
             CHAIN_NAME_BY_ID[blockchain],
           );
@@ -203,6 +208,8 @@ export const onLoadSales = createAsyncThunk(
           }
         }
       }
+
+      console.log("all got");
 
       /* SALES */
       const allSalesSorted = allSales
@@ -324,7 +331,11 @@ export const onLoadComics = createAsyncThunk(
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
 
         const comics = getContract(
-          getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
+          getNativeBlockchain(blockchain)
+            ? "ComicsNative"
+            : onlyAcceptsERC20(blockchain)
+            ? "ComicsOnlyMultiToken"
+            : "Comics",
           addresses.comics,
           CHAIN_NAME_BY_ID[blockchain],
         );
@@ -570,6 +581,7 @@ export const sellERC1155 = createAsyncThunk(
     tokens: string[];
     address: string;
     provider: any;
+    blockchain: string;
     // user: any;
   }) {
     const {
@@ -582,9 +594,10 @@ export const sellERC1155 = createAsyncThunk(
       tokens,
       // user,
       provider,
+      blockchain,
     } = args;
     try {
-      const { marketplace } = getAddressesMatic();
+      const { marketplace } = getAddresses(blockchain);
 
       const marketplaceContract = getContractCustom(
         "ClockSale",
@@ -717,8 +730,9 @@ export const buyFromShop = createAsyncThunk(
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addressesAllowed = getTokensAllowed(blockchain);
       if (
+        !onlyAcceptsERC20(blockchain) &&
         tokenSelected ===
-        addressesAllowed.filter((item) => item.name === "MATIC")[0].address
+          addressesAllowed.filter((item) => item.name === "MATIC")[0].address
       ) {
         const Aggregator = getContractCustom(
           "Aggregator",
@@ -856,6 +870,7 @@ export const buyERC1155 = createAsyncThunk(
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addresses = getTokensAllowed(blockchain);
       if (
+        !onlyAcceptsERC20(blockchain) &&
         token === addresses.filter((item) => item.name === "MATIC")[0].address
       ) {
         await marketplaceContract.methods
@@ -927,6 +942,7 @@ export const rentERC1155 = createAsyncThunk(
       const addresses = getTokensAllowed(blockchain);
 
       if (
+        !onlyAcceptsERC20(blockchain) &&
         token === addresses.filter((item) => item.name === "MATIC")[0].address
       ) {
         await rentContract.methods
@@ -1052,7 +1068,8 @@ export const rentBatchERC1155 = createAsyncThunk(
       const addressesAllowed = getTokensAllowed(blockchain);
       if (
         tokenSelected ===
-        addressesAllowed.filter((item) => item.name === "MATIC")[0].address
+          addressesAllowed.filter((item) => item.name === "MATIC")[0].address &&
+        hasAggregatorFeed(blockchain)
       ) {
         const Aggregator = getContractCustom(
           "Aggregator",
@@ -1281,7 +1298,11 @@ export const onCancelSale = createAsyncThunk(
 
     const { marketplace } = getAddresses(blockchain);
     const marketplaceContract = getContractCustom(
-      !getNativeBlockchain(blockchain) ? "ClockSale" : "ClockSaleFindora",
+      getNativeBlockchain(blockchain)
+        ? "ClockSaleFindora"
+        : onlyAcceptsERC20(blockchain)
+        ? "ClockSaleOnlyMultiToken"
+        : "ClockSale",
       marketplace,
       provider,
     );

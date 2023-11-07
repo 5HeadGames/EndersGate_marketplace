@@ -25,9 +25,9 @@ const IMX: any = {
 };
 
 const SKL: any = {
-  name: "Skale Token",
-  symbol: "sFUEL",
-  decimals: 18,
+  name: "USDC",
+  symbol: "USDC",
+  decimals: 6,
 };
 
 interface BasicChainInformation {
@@ -84,47 +84,30 @@ export const CHAINS: {
   //   blockExplorerUrls: ["https://gsc-mainnet.evm.findorascan.io/"],
   //   blockExplorer: "https://gsc-mainnet.evm.findorascan.io/",
   // },
-  1351057110: {
-    urls: [
-      "https://staging-v3.skalenodes.com/v1/staging-fast-active-bellatrix",
-    ],
-    name: "Inmutable X Testnet",
+  503129905: {
+    urls: ["https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird"],
+    name: "Nebula Hub",
     rpcUrls: [
-      "https://staging-v3.skalenodes.com/v1/staging-fast-active-bellatrix",
+      "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
     ],
     nativeCurrency: SKL,
     blockExplorerUrls: [
-      "https://staging-fast-active-bellatrix.explorer.staging-v3.skalenodes.com",
+      "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
     ],
     blockExplorer:
-      "https://staging-fast-active-bellatrix.explorer.staging-v3.skalenodes.com",
-    type: "mainnet",
+      "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
+    type: "both",
   },
-  1370526269: {
-    urls: [
-      "https://staging-v3.skalenodes.com/v1/staging-perfect-parallel-gacrux",
-    ],
-    name: "Skale Test Chain 1",
-    rpcUrls: [
-      "https://staging-v3.skalenodes.com/v1/staging-perfect-parallel-gacrux",
-    ],
-    nativeCurrency: IMX,
-    blockExplorerUrls: [
-      "https://staging-perfect-parallel-gacrux.explorer.staging-v3.skalenodes.com/",
-    ],
-    blockExplorer:
-      "https://staging-perfect-parallel-gacrux.explorer.staging-v3.skalenodes.com/",
-    type: "testnet",
-  },
-  13472: {
-    urls: [" https://rpc.testnet.immutable.com"],
-    name: "Inmutable X Testnet",
-    rpcUrls: [" https://rpc.testnet.immutable.com"],
-    nativeCurrency: IMX,
-    blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
-    blockExplorer: "https://explorer.testnet.immutable.com/",
-    type: "testnet",
-  },
+
+  // 13472: {
+  //   urls: [" https://rpc.testnet.immutable.com"],
+  //   name: "Inmutable X Testnet",
+  //   rpcUrls: [" https://rpc.testnet.immutable.com"],
+  //   nativeCurrency: IMX,
+  //   blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
+  //   blockExplorer: "https://explorer.testnet.immutable.com/",
+  //   type: "testnet",
+  // },
   137: {
     urls: [
       process.env.NEXT_PUBLIC_POLYGON_PROVIDER || "",
@@ -154,14 +137,18 @@ export const CHAINS: {
 
 export const MAINNET_CHAIN_IDS = Object.keys(CHAINS)
   .map((key) => {
-    return CHAINS[key].type == "mainnet" ? key : false;
+    return CHAINS[key].type == "mainnet" || CHAINS[key].type == "both"
+      ? key
+      : false;
   })
   .filter((chain) => {
     return chain;
   });
 export const TESTNET_CHAIN_IDS = Object.keys(CHAINS)
   .map((key) => {
-    return CHAINS[key].type == "testnet" ? key : false;
+    return CHAINS[key].type == "testnet" || CHAINS[key].type == "both"
+      ? key
+      : false;
   })
   .filter((chain) => {
     return chain;
@@ -172,8 +159,8 @@ export const CHAIN_IDS_BY_NAME: {
 } = {
   matic: process.env.NEXT_PUBLIC_ENV === "production" ? 137 : 80001,
   eth: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
-  imx: process.env.NEXT_PUBLIC_ENV === "production" ? 13472 : 13472,
-  skl: process.env.NEXT_PUBLIC_ENV === "production" ? 1351057110 : 1370526269,
+  imx: 13472,
+  skl: 503129905,
 };
 
 export const CHAIN_NAME_BY_ID: {
@@ -186,8 +173,7 @@ export const CHAIN_NAME_BY_ID: {
   1: "eth",
   11155111: "eth",
   13472: "imx",
-  1351057110: "skl",
-  1370526269: "skl",
+  503129905: "skl",
 };
 
 export const blockchains = [
@@ -212,7 +198,7 @@ export const blockchains = [
     image: "/images/imx.png",
   },
   {
-    name: "SKALE",
+    name: "NEBULA HUB",
     value: "skl",
     image: "/images/skl.svg",
   },

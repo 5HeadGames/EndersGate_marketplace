@@ -319,6 +319,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
             duration: sellNFTData.duration.toString(),
             provider: provider,
             // user: user,
+            blockchain,
           }),
         );
         if (!tx.payload) {
