@@ -84,20 +84,20 @@ export const CHAINS: {
   //   blockExplorerUrls: ["https://gsc-mainnet.evm.findorascan.io/"],
   //   blockExplorer: "https://gsc-mainnet.evm.findorascan.io/",
   // },
-  503129905: {
-    urls: ["https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird"],
-    name: "Nebula Hub",
-    rpcUrls: [
-      "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
-    ],
-    nativeCurrency: SKL,
-    blockExplorerUrls: [
-      "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
-    ],
-    blockExplorer:
-      "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
-    type: "both",
-  },
+  // 503129905: {
+  //   urls: ["https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird"],
+  //   name: "Nebula Hub",
+  //   rpcUrls: [
+  //     "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
+  //   ],
+  //   nativeCurrency: SKL,
+  //   blockExplorerUrls: [
+  //     "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
+  //   ],
+  //   blockExplorer:
+  //     "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
+  //   type: "both",
+  // },
 
   // 13472: {
   //   urls: [" https://rpc.testnet.immutable.com"],
@@ -192,16 +192,16 @@ export const blockchains = [
   //   value: "findora",
   //   image: "/images/findora.png",
   // },
-  {
-    name: "INMUTABLE X",
-    value: "imx",
-    image: "/images/imx.png",
-  },
-  {
-    name: "NEBULA HUB",
-    value: "skl",
-    image: "/images/skl.svg",
-  },
+  // {
+  //   name: "INMUTABLE X",
+  //   value: "imx",
+  //   image: "/images/imx.png",
+  // },
+  // {
+  //   name: "NEBULA HUB",
+  //   value: "skl",
+  //   image: "/images/skl.svg",
+  // },
 ];
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(
