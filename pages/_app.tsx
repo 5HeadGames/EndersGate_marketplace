@@ -60,7 +60,7 @@ const MyApp = ({ Component, pageProps }: AppProps & { Component: any }) => {
   return (
     <>
       <Head>
-        <title>Ender's Gate Marketplace</title>
+        <title>Enders Gate Marketplace</title>
       </Head>
       <Provider store={store}>
         <UserContextProvider>

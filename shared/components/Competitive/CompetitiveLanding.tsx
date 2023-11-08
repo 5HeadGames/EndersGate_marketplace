@@ -32,7 +32,7 @@ export const CompetitiveLanding = () => {
         >
           <Image
             src={"./icons/endersGateLogo.svg"}
-            alt="Ender's Gate logo"
+            alt="Enders Gate logo"
             w={["85%", "75%", "55%", "40%"]}
             mb="8"
           />
