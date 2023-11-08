@@ -27,7 +27,7 @@ const IMX: any = {
 const SKL: any = {
   name: "USDC",
   symbol: "USDC",
-  decimals: 6,
+  decimals: 18,
 };
 
 interface BasicChainInformation {
