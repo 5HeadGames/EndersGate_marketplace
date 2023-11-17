@@ -127,6 +127,8 @@ export const onLoadSales = createAsyncThunk(
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
 
+        console.log(addresses);
+
         console.log(CHAIN_NAME_BY_ID[blockchain]);
 
         /* SALES */
