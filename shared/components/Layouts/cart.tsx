@@ -58,7 +58,7 @@ export const Cart = ({
 
   const { blockchain } = useBlockchain();
 
-  const { pack, marketplace, MATICUSD } = getAddresses(blockchain);
+  const { pack, marketplace, NATIVEUSD } = getAddresses(blockchain);
 
   const refCartMobile = React.useRef(null);
 
@@ -73,7 +73,7 @@ export const Cart = ({
   }, [cart]);
 
   const getPriceMatic = async () => {
-    const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
+    const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
     const priceMATIC = await Aggregator.methods.latestAnswer().call();
     const price: any = (
       (parseInt(
@@ -122,7 +122,7 @@ export const Cart = ({
         provider,
         ethAddress,
         tokensAllowed,
-        MATICUSD,
+        NATIVEUSD,
         dispatch,
         blockchain,
       });

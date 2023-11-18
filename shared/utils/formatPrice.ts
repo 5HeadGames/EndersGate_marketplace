@@ -11,6 +11,8 @@ export const formatPrice = (price, blockchain) => {
       return `${Web3.utils.fromWei(price.toString() || "0", "ether")} WFRA`;
     case "imx":
       return `${Web3.utils.fromWei(price.toString() || "0", "ether")} tIMX`;
+    case "linea":
+      return `${nFormatter(parseInt(price) / 10 ** 6)} USD`;
     case "skl":
       return `${nFormatter(parseInt(price) / 10 ** 6)} USDC`;
   }

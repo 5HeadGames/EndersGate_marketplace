@@ -34,6 +34,7 @@ import { useUser } from "@shared/context/useUser";
 import { useForm } from "react-hook-form";
 import { packsShop, updateSales } from "@shared/utils/utils";
 import { DropdownShop } from "@shared/components/common/dropdowns/dropdownShop";
+import Web3 from "web3";
 
 const Shop = () => {
   const {
@@ -56,9 +57,11 @@ const Shop = () => {
 
   const { Modal, show, isShow, hide } = useCartModal();
 
+  console.log(blockchain, "blockchain");
+
   const { cartShop } = useSelector((state: any) => state.layout);
 
-  const { shop: shopAddress, MATICUSD } = getAddresses(blockchain);
+  const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
 
   const {
     register,
@@ -101,7 +104,6 @@ const Shop = () => {
 
   const buyPacks = async (data) => {
     const { influencer_code } = data;
-    console.log("a?");
 
     try {
       const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
@@ -115,7 +117,6 @@ const Shop = () => {
         return;
       }
 
-      console.log("a");
       let tx: any = "";
       if (!getNativeBlockchain(blockchain)) {
         tx = await dispatch(
@@ -162,21 +163,28 @@ const Shop = () => {
   };
 
   const getPriceMatic = async () => {
-    const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
+    const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
     const priceMATIC = await Aggregator.methods.latestAnswer().call();
     const price =
-      BigInt(
+      (BigInt(
         cartShop
           ?.map((item, i) => {
-            return (
-              (BigInt(item.price) / BigInt(10 ** 6)) * BigInt(item.quantity)
-            );
+            console.log(item.price);
+            return BigInt(item.price) * BigInt(item.quantity);
           })
           .reduce((item, acc) => {
             return BigInt(item) + BigInt(acc);
           }) * BigInt(10 ** 8),
-      ) / BigInt(priceMATIC);
-    setPriceNative((price + (price * BigInt(5)) / BigInt(100)).toString());
+      ) /
+        BigInt(priceMATIC)) *
+      BigInt(10 ** 12);
+    console.log(price);
+    setPriceNative(
+      Web3.utils.fromWei(
+        (price + (price * BigInt(2)) / BigInt(100)).toString(),
+        "ether",
+      ),
+    );
   };
 
   React.useEffect(() => {

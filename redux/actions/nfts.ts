@@ -127,10 +127,6 @@ export const onLoadSales = createAsyncThunk(
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
 
-        console.log(addresses);
-
-        console.log(CHAIN_NAME_BY_ID[blockchain]);
-
         /* SALES */
         const marketplace = getContract(
           getNativeBlockchain(blockchain)
@@ -714,7 +710,7 @@ export const buyFromShop = createAsyncThunk(
     let tx;
 
     try {
-      const { shop: shopAddress, MATICUSD: NATIVE_TO_USD } =
+      const { shop: shopAddress, NATIVEUSD: NATIVE_TO_USD } =
         getAddresses(blockchain);
 
       const shop = getContractCustom("Shop", shopAddress, provider);
@@ -1053,7 +1049,7 @@ export const rentBatchERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      const { rent, MATICUSD: NATIVE_TO_USD } = getAddresses(blockchain);
+      const { rent, NATIVEUSD: NATIVE_TO_USD } = getAddresses(blockchain);
 
       const rentContract = getContractCustom("Rent", rent, provider);
       const tokensAllowed = getTokensAllowed(blockchain);

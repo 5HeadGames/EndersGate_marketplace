@@ -37,7 +37,7 @@ const CompetitiveComponent = () => {
 
   // const {
   //   network,
-  //   addresses: { battlePass: battlePassAddress, MATICUSD },
+  //   addresses: { battlePass: battlePassAddress, NATIVEUSD },
   //   cartPass,
   // } = useSelector((state: any) => state.blockchain);
 
@@ -56,7 +56,7 @@ const CompetitiveComponent = () => {
   // }, [tokensAllowed]);
 
   // const getPriceMatic = async () => {
-  //   const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
+  //   const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
   //   const priceMATIC: any = await Aggregator.methods.latestAnswer().call();
   //   const price =
   //     BigInt(
@@ -114,7 +114,7 @@ const CompetitiveComponent = () => {
   //       tokenSelected ==
   //       addressesAllowed.filter((item) => item.name == "MATIC")[0].address
   //     ) {
-  //       const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
+  //       const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
   //       const priceMATIC: any = await Aggregator.methods.latestAnswer().call();
   //       const preprice =
   //         (parseFloat(

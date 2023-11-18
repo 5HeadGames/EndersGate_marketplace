@@ -283,7 +283,7 @@ export const buyNFTsMatic = async ({
   provider,
   ethAddress,
   tokensAllowed,
-  MATICUSD,
+  NATIVEUSD,
   dispatch,
   blockchain,
 }) => {
@@ -321,7 +321,7 @@ export const buyNFTsMatic = async ({
       tokenSelected ===
         addresses.filter((item) => item.name === "MATIC")[0].address
     ) {
-      const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
+      const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
       const priceMATIC = await Aggregator.methods.latestAnswer().call();
       price = Web3.utils.toWei(
         ((bid * 10 ** 8) / priceMATIC).toString(),
@@ -449,6 +449,7 @@ export const getNativeBlockchain = (blockchain) => {
 };
 
 export const hasAggregatorFeed = (blockchain) => {
+  console.log(blockchain, "blockchain agg");
   switch (blockchain) {
     case "matic":
       return true;
