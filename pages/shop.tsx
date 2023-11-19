@@ -57,8 +57,6 @@ const Shop = () => {
 
   const { Modal, show, isShow, hide } = useCartModal();
 
-  console.log(blockchain, "blockchain");
-
   const { cartShop } = useSelector((state: any) => state.layout);
 
   const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
@@ -272,7 +270,7 @@ const Shop = () => {
                           alt=""
                         />
                         <img
-                          src="icons/POLYGON.svg"
+                          src={`images/${blockchain}.png`}
                           className="w-6 h-6"
                           alt=""
                         />

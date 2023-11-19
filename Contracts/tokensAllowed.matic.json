@@ -2,16 +2,19 @@
   {
     "address": "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
     "name": "MATIC",
-    "logo": "/images/matic.png"
+    "logo": "/images/matic.png",
+    "main": true
   },
   {
     "address": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
     "name": "USDC",
-    "logo": "/images/usdc.png"
+    "logo": "/images/usdc.png",
+    "main": false
   },
   {
     "address": "0x9C9e5fD8bbc25984B178FdCE6117Defa39d2db39",
     "name": "BUSD",
-    "logo": "/images/busd.png"
+    "logo": "/images/busd.png",
+    "main": false
   }
 ]

@@ -710,8 +710,7 @@ export const buyFromShop = createAsyncThunk(
     let tx;
 
     try {
-      const { shop: shopAddress, NATIVEUSD: NATIVE_TO_USD } =
-        getAddresses(blockchain);
+      const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
 
       const shop = getContractCustom("Shop", shopAddress, provider);
       const tokensAllowed = getTokensAllowed(blockchain);
@@ -730,13 +729,9 @@ export const buyFromShop = createAsyncThunk(
       if (
         !onlyAcceptsERC20(blockchain) &&
         tokenSelected ===
-          addressesAllowed.filter((item) => item.name === "MATIC")[0].address
+          addressesAllowed.filter((item) => item.main)[0]?.address
       ) {
-        const Aggregator = getContractCustom(
-          "Aggregator",
-          NATIVE_TO_USD,
-          provider,
-        );
+        const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
         const preprice =
           (cartShop
@@ -749,7 +744,7 @@ export const buyFromShop = createAsyncThunk(
             10 ** 8) /
           priceMATIC;
         price = Web3.utils.toWei(
-          (preprice + preprice * 0.05).toString(),
+          (preprice + preprice * 0.03).toFixed(5).toString(),
           "ether",
         );
         tx = await shop.methods
