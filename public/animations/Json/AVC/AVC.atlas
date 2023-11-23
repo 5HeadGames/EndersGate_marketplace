@@ -1,0 +1,150 @@
+AVC.png
+size:4096,4096
+filter:Linear,Linear
+pma:true
+2nd light/2nd light_00139
+bounds:561,1331,384,216
+2nd light/2nd light_00141
+bounds:3475,3614,384,216
+2nd light/2nd light_00143
+bounds:0,0,384,216
+2nd light/2nd light_00145
+bounds:2276,3142,384,216
+2nd light/2nd light_00147
+bounds:2275,2924,384,216
+2nd light/2nd light_00149
+bounds:1781,2777,384,216
+2nd light/2nd light_00151
+bounds:1762,2559,384,216
+2nd light/2nd light_00153
+bounds:1762,2341,384,216
+2nd light/2nd light_00155
+bounds:3191,3354,384,216
+2nd light/2nd light_00157
+bounds:1040,2104,384,216
+2nd light/2nd light_00159
+bounds:1013,1886,384,216
+2nd light/2nd light_00161
+bounds:1013,1668,384,216
+2nd light/2nd light_00163
+bounds:1426,2104,384,216
+2nd light/2nd light_00165
+bounds:1399,1886,384,216
+2nd light/2nd light_00167
+bounds:1399,1668,384,216
+2nd light/2nd light_00169
+bounds:1812,2123,384,216
+2nd light/2nd light_00171
+bounds:1013,1450,384,216
+2nd light/2nd light_00173
+bounds:1399,1450,384,216
+Common_Pack_Gen0
+bounds:0,1300,559,935
+offsets:1,1,561,937
+Common_pack_bottom
+bounds:2774,3379,191,415
+offsets:1,1,193,417
+rotate:90
+White Solid 5
+bounds:1040,2898,739,1155
+offsets:1,1,741,1157
+beam back
+bounds:2774,3572,481,699
+offsets:1,1,483,701
+rotate:90
+beem effect
+bounds:2276,3360,496,693
+card
+bounds:1781,3189,493,864
+offsets:1,1,495,866
+card break1
+bounds:0,596,492,702
+offsets:1,1,494,704
+card break2
+bounds:1781,2995,492,192
+offsets:1,1,494,194
+grey card
+bounds:561,1549,450,686
+kon
+bounds:3475,3832,494,221
+offsets:1,1,496,223
+light/light_00052
+bounds:3577,3396,384,216
+light/light_00054
+bounds:494,914,384,216
+rotate:90
+light/light_00056
+bounds:712,945,384,216
+rotate:90
+light/light_00058
+bounds:494,528,384,216
+rotate:90
+light/light_00059
+bounds:712,559,384,216
+rotate:90
+light/light_00060
+bounds:947,1232,384,216
+light/light_00061
+bounds:1333,1232,384,216
+light/light_00062
+bounds:930,1014,384,216
+light/light_00063
+bounds:930,796,384,216
+light/light_00065
+bounds:1316,1014,384,216
+light/light_00066
+bounds:930,578,384,216
+light/light_00067
+bounds:1316,796,384,216
+light/light_00068
+bounds:1316,578,384,216
+light/light_00069
+bounds:375,310,384,216
+light/light_00070
+bounds:386,92,384,216
+light/light_00071
+bounds:3577,3178,384,216
+light/light_00072
+bounds:2167,2706,384,216
+light/light_00073
+bounds:2148,2488,384,216
+light/light_00075
+bounds:2198,2102,384,216
+rotate:90
+light/light_00077
+bounds:2416,2102,384,216
+rotate:90
+light/light_00078
+bounds:1812,1905,384,216
+light/light_00080
+bounds:2198,1884,384,216
+light/light_00082
+bounds:1785,1687,384,216
+light/light_00083
+bounds:1785,1469,384,216
+light/light_00084
+bounds:2171,1666,384,216
+light/light_00085
+bounds:2171,1448,384,216
+light/light_00086
+bounds:1785,1251,384,216
+light/light_00088
+bounds:2171,1230,384,216
+light/light_00090
+bounds:2557,1498,384,216
+rotate:90
+line
+bounds:1040,2322,12,679
+offsets:11,6,34,686
+rotate:90
+normal beam
+bounds:0,3146,1038,907
+offsets:1,1,1040,909
+over beam
+bounds:0,2237,1038,907
+offsets:1,1,1040,909
+smoke-33807
+bounds:0,218,373,376
+offsets:0,5,376,381
+white
+bounds:1040,2336,720,560

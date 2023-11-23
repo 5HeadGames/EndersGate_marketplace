@@ -17,6 +17,7 @@ import { BlockchainContextProvider } from "@shared/context/useBlockchain";
 import "swiper/css";
 import { UserContextProvider } from "@shared/context/useUser";
 import ScrollToTop from "@shared/components/common/scrollToTop";
+import Script from "next/script";
 
 const { ToastProvider } = require("react-toast-notifications"); //it throws ts error
 
@@ -61,6 +62,10 @@ const MyApp = ({ Component, pageProps }: AppProps & { Component: any }) => {
     <>
       <Head>
         <title>Enders Gate Marketplace</title>
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/@esotericsoftware/spine-player@4.0.*/dist/spine-player.css"
+        ></link>
       </Head>
       <Provider store={store}>
         <UserContextProvider>
