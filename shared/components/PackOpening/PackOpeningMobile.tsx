@@ -2,6 +2,7 @@ import clsx from "clsx";
 import Script from "next/script";
 import React from "react";
 import AnimatedPackCard from "./AnimatedPackCard";
+import { ScriptVideo } from "./ScriptVideo";
 
 export const PackOpeningMobile: React.FC<any> = ({
   cards,
@@ -25,6 +26,23 @@ export const PackOpeningMobile: React.FC<any> = ({
   show,
 }) => {
   // const [hovering, setHovering] = React.useState(false);
+  const vidRef4 = React.useRef<any>(null);
+  const [player, setPlayer] = React.useState(null);
+
+  React.useEffect(() => {
+    if (video) {
+      handlePlayVideo();
+    }
+  }, [video, videoPlaying, player]);
+
+  const handlePlayVideo = () => {
+    player?.play();
+    vidRef4?.current?.play();
+    setTimeout(() => {
+      player?.pause();
+      endPackOpening();
+    }, 4000);
+  };
 
   React.useEffect(() => {
     if (arrayPacks) {
@@ -198,47 +216,28 @@ export const PackOpeningMobile: React.FC<any> = ({
             </div>
           </div>
         )}
-        {video && videoPlaying === 1 && (
+        {video && (
           <>
-            <Script
-              src="https://unpkg.com/@esotericsoftware/spine-player@4.0.*/dist/iife/spine-player.js"
-              onLoad={() => {
-                new spine.SpinePlayer("testing", {
-                  jsonUrl:
-                    "/animations/Json/Epic_Pack_Gen0/Epic_Pack_Gen0.json",
-                  atlasUrl:
-                    "/animations/Json/Epic_Pack_Gen0/Epic_Pack_Gen0.atlas",
-                  viewport: {
-                    x: -0,
-                    y: -1080,
-                    width: 1920,
-                    height: 1080,
-                    padLeft: "0%",
-                    padRight: "0%",
-                    padTop: "0%",
-                    padBottom: "0%",
-                  },
-                  showControls: true,
-                  // backgroundColor: "#200025",
-                  success: function (player) {
-                    player.play();
-                    console.log(player, "loaded");
-                    setTimeout(() => {
-                      player.stopRendering();
-                      // endPackOpening();
-                    }, 5300);
-                    // player.stopRendering();
-                  },
-                  error: function (player, reason) {
-                    alert(reason);
-                  },
-                });
-              }}
-            ></Script>
-            <div
-              id="testing"
-              className={clsx("absolute h-[100vh] w-[100vw] z-0")}
-            ></div>
+            <ScriptVideo setPlayer={setPlayer} packAnimation={packAnimation} />
+            <div className="w-full h-full md:block hidden">
+              <div
+                id="animation"
+                className={clsx(
+                  { hidden: videoPlaying !== 1 },
+                  "h-full videoDesktop videoPack z-10",
+                )}
+              ></div>
+              <video
+                ref={vidRef4}
+                className={clsx(
+                  { "!hidden": videoPlaying === -1 },
+                  "h-full videoDesktop videoPack z-0",
+                )}
+                // controls
+                // muted={videoPlaying !== 3}
+                src="./videos/packVideos/Comp.mp4"
+              ></video>
+            </div>
           </>
         )}
       </div>
