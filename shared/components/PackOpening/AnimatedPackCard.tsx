@@ -16,13 +16,13 @@ const AnimatedPackCard = (props: any) => {
   };
 
   const cardsBacks = {
-    reaction: "/images/reaction.png",
-    action: "/images/action.png",
-    wood: "/images/wood.png",
-    stone: "/images/stone.png",
-    iron: "/images/iron.png",
-    gold: "/images/gold.png",
-    legendary: "/images/legendary.png",
+    reaction: "/images/cardsBack/reaction.png",
+    action: "/images/cardsBack/action.png",
+    wood: "/images/cardsBack/wood.png",
+    stone: "/images/cardsBack/stone.png",
+    iron: "/images/cardsBack/silver.png",
+    gold: "/images/cardsBack/gold.png",
+    legendary: "/images/cardsBack/legendary.png",
   };
 
   return (
