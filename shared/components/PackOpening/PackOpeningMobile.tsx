@@ -218,8 +218,8 @@ export const PackOpeningMobile: React.FC<any> = ({
         )}
         {video && (
           <>
-            <ScriptVideo setPlayer={setPlayer} packAnimation={packAnimation} />
-            <div className="w-full h-full md:block hidden">
+            {/* <ScriptVideo setPlayer={setPlayer} packAnimation={packAnimation} /> */}
+            {/* <div className="w-full h-full md:block hidden">
               <div
                 id="animation"
                 className={clsx(
@@ -237,7 +237,7 @@ export const PackOpeningMobile: React.FC<any> = ({
                 // muted={videoPlaying !== 3}
                 src="./videos/packVideos/Comp.mp4"
               ></video>
-            </div>
+            </div> */}
           </>
         )}
       </div>
