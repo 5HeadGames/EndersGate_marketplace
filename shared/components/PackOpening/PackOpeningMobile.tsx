@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import Script from "next/script";
 import React from "react";
 import AnimatedPackCard from "./AnimatedPackCard";
 
@@ -23,11 +24,6 @@ export const PackOpeningMobile: React.FC<any> = ({
   packAnimation,
   show,
 }) => {
-  const vidRef1mobile = React.useRef<any>(null);
-  const vidRef2mobile = React.useRef<any>(null);
-  const vidRef3mobile = React.useRef<any>(null);
-  const vidRef4mobile = React.useRef<any>(null);
-
   // const [hovering, setHovering] = React.useState(false);
 
   React.useEffect(() => {
@@ -54,18 +50,6 @@ export const PackOpeningMobile: React.FC<any> = ({
       }, 2000);
     }
   }, [startFlashingPack]);
-
-  const handlePlayVideo = () => {
-    vidRef1mobile?.current?.play();
-    vidRef2mobile?.current?.play();
-    vidRef3mobile?.current?.play();
-    vidRef4mobile?.current?.play();
-  };
-
-  React.useEffect(() => {
-    // if (videoPlaying !== 3) {
-    handlePlayVideo();
-  }, [video, videoPlaying]);
 
   return (
     <div
@@ -214,67 +198,47 @@ export const PackOpeningMobile: React.FC<any> = ({
             </div>
           </div>
         )}
-        {video && (
+        {video && videoPlaying === 1 && (
           <>
-            <div className="w-full h-full block md:hidden">
-              <video
-                ref={vidRef1mobile}
-                className={clsx(
-                  { ["hidden"]: videoPlaying !== 0 },
-                  "h-full absolute z-0 mobileVideo",
-                )}
-                // controls
-                muted
-                src={`./videos/packVideos/card_${
-                  packAnimation + 1
-                }_purple720x1280.mp4`}
-                onEnded={
-                  videoPlaying === 0 ? () => endPackOpening(0) : undefined
-                }
-              ></video>
-
-              <video
-                ref={vidRef2mobile}
-                className={clsx(
-                  { ["hidden"]: videoPlaying !== 1 },
-                  "h-full absolute z-0 mobileVideo",
-                )}
-                // controls
-                muted
-                src={`./videos/packVideos/card_${
-                  packAnimation + 1
-                }_green720x1280.mp4`}
-                onEnded={
-                  videoPlaying === 1 ? () => endPackOpening(1) : undefined
-                }
-              ></video>
-
-              <video
-                ref={vidRef3mobile}
-                className={clsx(
-                  { ["hidden"]: videoPlaying !== 2 },
-                  "w-full absolute z-0 mobileVideo",
-                )}
-                // controls
-                muted
-                src={`./videos/packVideos/card_${
-                  packAnimation + 1
-                }_yellow720x1280.mp4`}
-                onEnded={
-                  videoPlaying === 2 ? () => endPackOpening(2) : undefined
-                }
-              ></video>
-
-              <video
-                ref={vidRef4mobile}
-                className={clsx(
-                  { ["hidden"]: videoPlaying !== 3 },
-                  "w-screen mobileVideo",
-                )}
-                // controls
-                src="./videos/packVideos/portal_glow_720x1280.mp4"
-              ></video>
-            </div>
+            <Script
+              src="https://unpkg.com/@esotericsoftware/spine-player@4.0.*/dist/iife/spine-player.js"
+              onLoad={() => {
+                new spine.SpinePlayer("testing", {
+                  jsonUrl:
+                    "/animations/Json/Epic_Pack_Gen0/Epic_Pack_Gen0.json",
+                  atlasUrl:
+                    "/animations/Json/Epic_Pack_Gen0/Epic_Pack_Gen0.atlas",
+                  viewport: {
+                    x: -0,
+                    y: -1080,
+                    width: 1920,
+                    height: 1080,
+                    padLeft: "0%",
+                    padRight: "0%",
+                    padTop: "0%",
+                    padBottom: "0%",
+                  },
+                  showControls: true,
+                  // backgroundColor: "#200025",
+                  success: function (player) {
+                    player.play();
+                    console.log(player, "loaded");
+                    setTimeout(() => {
+                      player.stopRendering();
+                      // endPackOpening();
+                    }, 5300);
+                    // player.stopRendering();
+                  },
+                  error: function (player, reason) {
+                    alert(reason);
+                  },
+                });
+              }}
+            ></Script>
+            <div
+              id="testing"
+              className={clsx("absolute h-[100vh] w-[100vw] z-0")}
+            ></div>
           </>
         )}
       </div>

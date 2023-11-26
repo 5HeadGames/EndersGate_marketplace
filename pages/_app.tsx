@@ -65,7 +65,7 @@ const MyApp = ({ Component, pageProps }: AppProps & { Component: any }) => {
         <link
           rel="stylesheet"
           href="https://unpkg.com/@esotericsoftware/spine-player@4.0.*/dist/spine-player.css"
-        ></link>
+        />
       </Head>
       <Provider store={store}>
         <UserContextProvider>

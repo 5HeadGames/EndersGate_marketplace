@@ -39,7 +39,7 @@ export const PackOpeningComponent: React.FC<any> = ({
     setPackAnimation(id);
     try {
       const web3 = await getWeb3();
-      await packContract.methods.unpack(id, 1).send({ from: account });
+      // await packContract.methods.unpack(id, 1).send({ from: account });
       const block = await web3.eth.getBlockNumber();
       const eventsTransfer = await NFTContract.getPastEvents("TransferSingle", {
         filter: {
@@ -79,14 +79,15 @@ export const PackOpeningComponent: React.FC<any> = ({
         return newArray;
       });
       setTimeout(() => {
-        setVideoPlaying(3);
-        setCardToOpen(new Array(5).fill(false));
-        setVideo(true);
         setAnimating(false);
+        setVideo(true);
+        setVideoPlaying(1);
+        console.log(1);
+        setCardToOpen(new Array(5).fill(false));
         updateBalance();
+        setIsLoadingPack(false);
+        setOpeningPack(false);
       }, 2100);
-      setIsLoadingPack(false);
-      setOpeningPack(false);
     } catch (error) {
       console.log(error);
       setOpeningPack(false);
@@ -146,6 +147,7 @@ export const PackOpeningComponent: React.FC<any> = ({
           startFlashingPack={startFlashingPack}
           packAnimation={packAnimation}
           show={show}
+          endPackOpening={endPackOpening}
         />
         <PackOpeningMobile
           cards={cards}

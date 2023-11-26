@@ -93,6 +93,11 @@ select {
   width: 100% !important;
 }
 
+//Video animation
+.spine-player-controls {
+  display: none !important;
+}
+
 @media (min-width: 300px) and (max-width: 400px) {
   .nft-mob {
     height: 70vh !important;

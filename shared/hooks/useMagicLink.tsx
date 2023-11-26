@@ -8,7 +8,7 @@ import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 const getMagicConfig = (networkId: any) => {
   const network = CHAINS[networkId];
   return {
-    rpcUrl: network.urls[0],
+    rpcUrl: network?.urls[0],
     chainId: networkId,
   };
 };

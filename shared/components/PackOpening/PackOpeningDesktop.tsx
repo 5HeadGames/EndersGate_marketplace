@@ -1,7 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { videoPath } from "@shared/utils/videos";
 import clsx from "clsx";
+import Script from "next/script";
 import React from "react";
 import AnimatedPackCard from "./AnimatedPackCard";
+import { ScriptVideo } from "./ScriptVideo";
 
 export const PackOpening = ({
   cards,
@@ -20,12 +23,12 @@ export const PackOpening = ({
   startFlashingPack,
   setStartFlashingPack,
   video,
+  packAnimation,
+  endPackOpening,
   show,
 }: any) => {
-  const vidRef1 = React.useRef<any>(null);
-  const vidRef2 = React.useRef<any>(null);
-  const vidRef3 = React.useRef<any>(null);
   const vidRef4 = React.useRef<any>(null);
+  const [player, setPlayer] = React.useState(null);
 
   React.useEffect(() => {
     const audio: any = document.getElementsByClassName("videoPack");
@@ -53,23 +56,24 @@ export const PackOpening = ({
   }, [startFlashingPack]);
 
   const handlePlayVideo = () => {
-    vidRef1?.current?.play();
-
-    vidRef2?.current?.play();
-
-    vidRef3?.current?.play();
-
+    player?.play();
     vidRef4?.current?.play();
+    setTimeout(() => {
+      player?.pause();
+      endPackOpening();
+    }, 4000);
   };
 
   React.useEffect(() => {
-    handlePlayVideo();
-  }, [video, videoPlaying]);
+    if (video) {
+      handlePlayVideo();
+    }
+  }, [video, videoPlaying, player]);
 
   return (
     <div
       className={clsx(
-        "w-full min-h-screen relative overflow-hidden md:block hidden",
+        "w-full h-[calc(100vh-55px)] relative overflow-hidden md:block hidden",
       )}
       style={{ backgroundColor: "#111" }}
     >
@@ -116,19 +120,30 @@ export const PackOpening = ({
       </div>
       <div
         className={clsx(
-          "w-full min-h-screen flex md:items-center md:justify-center relative",
+          "w-full h-[calc(100vh-55px)] flex md:items-center md:justify-center relative",
         )}
       >
         {/* {cardPack === 0 ? ( */}
         <>
           {video ? (
             <>
+              <ScriptVideo
+                setPlayer={setPlayer}
+                packAnimation={packAnimation}
+              />
               <div className="w-full h-full md:block hidden">
+                <div
+                  id="animation"
+                  className={clsx(
+                    { hidden: videoPlaying !== 1 },
+                    "h-full videoDesktop videoPack z-10",
+                  )}
+                ></div>
                 <video
                   ref={vidRef4}
                   className={clsx(
-                    { ["hidden"]: videoPlaying !== 3 },
-                    "h-full videoDesktop videoPack",
+                    { "!hidden": videoPlaying === -1 },
+                    "h-full videoDesktop videoPack z-0",
                   )}
                   // controls
                   // muted={videoPlaying !== 3}
@@ -248,24 +263,6 @@ export const PackOpening = ({
             </div>
           )}
         </>
-        {/*) : (
-          // <div
-          //   className={clsx(
-          //     "flex gap-10 items-center justify-start relative containerPacks w-full overflow-scroll h-screen px-10"
-          //   )}
-          // >
-          //   {new Array(5 * (5 - packAvailable)).fill(false).map((a, index) => {
-          //     return (
-          //       <img
-          //         key={index}
-          //         src="./videos/eclipso_front.png"
-          //         className={clsx("cursor-pointer xl:w-60 w-32")}
-          //         alt=""
-          //       />
-          //     );
-          //   })}
-          // </div>
-        )*/}
       </div>
     </div>
   );
