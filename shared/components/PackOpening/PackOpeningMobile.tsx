@@ -27,21 +27,27 @@ export const PackOpeningMobile: React.FC<any> = ({
 }) => {
   // const [hovering, setHovering] = React.useState(false);
   const vidRef4 = React.useRef<any>(null);
-  const [player, setPlayer] = React.useState(null);
+  const [player0, setPlayer0] = React.useState(null);
+  const [player1, setPlayer1] = React.useState(null);
+  const [player2, setPlayer2] = React.useState(null);
+  const [player3, setPlayer3] = React.useState(null);
 
   React.useEffect(() => {
     if (video) {
       handlePlayVideo();
     }
-  }, [video, videoPlaying, player]);
+  }, [video, videoPlaying]);
 
   const handlePlayVideo = () => {
-    player?.play();
+    const playerSelected = getPlayerSelected(packAnimation);
+    playerSelected?.play();
     vidRef4?.current?.play();
     setTimeout(() => {
-      player?.pause();
       endPackOpening();
-    }, 4000);
+    }, 3650);
+    setTimeout(() => {
+      playerSelected?.pause();
+    }, 5320);
   };
 
   React.useEffect(() => {
@@ -52,6 +58,19 @@ export const PackOpeningMobile: React.FC<any> = ({
       }
     }
   }, [arrayPacks]);
+
+  const getPlayerSelected = (packAnimation) => {
+    switch (packAnimation) {
+      case 0:
+        return player0;
+      case 1:
+        return player1;
+      case 2:
+        return player2;
+      case 3:
+        return player3;
+    }
+  };
 
   React.useEffect(() => {
     if (startFlashing === true) {
@@ -218,26 +237,47 @@ export const PackOpeningMobile: React.FC<any> = ({
         )}
         {video && (
           <>
-            {/* <ScriptVideo setPlayer={setPlayer} packAnimation={packAnimation} /> */}
-            {/* <div className="w-full h-full md:block hidden">
-              <div
-                id="animation"
-                className={clsx(
-                  { hidden: videoPlaying !== 1 },
-                  "h-full videoDesktop videoPack z-10",
-                )}
-              ></div>
-              <video
-                ref={vidRef4}
-                className={clsx(
-                  { "!hidden": videoPlaying === -1 },
-                  "h-full videoDesktop videoPack z-0",
-                )}
-                // controls
-                // muted={videoPlaying !== 3}
-                src="./videos/packVideos/Comp.mp4"
-              ></video>
-            </div> */}
+            <ScriptVideo
+              setPlayer0={setPlayer0}
+              setPlayer1={setPlayer1}
+              setPlayer2={setPlayer2}
+              setPlayer3={setPlayer3}
+              mobile
+            />
+            <div
+              id="animation-mobile-0"
+              className={clsx(
+                { hidden: packAnimation !== 0 || videoPlaying !== 1 || !video },
+                "h-full videoDesktop videoPack z-10",
+              )}
+            ></div>
+            <div
+              id="animation-mobile-1"
+              className={clsx(
+                {
+                  hidden: packAnimation !== 1 || videoPlaying !== 1 || !video,
+                },
+                "h-full videoDesktop videoPack z-10",
+              )}
+            ></div>
+            <div
+              id="animation-mobile-2"
+              className={clsx(
+                {
+                  hidden: packAnimation !== 2 || videoPlaying !== 1 || !video,
+                },
+                "h-full videoDesktop videoPack z-10",
+              )}
+            ></div>
+            <div
+              id="animation-mobile-3"
+              className={clsx(
+                {
+                  hidden: packAnimation !== 3 || videoPlaying !== 1 || !video,
+                },
+                "h-full videoDesktop videoPack z-10",
+              )}
+            ></div>{" "}
           </>
         )}
       </div>

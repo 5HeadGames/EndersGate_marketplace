@@ -8,6 +8,7 @@ export const ScriptVideo = ({
   setPlayer1,
   setPlayer2,
   setPlayer3,
+  mobile = false,
 }) => {
   return (
     <Script
@@ -15,7 +16,7 @@ export const ScriptVideo = ({
       onReady={() => {
         console.log("spine");
         for (let i = 0; i < 4; i++) {
-          new spine.SpinePlayer(`animation-${i}`, {
+          new spine.SpinePlayer(`animation-${mobile ? `mobile-${i}` : i}`, {
             jsonUrl: `/animations/Json/${videoPath(i)}.json`,
             atlasUrl: `/animations/Json/${videoPath(i)}.atlas`,
             viewport: {
