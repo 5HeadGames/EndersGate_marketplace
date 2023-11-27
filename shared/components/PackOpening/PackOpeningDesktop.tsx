@@ -138,7 +138,7 @@ export const PackOpening = ({
     if (
       video &&
       videoPlaying === 1 &&
-      player.assetManager.isLoadingComplete()
+      player?.assetManager?.isLoadingComplete()
     ) {
       handlePlayVideo();
     }
