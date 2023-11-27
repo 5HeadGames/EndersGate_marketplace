@@ -44,10 +44,10 @@ export const PackOpeningMobile: React.FC<any> = ({
     vidRef4?.current?.play();
     setTimeout(() => {
       endPackOpening();
-    }, 3650);
+    }, 3700);
     setTimeout(() => {
       playerSelected?.pause();
-    }, 5320);
+    }, 5300);
   };
 
   React.useEffect(() => {
@@ -91,7 +91,7 @@ export const PackOpeningMobile: React.FC<any> = ({
   return (
     <div
       className={clsx(
-        "w-screen h-screen relative overflow-hidden md:hidden flex flex-col h-screen",
+        "w-screen h-screen relative overflow-hidden md:hidden flex flex-col",
       )}
       style={{ backgroundColor: "#1e1a29" }}
     >
@@ -217,7 +217,7 @@ export const PackOpeningMobile: React.FC<any> = ({
           >
             <div
               className={clsx(
-                "z-50  flex overflow-scroll items-center md:justify-center z-0 md:gap-10 gap-6 w-full  px-10",
+                "z-50 flex overflow-scroll items-center md:justify-center md:gap-10 gap-6 w-full  px-10",
               )}
             >
               {cardsPack.map((id: number, index: number) => {
@@ -235,7 +235,7 @@ export const PackOpeningMobile: React.FC<any> = ({
             </div>
           </div>
         )}
-        {video && (
+        {/* {video && (
           <>
             <ScriptVideo
               setPlayer0={setPlayer0}
@@ -279,7 +279,7 @@ export const PackOpeningMobile: React.FC<any> = ({
               )}
             ></div>{" "}
           </>
-        )}
+        )} */}
       </div>
     </div>
   );

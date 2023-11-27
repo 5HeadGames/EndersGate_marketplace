@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { LoadingOutlined } from "@ant-design/icons";
 import { videoPath } from "@shared/utils/videos";
 import clsx from "clsx";
 import Script from "next/script";
@@ -26,8 +27,11 @@ export const PackOpening = ({
   packAnimation,
   endPackOpening,
   show,
+  openingPack,
 }: any) => {
   const vidRef4 = React.useRef<any>(null);
+  const [spine, setSpine] = React.useState(null);
+  // const [player, setPlayer] = React.useState(null);
   const [player0, setPlayer0] = React.useState(null);
   const [player1, setPlayer1] = React.useState(null);
   const [player2, setPlayer2] = React.useState(null);
@@ -58,7 +62,7 @@ export const PackOpening = ({
     }
   }, [startFlashingPack]);
 
-  const getPlayerSelected = (packAnimation) => {
+  const getPlayerSelected = (packAnimation: any) => {
     switch (packAnimation) {
       case 0:
         return player0;
@@ -68,26 +72,77 @@ export const PackOpening = ({
         return player2;
       case 3:
         return player3;
+      default:
     }
   };
 
   const handlePlayVideo = () => {
-    const playerSelected = getPlayerSelected(packAnimation);
-    playerSelected?.play();
+    const player = getPlayerSelected(packAnimation);
+    console.log("play");
+    player?.play();
     vidRef4?.current?.play();
     setTimeout(() => {
       endPackOpening();
     }, 3650);
     setTimeout(() => {
-      playerSelected?.pause();
-    }, 5320);
+      player?.pause();
+    }, 5450);
   };
 
   React.useEffect(() => {
-    if (video) {
+    if (spine) {
+      for (let i = 0; i < 4; i++) {
+        new spine.SpinePlayer(`animation-${i}`, {
+          jsonUrl: `/animations/Json/${videoPath(i)}.json`,
+          atlasUrl: `/animations/Json/${videoPath(i)}.atlas`,
+          viewport: {
+            x: -0,
+            y: -1080,
+            width: 1920,
+            height: 1080,
+            padLeft: "0%",
+            padRight: "0%",
+            padTop: "0%",
+            padBottom: "0%",
+          },
+          showControls: true,
+          backgroundColor: "#2d1541",
+          // eslint-disable-next-line no-loop-func
+          success: function (player) {
+            switch (i) {
+              case 0:
+                setPlayer0(player);
+                break;
+              case 1:
+                setPlayer1(player);
+                break;
+              case 2:
+                setPlayer2(player);
+                break;
+              case 3:
+                setPlayer3(player);
+                break;
+              default:
+            }
+          },
+          error: function (player, reason) {
+            alert(reason);
+          },
+        });
+      }
+    }
+  }, [spine]);
+
+  React.useEffect(() => {
+    const player = getPlayerSelected(packAnimation);
+    if (
+      video &&
+      videoPlaying === 1 &&
+      player.assetManager.isLoadingComplete()
+    ) {
       handlePlayVideo();
     }
-  }, [video, videoPlaying]);
+  }, [video, videoPlaying, player0, player1, player2, player3]);
 
   return (
     <div
@@ -96,12 +151,7 @@ export const PackOpening = ({
       )}
       style={{ backgroundColor: "#111" }}
     >
-      <ScriptVideo
-        setPlayer0={setPlayer0}
-        setPlayer1={setPlayer1}
-        setPlayer2={setPlayer2}
-        setPlayer3={setPlayer3}
-      />
+      <ScriptVideo setSpine={setSpine} />
       <div
         className={clsx(
           { hidden: video },
@@ -155,50 +205,44 @@ export const PackOpening = ({
               "w-full h-full md:block hidden",
             )}
           >
-            <div
-              id="animation-0"
-              className={clsx(
-                { hidden: packAnimation !== 0 || videoPlaying !== 1 || !video },
-                "h-full videoDesktop videoPack z-10",
-              )}
-            ></div>
-            <div
-              id="animation-1"
-              className={clsx(
-                {
-                  hidden: packAnimation !== 1 || videoPlaying !== 1 || !video,
-                },
-                "h-full videoDesktop videoPack z-10",
-              )}
-            ></div>
-            <div
-              id="animation-2"
-              className={clsx(
-                {
-                  hidden: packAnimation !== 2 || videoPlaying !== 1 || !video,
-                },
-                "h-full videoDesktop videoPack z-10",
-              )}
-            ></div>
-            <div
-              id="animation-3"
-              className={clsx(
-                {
-                  hidden: packAnimation !== 3 || videoPlaying !== 1 || !video,
-                },
-                "h-full videoDesktop videoPack z-10",
-              )}
-            ></div>
+            {new Array(4).fill(false).map((item, i) => {
+              return (
+                <div
+                  id={`animation-${i}`}
+                  className={clsx(
+                    {
+                      hidden:
+                        packAnimation !== i || videoPlaying === -1 || !video,
+                    },
+                    { "z-[100000]": videoPlaying !== 3 },
+                    "h-full w-full top-0 left-0 absolute",
+                  )}
+                ></div>
+              );
+            })}
             <video
               ref={vidRef4}
               className={clsx(
                 { "!hidden": videoPlaying === -1 || !video },
-                "h-full videoDesktop videoPack z-0",
+                { relative: videoPlaying === 3 },
+                "h-full z-0",
               )}
-              // controls
-              // muted={videoPlaying !== 3}
               src="./videos/packVideos/Comp.mp4"
             ></video>
+          </div>
+          <div
+            className={clsx(
+              {
+                hidden:
+                  !video ||
+                  getPlayerSelected(
+                    packAnimation,
+                  )?.assetManager?.isLoadingComplete(),
+              },
+              "absolute top-0 bottom-0 left-0 right-0 m-auto flex items-center justify-center z-50",
+            )}
+          >
+            <LoadingOutlined className="text-4xl text-white" />
           </div>
           {video ? (
             <></>
@@ -277,7 +321,7 @@ export const PackOpening = ({
 
           <div
             className={clsx(
-              { hidden: videoPlaying !== 3 },
+              { hidden: videoPlaying !== 3 || !video },
               "absolute bottom-0 right-0 m-10 mb-20 z-[10000] cursor-pointer titleNext text-yellow-400 font-bold",
             )}
             onClick={() => {
@@ -296,7 +340,7 @@ export const PackOpening = ({
               className={clsx(
                 videoPlaying !== 3
                   ? ["hidden"]
-                  : "absolute top-0 bottom-0 left-0 right-0 m-auto flex overflow-x-auto items-center md:justify-center z-0 md:gap-10 gap-6 w-full h-screen px-10",
+                  : "absolute top-0 bottom-0 left-0 right-0 m-auto flex overflow-x-auto items-center md:justify-center z-[200] md:gap-10 gap-6 w-full h-screen px-10",
               )}
             >
               {cardsPack.map((id: number, index: number) => {
