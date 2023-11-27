@@ -39,7 +39,7 @@ export const PackOpeningComponent: React.FC<any> = ({
     setPackAnimation(id);
     try {
       const web3 = await getWeb3();
-      // await packContract.methods.unpack(id, 1).send({ from: account });
+      await packContract.methods.unpack(id, 1).send({ from: account });
       const block = await web3.eth.getBlockNumber();
       const eventsTransfer = await NFTContract.getPastEvents("TransferSingle", {
         filter: {
