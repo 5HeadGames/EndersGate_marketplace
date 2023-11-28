@@ -53,12 +53,10 @@ export const getContractCustom = (
   provider: any,
 ) => {
   const web3 = getWeb3(provider);
-  console.log(web3, provider);
   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 
 export const getProvider = (blockchain) => {
-  console.log(CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0]);
   return new Web3.providers.HttpProvider(
     CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0],
   );

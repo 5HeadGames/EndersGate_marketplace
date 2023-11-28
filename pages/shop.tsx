@@ -34,6 +34,8 @@ import { useUser } from "@shared/context/useUser";
 import { useForm } from "react-hook-form";
 import { packsShop, updateSales } from "@shared/utils/utils";
 import { DropdownShop } from "@shared/components/common/dropdowns/dropdownShop";
+import { nFormatter } from "@shared/components/common/specialFields/SpecialFields";
+import Web3 from "web3";
 
 const Shop = () => {
   const {
@@ -44,7 +46,6 @@ const Shop = () => {
   const [counters, setCounters] = useState([1, 1, 1, 1]);
   const [isLoading, setIsLoading] = useState(false);
   const [isValidCode, setValidCode] = useState(false);
-  const router = useRouter();
   const [tokenSelected, setTokenSelected] = React.useState("");
   const [messageBuy, setMessageBuy] = React.useState("");
   const { addToast } = useToasts();
@@ -61,13 +62,13 @@ const Shop = () => {
   const { shop: shopAddress, MATICUSD } = getAddresses(blockchain);
 
   const {
-    register,
+    // register,
     handleSubmit,
     formState: { errors },
-    setError,
-    getValues,
+    // setError,
+    // getValues,
     setValue,
-    clearErrors,
+    // clearErrors,
   } = useForm();
 
   const dispatch = useDispatch();
@@ -101,7 +102,6 @@ const Shop = () => {
 
   const buyPacks = async (data) => {
     const { influencer_code } = data;
-    console.log("a?");
 
     try {
       const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
@@ -115,7 +115,6 @@ const Shop = () => {
         return;
       }
 
-      console.log("a");
       let tx: any = "";
       if (!getNativeBlockchain(blockchain)) {
         tx = await dispatch(
@@ -162,21 +161,33 @@ const Shop = () => {
   };
 
   const getPriceMatic = async () => {
+    console.log("get price");
     const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
     const priceMATIC = await Aggregator.methods.latestAnswer().call();
     const price =
       BigInt(
         cartShop
           ?.map((item, i) => {
-            return (
-              (BigInt(item.price) / BigInt(10 ** 6)) * BigInt(item.quantity)
-            );
+            return BigInt(item.price) * BigInt(item.quantity);
           })
           .reduce((item, acc) => {
             return BigInt(item) + BigInt(acc);
           }) * BigInt(10 ** 8),
       ) / BigInt(priceMATIC);
-    setPriceNative((price + (price * BigInt(5)) / BigInt(100)).toString());
+    console.log(price);
+    setPriceNative(
+      (
+        parseFloat(
+          Web3.utils.fromWei((price * BigInt(10 ** 12)).toString(), "ether"),
+        ) +
+        parseFloat(
+          Web3.utils.fromWei((price * BigInt(10 ** 12)).toString(), "ether"),
+        ) *
+          0.0005
+      )
+        .toFixed(6)
+        .toString(),
+    );
   };
 
   React.useEffect(() => {
@@ -694,7 +705,7 @@ const ShopElement = ({ sale, counters, setCounters, index }) => {
                   );
                 }
               } else {
-                router.push("/login");
+                router.push("/login?redirect=true&redirectAddress=/shop");
               }
             }}
           >

@@ -741,17 +741,37 @@ export const buyFromShop = createAsyncThunk(
         );
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
         const preprice =
-          (cartShop
-            ?.map((item, i) => {
-              return (parseInt(item.price) / 10 ** 6) * item.quantity;
-            })
-            .reduce((item, acc) => {
-              return item + acc;
-            }) *
-            10 ** 8) /
-          priceMATIC;
+          BigInt(
+            cartShop
+              ?.map((item, i) => {
+                console.log(item.price, "item");
+                return BigInt(item.price) * BigInt(item.quantity);
+              })
+              .reduce((item, acc) => {
+                return BigInt(item) + BigInt(acc);
+              }) * BigInt(10 ** 8),
+          ) / BigInt(priceMATIC);
+
+        console.log(preprice, "preprice");
+        console.log("pre wei", (preprice * BigInt(10 ** 12)).toString());
         price = Web3.utils.toWei(
-          (preprice + preprice * 0.05).toString(),
+          (
+            parseFloat(
+              Web3.utils.fromWei(
+                (preprice * BigInt(10 ** 12)).toString(),
+                "ether",
+              ),
+            ) +
+            parseFloat(
+              Web3.utils.fromWei(
+                (preprice * BigInt(10 ** 12)).toString(),
+                "ether",
+              ),
+            ) *
+              0.0005
+          )
+            .toFixed(6)
+            .toString(),
           "ether",
         );
         tx = await shop.methods
