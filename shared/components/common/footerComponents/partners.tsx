@@ -2,7 +2,7 @@ import React from "react";
 
 const Partners = () => {
   const partners = [
-    { logo: "/icons/Findora_Logo.svg", link: "https://findora.org/" },
+    { logo: "/icons/skl.webp", link: "https://skale.space/" },
     { logo: "/icons/Chainlink.svg", link: "https://chain.link/" },
     { logo: "/icons/Chainstack.svg", link: "https://chainstack.com/" },
     { logo: "/icons/DappRadar.svg", link: "https://dappradar.com/" },
