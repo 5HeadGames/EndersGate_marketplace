@@ -143,20 +143,20 @@ const DashboardComponent = () => {
                           description:
                             "Enjoy +230 Unique hand drawn playing cards.",
                           image: "/images/gen0_pack.png",
-                          link: "https://www.endersgate.gg/shop",
+                          link: "/shop",
                         },
                       ]?.map(({ name, description, image, link }: any) => {
                         return (
-                          <a
+                          <Link
                             href={link}
                             target="_blank"
                             rel="noreferrer"
-                            className="flex flex-col items-center justify-center h-[400px] sm:max-w-[350px] overflow-hidden shrink-0"
+                            className="flex flex-col items-center justify-center h-[400px] sm:max-w-[350px] overflow-hidden shrink-0 cursor-pointer"
                           >
                             <div className="bg-secondary rounded-xl border border-overlay-border h-[390px] sm:max-w-[350px] flex items-end overflow-hidden w-full">
                               <img
                                 src={image}
-                                className="absolute max-w-[350px] w-full h-[390px]"
+                                className="absolute max-w-[350px] w-full h-[390px] cursor-pointer"
                                 alt=""
                               />
                               <div className="p-4 flex items-center justify-center relative sm:min-w-[400px] max-w-[350px] w-full rounded-xl bg-secondary border border-secondary gap-2">
@@ -178,7 +178,7 @@ const DashboardComponent = () => {
                                 </div>
                               </div>
                             </div>
-                          </a>
+                          </Link>
                         );
                       })}
                     </div>
