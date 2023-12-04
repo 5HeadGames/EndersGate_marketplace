@@ -1,19 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import Link from "next/link";
 import useMagicLink from "@shared/hooks/useMagicLink";
-import { Icons } from "@shared/const/Icons";
 import { useRouter } from "next/dist/client/router";
 import clsx from "clsx";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppDispatch } from "redux/store";
 import { onLoadSales } from "redux/actions";
-import {
-  AreaChartOutlined,
-  SearchOutlined,
-  ShopOutlined,
-  ShoppingCartOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
 import { Dropdown } from "../common/dropdowns/dropdown/dropdown";
@@ -26,82 +19,9 @@ import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
 import { getRentsPendingByUser } from "@shared/web3";
 import { useUser } from "@shared/context/useUser";
-
-type ButtonsTypes = { logout: boolean; userData: boolean };
-
-const navItems = [
-  {
-    name: "HOME",
-    link: "/",
-    icon: <AreaChartOutlined />,
-  },
-  { name: "EXPLORE", link: "/marketplace", icon: <ShopOutlined /> },
-  // { name: "COMICS", link: "/comics", icon: <ShopOutlined /> },
-  { name: "SHOP", link: "/shop", icon: <ShopOutlined /> },
-];
-
-export const Message: React.FunctionComponent<{
-  content: string;
-  open: boolean;
-}> = (props) => {
-  const { content, open } = props;
-
-  return (
-    <div
-      className={clsx(
-        `absolute bottom-3.5 left-3.5 bg-purple-300 px-10 py-4 rounded-md`,
-        "ease-out duration-300",
-        open ? "scale-100" : "scale-0",
-      )}
-    >
-      {content}
-    </div>
-  );
-};
-
-export const Logo = () => (
-  <Link href="/">
-    <div className="md:py-0 py-2 flex gap-2 items-center cursor-pointer max-w-1/2">
-      <img className="h-6" src={Icons.logo5HG} alt="logo" />
-      <img
-        className="max-h-6 2xl:block hidden"
-        src={Icons.logoenders}
-        alt="logo"
-      />
-      <img
-        className="h-6 md:block hidden 2xl:hidden"
-        src={Icons.logoendersmobile}
-        alt="logo"
-      />
-    </div>
-  </Link>
-);
-
-export const NavbarItem = ({ name, link, route, notification }) => {
-  return (
-    <Link href={link}>
-      <a
-        className={clsx(
-          "py-2 relative",
-          "text-md font-[500] text-white opacity-50",
-          {
-            "!opacity-100": link === route || notification,
-          },
-        )}
-        href={link}
-      >
-        {notification ? (
-          <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9.5px] bg-red-primary">
-            {notification}
-          </div>
-        ) : (
-          ""
-        )}
-        {name}
-      </a>
-    </Link>
-  );
-};
+import { handleSignOut, Logo, NavbarItem, navItems } from "./utils";
+import ModalShop from "../Shop/ModalShop";
+import { useModal } from "@shared/hooks/modal";
 
 const styles = {
   content: {
@@ -125,14 +45,20 @@ export default function AppLayout({ children }) {
 
   const router = useRouter();
 
-  const { logout, login } = useMagicLink();
+  const { login, logout } = useMagicLink();
 
   const { updateUser } = useUser();
 
   const {
     user: { ethAddress, providerName },
   } = useUser();
-  const { cart, cartRent } = useSelector((state: any) => state.layout);
+
+  const { cart, cartRent, cartShop } = useSelector(
+    (state: any) => state.layout,
+  );
+
+  const { Modal, show, isShow, hide } = useModal();
+
   const { allRents } = useSelector((state: any) => state.nfts);
 
   const { blockchain, updateBlockchain } = useBlockchain();
@@ -177,30 +103,6 @@ export default function AppLayout({ children }) {
     loadSales();
   }, [blockchain]);
 
-  const handleDisabled = (field: keyof ButtonsTypes) => (value: boolean) => {
-    setDisabled((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSignOut = async () => {
-    if (providerName === "magic") {
-      const toggleLogout = handleDisabled("logout");
-      toggleLogout(true);
-      logout(updateUser);
-      toggleLogout(false);
-    } else {
-      updateUser({
-        ethAddress: "",
-        email: "",
-        provider: "",
-        providerName: "",
-      });
-    }
-    localStorage.removeItem("typeOfConnection");
-    localStorage.removeItem("loginTime");
-    localStorage.removeItem("chain");
-    router.push("/");
-  };
-
   const userRentsNotificationArray =
     getRentsPendingByUser({ user: ethAddress, rents: allRents }) || [];
 
@@ -234,13 +136,20 @@ export default function AppLayout({ children }) {
     {
       name: "LOG OUT",
       decoration: "line-primary",
-      onClick: handleSignOut,
+      onClick: () =>
+        handleSignOut({
+          providerName,
+          logout,
+          updateUser,
+          router,
+          setDisabled,
+        }),
       disabled: disabled.logout,
     },
   ];
 
   return (
-    <div className="overflow-x-hidden">
+    <div className="overflow-x-hidden relative">
       <nav
         className={clsx(
           "fixed top-0 z-[100]",
@@ -307,6 +216,7 @@ export default function AppLayout({ children }) {
                     "!opacity-100":
                       cartOpen || cart.length + cartRent.length > 0,
                   },
+                  { "!hidden": router.pathname == "/shop" },
                   "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
                 )}
                 onClick={() => {
@@ -314,7 +224,11 @@ export default function AppLayout({ children }) {
                 }}
               >
                 {(cart.length > 0 || cartRent.length > 0) && (
-                  <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary">
+                  <div
+                    className={clsx(
+                      "absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary",
+                    )}
+                  >
                     {cart.length + cartRent.length}
                   </div>
                 )}
@@ -374,6 +288,7 @@ export default function AppLayout({ children }) {
           <div
             className={clsx(
               { "!opacity-100": cartOpen || cart.length > 0 },
+              { hidden: router.pathname === "/shop" },
               "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
             )}
             onClick={() => {

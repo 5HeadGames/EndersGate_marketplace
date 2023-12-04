@@ -17,6 +17,8 @@ import {
 import AccordionMenu from "./Accordion";
 import { Input } from "./form/input";
 import { Button } from "./button";
+import { WalletOutlined } from "@ant-design/icons";
+import { useUser } from "@shared/context/useUser";
 
 export const useCartModal = () => {
   const { showWallet } = useMagicLink();
@@ -46,6 +48,7 @@ export const useCartModal = () => {
       setTokenSelected,
       buy,
       providerName,
+      user,
       blockchain,
       isShow,
       handleSubmit,
@@ -256,22 +259,6 @@ export const useCartModal = () => {
                           </div>
                         </div>
 
-                        {blockchain === "findora" && (
-                          <a
-                            className="text-[12px] text-white pt-4 font-bold flex flex-col items-center justify-center gap-2 cursor-pointer"
-                            href="https://rialtobridge.io/"
-                            target={"_blank"}
-                            rel="noreferrer"
-                          >
-                            <img
-                              src="images/Railtobridge_Icon.webp"
-                              className="h-10"
-                              alt=""
-                            />{" "}
-                            Add funds to your wallet in Rialto Bridge
-                          </a>
-                        )}
-
                         {messageBuy !== "" ? (
                           <div className="py-2 text-lg text-white font-bold text-center w-full">
                             {messageBuy}
@@ -279,6 +266,39 @@ export const useCartModal = () => {
                         ) : (
                           ""
                         )}
+                        {blockchain === "matic" &&
+                          tokensAllowed.filter((token) => {
+                            return token.address === tokenSelected;
+                          })[0]?.transak && (
+                            <>
+                              <a
+                                href={`https://global.transak.com?apiKey=${
+                                  process.env.NEXT_PUBLIC_TRANSAK_API_KEY
+                                }&walletAddress=${user}&redirectURL=https://marketplace.endersgate.gg/&defaultCryptoAmount=${priceMatic}&cryptoCurrencyCode=${
+                                  tokensAllowed.filter((token) => {
+                                    return token.address === tokenSelected;
+                                  })[0]?.name
+                                }&network=polygon&defaultFiatCurrency=USD`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-green-button font-bold text-[13px] flex items-center justify-center gap-2 cursor-pointer py-2"
+                              >
+                                Not enough{" "}
+                                {
+                                  tokensAllowed.filter((token) => {
+                                    return token.address === tokenSelected;
+                                  })[0]?.name
+                                }
+                                ? Click here and buy for your purchase!{" "}
+                                <WalletOutlined />{" "}
+                              </a>
+                              <p className="text-green-button font-bold text-[13px] flex items-center justify-center gap-2 cursor-pointer">
+                                Note: Some crypto currencies require a minimum
+                                of value to buy that could exceed the cost of
+                                this purchase.
+                              </p>
+                            </>
+                          )}
                         {/* {router && router.asPath == "/shop" && (
                           <>
                             <AccordionMenu title="Promo Code / Referral">
@@ -366,21 +386,6 @@ export const useCartModal = () => {
                             Complete Purchase
                           </Button>
                         </div>
-                        {providerName == "magic" && blockchain == "matic" && (
-                          <div
-                            className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
-                            onClick={() => {
-                              showWallet();
-                            }}
-                          >
-                            <img
-                              src="icons/wallet.png"
-                              className="w-8 pb-2"
-                              alt=""
-                            />{" "}
-                            Add funds to your wallet
-                          </div>
-                        )}
                       </form>
                     ) : (
                       <div className="h-full flex flex-col items-center justify-center text-white font-bold gap-4 text-md text-center w-64 p-4 border border-transparent-color-gray-200 rounded-xl">

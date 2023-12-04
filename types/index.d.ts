@@ -2,6 +2,8 @@ interface NFT {
   tokenId: number | string;
 }
 
+type ButtonsTypes = { logout: boolean; userData: boolean };
+
 type Activity = {
   createdAt: string;
   type: "sell" | "buy" | "login";

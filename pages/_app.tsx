@@ -17,7 +17,6 @@ import { BlockchainContextProvider } from "@shared/context/useBlockchain";
 import "swiper/css";
 import { UserContextProvider } from "@shared/context/useUser";
 import ScrollToTop from "@shared/components/common/scrollToTop";
-
 const { ToastProvider } = require("react-toast-notifications"); //it throws ts error
 
 const MyApp = ({ Component, pageProps }: AppProps & { Component: any }) => {

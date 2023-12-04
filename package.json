@@ -19,6 +19,7 @@
     "@mui/icons-material": "^5.3.0",
     "@mui/material": "^5.10.12",
     "@reduxjs/toolkit": "^1.7.1",
+    "@transak/transak-sdk": "^2.0.1",
     "@types/google.maps": "^3.53.4",
     "@types/node": "^18.11.18",
     "@types/react": "^17.0.38",

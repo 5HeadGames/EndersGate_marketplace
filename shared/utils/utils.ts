@@ -58,14 +58,7 @@ export const packsShop = [
   },
 ];
 
-export const updateSales = async ({
-  setIsLoading,
-  blockchain,
-  shopAddress,
-  setSales,
-  setCounters,
-}) => {
-  setIsLoading(true);
+export const updateSales = async ({ blockchain, shopAddress, setSales }) => {
   try {
     // Use web3 to get the user's accounts.
     const shop = getContract(
@@ -103,7 +96,6 @@ export const updateSales = async ({
       });
 
     setSales(created);
-    setCounters(created.map(() => 1));
   } catch (error) {
     // Catch any errors for any of the above operations.
     alert(
@@ -111,5 +103,4 @@ export const updateSales = async ({
     );
     console.error(error);
   }
-  setIsLoading(false);
 };
