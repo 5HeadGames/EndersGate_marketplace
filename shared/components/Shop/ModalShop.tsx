@@ -43,6 +43,8 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
 
   const tokensAllowed = getTokensAllowed(blockchain);
 
+  console.log()
+
   const { cartShop } = useSelector((state: any) => state.layout);
 
   const { shop: shopAddress, MATICUSD } = getAddresses(blockchain);
