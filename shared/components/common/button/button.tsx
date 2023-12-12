@@ -130,7 +130,7 @@ export const Button: React.FC<
           },
 
           //global
-          "group flex items-center justify-center border outline-none transition-colors duration-200",
+          "group flex items-center justify-center border outline-none transition-colors duration-200 text-primary-disabled",
           "focus:outline-none",
           "disabled:cursor-not-allowed",
           { "px-6 py-2": size === "small" },

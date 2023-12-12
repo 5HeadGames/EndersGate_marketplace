@@ -16410,6 +16410,128 @@
         }
       ],
       "typeCard": "avatar"
+    },
+    {
+      "name": "Ultraman",
+      "type": "ERC1155",
+      "description": "● Specium Beam ● Specium Blade ● Ultra Slash",
+      "image": "https://bafkreieqqultmhvbou4hicsnk6zc7t5ui44y5fqzw6tygqdv2shjalocxy.ipfs.w3s.link/",
+      "symbol": "GATE",
+      "synergies": ["Pending"],
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 233
+        },
+        "name": {
+          "name": "name",
+          "value": "Ultraman"
+        },
+        "type": {
+          "name": "type",
+          "value": "Mystic"
+        },
+        "rarity": {
+          "name": "rarity",
+          "value": "Collectors Edition"
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafkreieqqultmhvbou4hicsnk6zc7t5ui44y5fqzw6tygqdv2shjalocxy.ipfs.w3s.link/"
+        },
+        "description": {
+          "name": "description",
+          "value": "● Specium Beam ● Specium Blade ● Ultra Slash"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "name",
+          "value": "Ultraman"
+        },
+        {
+          "trait_type": "type",
+          "value": "Mystic"
+        },
+        {
+          "trait_type": "rarity",
+          "value": "Collectors Edition"
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafkreieqqultmhvbou4hicsnk6zc7t5ui44y5fqzw6tygqdv2shjalocxy.ipfs.w3s.link/"
+        },
+        {
+          "trait_type": "description",
+          "value": "● Specium Beam ● Specium Blade ● Ultra Slash"
+        },
+        {
+          "trait_type": "id",
+          "value": 233
+        }
+      ],
+      "typeCard": "avatar"
+    },
+    {
+      "name": "Bemular",
+      "type": "ERC1155",
+      "description": "● Giant Light Orb ● Specium Beam. ● Red Orb Beam.",
+      "image": "https://bafkreifvo4adoub5b6qzy7a4fcsypygvllzfef7ypde2x426m7xcy3y5ji.ipfs.w3s.link/",
+      "symbol": "GATE",
+      "synergies": ["Pending"],
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 234
+        },
+        "name": {
+          "name": "name",
+          "value": "Bemular"
+        },
+        "type": {
+          "name": "type",
+          "value": "Void"
+        },
+        "rarity": {
+          "name": "rarity",
+          "value": "Collectors Edition"
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafkreifvo4adoub5b6qzy7a4fcsypygvllzfef7ypde2x426m7xcy3y5ji.ipfs.w3s.link/"
+        },
+        "description": {
+          "name": "description",
+          "value": "● Giant Light Orb ● Specium Beam. ● Red Orb Beam."
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "name",
+          "value": "Bemular"
+        },
+        {
+          "trait_type": "type",
+          "value": "Void"
+        },
+        {
+          "trait_type": "rarity",
+          "value": "Collectors Edition"
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafkreifvo4adoub5b6qzy7a4fcsypygvllzfef7ypde2x426m7xcy3y5ji.ipfs.w3s.link/"
+        },
+        {
+          "trait_type": "description",
+          "value": "● Giant Light Orb ● Specium Beam. ● Red Orb Beam."
+        },
+        {
+          "trait_type": "id",
+          "value": 234
+        }
+      ],
+      "typeCard": "avatar"
     }
   ],
   "wood": [

@@ -16,13 +16,15 @@ import { getAddressesMatic, getContractCustom } from "@shared/web3";
 import Web3 from "web3";
 import {
   onApproveERC1155,
-  onExchangeERC721to1155,
+  onExchangeEGERC721to1155,
+  onExchangePackERC721to1155,
   onGetAssets,
 } from "@redux/actions";
 import { useToasts } from "react-toast-notifications";
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { useUser } from "@shared/context/useUser";
+import clsx from "clsx";
 
 const navItems = [
   { title: "Trading Cards", value: "Trading Cards" },
@@ -36,12 +38,14 @@ const SwapComponent = () => {
 
   const dispatch = useDispatch();
   const { Modal, show, hide, isShow } = useModal();
-  const { common_pack, rare_pack, epic_pack, legendary_pack, exchange } =
+  const { common_pack, ultraman, bemular, exchange, exchangeEG } =
     getAddressesMatic();
 
   const { addToast } = useToasts();
 
   const { blockchain } = useBlockchain();
+
+  const [showEG, setShowEG] = React.useState(false);
 
   const passPacks = [
     {
@@ -70,12 +74,33 @@ const SwapComponent = () => {
     // },
   ];
 
+  const passEG = [
+    {
+      name: "Ultraman Collector Edition Pass",
+      nameKey: "Ultraman",
+      image: "/images/swap/Common pass.svg",
+      address: ultraman,
+    },
+    {
+      name: "Bemular Collector Edition Pass",
+      nameKey: "Bemular",
+      image: "/images/swap/Bemular_pass.svg",
+      address: bemular,
+    },
+  ];
+
+  const [balanceEG, setBalanceEG] = React.useState({
+    Ultraman: 0,
+    Bemular: 0,
+  });
+
   const [balance, setBalance] = React.useState({
     "Common Pack": 0,
     "Rare Pack": 0,
     "Epic Pack": 0,
     "Legendary Pack": 0,
   });
+
   const [search, setSearch] = React.useState("");
 
   const [loading, setLoading] = React.useState(false);
@@ -83,11 +108,15 @@ const SwapComponent = () => {
 
   React.useEffect(() => {
     if (user) {
-      handleSetBalance();
+      if (showEG) {
+        handleSetBalanceEG();
+      } else {
+        handleSetBalancePacks();
+      }
     }
-  }, [user]);
+  }, [user, showEG]);
 
-  const handleSetBalance = async () => {
+  const handleSetBalancePacks = async () => {
     const balance = {
       "Common Pack": 0,
       "Rare Pack": 0,
@@ -111,10 +140,47 @@ const SwapComponent = () => {
       const balancePass = await pack.methods.balanceOf(user).call();
       balance[item.nameKey] = balancePass;
     }
+
     setBalance(balance);
   };
 
-  const exchangeAll = async () => {
+  const handleSetBalanceEG = async () => {
+    const balance = {
+      Ultraman: 0,
+      Bemular: 0,
+    };
+    const web3 = new Web3(
+      process.env["NEXT_PUBLIC_POLYGON_RPC"]
+        ? process.env["NEXT_PUBLIC_POLYGON_RPC"]
+        : "http://localhost:8585",
+    );
+
+    for (let i = 0; i < passPacks.length; i++) {
+      const item = passPacks[i];
+      const pack = await getContractCustom(
+        "ERC721Seadrop",
+        item.address,
+        web3.currentProvider,
+      );
+
+      const balancePass = await pack.methods.balanceOf(user).call();
+      balance[item.nameKey] = balancePass;
+    }
+    for (let i = 0; i < passEG.length; i++) {
+      const item = passEG[i];
+      const eg = await getContractCustom(
+        "ERC721Seadrop",
+        item.address,
+        web3.currentProvider,
+      );
+
+      const balancePass = await eg.methods.balanceOf(user).call();
+      balance[item.nameKey] = balancePass;
+    }
+    setBalanceEG(balance);
+  };
+
+  const exchangeAllPacks = async () => {
     setLoading(true);
     try {
       const packsToExchange = passPacks.filter(
@@ -133,7 +199,7 @@ const SwapComponent = () => {
               from: user,
               pack: item.address,
               provider: provider,
-              blockchain,
+              exchange,
             }),
           );
           if (res?.payload?.err) {
@@ -142,8 +208,8 @@ const SwapComponent = () => {
         }
       }
 
-      const res: any = dispatch(
-        onExchangeERC721to1155({
+      const res: any = await dispatch(
+        onExchangePackERC721to1155({
           from: user,
           nfts: passPacks
             .filter((item) => balance[item.nameKey] > 0)
@@ -161,7 +227,78 @@ const SwapComponent = () => {
       addToast("Your NFTs have been exchanged succesfully!", {
         appearance: "success",
       });
-      handleSetBalance();
+      handleSetBalancePacks();
+      setTimeout(() => {
+        hide();
+        setLoading(false);
+        setSuccess(false);
+      }, 1500);
+    } catch (error) {
+      console.log(error);
+      addToast("Ups! Error exchanging your tokens, please try again", {
+        appearance: "error",
+      });
+      hide();
+      setLoading(false);
+      setSuccess(false);
+    }
+  };
+
+  const exchangeAllEG = async () => {
+    setLoading(true);
+    try {
+      const cardsToExchange = passEG.filter(
+        (item) => balance[item.nameKey] > 0,
+      );
+
+      for (const element of cardsToExchange) {
+        const item = element;
+        const eg = getContractCustom("ERC721Seadrop", item.address, provider);
+        console.log(eg);
+        const isApproved = await eg.methods
+          .isApprovedForAll(user, exchangeEG)
+          .call();
+        console.log(isApproved, user, exchangeEG, "approved?");
+        if (isApproved == false) {
+          const res: any = dispatch(
+            onApproveERC1155({
+              from: user,
+              pack: item.address,
+              provider: provider,
+              exchange: exchangeEG,
+            }),
+          );
+          if (res?.payload?.err) {
+            throw new Error(res?.payload.err.message);
+          }
+        }
+      }
+      console.log(
+        passEG
+          .filter((item) => balanceEG[item.nameKey] > 0)
+          .map((item) => item.address),
+      );
+
+      const res: any = await dispatch(
+        onExchangeEGERC721to1155({
+          from: user,
+          nfts: passEG
+            .filter((item) => balanceEG[item.nameKey] > 0)
+            .map((item) => item.address),
+          provider: provider,
+          blockchain: blockchain,
+        }),
+      );
+      if (res?.payload?.err) {
+        throw new Error(res?.payload.err.message);
+      }
+
+      setSuccess(true);
+      dispatch(onGetAssets({ address: user, blockchain }));
+      addToast("Your NFTs have been exchanged succesfully!", {
+        appearance: "success",
+      });
+      handleSetBalanceEG();
       setTimeout(() => {
         hide();
         setLoading(false);
@@ -198,16 +335,25 @@ const SwapComponent = () => {
               Swap your ERC721 NFTs for ERC1155
             </h3>
             <p className="text-sm text-primary-disabled text-justify">
-              <span className="text-white"> Note:</span> You will need to
-              complete{" "}
-              {Object.keys(balance)
-                ?.map((item) => balance[item])
-                ?.filter((item) => item > 0).length + 1}{" "}
-              transactions in order to list your tokens on our platform. The
-              first transaction is to grant us permission to list your tokens,
-              and the second transaction is to actually list the tokens. If you
-              have already granted us permission, you will only need to complete
-              the second transaction.
+              <span className="text-white"> Note:</span> Note: To swap your
+              tokens on the 5HG marketplace, you will need to complete{" "}
+              {showEG ? (
+                <>
+                  {Object.keys(balanceEG)
+                    ?.map((item) => balanceEG[item])
+                    ?.filter((item) => item > 0).length + 1}
+                </>
+              ) : (
+                <>
+                  {Object.keys(balance)
+                    ?.map((item) => balance[item])
+                    ?.filter((item) => item > 0).length + 1}
+                </>
+              )}{" "}
+              transactions. The firsts transactions grants us permission to swap
+              your tokens of each Pass Collection, and the last transaction
+              executes the swaps. Granting permission only occurs once per
+              session.
             </p>
           </div>
 
@@ -228,15 +374,31 @@ const SwapComponent = () => {
                 </div>
               </div>
             )}
-            <img src="/images/CommonPass.png" className="w-1/3 flex" alt="" />
+            <img
+              src={
+                showEG
+                  ? "/images/swap/Common pass.svg"
+                  : "/images/CommonPass.png"
+              }
+              className="w-1/2  flex"
+              alt=""
+            />
             <ArrowRightOutlined className="text-xl text-white" />
-            <img src="/images/0.png" className="w-1/3 flex" alt="" />
+            <img
+              src={showEG ? "/images/swap/Ultraman.svg" : "/images/0.png"}
+              className="w-1/3 flex"
+              alt=""
+            />
           </div>
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4">
             <Button
-              className="px-2 py-1 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md"
+              className="px-2 py-1 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md font-[500]"
               onClick={() => {
-                exchangeAll();
+                if (!showEG) {
+                  exchangeAllPacks();
+                } else {
+                  exchangeAllEG();
+                }
               }}
               disabled={loading}
             >
@@ -271,13 +433,28 @@ const SwapComponent = () => {
       </div>
       <div className="flex md:flex-row flex-col md:items-end md:justify-start justify-center gap-4 mb-2 pl-4">
         <div className="text-primary-disabled font-bold Raleway">
-          {Object.keys(balance)
-            ?.map((item) => {
-              return parseInt(balance[item]);
-            })
-            ?.reduce((acc, num) => {
-              return acc + num;
-            })}{" "}
+          {!showEG ? (
+            <>
+              {Object.keys(balance)
+                ?.map((item) => {
+                  console.log(balance, item);
+                  return parseInt(balance[item]);
+                })
+                ?.reduce((acc, num) => {
+                  return acc + num;
+                })}
+            </>
+          ) : (
+            <>
+              {Object.keys(balanceEG)
+                ?.map((item) => {
+                  return parseInt(balanceEG[item]);
+                })
+                ?.reduce((acc, num) => {
+                  return acc + num;
+                })}
+            </>
+          )}{" "}
           ERC721 Items
         </div>
         <Button
@@ -286,27 +463,61 @@ const SwapComponent = () => {
             show();
           }}
         >
-          Swap All to ERC1155
+          Swap {showEG ? "Cards" : "Packs"} All to ERC1155
+        </Button>
+        <Button
+          className={clsx(
+            { "!border-purple-600 from-overlay to-[#420057]": !showEG },
+            { "!border-alert-error from-overlay to-[#440000bb]": showEG },
+            "px-2 py-1 border  bg-gradient-to-b  rounded-md",
+          )}
+          onClick={() => {
+            setShowEG((prev) => !prev);
+          }}
+        >
+          {showEG ? "Cards" : "Packs"}
         </Button>
       </div>
       <div className="flex items-center justify-center gap-4 min-h-[calc(75vh)] border border-overlay-border bg-overlay rounded-xl p-4 overflow-auto">
-        {Object.keys(balance)
-          ?.map((item) => balance[item])
+        {Object.keys(showEG ? balanceEG : balance)
+          ?.map((item) => (showEG ? balanceEG[item] : balance[item]))
           ?.reduce((acc, num) => parseInt(acc) + parseInt(num)) > 0 ? (
           <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center justify-center gap-4">
-            {passPacks.map((item) => {
-              return (
-                <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
-                  <img src={item.image} className="w-full" alt="" />
-                  <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
-                    {item.name}
-                  </h2>
-                  <p className="text-md text-primary-disabled Raleway">
-                    QUANTITY: {balance[item.nameKey]}
-                  </p>
-                </div>
-              );
-            })}
+            <>
+              {!showEG ? (
+                <>
+                  {passPacks.map((item) => {
+                    return (
+                      <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
+                        <img src={item.image} className="w-full" alt="" />
+                        <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
+                          {item.name}
+                        </h2>
+                        <p className="text-md text-primary-disabled Raleway">
+                          QUANTITY: {balance[item.nameKey]}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {passEG.map((item) => {
+                    return (
+                      <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
+                        <img src={item.image} className="w-full" alt="" />
+                        <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
+                          {item.name}
+                        </h2>
+                        <p className="text-md text-primary-disabled Raleway">
+                          QUANTITY: {balanceEG[item.nameKey]}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+            </>
           </div>
         ) : (
           <div className="flex flex-col gap-2 h-full w-full items-center justify-center">

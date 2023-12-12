@@ -7,6 +7,7 @@ import GameItems from "./GameItems.json";
 import ERC20 from "./ERC20.json";
 import Aggregator from "./AggregatorV3.json";
 import ExchangeERC1155 from "./ExchangeERC1155.json";
+import ExchangeEGERC1155 from "./ExchangeEGERC1155.json";
 import ERC721Seadrop from "./ERC721SeaDrop.json";
 import Shop from "./ClockSaleOwnable.json";
 import ShopFindora from "./ClockSaleOwnableFindora.json";
@@ -38,5 +39,6 @@ const contracts = {
   Rent,
   RentNative,
   RentOnlyMultiToken,
+  ExchangeEGERC1155,
 };
 export default contracts;

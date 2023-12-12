@@ -493,7 +493,7 @@ export const onGetAssets = createAsyncThunk(
   },
 );
 
-export const onExchangeERC721to1155 = createAsyncThunk(
+export const onExchangePackERC721to1155 = createAsyncThunk(
   actionTypes.EXCHANGE_NFT,
   async function prepare(args: {
     from: string;
@@ -531,12 +531,50 @@ export const onExchangeERC721to1155 = createAsyncThunk(
   },
 );
 
+export const onExchangeEGERC721to1155 = createAsyncThunk(
+  actionTypes.EXCHANGE_NFT,
+  async function prepare(args: {
+    from: string;
+    nfts: string[];
+    provider: any;
+    blockchain: string;
+    // user: any;
+  }) {
+    const {
+      from,
+      nfts,
+      // user,
+      provider,
+      blockchain,
+    } = args;
+
+    try {
+      const { exchangeEG } = getAddresses(blockchain);
+
+      const marketplaceContract = getContractCustom(
+        "ExchangeEGERC1155",
+        exchangeEG,
+        provider,
+      );
+
+      await marketplaceContract.methods
+        .exchangeAllERC1155(nfts)
+        .send({ from: from });
+
+      return { from, nfts };
+    } catch (err) {
+      console.log({ err });
+      return { err };
+    }
+  },
+);
+
 export const onApproveERC1155 = createAsyncThunk(
   actionTypes.EXCHANGE_NFT,
   async function prepare(args: {
     from: string;
     pack: string;
-    blockchain: string;
+    exchange: string;
     provider: any;
     // user: any;
   }) {
@@ -544,11 +582,10 @@ export const onApproveERC1155 = createAsyncThunk(
       from,
       pack,
       // user,
+      exchange,
       provider,
-      blockchain,
     } = args;
 
-    const { exchange } = getAddresses(blockchain);
     try {
       const marketplaceContract = getContractCustom(
         "ERC721Seadrop",
