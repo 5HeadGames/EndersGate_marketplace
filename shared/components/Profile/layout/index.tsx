@@ -37,7 +37,7 @@ const ProfileLayout = ({ children }) => {
     }
   }, [account, user]);
 
-  const profileImage = Icons.logo;
+  const profileImage = Icons.profile;
 
   const handleUserForm = (data: any) => {
     set(ref(db, "profile/" + user), data)
@@ -78,65 +78,67 @@ const ProfileLayout = ({ children }) => {
             alt=""
           />
         </div>
-        <div className="absolute bottom-[-140px] sm:left-[120px] left-0 sm:right-auto right-0 mx-auto flex flex-col gap-2 items-center justify-center">
-          <img
-            className="md:w-40 w-32 rounded-full border-t border-overlay-border p-2 bg-overlay"
-            src={profileImage}
-            alt=""
-          />{" "}
-          <div className="flex mt-2 gap-5 items-center">
-            <div className="flex flex-col justify-center items-center">
-              {!editable ? (
-                <h2 className="text-white font-bold md:text-2xl text-lg flex justify-center items-center gap-2 py-1 w-60">
-                  <EditOutlined
-                    className="cursor-pointer text-lg"
-                    onClick={() => {
-                      setEditable(true);
-                    }}
-                  />{" "}
-                  {userName}
-                </h2>
-              ) : (
-                <form
-                  onSubmit={handleSubmit(handleUserForm)}
-                  className="flex gap-1 items-center justify-center text-white font-bold mb-2 w-60"
-                >
-                  <XIcon
-                    className="cursor-pointer w-6"
-                    onClick={() => {
-                      setEditable(false);
-                    }}
-                  />{" "}
-                  <Input
-                    register={register}
-                    name="username"
-                    type="text"
-                    withoutX
-                    classNameContainer="text-[10px] bg-overlay rounded-xl border border-overlay-border px-2"
-                    placeholder={userName}
-                  />
-                  <Button
-                    type="submit"
-                    className="text-[10px] px-2 py-2 bg-green-button rounded-xl text-overlay hover:text-green-button hover:bg-overlay hover:border-green-button transition-all duration-500"
+        <div className="absolute bottom-[-80px] sm:left-[120px] left-0 sm:right-auto right-0 mx-auto flex flex-col gap-2 items-center justify-center">
+          <div className="flex gap-2 items-center">
+            <img
+              className="md:w-40 w-32 rounded-full border-t border-overlay-border p-2 bg-overlay"
+              src={profileImage}
+              alt=""
+            />{" "}
+            <div className="flex items-end pt-10">
+              <div className="flex flex-col justify-center items-center">
+                {!editable ? (
+                  <h2 className="text-white font-bold text-xl flex justify-center items-center gap-2 w-52">
+                    <EditOutlined
+                      className="cursor-pointer text-sm"
+                      onClick={() => {
+                        setEditable(true);
+                      }}
+                    />{" "}
+                    {userName}
+                  </h2>
+                ) : (
+                  <form
+                    onSubmit={handleSubmit(handleUserForm)}
+                    className="flex gap-1 items-center justify-center text-white font-bold mt-2 w-60 pr-4"
                   >
-                    Save
-                  </Button>
-                </form>
-              )}
-              <h2 className="text-green-button font-bold md:text-[12px] text-[10px]">
-                (<AddressText text={user} />)
+                    <XIcon
+                      className="cursor-pointer w-6"
+                      onClick={() => {
+                        setEditable(false);
+                      }}
+                    />{" "}
+                    <Input
+                      register={register}
+                      name="username"
+                      type="text"
+                      withoutX
+                      classNameContainer="text-[10px] bg-overlay rounded-xl border border-overlay-border px-2"
+                      placeholder={userName}
+                    />
+                    <Button
+                      type="submit"
+                      className="text-[10px] px-2 py-1 bg-green-button rounded-xl !border-black !text-black hover:!bg-overlay hover:!text-green-button hover:!border-green-button transition-all duration-500"
+                    >
+                      Save
+                    </Button>
+                  </form>
+                )}
+              </div>
+              <h2 className="text-primary-disabled font-[500] md:text-[14px] text-[12px]">
+                <AddressText text={user} />
               </h2>
+              {providerName === "magic" && (
+                <Button
+                  type="submit"
+                  decoration="line-white"
+                  className="rounded-xl bg-overlay-2 text-white hover:text-overlay text-[12px] border border-overlay-border py-2 px-4 whitespace-nowrap"
+                  onClick={() => showWallet()}
+                >
+                  Show Wallet
+                </Button>
+              )}
             </div>
-            {providerName === "magic" && (
-              <Button
-                type="submit"
-                decoration="line-white"
-                className="rounded-xl bg-overlay-2 text-white hover:text-overlay text-[12px] border border-overlay-border py-2 px-4 whitespace-nowrap"
-                onClick={() => showWallet()}
-              >
-                Show Wallet
-              </Button>
-            )}
           </div>
         </div>
       </div>
