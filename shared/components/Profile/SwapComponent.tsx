@@ -25,6 +25,8 @@ import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { useUser } from "@shared/context/useUser";
 import clsx from "clsx";
+import { FAQS } from "@shared/utils/utils";
+import AccordionFAQ from "../common/AccordionFAQ";
 
 const SwapComponent = () => {
   const {
@@ -520,56 +522,77 @@ const SwapComponent = () => {
           </Button>
         </div>
         <div className="flex w-full gap-1">
-          <div className="flex items-center justify-center gap-4 min-h-[calc(75vh)] border border-overlay-border bg-overlay rounded-xl p-4 overflow-auto w-full">
-            {Object.keys(showEG ? balanceEG : balance)
-              ?.map((item) => (showEG ? balanceEG[item] : balance[item]))
-              ?.reduce((acc, num) => parseInt(acc) + parseInt(num)) > 0 ? (
-              <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center justify-center gap-4">
-                <>
-                  {!showEG ? (
-                    <>
-                      {passPacks.map((item) => {
-                        return (
-                          <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
-                            <img src={item.image} className="w-full" alt="" />
-                            <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
-                              {item.name}
-                            </h2>
-                            <p className="text-md text-primary-disabled Raleway">
-                              QUANTITY: {balance[item.nameKey]}
-                            </p>
-                          </div>
-                        );
-                      })}
-                    </>
-                  ) : (
-                    <>
-                      {passEG.map((item) => {
-                        return (
-                          <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
-                            <img src={item.image} className="w-full" alt="" />
-                            <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
-                              {item.name}
-                            </h2>
-                            <p className="text-md text-primary-disabled Raleway">
-                              QUANTITY: {balanceEG[item.nameKey]}
-                            </p>
-                          </div>
-                        );
-                      })}
-                    </>
-                  )}
-                </>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2 h-full w-full items-center justify-center">
-                <img src={Icons.logoCard} className="w-20" alt="" />
-                <h2 className="text-xl text-primary-disabled text-center">
-                  You don't have any Pass NFT
-                </h2>
-              </div>
-            )}
+          <div className="flex flex-col items-center justify-start gap-4 min-h-[calc(75vh)] border border-overlay-border bg-overlay rounded-xl p-4 overflow-auto w-full">
+            <div className="flex flex-col md:items-start md:justify-start justify-center items-center gap-6 w-full pt-6 pl-6">
+              <h2 className="text-5xl font-bold text-white">Card Pass Swap</h2>
+              <p className="text-primary-disabled md:w-[60%] w-full md:text-xl text-lg">
+                Swap your official Enders Gate Card Pass (721) tokens to
+                official Enders Gate Trading Card (1155) tokens by selecting the
+                desired quantity and completing the swap process.
+              </p>
+            </div>
+            <div className="flex flex-wrap w-full min-h-[calc(60vh)]">
+              {Object.keys(showEG ? balanceEG : balance)
+                ?.map((item) => (showEG ? balanceEG[item] : balance[item]))
+                ?.reduce((acc, num) => parseInt(acc) + parseInt(num)) > 0 ? (
+                <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 items-center justify-center gap-4">
+                  <>
+                    {!showEG ? (
+                      <>
+                        {passPacks.map((item) => {
+                          return (
+                            <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
+                              <img src={item.image} className="w-full" alt="" />
+                              <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
+                                {item.name}
+                              </h2>
+                              <p className="text-md text-primary-disabled Raleway">
+                                QUANTITY: {balance[item.nameKey]}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </>
+                    ) : (
+                      <>
+                        {passEG.map((item) => {
+                          return (
+                            <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
+                              <img src={item.image} className="w-full" alt="" />
+                              <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
+                                {item.name}
+                              </h2>
+                              <p className="text-md text-primary-disabled Raleway">
+                                QUANTITY: {balanceEG[item.nameKey]}
+                              </p>
+                              <p className="text-md text-primary-disabled Raleway">
+                                Token: ERC721
+                              </p>
+                              <p className="text-md text-primary-disabled Raleway">
+                                Blockchain: Matic{" "}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </>
+                    )}
+                  </>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2 h-full w-full items-center justify-center">
+                  <img src={Icons.logoCard} className="w-20" alt="" />
+                  <h2 className="text-xl text-primary-disabled text-center">
+                    You don't have any Pass NFT
+                  </h2>
+                </div>
+              )}
+            </div>
           </div>
+        </div>
+        <div className="flex flex-col gap-4 py-4">
+          {FAQS.map((faq) => {
+            return <AccordionFAQ title={faq.title}>{faq.content}</AccordionFAQ>;
+          })}
         </div>
       </div>
     </div>
