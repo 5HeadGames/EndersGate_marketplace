@@ -42,7 +42,7 @@ const SwapComponent = () => {
 
   const { blockchain } = useBlockchain();
 
-  const [showEG, setShowEG] = React.useState(false);
+  const [showEG, setShowEG] = React.useState(true);
 
   const passPacks = [
     {
@@ -178,6 +178,7 @@ const SwapComponent = () => {
   };
 
   const exchangeAllPacks = async () => {
+    console.log("a?");
     setLoading(true);
     try {
       const packsToExchange = passPacks.filter(
@@ -190,6 +191,7 @@ const SwapComponent = () => {
         const isApproved = await pack.methods
           .isApprovedForAll(user, exchange)
           .call();
+
         if (isApproved == false) {
           const res: any = dispatch(
             onApproveERC1155({
@@ -245,7 +247,7 @@ const SwapComponent = () => {
     setLoading(true);
     try {
       const cardsToExchange = passEG.filter(
-        (item) => balance[item.nameKey] > 0,
+        (item) => balanceEG[item.nameKey] > 0,
       );
 
       for (const element of cardsToExchange) {
@@ -270,11 +272,6 @@ const SwapComponent = () => {
           }
         }
       }
-      console.log(
-        passEG
-          .filter((item) => balanceEG[item.nameKey] > 0)
-          .map((item) => item.address),
-      );
 
       const res: any = await dispatch(
         onExchangeEGERC721to1155({

@@ -16,6 +16,11 @@
           "internalType": "contract EndersGate",
           "name": "_targetContract",
           "type": "address"
+        },
+        {
+          "internalType": "contract EndersPack",
+          "name": "_targetContractPack",
+          "type": "address"
         }
       ],
       "stateMutability": "nonpayable",
@@ -251,6 +256,19 @@
       "outputs": [
         {
           "internalType": "contract EndersGate",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "targetContractPack",
+      "outputs": [
+        {
+          "internalType": "contract EndersPack",
           "name": "",
           "type": "address"
         }
