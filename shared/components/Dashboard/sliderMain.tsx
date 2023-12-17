@@ -76,9 +76,7 @@ export const SliderMain = ({ salesDefault, cards }) => {
               id={arraySlider[arrayPos[3]]?.nftId}
               transactionId={arraySlider[arrayPos[3]]?.id}
               seller={arraySlider[arrayPos[3]]?.seller}
-              icon={
-                cards[arraySlider[arrayPos[3]]?.nftId]?.properties?.image?.value
-              }
+              icon={cards[arraySlider[arrayPos[3]]?.nftId]?.image}
               sale={arraySlider[arrayPos[3]]}
               name={
                 cards[arraySlider[arrayPos[3]]?.nftId]?.properties?.name?.value
@@ -146,7 +144,7 @@ const ItemCardSlider = ({
           alt=""
         />
         <img
-          src={cards[sale.nftId].properties.image.value}
+          src={cards[sale.nftId].image}
           className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
           alt=""
         />

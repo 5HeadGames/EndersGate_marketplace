@@ -156,7 +156,7 @@ const Inventory = () => {
                   <CardInventory
                     key={card.id}
                     id={card.id}
-                    icon={cards[card.id]?.properties?.image?.value}
+                    icon={cards[card.id]?.image}
                     name={cards[card.id]?.properties?.name?.value}
                     balance={card.balance}
                     type={cards[card.id].typeCard}
@@ -215,7 +215,7 @@ const Inventory = () => {
                   <CardInventory
                     key={card.id}
                     id={card.id}
-                    icon={cards[card.id]?.properties?.image?.value}
+                    icon={cards[card.id]?.image}
                     name={cards[card.id]?.properties?.name?.value}
                     balance={card.balance}
                     type={cards[card.id].typeCard}

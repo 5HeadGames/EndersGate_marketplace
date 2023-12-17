@@ -217,7 +217,7 @@ const DashboardComponent = () => {
                   icon={
                     sale.nft === pack
                       ? packs[sale.nftId]?.properties?.image?.value
-                      : cards[sale.nftId]?.properties?.image?.value
+                      : cards[sale.nftId]?.image
                   }
                   name={
                     sale.nft === pack

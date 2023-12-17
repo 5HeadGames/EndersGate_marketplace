@@ -200,7 +200,7 @@ export const PackOpeningComponent: React.FC<any> = ({
                       key={"history" + card.txHash + card?.id}
                     >
                       <img
-                        src={cards[card?.id]?.properties?.image?.value}
+                        src={cards[card?.id]?.image}
                         className="h-32"
                         alt=""
                       />

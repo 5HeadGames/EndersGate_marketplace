@@ -393,7 +393,7 @@ const MarketplaceComponent = () => {
                           icon={
                             isPack(sale.nft)
                               ? packs[sale.nftId]?.properties?.image?.value
-                              : cards[sale.nftId]?.properties?.image?.value
+                              : cards[sale.nftId]?.image
                           }
                           name={
                             isPack(sale.nft)

@@ -56,7 +56,7 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
                 src={
                   pack
                     ? packs[sale.nftId]?.properties?.image?.value
-                    : cards[sale.nftId]?.properties?.image?.value
+                    : cards[sale.nftId]?.image
                 }
                 className={"h-12 w-8"}
                 alt=""

@@ -203,7 +203,7 @@ export const PackOpeningMobile: React.FC<any> = ({
                 return (
                   <React.Fragment key={index + "card"}>
                     <AnimatedPackCard
-                      cardFront={cards[id]?.properties?.image?.value}
+                      cardFront={cards[id]?.image}
                       cardType={cards[id]?.typeCard}
                       cardId={id}
                       className={`card-${index + 1}`}

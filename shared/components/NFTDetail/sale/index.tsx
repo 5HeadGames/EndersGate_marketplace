@@ -197,8 +197,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   src={
                     isPack
                       ? packs[sale?.nftId].properties.image.value
-                      : cards[sale?.nftId]?.properties?.image?.value ||
-                        Icons.logo
+                      : cards[sale?.nftId]?.image || Icons.logo
                   }
                   className="absolute xl:top-[-20%] top-[-25%] bottom-0 xl:left-[-55%] left-[-35%] right-0 margin-auto opacity-50 xl:min-w-[1050px] min-w-[175%]"
                   alt=""
@@ -237,10 +236,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   >
                     <Tilt className="flex items-center justify-center">
                       <img
-                        src={
-                          cards[sale.nftId]?.properties?.image?.value ||
-                          Icons.logo
-                        }
+                        src={cards[sale.nftId]?.image || Icons.logo}
                         className={clsx(
                           Styles.animatedImageMain,
                           { ["hidden"]: flippedCard },

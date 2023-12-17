@@ -59,7 +59,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
         <CongratsListing
           hide={hide}
           name={cards[id]?.properties?.name?.value}
-          image={cards[id]?.properties?.image?.value}
+          image={cards[id]?.image}
         />
       </Modal>
       {id !== undefined ? (
