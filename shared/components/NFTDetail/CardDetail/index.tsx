@@ -93,7 +93,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                   </svg>
                 </div>
                 <img
-                  src={cards[id].properties.image?.value}
+                  src={cards[id].image}
                   className="absolute xl:top-[-20%] top-[-25%] bottom-0 xl:left-[-55%] left-[-35%] right-0 margin-auto opacity-50 xl:min-w-[1050px] min-w-[175%]"
                   alt=""
                 />
@@ -105,7 +105,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                   >
                     <Tilt className="flex items-center justify-center">
                       <img
-                        src={cards[id].properties.image?.value || Icons.logo}
+                        src={cards[id].image || Icons.logo}
                         className={clsx(
                           Styles.animatedImageMain,
                           { ["hidden"]: flippedCard },

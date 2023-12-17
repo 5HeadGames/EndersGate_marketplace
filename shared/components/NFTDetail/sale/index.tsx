@@ -209,8 +209,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         src={
                           isPack
                             ? packs[sale.nftId].properties.image.value
-                            : cards[sale.nftId].properties.image?.value ||
-                              Icons.logo
+                            : cards[sale.nftId].image || Icons.logo
                         }
                         className={clsx(
                           Styles.animatedImageMain,

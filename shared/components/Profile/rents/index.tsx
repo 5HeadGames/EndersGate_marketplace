@@ -289,7 +289,7 @@ const Rent = ({
               src={
                 pack
                   ? packs[rent.nftId]?.properties?.image?.value
-                  : cards[rent.nftId]?.properties.image?.value
+                  : cards[rent.nftId]?.image
               }
               className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
               alt=""
