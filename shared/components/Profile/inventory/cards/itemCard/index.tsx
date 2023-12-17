@@ -11,17 +11,11 @@ import {
 } from "@chakra-ui/react";
 import ReactCardFlip from "react-card-flip";
 import Tilt from "react-parallax-tilt";
-import {
-  LoadingOutlined,
-  ReloadOutlined,
-  RightOutlined,
-  RightSquareOutlined,
-} from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
+import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
 import { onGetAssets } from "@redux/actions";
 import {
   getAddresses,
-  getAddressesMatic,
   getContractCustom,
   getNativeBlockchain,
   onlyAcceptsERC20,
@@ -345,23 +339,7 @@ export const CardInventory = (props) => {
                   <img
                     onClick={() => setIsFlipped((prev) => !prev)}
                     className={clsx({ hidden: !isFlipped }, "cardPreview")}
-                    src={
-                      props.type === "reaction" || props.type === "action"
-                        ? "https://bafybeihcpwv3p6s3v2ud75snxe3yuuvv5yu7mw2t7tkmyya4fa475sqyay.ipfs.nftstorage.link/"
-                        : props.type === "wood"
-                        ? "https://bafybeicuhzudy54dbu6ptekwea5hfxyl7zbv2il7tyht7gkolzlklumnva.ipfs.nftstorage.link/"
-                        : props.type === "stone"
-                        ? "https://bafybeidcxv7rxdyat3mh642vcmouu4kopyq7tnnvmx65kt7dge425c4t7e.ipfs.nftstorage.link/"
-                        : props.type === "iron"
-                        ? "https://bafybeihusx7vstfvzjltvdnyl6njvntpdo2h5omkwjrdphhd2liowfewmu.ipfs.nftstorage.link/"
-                        : props.type === "gold"
-                        ? "https://bafybeiam2levzdsrwxi7pkwbq6hlok3xk6owd3o66f2vzyqxwd7euxfgvu.ipfs.nftstorage.link/"
-                        : props.type === "legendary"
-                        ? "https://bafybeih2vpmzogfeinhrojfc44tkvzmd7kv5naimntmzfz3lc4uwcpiubm.ipfs.nftstorage.link/"
-                        : props.type === "avatar"
-                        ? "https://bafybeienpnn5qgi6ce2mdf2maxrf3k6pn3bhhqo67pb2xd2g5uby6p5pfe.ipfs.nftstorage.link/"
-                        : props.icon
-                    }
+                    src={props.back || props.icon}
                     alt=""
                   />
                 </Tilt>

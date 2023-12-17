@@ -160,6 +160,7 @@ const Inventory = () => {
                     name={cards[card.id]?.properties?.name?.value}
                     balance={card.balance}
                     type={cards[card.id].typeCard}
+                    back={cards[card.id]?.properties?.back?.value}
                     typeNFT={"card"}
                     byId
                   />
@@ -218,6 +219,7 @@ const Inventory = () => {
                     name={cards[card.id]?.properties?.name?.value}
                     balance={card.balance}
                     type={cards[card.id].typeCard}
+                    back={cards[card.id]?.properties?.back?.value}
                     typeNFT={"card"}
                     rented
                     byId
