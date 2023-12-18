@@ -465,7 +465,7 @@ const CartItem = ({ item, pack, cards, blockchain, handleRemove }) => {
             src={
               item.nft === pack
                 ? packs[item.nftId]?.properties?.image?.value
-                : cards[item.nftId]?.properties.image?.value
+                : cards[item.nftId]?.image
             }
             className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
             alt=""

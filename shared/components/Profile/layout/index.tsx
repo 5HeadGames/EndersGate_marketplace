@@ -170,7 +170,7 @@ export const Activity = ({ date, type, metadata, pack }) => {
               src={
                 pack
                   ? packs[metadata?.tokenId]?.properties?.image?.value
-                  : cards[metadata?.tokenId]?.properties.image?.value
+                  : cards[metadata?.tokenId]?.image
               }
               className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
               alt=""

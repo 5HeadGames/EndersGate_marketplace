@@ -47,7 +47,7 @@ export const ModalRent = ({
               src={
                 isPack
                   ? packs[rent?.nftId].properties.image.value
-                  : cards[rent?.nftId]?.properties?.image?.value || Icons.logo
+                  : cards[rent?.nftId]?.image || Icons.logo
               }
               className={clsx(
                 Styles.animatedImage,

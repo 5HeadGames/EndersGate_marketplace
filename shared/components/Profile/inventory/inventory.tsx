@@ -156,10 +156,11 @@ const Inventory = () => {
                   <CardInventory
                     key={card.id}
                     id={card.id}
-                    icon={cards[card.id]?.properties?.image?.value}
+                    icon={cards[card.id]?.image}
                     name={cards[card.id]?.properties?.name?.value}
                     balance={card.balance}
                     type={cards[card.id].typeCard}
+                    back={cards[card.id]?.properties?.back?.value}
                     typeNFT={"card"}
                     byId
                   />
@@ -214,10 +215,11 @@ const Inventory = () => {
                   <CardInventory
                     key={card.id}
                     id={card.id}
-                    icon={cards[card.id]?.properties?.image?.value}
+                    icon={cards[card.id]?.image}
                     name={cards[card.id]?.properties?.name?.value}
                     balance={card.balance}
                     type={cards[card.id].typeCard}
+                    back={cards[card.id]?.properties?.back?.value}
                     typeNFT={"card"}
                     rented
                     byId

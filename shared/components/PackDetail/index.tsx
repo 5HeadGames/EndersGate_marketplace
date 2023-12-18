@@ -183,14 +183,14 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
             <div className="flex flex-col gap-2">
               <div className="flex relative items-center justify-center xl:min-w-[500px] min-w-[320px] min-h-[675px] py-10 xl:px-24 rounded-md bg-secondary cursor-pointer relative overflow-hidden border border-gray-500">
                 <img
-                  src={packs[id].properties.image?.value}
+                  src={packs[id].image}
                   className="absolute xl:top-[-20%] top-[-25%] bottom-0 xl:left-[-55%] left-[-35%] right-0 margin-auto opacity-50 xl:min-w-[1050px] min-w-[175%]"
                   alt=""
                 />
                 <Tilt className="flex items-center justify-center">
                   <div className="sm:sticky sm:top-32 h-min w-auto">
                     <img
-                      src={packs[id].properties.image?.value || Icons.logo}
+                      src={packs[id].image || Icons.logo}
                       className={clsx(Styles.animatedImageMain)}
                       alt=""
                     />

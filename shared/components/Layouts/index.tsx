@@ -22,6 +22,8 @@ import { useUser } from "@shared/context/useUser";
 import { handleSignOut, Logo, NavbarItem, navItems } from "./utils";
 import ModalShop from "../Shop/ModalShop";
 import { useModal } from "@shared/hooks/modal";
+import { Button } from "../common/button/button";
+import Link from "next/link";
 
 const styles = {
   content: {
@@ -53,11 +55,9 @@ export default function AppLayout({ children }) {
     user: { ethAddress, providerName },
   } = useUser();
 
-  const { cart, cartRent, cartShop } = useSelector(
-    (state: any) => state.layout,
-  );
+  const { cart, cartRent } = useSelector((state: any) => state.layout);
 
-  const { Modal, show, isShow, hide } = useModal();
+  const { Modal: ModalSwap, show, isShow, hide } = useModal();
 
   const { allRents } = useSelector((state: any) => state.nfts);
 
@@ -92,6 +92,7 @@ export default function AppLayout({ children }) {
   };
 
   React.useEffect(() => {
+    show();
     reconnect();
   }, []);
 
@@ -342,6 +343,69 @@ export default function AppLayout({ children }) {
         cartOpen={cartOpen}
         setCartOpen={setCartOpen}
       ></Cart>
+
+      <ModalSwap isShow={isShow} withoutX>
+        <div className="flex flex-col items-center bg-secondary rounded-xl border border-overlay-border w-full relative md:max-w-[700px] md:min-w-[500px] max-w-[350px] min-w-[350px]">
+          <div className="flex items-center justify-center border-b border-overlay-border w-full py-4 px-4 relative">
+            <h2 className="font-bold text-primary text-center text-3xl">
+              Swap your Collab Pass!
+            </h2>
+            <XIcon
+              onClick={() => hide()}
+              className="absolute right-4 top-0 bottom-0 my-auto text-primary-disabled text-xl w-6 cursor-pointer"
+            ></XIcon>
+          </div>
+          <div className="flex flex-col gap-4 w-full items-center justify-center pb-4 pt-2 md:px-16 px-4">
+            <h3 className="text-lg text-white text-center w-full font-bold Raleway">
+              Login to Swap your ERC721 NFTs for ERC1155
+            </h3>
+            <p className="text-sm text-primary-disabled text-justify">
+              Login to swap your Ultraman Mint Passes obtained from OpenSea on
+              the 5HG marketplace. Enders Gate 1155 NFTs can be added to your
+              card deck in-game for use in duels, unlock special game modes, and
+              be rented to other players through the 5HG marketplace.
+            </p>
+
+            <div className="flex w-full justify-around items-center">
+              <p className="text-sm font-bold text-white w-36 text-center">
+                Need help?
+              </p>
+              <Link href="/profile/swap#FAQ">
+                <p className="text-sm font-bold text-white py-1 px-4 bg-[#353535] rounded-xl w-36 text-center">
+                  Visit our <span className="underline">FAQ</span>
+                </p>
+              </Link>
+              <a
+                href="https://discord.com/invite/nHNkWdE99h"
+                target={"_blank"}
+                rel="noreferrer"
+                className="text-sm font-bold text-white py-1 px-4 bg-[#353535] rounded-xl w-36 text-center"
+              >
+                Join our <span className="underline">Discord</span>
+              </a>
+            </div>
+          </div>
+
+          <div className="flex gap-2 items-center justify-center py-2 border-y border-overlay-border relative">
+            <img
+              src="/images/swap/SwapModalImage1.png"
+              className="w-full flex"
+              alt=""
+            />
+          </div>
+          <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4">
+            <Button
+              className="w-1/3 py-2 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md text-white font-bold"
+              href="/login?redirect=true&redirectAddress=/profile/swap"
+              onClick={() => {
+                hide();
+              }}
+            >
+              Login
+            </Button>
+          </div>
+        </div>
+      </ModalSwap>
 
       <div className={clsx("bg-overlay flex flex-col")} style={styles.content}>
         {children}

@@ -205,7 +205,7 @@ const Sale = ({ sale, pack, setCancelId, show }) => {
               src={
                 pack
                   ? packs[sale.nftId]?.properties?.image?.value
-                  : cards[sale.nftId]?.properties.image?.value
+                  : cards[sale.nftId]?.image
               }
               className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
               alt=""

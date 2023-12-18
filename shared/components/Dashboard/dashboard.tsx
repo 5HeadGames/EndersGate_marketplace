@@ -62,7 +62,7 @@ const DashboardComponent = () => {
         <div className="max-w-[100vw] overflow-hidden min-h-[100vh] bg-overlay relative flex items-center">
           <img
             src="/images/bg_landing.svg"
-            className={`absolute 2xl:min-w-[165vw] lg:min-w-[250vw] min-w-[350vw] lg:max-h-[85vh] top-0 banner border-b border-overlay-border`}
+            className={`absolute 2xl:min-w-[165vw] lg:min-w-[250vw] min-w-[350vw] lg:max-h-[800px] top-0 banner border-b border-overlay-border`}
             alt=""
           />
           <div className="flex flex-col pt-24 w-full items-center lg:min-h-screen relative gap-4 border-b border-overlay-border xl:px-32 lg:px-24 md:px-16 xs:px-8 text-white">
@@ -217,7 +217,7 @@ const DashboardComponent = () => {
                   icon={
                     sale.nft === pack
                       ? packs[sale.nftId]?.properties?.image?.value
-                      : cards[sale.nftId]?.properties?.image?.value
+                      : cards[sale.nftId]?.image
                   }
                   name={
                     sale.nft === pack
