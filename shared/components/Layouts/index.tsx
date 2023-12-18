@@ -355,7 +355,7 @@ export default function AppLayout({ children }) {
               className="absolute right-4 top-0 bottom-0 my-auto text-primary-disabled text-xl w-6 cursor-pointer"
             ></XIcon>
           </div>
-          <div className="flex flex-col gap-4 w-full items-center justify-center pb-4 pt-2 px-16">
+          <div className="flex flex-col gap-4 w-full items-center justify-center pb-4 pt-2 md:px-16 px-4">
             <h3 className="text-lg text-white text-center w-full font-bold Raleway">
               Login to Swap your ERC721 NFTs for ERC1155
             </h3>
