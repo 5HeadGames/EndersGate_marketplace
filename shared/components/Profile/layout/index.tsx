@@ -78,14 +78,14 @@ const ProfileLayout = ({ children }) => {
             alt=""
           />
         </div>
-        <div className="absolute bottom-[-80px] sm:left-[120px] left-0 sm:right-auto right-0 mx-auto flex flex-col gap-2 items-center justify-center">
-          <div className="flex gap-2 items-center">
+        <div className="absolute sm:bottom-[-80px] bottom-[-110px]  sm:left-[120px] left-0 sm:right-auto right-0 mx-auto flex flex-col gap-2 items-center justify-center">
+          <div className="flex sm:flex-row flex-col gap-2 items-center">
             <img
               className="md:w-40 w-32 rounded-full border-t border-overlay-border p-2 bg-overlay"
               src={profileImage}
               alt=""
             />{" "}
-            <div className="flex items-end pt-10">
+            <div className="flex sm:flex-row flex-col sm:items-end items-center justify-center sm:pt-10">
               <div className="flex flex-col justify-center items-center">
                 {!editable ? (
                   <h2 className="text-white font-bold text-xl flex justify-center items-center gap-2 w-52">

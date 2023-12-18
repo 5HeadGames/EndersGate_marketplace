@@ -2,6 +2,7 @@ import { Button } from "@shared/components/common/button";
 
 import React from "react";
 import {
+  ArrowDownOutlined,
   ArrowRightOutlined,
   CheckOutlined,
   LoadingOutlined,
@@ -344,8 +345,8 @@ const SwapComponent = () => {
   ];
 
   return (
-    <div className="flex w-full 2xl:px-36 px-24 gap-2">
-      <div className="flex flex-col gap-1 w-60 pt-36">
+    <div className="flex sm:flex-row flex-col w-full 2xl:px-36 md:px-24 px-4 gap-2">
+      <div className="flex flex-col gap-1 sm:w-60 w-full sm:pt-36">
         {menuElements.map(({ name, link, image, active, onClick }) => {
           return link ? (
             <a
@@ -438,14 +439,14 @@ const SwapComponent = () => {
                     {passEG.map((item) => {
                       return (
                         balanceEG[item.nameKey] > 0 && (
-                          <div className="flex items-center justify-center w-full gap-2">
-                            <div className="flex flex-col w-1/2 bg-[#232323] gap-2 rounded-xl p-4">
+                          <div className="flex sm:flex-row flex-col items-center justify-center w-full gap-2 px-2">
+                            <div className="flex flex-col sm:w-1/2 w-full bg-[#232323] gap-2 rounded-xl p-4">
                               <h2 className="text-white text-lg text-center">
                                 {item.name}
                               </h2>
                               <img
                                 src={item.image}
-                                className="md:h-28 h-24 flex"
+                                className="h-32 flex"
                                 alt=""
                               />
                               <div className="flex gap-2 px-2 w-full justify-center items-center">
@@ -462,7 +463,7 @@ const SwapComponent = () => {
                                     Token Type:
                                   </h3>{" "}
                                   <p className="text-[18px] flex h-5 font-bold">
-                                    ERC721
+                                    721
                                   </p>
                                 </div>{" "}
                                 <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
@@ -475,14 +476,15 @@ const SwapComponent = () => {
                                 </div>
                               </div>
                             </div>
-                            <ArrowRightOutlined className="text-xl text-white" />
-                            <div className="flex flex-col w-1/2 bg-[#232323] gap-2 rounded-xl p-4">
+                            <ArrowRightOutlined className="text-xl text-white sm:flex hidden" />
+                            <ArrowDownOutlined className="text-xl text-white sm:hidden" />
+                            <div className="flex flex-col sm:w-1/2 w-full bg-[#232323] gap-2 rounded-xl p-4">
                               <h2 className="text-white text-lg text-center">
                                 {item.nameResult}
                               </h2>
                               <img
                                 src={item.result}
-                                className="md:h-28 h-24 flex"
+                                className="h-32 flex"
                                 alt=""
                               />
                               <div className="flex gap-2 px-2 w-full justify-center items-center">
@@ -499,7 +501,7 @@ const SwapComponent = () => {
                                     Token Type:
                                   </h3>{" "}
                                   <p className="text-[18px] flex h-5 font-bold">
-                                    ERC1155
+                                    1155
                                   </p>
                                 </div>{" "}
                                 <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
@@ -617,14 +619,16 @@ const SwapComponent = () => {
         <div className="flex w-full gap-1">
           <div className="flex flex-col items-center justify-start gap-4 min-h-[calc(75vh)] border border-overlay-border bg-overlay rounded-xl p-4 overflow-auto w-full">
             <div className="flex flex-col md:items-start md:justify-start justify-center items-center gap-6 w-full pt-6 pl-6">
-              <h2 className="text-5xl font-bold text-white">Card Pass Swap</h2>
-              <p className="text-primary-disabled md:w-[60%] w-full md:text-xl text-lg">
+              <h2 className="sm:text-5xl text-3xl font-bold text-white">
+                {showEG ? "Card" : "Pack"} Pass Swap
+              </h2>
+              <p className="text-primary-disabled md:w-[60%] w-full md:text-xl sm:text-lg text-sm">
                 Swap your official Enders Gate Card Pass (721) tokens to
                 official Enders Gate Trading Card (1155) tokens by selecting the
                 desired quantity and completing the swap process.
               </p>
             </div>
-            <div className="flex flex-wrap w-full min-h-[calc(60vh)]">
+            <div className="flex sm:flex-wrap sm:justify-start items-center justify-center w-full min-h-[calc(60vh)] px-10">
               {Object.keys(showEG ? balanceEG : balance)
                 ?.map((item) => (showEG ? balanceEG[item] : balance[item]))
                 ?.reduce((acc, num) => parseInt(acc) + parseInt(num)) > 0 ? (
