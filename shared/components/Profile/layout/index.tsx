@@ -18,6 +18,8 @@ import { Input } from "@shared/components/common/form/input";
 import { child, get, getDatabase, ref, set } from "firebase/database";
 import { toast } from "react-hot-toast";
 import { useUser } from "@shared/context/useUser";
+import clsx from "clsx";
+import Link from "next/link";
 
 const ProfileLayout = ({ children }) => {
   const {
@@ -68,12 +70,32 @@ const ProfileLayout = ({ children }) => {
       });
   }, [user]);
 
+  const profileItems = [
+    { name: "Inventory", link: "/profile" },
+    {
+      name: "Activity",
+      link: "/profile/activity",
+    },
+    {
+      name: "My Sales",
+      link: "/profile/sales",
+    },
+    {
+      name: "My Rents",
+      link: "/profile/rents",
+    },
+    {
+      name: "Swap",
+      link: "/profile/swap",
+    },
+  ];
+
   return (
     <div className="flex flex-col py-8">
-      <div className="flex flex-col relative mb-40">
+      <div className="flex flex-col relative mb-20">
         <div className="w-full">
           <img
-            src="/images/bg_landing.png"
+            src="/images/inventory/banner.svg"
             className="w-full border-b border-overlay-border"
             alt=""
           />
@@ -85,10 +107,10 @@ const ProfileLayout = ({ children }) => {
               src={profileImage}
               alt=""
             />{" "}
-            <div className="flex sm:flex-row flex-col sm:items-end items-center justify-center sm:pt-10">
+            <div className="flex sm:flex-row flex-col sm:items-end items-start justify-center sm:pt-10">
               <div className="flex flex-col justify-center items-center">
                 {!editable ? (
-                  <h2 className="text-white font-bold text-xl flex justify-center items-center gap-2 w-52">
+                  <h2 className="text-white font-bold text-xl flex justify-start items-center gap-2 w-52 overflow-hidden">
                     <EditOutlined
                       className="cursor-pointer text-sm"
                       onClick={() => {
@@ -141,6 +163,30 @@ const ProfileLayout = ({ children }) => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="flex flex-col md:px-32 px-16">
+        <div className="flex gap-4 w-full px-8 py-2">
+          {profileItems.map(({ link, name }) => {
+            return (
+              <Link href={link}>
+                <p
+                  className={clsx(
+                    { "text-white": link === router.asPath },
+                    { "text-overlay-border": link !== router.asPath },
+                    "text-lg px-4 font-bold cursor-pointer",
+                  )}
+                >
+                  {name}
+                </p>
+              </Link>
+            );
+          })}
+        </div>
+        <img
+          src="/images/inventory/border_menu.png"
+          className="w-full"
+          alt=""
+        />
       </div>
       {children}
     </div>
