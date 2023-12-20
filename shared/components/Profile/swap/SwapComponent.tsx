@@ -501,35 +501,37 @@ const SwapComponent = () => {
                                 <h2 className="text-white text-lg text-center">
                                   {item.name}
                                 </h2>
-                                <img
-                                  src={item.image}
-                                  className="h-32 flex"
-                                  alt=""
-                                />{" "}
-                                <div className="flex gap-2 px-2 w-full justify-center items-center">
-                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                    <h3 className="text-[10px] font-[400]">
-                                      Quantity:
-                                    </h3>{" "}
-                                    <p className="text-[18px] flex h-5 font-bold">
-                                      {balanceEG[item.nameKey]}
-                                    </p>
-                                  </div>
-                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                    <h3 className="text-[10px] font-[400]">
-                                      Token Type:
-                                    </h3>{" "}
-                                    <p className="text-[18px] flex h-5 font-bold">
-                                      721
-                                    </p>
-                                  </div>{" "}
-                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                    <h3 className="text-[10px] font-[400]">
-                                      Blockchain:
-                                    </h3>{" "}
-                                    <p className="text-[18px] flex h-5 font-bold">
-                                      Matic
-                                    </p>
+                                <div className="flex flex-row-reverse gap-2 w-full">
+                                  <img
+                                    src={item.image}
+                                    className="h-28 flex"
+                                    alt=""
+                                  />{" "}
+                                  <div className="flex flex-col gap-2 w-[110px] justify-center items-center">
+                                    <div className="flex flex-col items-center text-[#B8B8B8] px-2 py-1 bg-[#3F3F3F] rounded-xl w-full">
+                                      <h3 className="text-[10px] font-[400]">
+                                        QUANTITY:
+                                      </h3>{" "}
+                                      <p className="text-[18px] flex items-center justify-center h-5 font-bold">
+                                        {balanceEG[item.nameKey]}
+                                      </p>
+                                    </div>
+                                    <div className="flex flex-col items-center text-[#B8B8B8] px-2 py-1 bg-[#3F3F3F] rounded-xl w-full">
+                                      <h3 className="text-[10px] font-[400]">
+                                        Token Type:
+                                      </h3>{" "}
+                                      <p className="text-[14px] items-center justify-center flex h-5 font-bold">
+                                        ERC-721
+                                      </p>
+                                    </div>{" "}
+                                    <div className="flex flex-col items-center text-[#B8B8B8] px-2 py-1 bg-[#3F3F3F] rounded-xl w-full">
+                                      <h3 className="text-[10px] font-[400]">
+                                        Blockchain:
+                                      </h3>{" "}
+                                      <p className="text-[18px] flex h-5 items-center justify-center font-bold">
+                                        Matic
+                                      </p>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -539,43 +541,44 @@ const SwapComponent = () => {
                                 <h2 className="text-white text-lg text-center">
                                   {item.nameResult}
                                 </h2>
-
-                                <div className="flex gap-2 justify-center items-center">
-                                  <img
-                                    src={item.result}
-                                    className="h-32 flex"
-                                    alt=""
-                                  />{" "}
-                                  <img
-                                    src={item.imageBonus}
-                                    className="h-32 flex"
-                                    alt=""
-                                  />
-                                </div>
-                                <div className="flex gap-2 px-2 w-full justify-center items-center">
-                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                    <h3 className="text-[10px] font-[400]">
-                                      Quantity:
-                                    </h3>{" "}
-                                    <p className="text-[18px] flex h-5 font-bold">
-                                      {balanceEG[item.nameKey]}
-                                    </p>
+                                <div className="flex flex-row-reverse gap-2 w-full">
+                                  <div className="flex gap-2 justify-center items-center">
+                                    <img
+                                      src={item.result}
+                                      className="h-36 flex"
+                                      alt=""
+                                    />{" "}
+                                    <img
+                                      src={item.imageBonus}
+                                      className="h-32 flex"
+                                      alt=""
+                                    />
                                   </div>
-                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                    <h3 className="text-[10px] font-[400]">
-                                      Token Type:
-                                    </h3>{" "}
-                                    <p className="text-[18px] flex h-5 font-bold">
-                                      1155
-                                    </p>
-                                  </div>{" "}
-                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                    <h3 className="text-[10px] font-[400]">
-                                      Blockchain:
-                                    </h3>{" "}
-                                    <p className="text-[18px] flex h-5 font-bold">
-                                      Matic
-                                    </p>
+                                  <div className="flex flex-col gap-2 px-2 w-[110px] justify-center items-center">
+                                    <div className="flex flex-col items-center text-[#B8B8B8] px-2 py-1 bg-[#3F3F3F] rounded-xl w-full">
+                                      <h3 className="text-[10px] font-[400]">
+                                        QUANTITY:
+                                      </h3>{" "}
+                                      <p className="text-[18px] flex items-center justify-center h-5 font-bold">
+                                        {balanceEG[item.nameKey]}
+                                      </p>
+                                    </div>
+                                    <div className="flex flex-col items-center text-[#B8B8B8] px-2 py-1 bg-[#3F3F3F] rounded-xl w-full">
+                                      <h3 className="text-[10px] font-[400]">
+                                        Token Type:
+                                      </h3>{" "}
+                                      <p className="text-[14px] items-center justify-center flex h-5 font-bold">
+                                        ERC-1155
+                                      </p>
+                                    </div>{" "}
+                                    <div className="flex flex-col items-center text-[#B8B8B8] px-2 py-1 bg-[#3F3F3F] rounded-xl w-full">
+                                      <h3 className="text-[10px] font-[400]">
+                                        Blockchain:
+                                      </h3>{" "}
+                                      <p className="text-[18px] flex h-5 items-center justify-center font-bold">
+                                        Matic
+                                      </p>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -702,41 +705,57 @@ const SwapComponent = () => {
                   <>
                     {!showEG ? (
                       <>
-                        {passPacks.map((item) => {
-                          return (
-                            <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
-                              <img src={item.image} className="w-full" alt="" />
-                              <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
-                                {item.name}
-                              </h2>
-                              <p className="text-md text-primary-disabled Raleway">
-                                QUANTITY: {balance[item.nameKey]}
-                              </p>
-                            </div>
-                          );
-                        })}
+                        {passPacks
+                          .filter((item) => {
+                            return balance[item.nameKey] > 0;
+                          })
+                          .map((item) => {
+                            return (
+                              <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
+                                <img
+                                  src={item.image}
+                                  className="w-full"
+                                  alt=""
+                                />
+                                <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
+                                  {item.name}
+                                </h2>
+                                <p className="text-md text-primary-disabled Raleway">
+                                  QUANTITY: {balance[item.nameKey]}
+                                </p>
+                              </div>
+                            );
+                          })}
                       </>
                     ) : (
                       <>
-                        {passEG.map((item) => {
-                          return (
-                            <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
-                              <img src={item.image} className="w-full" alt="" />
-                              <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
-                                {item.name}
-                              </h2>
-                              <p className="text-md text-primary-disabled Raleway">
-                                QUANTITY: {balanceEG[item.nameKey]}
-                              </p>
-                              <p className="text-md text-primary-disabled Raleway">
-                                Token: ERC721
-                              </p>
-                              <p className="text-md text-primary-disabled Raleway">
-                                Blockchain: Matic{" "}
-                              </p>
-                            </div>
-                          );
-                        })}
+                        {passEG
+                          .filter((item) => {
+                            return balanceEG[item.nameKey] > 0;
+                          })
+                          .map((item) => {
+                            return (
+                              <div className="flex items-center flex-col md:w-96 sm:w-72 w-60">
+                                <img
+                                  src={item.image}
+                                  className="w-full"
+                                  alt=""
+                                />
+                                <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
+                                  {item.name}
+                                </h2>
+                                <p className="text-md text-primary-disabled Raleway">
+                                  QUANTITY: {balanceEG[item.nameKey]}
+                                </p>
+                                <p className="text-md text-primary-disabled Raleway">
+                                  Token: ERC721
+                                </p>
+                                <p className="text-md text-primary-disabled Raleway">
+                                  Blockchain: Matic{" "}
+                                </p>
+                              </div>
+                            );
+                          })}
                       </>
                     )}
                   </>
