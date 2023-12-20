@@ -301,7 +301,7 @@ const SwapComponent = () => {
       if (res?.payload?.err) {
         throw new Error(res?.payload.err.message);
       }
-      console.log(balanceEG);
+      console.log(balanceEG, getExchangeType(balanceEG));
       setExchangeType(getExchangeType(balanceEG));
       setSuccess(true);
       setTimeout(() => {

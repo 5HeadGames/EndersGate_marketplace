@@ -29,13 +29,13 @@ export const authStillValid = () => {
 };
 
 export const getExchangeType = (balanceEG: any) => {
-  if (balanceEG.Ultraman) {
-    if (balanceEG.Bemular) {
+  if (parseInt(balanceEG.Ultraman) > 0) {
+    if (parseInt(balanceEG.Bemular) > 0) {
       return 1;
     }
     return 2;
   } else {
-    if (balanceEG.Bemular) {
+    if (parseInt(balanceEG.Bemular) > 0) {
       return 3;
     }
   }
