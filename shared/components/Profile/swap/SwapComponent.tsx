@@ -423,7 +423,7 @@ const SwapComponent = () => {
                   />
                 </a>
                 <img
-                  src="/images/view_comics.png"
+                  src="/images/swap/View_Collectibles.png"
                   className="h-12 cursor-pointer"
                   alt=""
                   onClick={() => {
