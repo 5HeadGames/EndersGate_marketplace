@@ -28,3 +28,40 @@ export const authStillValid = () => {
   );
 };
 
+export const getExchangeType = (balanceEG: any) => {
+  if (balanceEG.Ultraman) {
+    if (balanceEG.Bemular) {
+      return 1;
+    }
+    return 2;
+  } else {
+    if (balanceEG.Bemular) {
+      return 3;
+    }
+  }
+  return 0;
+};
+
+export const menuElements = (showEG, setShowEG) => [
+  {
+    name: "Card Pass Swap",
+    image: "/images/swap/cardIcon.png",
+    active: showEG === true,
+    onClick: () => {
+      setShowEG(true);
+    },
+  },
+  {
+    name: "Pack Pass Swap",
+    image: "/images/swap/PackIcon.png",
+    active: showEG === false,
+    onClick: () => {
+      setShowEG(false);
+    },
+  },
+  {
+    name: "Visit OPENSEA",
+    image: "/images/swap/opensea_white.png",
+    link: `https://testnets.opensea.io/0xc2B8Abc5249397DB5d159b4E3c311c2fAf4091f2`,
+  },
+];

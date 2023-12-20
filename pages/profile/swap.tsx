@@ -1,6 +1,6 @@
 import React from "react";
 import ProfileLayout from "@shared/components/Profile/layout";
-import SwapComponent from "@shared/components/Profile/SwapComponent";
+import SwapComponent from "@shared/components/Profile/swap/SwapComponent";
 
 const ProfileSales = () => {
   return (

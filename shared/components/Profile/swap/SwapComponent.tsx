@@ -27,15 +27,20 @@ import { useBlockchain } from "@shared/context/useBlockchain";
 import { useUser } from "@shared/context/useUser";
 import clsx from "clsx";
 import { FAQS } from "@shared/utils/utils";
-import AccordionFAQ from "../common/AccordionFAQ";
+import AccordionFAQ from "../../common/AccordionFAQ";
+import { useRouter } from "next/router";
+import { getExchangeType, menuElements } from "@shared/components/utils";
 
 const SwapComponent = () => {
   const {
     user: { ethAddress: user, provider },
   } = useUser();
 
+  const router = useRouter();
+
   const dispatch = useDispatch();
   const { Modal, show, hide, isShow } = useModal();
+
   const { common_pack, ultraman, bemular, exchange, exchangeEG } =
     getAddressesMatic();
 
@@ -80,6 +85,7 @@ const SwapComponent = () => {
       nameResult: "Ultraman Avatar Card",
       nameKey: "Ultraman",
       image: "/images/swap/Common pass.svg",
+      imageBonus: "/images/swap/BonusPack.png",
       result: "/images/swap/Ultraman.svg",
       address: ultraman,
     },
@@ -87,6 +93,7 @@ const SwapComponent = () => {
       name: "Bemular MINT PASS",
       nameResult: "Bemular Avatar Card",
       nameKey: "Bemular",
+      imageBonus: "/images/swap/BonusPack.png",
       image: "/images/swap/Bemular_pass.svg",
       result: "/images/swap/Bemular.svg",
       address: bemular,
@@ -108,7 +115,9 @@ const SwapComponent = () => {
   const [search, setSearch] = React.useState("");
 
   const [loading, setLoading] = React.useState(false);
+  const [congrats, setCongrats] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
+  const [exchangeType, setExchangeType] = React.useState(0);
 
   React.useEffect(() => {
     if (user) {
@@ -260,7 +269,6 @@ const SwapComponent = () => {
       for (const element of cardsToExchange) {
         const item = element;
         const eg = getContractCustom("ERC721Seadrop", item.address, provider);
-        console.log(eg);
         const isApproved = await eg.methods
           .isApprovedForAll(user, exchangeEG)
           .call();
@@ -293,18 +301,19 @@ const SwapComponent = () => {
       if (res?.payload?.err) {
         throw new Error(res?.payload.err.message);
       }
-
+      console.log(balanceEG);
+      setExchangeType(getExchangeType(balanceEG));
       setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        setLoading(false);
+      }, 1500);
       dispatch(onGetAssets({ address: user, blockchain }));
       addToast("Your NFTs have been exchanged succesfully!", {
         appearance: "success",
       });
       handleSetBalanceEG();
-      setTimeout(() => {
-        hide();
-        setLoading(false);
-        setSuccess(false);
-      }, 1500);
+      setCongrats(true);
     } catch (error) {
       console.log(error);
       addToast("Ups! Error exchanging your tokens, please try again", {
@@ -316,230 +325,287 @@ const SwapComponent = () => {
     }
   };
 
-  React.useEffect(() => {
-    console.log(showEG);
-  }, [showEG]);
-
-  const menuElements = [
-    {
-      name: "Card Pass Swap",
-      image: "/images/swap/cardIcon.png",
-      active: showEG === true,
-      onClick: () => {
-        setShowEG(true);
-      },
-    },
-    {
-      name: "Pack Pass Swap",
-      image: "/images/swap/PackIcon.png",
-      active: showEG === false,
-      onClick: () => {
-        setShowEG(false);
-      },
-    },
-    {
-      name: "Visit OPENSEA",
-      image: "/images/swap/opensea_white.png",
-      link: `https://testnets.opensea.io/0xc2B8Abc5249397DB5d159b4E3c311c2fAf4091f2`,
-    },
-  ];
-
   return (
     <div className="flex sm:flex-row flex-col w-full 2xl:px-36 md:px-24 px-4 gap-2">
       <div className="flex flex-col gap-1 sm:w-60 w-full sm:pt-36">
-        {menuElements.map(({ name, link, image, active, onClick }) => {
-          return link ? (
-            <a
-              href={link}
-              target="_blank"
-              rel="noreferrer"
-              className={clsx(
-                { "bg-gray-800 !border-primary-disabled": active },
-                "flex items-center border border-transparent gap-2 rounded-md p-2 bg-black cursor-pointer",
-              )}
-            >
-              <img className="w-7 max-h-[25px]" src={image} alt="" />
-              <p className="text-primary-disabled font-bold">{name}</p>
-            </a>
-          ) : (
-            <div
-              onClick={onClick}
-              className={clsx(
-                { "bg-gray-800 !border-primary-disabled": active },
-                "flex border border-transparent gap-2 rounded-md p-2 bg-black cursor-pointer",
-              )}
-            >
-              <img className="w-10" src={image} alt="" />
-              <p className="text-primary-disabled font-bold">{name}</p>
-            </div>
-          );
-        })}
+        {menuElements(showEG, setShowEG).map(
+          ({ name, link, image, active, onClick }) => {
+            return link ? (
+              <a
+                href={link}
+                target="_blank"
+                rel="noreferrer"
+                className={clsx(
+                  { "bg-gray-800 !border-primary-disabled": active },
+                  "flex items-center border border-transparent gap-2 rounded-md p-2 bg-black cursor-pointer",
+                )}
+              >
+                <img className="w-7 max-h-[25px]" src={image} alt="" />
+                <p className="text-primary-disabled font-bold">{name}</p>
+              </a>
+            ) : (
+              <div
+                onClick={onClick}
+                className={clsx(
+                  { "bg-gray-800 !border-primary-disabled": active },
+                  "flex border border-transparent gap-2 rounded-md p-2 bg-black cursor-pointer",
+                )}
+              >
+                <img className="w-10" src={image} alt="" />
+                <p className="text-primary-disabled font-bold">{name}</p>
+              </div>
+            );
+          },
+        )}
       </div>
       <div className="flex flex-col w-full">
-        <Modal isShow={isShow} withoutX>
-          <div className="flex flex-col items-center bg-secondary rounded-xl border border-overlay-border w-full relative md:max-w-[700px] md:min-w-[700px] sm:min-w-[550px] max-w-[350px] min-w-[350px]">
-            <div className="flex items-center justify-center border-b border-overlay-border w-full py-4 px-4 relative">
-              <h2 className="font-bold text-primary text-center text-3xl">
-                Pass Swap
-              </h2>
-              {!loading && (
+        <Modal
+          onClose={() => {
+            setCongrats(false);
+          }}
+          isShow={isShow}
+          withoutX
+        >
+          {congrats && showEG ? (
+            <div
+              style={{ width: "90vw", maxWidth: "375px" }}
+              className="relative bg-overlay flex flex-col items-center gap-4 jusify-center shadow-2xl rounded-2xl mt-36"
+            >
+              <img
+                src="/images/swap/congrats_bg.png"
+                className="w-full opacity-[0.40] absolute top-0"
+                alt=""
+              />
+              <img
+                src={
+                  exchangeType === 1
+                    ? "/images/swap/ultraman_bemular_pack.png"
+                    : exchangeType === 2
+                    ? "/images/swap/ultraman_plus_pack.png"
+                    : exchangeType === 3
+                    ? "/images/swap/bemular_plus_pack.png"
+                    : ""
+                }
+                className="absolute top-[-175px]"
+                width={"275px"}
+                alt=""
+              />
+              <div className="absolute h-full w-full rounded-2xl bg-gradient-to-b from-transparent to-overlay px-2 from-0% to-30% "></div>
+              <div className="absolute top-2 right-2 flex justify-end w-full py-2">
                 <XIcon
-                  onClick={() => hide()}
-                  className="absolute right-4 top-0 bottom-0 my-auto text-primary-disabled text-xl w-6 cursor-pointer"
-                ></XIcon>
-              )}
-            </div>
-            <div className="flex flex-col gap-4 px-4 w-full items-center justify-center pb-4 pt-2 ">
-              <h3 className="text-lg text-white text-center w-full font-bold Raleway">
-                Swap your ERC721 NFTs for ERC1155
-              </h3>
-              <p className="text-sm text-primary-disabled text-justify">
-                <span className="text-white"> Note:</span> To swap your tokens
-                on the 5HG marketplace, you will need to complete{" "}
-                {showEG ? (
-                  <>
-                    {Object.keys(balanceEG)
-                      ?.map((item) => balanceEG[item])
-                      ?.filter((item) => item > 0).length + 1}
-                  </>
-                ) : (
-                  <>
-                    {Object.keys(balance)
-                      ?.map((item) => balance[item])
-                      ?.filter((item) => item > 0).length + 1}
-                  </>
-                )}{" "}
-                transactions. The firsts transactions grants us permission to
-                swap your tokens of each Pass Collection, and the last
-                transaction executes the swaps. Granting permission only occurs
-                once per session.
-              </p>
-            </div>
-
-            <div className="flex gap-2 items-center justify-center py-2 border-y border-overlay-border relative w-full px-2">
-              {loading && (
-                <div className="flex flex-col items-center justify-center absolute top-0 bottom-0 left-0 right-0 m-auto w-full bg-[#00000088]">
-                  <div className="flex flex-col  items-center justify-center h-auto bg-overlay border border-overlay-border p-4 rounded-xl">
-                    <h2 className="text-white text-xl text-center font-bold ">
-                      Swap {success ? "completed" : "in progress..."}
-                    </h2>
-                    <div className="w-full flex items-center justify-center py-2">
-                      {!success ? (
-                        <LoadingOutlined className="text-4xl text-white" />
-                      ) : (
-                        <CheckOutlined className="text-4xl text-green-button" />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-              <div className="flex flex-col gap-6 items-center justify-center w-full py-4">
-                {showEG ? (
-                  <>
-                    {passEG.map((item) => {
-                      return (
-                        balanceEG[item.nameKey] > 0 && (
-                          <div className="flex sm:flex-row flex-col items-center justify-center w-full gap-2 px-2">
-                            <div className="flex flex-col sm:w-1/2 w-full bg-[#232323] gap-2 rounded-xl p-4">
-                              <h2 className="text-white text-lg text-center">
-                                {item.name}
-                              </h2>
-                              <img
-                                src={item.image}
-                                className="h-32 flex"
-                                alt=""
-                              />
-                              <div className="flex gap-2 px-2 w-full justify-center items-center">
-                                <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                  <h3 className="text-[10px] font-[400]">
-                                    Quantity:
-                                  </h3>{" "}
-                                  <p className="text-[18px] flex h-5 font-bold">
-                                    {balanceEG[item.nameKey]}
-                                  </p>
-                                </div>
-                                <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                  <h3 className="text-[10px] font-[400]">
-                                    Token Type:
-                                  </h3>{" "}
-                                  <p className="text-[18px] flex h-5 font-bold">
-                                    721
-                                  </p>
-                                </div>{" "}
-                                <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                  <h3 className="text-[10px] font-[400]">
-                                    Blockchain:
-                                  </h3>{" "}
-                                  <p className="text-[18px] flex h-5 font-bold">
-                                    Matic
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            <ArrowRightOutlined className="text-xl text-white sm:flex hidden" />
-                            <ArrowDownOutlined className="text-xl text-white sm:hidden" />
-                            <div className="flex flex-col sm:w-1/2 w-full bg-[#232323] gap-2 rounded-xl p-4">
-                              <h2 className="text-white text-lg text-center">
-                                {item.nameResult}
-                              </h2>
-                              <img
-                                src={item.result}
-                                className="h-32 flex"
-                                alt=""
-                              />
-                              <div className="flex gap-2 px-2 w-full justify-center items-center">
-                                <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                  <h3 className="text-[10px] font-[400]">
-                                    Quantity:
-                                  </h3>{" "}
-                                  <p className="text-[18px] flex h-5 font-bold">
-                                    {balanceEG[item.nameKey]}
-                                  </p>
-                                </div>
-                                <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                  <h3 className="text-[10px] font-[400]">
-                                    Token Type:
-                                  </h3>{" "}
-                                  <p className="text-[18px] flex h-5 font-bold">
-                                    1155
-                                  </p>
-                                </div>{" "}
-                                <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
-                                  <h3 className="text-[10px] font-[400]">
-                                    Blockchain:
-                                  </h3>{" "}
-                                  <p className="text-[18px] flex h-5 font-bold">
-                                    Matic
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      );
-                    })}
-                  </>
-                ) : (
-                  ""
-                )}
+                  className="text-white w-5 cursor-pointer p-[2px] rounded-full bg-overlay border border-white"
+                  onClick={() => {
+                    setCongrats(false);
+                    hide();
+                  }}
+                />
+              </div>
+              <div className="flex flex-col items-center justify-center relative rounded-full px-6 pt-16 pb-8 gap-2">
+                <h2 className="text-white text-center font-bold text-5xl text-red-alert">
+                  Success!
+                </h2>{" "}
+                <p className="text-center text-white text-lg py-4">
+                  Ultraman X Enders Gate collab bundle Obtained! Check your
+                  inventory for your new collectibles.
+                </p>
+                <p className="text-center text-white text-lg py-2">
+                  Share this with your friends and inform them about the Drop!
+                </p>
+                <a
+                  href={`https://twitter.com/intent/tweet?text=I'm so excited to announce that I just have obtained my Ultraman X Enders Gate collab bundle from Enders Gate! Get yours on: https://marketplace.endersgate.gg/profile/swap`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/images/share.png"
+                    className="h-12 cursor-pointer"
+                    alt=""
+                  />
+                </a>
+                <img
+                  src="/images/view_comics.png"
+                  className="h-12 cursor-pointer"
+                  alt=""
+                  onClick={() => {
+                    router.push("/profile");
+                    setCongrats(false);
+                    hide();
+                  }}
+                />
               </div>
             </div>
-            <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4">
-              <Button
-                className="px-2 py-1 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md font-[500]"
-                onClick={() => {
-                  if (!showEG) {
-                    exchangeAllPacks();
-                  } else {
-                    exchangeAllEG();
-                  }
-                }}
-                disabled={loading}
-              >
-                Confirm Swap
-              </Button>
+          ) : (
+            <div className="flex flex-col items-center bg-secondary rounded-xl border border-overlay-border w-full relative md:max-w-[700px] md:min-w-[700px] sm:min-w-[550px] max-w-[350px] min-w-[350px]">
+              <div className="flex items-center justify-center border-b border-overlay-border w-full py-4 px-4 relative">
+                <h2 className="font-bold text-primary text-center text-3xl">
+                  Pass Swap
+                </h2>
+                {!loading && (
+                  <XIcon
+                    onClick={() => hide()}
+                    className="absolute right-4 top-0 bottom-0 my-auto text-primary-disabled text-xl w-6 cursor-pointer"
+                  ></XIcon>
+                )}
+              </div>
+              <div className="flex flex-col gap-4 px-4 w-full items-center justify-center pb-4 pt-2 ">
+                <h3 className="text-lg text-white text-center w-full font-bold Raleway">
+                  Swap your ERC721 NFTs for ERC1155
+                </h3>
+                <p className="text-sm text-primary-disabled text-justify">
+                  <span className="text-white"> Note:</span> To swap your tokens
+                  on the 5HG marketplace, you will need to complete{" "}
+                  {showEG ? (
+                    <>
+                      {Object.keys(balanceEG)
+                        ?.map((item) => balanceEG[item])
+                        ?.filter((item) => item > 0).length + 1}
+                    </>
+                  ) : (
+                    <>
+                      {Object.keys(balance)
+                        ?.map((item) => balance[item])
+                        ?.filter((item) => item > 0).length + 1}
+                    </>
+                  )}{" "}
+                  transactions. The firsts transaction grants us permission to
+                  swap your tokens, and the last transaction executes the swap.
+                  Granting permission only occurs once per session.
+                </p>
+              </div>
+
+              <div className="flex gap-2 items-center justify-center py-2 border-y border-overlay-border relative w-full px-2">
+                {loading && (
+                  <div className="flex flex-col items-center justify-center absolute top-0 bottom-0 left-0 right-0 m-auto w-full bg-[#00000088]">
+                    <div className="flex flex-col  items-center justify-center h-auto bg-overlay border border-overlay-border p-4 rounded-xl">
+                      <h2 className="text-white text-xl text-center font-bold ">
+                        Swap {success ? "completed" : "in progress..."}
+                      </h2>
+                      <div className="w-full flex items-center justify-center py-2">
+                        {!success ? (
+                          <LoadingOutlined className="text-4xl text-white" />
+                        ) : (
+                          <CheckOutlined className="text-4xl text-green-button" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div className="flex flex-col gap-6 items-center justify-center w-full py-4">
+                  {showEG ? (
+                    <>
+                      {passEG.map((item) => {
+                        return (
+                          balanceEG[item.nameKey] > 0 && (
+                            <div className="flex sm:flex-row flex-col items-center justify-center w-full gap-2 px-2">
+                              <div className="flex flex-col sm:w-1/2 w-full bg-[#232323] gap-2 rounded-xl p-4">
+                                <h2 className="text-white text-lg text-center">
+                                  {item.name}
+                                </h2>
+                                <img
+                                  src={item.image}
+                                  className="h-32 flex"
+                                  alt=""
+                                />{" "}
+                                <div className="flex gap-2 px-2 w-full justify-center items-center">
+                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
+                                    <h3 className="text-[10px] font-[400]">
+                                      Quantity:
+                                    </h3>{" "}
+                                    <p className="text-[18px] flex h-5 font-bold">
+                                      {balanceEG[item.nameKey]}
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
+                                    <h3 className="text-[10px] font-[400]">
+                                      Token Type:
+                                    </h3>{" "}
+                                    <p className="text-[18px] flex h-5 font-bold">
+                                      721
+                                    </p>
+                                  </div>{" "}
+                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
+                                    <h3 className="text-[10px] font-[400]">
+                                      Blockchain:
+                                    </h3>{" "}
+                                    <p className="text-[18px] flex h-5 font-bold">
+                                      Matic
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                              <ArrowRightOutlined className="text-xl text-white sm:flex hidden" />
+                              <ArrowDownOutlined className="text-xl text-white sm:hidden" />
+                              <div className="flex flex-col sm:w-1/2 w-full bg-[#232323] gap-2 rounded-xl p-4">
+                                <h2 className="text-white text-lg text-center">
+                                  {item.nameResult}
+                                </h2>
+
+                                <div className="flex gap-2 justify-center items-center">
+                                  <img
+                                    src={item.result}
+                                    className="h-32 flex"
+                                    alt=""
+                                  />{" "}
+                                  <img
+                                    src={item.imageBonus}
+                                    className="h-32 flex"
+                                    alt=""
+                                  />
+                                </div>
+                                <div className="flex gap-2 px-2 w-full justify-center items-center">
+                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
+                                    <h3 className="text-[10px] font-[400]">
+                                      Quantity:
+                                    </h3>{" "}
+                                    <p className="text-[18px] flex h-5 font-bold">
+                                      {balanceEG[item.nameKey]}
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
+                                    <h3 className="text-[10px] font-[400]">
+                                      Token Type:
+                                    </h3>{" "}
+                                    <p className="text-[18px] flex h-5 font-bold">
+                                      1155
+                                    </p>
+                                  </div>{" "}
+                                  <div className="flex flex-col items-center text-[#B8B8B8] p-2 bg-[#3F3F3F] rounded-xl w-1/3">
+                                    <h3 className="text-[10px] font-[400]">
+                                      Blockchain:
+                                    </h3>{" "}
+                                    <p className="text-[18px] flex h-5 font-bold">
+                                      Matic
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        );
+                      })}
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
+              <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4">
+                <Button
+                  className="px-2 py-1 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md font-[500]"
+                  onClick={() => {
+                    if (!showEG) {
+                      exchangeAllPacks();
+                    } else {
+                      exchangeAllEG();
+                    }
+                  }}
+                  disabled={loading}
+                >
+                  Confirm Swap
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </Modal>
         <div className="flex gap-4 items-center mb-4">
           <div className="border flex items-center text-lg justify-center border-overlay-border bg-overlay-2 rounded-xl w-full">
