@@ -19,6 +19,8 @@ export const PackOpening = ({
   setStartFlashing,
   startFlashingPack,
   setStartFlashingPack,
+  endPackOpening,
+  packAnimation,
   video,
   show,
 }: any) => {
@@ -81,9 +83,6 @@ export const PackOpening = ({
       >
         <img
           className={clsx("titlePacks", "h-full cursor-pointer z-50")}
-          // onClick={() => {
-          //   setCardPack(0);
-          // }}
           src="./videos/packVideos/mypacks.png"
           alt="my packs title"
         />
@@ -117,17 +116,69 @@ export const PackOpening = ({
       <div
         className={clsx(
           "w-full min-h-screen flex md:items-center md:justify-center relative",
+          { "!items-start !justify-start": video },
         )}
       >
-        {/* {cardPack === 0 ? ( */}
         <>
           {video ? (
             <>
               <div className="w-full h-full md:block hidden">
                 <video
+                  ref={vidRef1}
+                  className={clsx(
+                    { hidden: videoPlaying !== 0 },
+                    "h-full absolute z-20 videoPack",
+                  )}
+                  // controls
+                  src={`/videos/packVideos/common_pack_green.webm`}
+                  muted={videoPlaying !== 0}
+                  onEnded={
+                    videoPlaying === 0 ? () => endPackOpening() : undefined
+                  }
+                ></video>
+
+                {/* <video
+                  ref={vidRef2}
+                  className={clsx(
+                    { ["hidden"]: videoPlaying !== 1 },
+                    "h-full absolute z-20 videoPack",
+                  )}
+                  // controls
+                  muted={videoPlaying !== 1}
+                  src={`./assets/packVideos/card_${
+                    packAnimation + 1
+                  }_purple.mp4`}
+                  onLoad={() => {
+                    console.log("terminó_purple");
+                  }}
+                  onEnded={
+                    videoPlaying === 1 ? () => endPackOpening() : undefined
+                  }
+                ></video>
+
+                <video
+                  ref={vidRef3}
+                  className={clsx(
+                    { ["hidden"]: videoPlaying !== 2 },
+                    "h-full absolute z-20 videoPack",
+                  )}
+                  // controls
+                  muted={videoPlaying !== 2}
+                  src={`./assets/packVideos/card_${
+                    packAnimation + 1
+                  }_green.mp4`}
+                  onLoad={() => {
+                    console.log("terminó_green");
+                  }}
+                  onEnded={
+                    videoPlaying === 2 ? () => endPackOpening() : undefined
+                  }
+                ></video> */}
+
+                <video
                   ref={vidRef4}
                   className={clsx(
-                    { ["hidden"]: videoPlaying !== 3 },
+                    { hidden: videoPlaying !== 3 },
                     "h-full videoDesktop videoPack",
                   )}
                   // controls
@@ -199,13 +250,13 @@ export const PackOpening = ({
 
           <div
             className={clsx("absolute w-full h-full blurContainer", {
-              ["hidden"]: !startFlashing,
+              hidden: !startFlashing,
             })}
           ></div>
 
           <div
             className={clsx("absolute w-full h-full blurContainerPack", {
-              ["hidden"]: !startFlashingPack,
+              hidden: !startFlashingPack,
             })}
           ></div>
 

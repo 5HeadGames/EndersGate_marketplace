@@ -67,6 +67,7 @@ export const PackOpeningComponent: React.FC<any> = ({
       setStartFlashing(true);
       setAnimating(true);
       setOpeningPack(false);
+      setVideoPlaying(0);
       setCardToOpen((prev) => {
         const newArray: any[] = [];
         prev.forEach((a, id) => {
@@ -79,10 +80,10 @@ export const PackOpeningComponent: React.FC<any> = ({
         return newArray;
       });
       setTimeout(() => {
-        setVideoPlaying(3);
+        setVideoPlaying(0);
         setCardToOpen(new Array(5).fill(false));
-        setVideo(true);
         setAnimating(false);
+        setVideo(true);
         updateBalance();
       }, 2100);
       setIsLoadingPack(false);
@@ -134,6 +135,7 @@ export const PackOpeningComponent: React.FC<any> = ({
           cardsPack={cardsPack}
           animating={animating}
           setNoAudio={setVideo}
+          endPackOpening={endPackOpening}
           video={video}
           isLoading={isLoadingPack}
           setIsLoading={setIsLoadingPack}

@@ -217,7 +217,7 @@ export const PackOpeningMobile: React.FC<any> = ({
         {video && (
           <>
             <div className="w-full h-full block md:hidden">
-              <video
+              {/* <video
                 ref={vidRef1mobile}
                 className={clsx(
                   { ["hidden"]: videoPlaying !== 0 },
@@ -263,7 +263,7 @@ export const PackOpeningMobile: React.FC<any> = ({
                 onEnded={
                   videoPlaying === 2 ? () => endPackOpening(2) : undefined
                 }
-              ></video>
+              ></video> */}
 
               <video
                 ref={vidRef4mobile}
