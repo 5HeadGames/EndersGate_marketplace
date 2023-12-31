@@ -18,24 +18,25 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useStats } from "@shared/hooks/useStats";
 
 const DashboardComponent = () => {
   const { nfts } = useAppSelector((state) => state);
   const cards = convertArrayCards();
 
-  // const { recentlyListed, recentlySold } = useStats({
-  //   nfts,
-  //   listedSelected: "trading_cards",
-  //   soldSelected: "trading_cards",
-  //   columnSelected: "last_7d",
-  // });
+  const { recentlyListed, recentlySold } = useStats({
+    nfts,
+    listedSelected: "trading_cards",
+    soldSelected: "trading_cards",
+    columnSelected: "last_7d",
+  });
 
-  // const { recentlyListed: recentlyListedCards } = useStats({
-  //   nfts,
-  //   listedSelected: "trading_cards",
-  //   soldSelected: "trading_cards",
-  //   columnSelected: "last_7d",
-  // });
+  const { recentlyListed: recentlyListedCards } = useStats({
+    nfts,
+    listedSelected: "trading_cards",
+    soldSelected: "trading_cards",
+    columnSelected: "last_7d",
+  });
 
   const { pack } = getAddressesMatic();
 

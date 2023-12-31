@@ -1,6 +1,5 @@
 import { getAddresses, getAddressesMatic } from "@shared/web3";
 import React from "react";
-import Web3 from "web3";
 
 export const useStats = ({
   nfts,
