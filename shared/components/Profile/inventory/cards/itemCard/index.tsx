@@ -345,7 +345,7 @@ export const CardInventory = (props) => {
                 </Tilt>
               </ReactCardFlip>
 
-              <div className="relative w-72 mt-2">
+              <div className="relative w-80 mt-2">
                 <img
                   src="/images/box_footer_card.png"
                   className="absolute w-full h-full top-0"
@@ -355,6 +355,25 @@ export const CardInventory = (props) => {
                   className="text-xl text-center font-bold p-6 relative z-10 flex items-center justify-center gap-4 mt-1 cursor-pointer"
                   style={{ color: "#FFDB8A" }}
                 >
+                  {props.typeNFT === "pack" && (
+                    <Button
+                      variant="contained"
+                      sx={{
+                        border: "solid 1px",
+                        borderColor: "white",
+                        py: 1,
+                        px: 4,
+                        bgColor: "#000",
+                        fontSize: "15px",
+                        lineHeight: "16px",
+                        color: "white",
+                        outline: "none",
+                        ring: "none",
+                      }}
+                    >
+                      <Link href={`/pack_opening`}>Open</Link>
+                    </Button>
+                  )}
                   <Button
                     variant="contained"
                     sx={{
