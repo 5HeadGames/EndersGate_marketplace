@@ -148,7 +148,7 @@
       "name": "Earth Cocktail",
       "type": "ERC1155",
       "description": "Select one earth Guardian on your side of the field; increase their attack and HP by 75 for 3 turns. ",
-      "image": "https://bafybeidxljqtuxuftqt2e7ncma3ubsokxxhzpa7ep664q6onriyi4owk2u.ipfs.w3s.link/EARTH%20COCTAIL%20FRONT.webp",
+      "image": "https://bafybeidxljqtuxuftqt2e7ncma3ubsokxxhzpa7ep664q6onriyi4owk2u.ipfs.nftstorage.link/EARTH%20COCTAIL%20FRONT.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -211,7 +211,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeidxljqtuxuftqt2e7ncma3ubsokxxhzpa7ep664q6onriyi4owk2u.ipfs.w3s.link/EARTH%20COCTAIL%20FRONT.webp"
+          "value": "https://bafybeidxljqtuxuftqt2e7ncma3ubsokxxhzpa7ep664q6onriyi4owk2u.ipfs.nftstorage.link/EARTH%20COCTAIL%20FRONT.webp"
         }
       ],
       "typeCard": "action"
@@ -2668,7 +2668,7 @@
       "name": "Hatchling Potential",
       "type": "ERC1155",
       "description": "Pay 25 Gold for 3 turns during your standby phase to successfully Activate: \nA random Guardian from your deck appears on the field in MP1",
-      "image": "https://bafybeihb2iuebutsqafquhnkrjnkcppsg44cwjlswtiuhj2jwgpigdc34a.ipfs.w3s.link/HATCHLING%20POTENITAL.webp",
+      "image": "https://bafybeihb2iuebutsqafquhnkrjnkcppsg44cwjlswtiuhj2jwgpigdc34a.ipfs.nftstorage.link/HATCHLING%20POTENITAL.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -2731,7 +2731,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeihb2iuebutsqafquhnkrjnkcppsg44cwjlswtiuhj2jwgpigdc34a.ipfs.w3s.link/HATCHLING%20POTENITAL.webp"
+          "value": "https://bafybeihb2iuebutsqafquhnkrjnkcppsg44cwjlswtiuhj2jwgpigdc34a.ipfs.nftstorage.link/HATCHLING%20POTENITAL.webp"
         }
       ],
       "typeCard": "action"
@@ -3318,7 +3318,7 @@
       "name": "Fire Trap",
       "type": "ERC1155",
       "description": "Flip: Deal 30 damage to one selected Guardian on the field. ",
-      "image": "https://bafybeia74qx22tywfyqlpprcdhvxum3d373wnbc6r2uu5xyubwnhran4e4.ipfs.w3s.link/FIRE-TRAP-FRONT.webp",
+      "image": "https://bafybeia74qx22tywfyqlpprcdhvxum3d373wnbc6r2uu5xyubwnhran4e4.ipfs.nftstorage.link/FIRE-TRAP-FRONT.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -3381,7 +3381,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeia74qx22tywfyqlpprcdhvxum3d373wnbc6r2uu5xyubwnhran4e4.ipfs.w3s.link/FIRE-TRAP-FRONT.webp"
+          "value": "https://bafybeia74qx22tywfyqlpprcdhvxum3d373wnbc6r2uu5xyubwnhran4e4.ipfs.nftstorage.link/FIRE-TRAP-FRONT.webp"
         }
       ],
       "typeCard": "reaction"
@@ -3820,7 +3820,7 @@
       "name": "Unpleasant Entry",
       "type": "ERC1155",
       "description": "Flip: Activate when your opponent summons a Guardian; deal 25 damage to the Guardian upon their entry.",
-      "image": "https://bafybeiewbjuzsl2wvrahwwxt3ovypqwl76hg7d3xvexe4jufut5aazw77i.ipfs.w3s.link/UNPLESANT%20ENTRY%20FRONT.webp",
+      "image": "https://bafybeiewbjuzsl2wvrahwwxt3ovypqwl76hg7d3xvexe4jufut5aazw77i.ipfs.nftstorage.link/UNPLESANT%20ENTRY%20FRONT.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -3883,7 +3883,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeiewbjuzsl2wvrahwwxt3ovypqwl76hg7d3xvexe4jufut5aazw77i.ipfs.w3s.link/UNPLESANT%20ENTRY%20FRONT.webp"
+          "value": "https://bafybeiewbjuzsl2wvrahwwxt3ovypqwl76hg7d3xvexe4jufut5aazw77i.ipfs.nftstorage.link/UNPLESANT%20ENTRY%20FRONT.webp"
         }
       ],
       "typeCard": "reaction"
@@ -3892,7 +3892,7 @@
       "name": "Pacifist Incenstive",
       "type": "ERC1155",
       "description": "Flip: Pay 100 gold to your opponent then end their attack phase. ",
-      "image": "https://bafybeic5wz24kekfbtotk767hd2a2zdrj5y2t5md32fcorqrzwlr63mts4.ipfs.w3s.link/PACIFIST%20INCENTIVE%20FRONT.webp",
+      "image": "https://bafybeic5wz24kekfbtotk767hd2a2zdrj5y2t5md32fcorqrzwlr63mts4.ipfs.nftstorage.link/PACIFIST%20INCENTIVE%20FRONT.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -3955,7 +3955,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeic5wz24kekfbtotk767hd2a2zdrj5y2t5md32fcorqrzwlr63mts4.ipfs.w3s.link/PACIFIST%20INCENTIVE%20FRONT.webp"
+          "value": "https://bafybeic5wz24kekfbtotk767hd2a2zdrj5y2t5md32fcorqrzwlr63mts4.ipfs.nftstorage.link/PACIFIST%20INCENTIVE%20FRONT.webp"
         }
       ],
       "typeCard": "reaction"
@@ -4252,7 +4252,7 @@
       "name": "Knight's Revenge",
       "type": "ERC1155",
       "description": "Flip: When your opponent declares an attack, discard one Guardian from your hand to the graveyard; deal 50 damage to the attacking Guardian & end your opponent's attack phase.",
-      "image": "https://bafybeidyifr4vrtlnliqrwpgqdyuodzbyzddlqehcrkho4fuwzl2tpuj4y.ipfs.w3s.link/KNIGHT'S%20REVENGE.webp",
+      "image": "https://bafybeidyifr4vrtlnliqrwpgqdyuodzbyzddlqehcrkho4fuwzl2tpuj4y.ipfs.nftstorage.link/KNIGHT'S%20REVENGE.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -4315,7 +4315,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeidyifr4vrtlnliqrwpgqdyuodzbyzddlqehcrkho4fuwzl2tpuj4y.ipfs.w3s.link/KNIGHT'S%20REVENGE.webp"
+          "value": "https://bafybeidyifr4vrtlnliqrwpgqdyuodzbyzddlqehcrkho4fuwzl2tpuj4y.ipfs.nftstorage.link/KNIGHT'S%20REVENGE.webp"
         }
       ],
       "typeCard": "reaction"
@@ -7206,7 +7206,7 @@
       "name": "Cheif Nopsis",
       "type": "ERC1155",
       "description": "[Insect | Tank] Passive: All attacks are directed to chief Nopsis. Additionally, all \"Fire Ant Colony\" Guardians Gain +10 ATK & +10 HP.",
-      "image": "https://bafybeidngjbmmqvm53pweyohu7tu56qukaor3n2ncd2xwrb3feq3xwi3yu.ipfs.w3s.link/CHIEF%20NOPSIS.webp",
+      "image": "https://bafybeidngjbmmqvm53pweyohu7tu56qukaor3n2ncd2xwrb3feq3xwi3yu.ipfs.nftstorage.link/CHIEF%20NOPSIS.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -7301,7 +7301,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeidngjbmmqvm53pweyohu7tu56qukaor3n2ncd2xwrb3feq3xwi3yu.ipfs.w3s.link/CHIEF%20NOPSIS.webp"
+          "value": "https://bafybeidngjbmmqvm53pweyohu7tu56qukaor3n2ncd2xwrb3feq3xwi3yu.ipfs.nftstorage.link/CHIEF%20NOPSIS.webp"
         }
       ],
       "typeCard": "iron"
@@ -7520,7 +7520,7 @@
       "name": "Alpha Wold Dax",
       "type": "ERC1155",
       "description": "[Beast | Fighter] \"Wolf Pack\" Passive: Attacks from Alpha Wolf Dax deal 20% life steal which heal him on hit",
-      "image": "https://bafybeibbnvuau3k5mlio5p3x632mng7yofd7udrta6b2ymfabcza7zbemm.ipfs.w3s.link/ALPHA%20WOLF%20DAX%20FRONT.webp",
+      "image": "https://bafybeibbnvuau3k5mlio5p3x632mng7yofd7udrta6b2ymfabcza7zbemm.ipfs.nftstorage.link/ALPHA%20WOLF%20DAX%20FRONT.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -7615,7 +7615,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeibbnvuau3k5mlio5p3x632mng7yofd7udrta6b2ymfabcza7zbemm.ipfs.w3s.link/ALPHA%20WOLF%20DAX%20FRONT.webp"
+          "value": "https://bafybeibbnvuau3k5mlio5p3x632mng7yofd7udrta6b2ymfabcza7zbemm.ipfs.nftstorage.link/ALPHA%20WOLF%20DAX%20FRONT.webp"
         }
       ],
       "typeCard": "iron"
@@ -8144,7 +8144,7 @@
       "name": "Nyssa",
       "type": "ERC1155",
       "description": "[Human| Assassin] \"Earth Counter\" Passive: 25% Chance to counter the next attack with an Earth projectile. On Successful Block; reset effect after 2 turns.",
-      "image": "https://bafybeiguepbb7aztryzh7dimm7gllzho332bc4if2ykmodh3vovh6kalxi.ipfs.w3s.link/NYSAA%20FRONT.webp",
+      "image": "https://bafybeiguepbb7aztryzh7dimm7gllzho332bc4if2ykmodh3vovh6kalxi.ipfs.nftstorage.link/NYSAA%20FRONT.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -8239,7 +8239,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeiguepbb7aztryzh7dimm7gllzho332bc4if2ykmodh3vovh6kalxi.ipfs.w3s.link/NYSAA%20FRONT.webp"
+          "value": "https://bafybeiguepbb7aztryzh7dimm7gllzho332bc4if2ykmodh3vovh6kalxi.ipfs.nftstorage.link/NYSAA%20FRONT.webp"
         }
       ],
       "typeCard": "iron"
@@ -11174,7 +11174,7 @@
       "name": "Glowe",
       "type": "ERC1155",
       "description": "[Elemental | Support] \"Fire Works\" Passive: While you control another \"Elemental\" Type Guardian, Glowé cannot be attacked. During each of your End Phases: Inflict 50 damage to your opponents LP. ",
-      "image": "https://bafybeihtrhgmlxtrjoxdouomg64depmj6jllqk2f65pu4urv5hw4icee3e.ipfs.w3s.link/GLOWER%20FRONT.webp",
+      "image": "https://bafybeihtrhgmlxtrjoxdouomg64depmj6jllqk2f65pu4urv5hw4icee3e.ipfs.nftstorage.link/GLOWER%20FRONT.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -11269,7 +11269,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeihtrhgmlxtrjoxdouomg64depmj6jllqk2f65pu4urv5hw4icee3e.ipfs.w3s.link/GLOWER%20FRONT.webp"
+          "value": "https://bafybeihtrhgmlxtrjoxdouomg64depmj6jllqk2f65pu4urv5hw4icee3e.ipfs.nftstorage.link/GLOWER%20FRONT.webp"
         }
       ],
       "typeCard": "stone"
@@ -13261,7 +13261,7 @@
       "name": "Xozog",
       "type": "ERC1155",
       "description": "[Undead | Mage] \"Erase\" Once per turn, execute 1 Enemy Guardian  under 20% Health.",
-      "image": "https://bafybeibwghpcz7pmqdzpx4cdnv5z3pg7iqujjc5yx4iny2l56thdkusrlm.ipfs.w3s.link/XOLZOG%20FRONT.webp",
+      "image": "https://bafybeibwghpcz7pmqdzpx4cdnv5z3pg7iqujjc5yx4iny2l56thdkusrlm.ipfs.nftstorage.link/XOLZOG%20FRONT.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -13356,7 +13356,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeibwghpcz7pmqdzpx4cdnv5z3pg7iqujjc5yx4iny2l56thdkusrlm.ipfs.w3s.link/XOLZOG%20FRONT.webp"
+          "value": "https://bafybeibwghpcz7pmqdzpx4cdnv5z3pg7iqujjc5yx4iny2l56thdkusrlm.ipfs.nftstorage.link/XOLZOG%20FRONT.webp"
         }
       ],
       "typeCard": "legendary"
@@ -14410,7 +14410,7 @@
       "name": "Xen-Zoh",
       "type": "ERC1155",
       "description": "[Ascended | Assassin] \"Future Sight\" Activate: Once Every two turns, negate 1 attack & counter it with back stab causing 5 bleed damage for 2 turns. ",
-      "image": "https://bafybeicjjdsfessbcoa7qxqmvbofr6sqfvauvt4h6bot4ltngusc72tpjq.ipfs.w3s.link/XEN%20ZOH%20FRONT.webp",
+      "image": "https://bafybeicjjdsfessbcoa7qxqmvbofr6sqfvauvt4h6bot4ltngusc72tpjq.ipfs.nftstorage.link/XEN%20ZOH%20FRONT.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -14505,7 +14505,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeicjjdsfessbcoa7qxqmvbofr6sqfvauvt4h6bot4ltngusc72tpjq.ipfs.w3s.link/XEN%20ZOH%20FRONT.webp"
+          "value": "https://bafybeicjjdsfessbcoa7qxqmvbofr6sqfvauvt4h6bot4ltngusc72tpjq.ipfs.nftstorage.link/XEN%20ZOH%20FRONT.webp"
         }
       ],
       "typeCard": "gold"
@@ -17118,7 +17118,7 @@
       "name": "Dracul",
       "type": "ERC1155",
       "description": "+20 attack for all guardians in your deck",
-      "image": "https://bafybeieogbzvgk66wbhzv44seyanz5g3skomt7nmr7vnz5qhkvupc3hzue.ipfs.w3s.link/Dracul_front.webp",
+      "image": "https://bafybeieogbzvgk66wbhzv44seyanz5g3skomt7nmr7vnz5qhkvupc3hzue.ipfs.nftstorage.link/Dracul_front.webp",
       "symbol": "GATE",
       "synergies": ["Dominic"],
       "properties": {
@@ -17174,7 +17174,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeieogbzvgk66wbhzv44seyanz5g3skomt7nmr7vnz5qhkvupc3hzue.ipfs.w3s.link/Dracul_front.webp"
+          "value": "https://bafybeieogbzvgk66wbhzv44seyanz5g3skomt7nmr7vnz5qhkvupc3hzue.ipfs.nftstorage.link/Dracul_front.webp"
         }
       ],
       "typeCard": "avatar"
@@ -17315,7 +17315,7 @@
       "name": "Alugaster",
       "type": "ERC1155",
       "description": "[Human | Fighter] \"Noble Paladin\" Activate:During your main phases, Alugastor can heal him self for 20 HP. Cooldown: 3 turns. ",
-      "image": "https://bafybeigg7nyiqntqw3wmci4o7vl4tladlusw5k2kwuv7ydgqfdvqg6x4ey.ipfs.w3s.link/ALUGASTOR%20FRONT.webp",
+      "image": "https://bafybeigg7nyiqntqw3wmci4o7vl4tladlusw5k2kwuv7ydgqfdvqg6x4ey.ipfs.nftstorage.link/ALUGASTOR%20FRONT.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -17410,7 +17410,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeigg7nyiqntqw3wmci4o7vl4tladlusw5k2kwuv7ydgqfdvqg6x4ey.ipfs.w3s.link/ALUGASTOR%20FRONT.webp"
+          "value": "https://bafybeigg7nyiqntqw3wmci4o7vl4tladlusw5k2kwuv7ydgqfdvqg6x4ey.ipfs.nftstorage.link/ALUGASTOR%20FRONT.webp"
         }
       ],
       "typeCard": "wood"
@@ -18979,7 +18979,7 @@
       "name": "Voidwalker Kek'zin",
       "type": "ERC1155",
       "description": "Active: Select one enemy Guardian as your rival; Kek'zin takes 25% less DMG from them.",
-      "image": "https://bafybeicfgc57dxnl3ekrdgloco2o2aerqcsef7goaolt5v5zm5g36yedo4.ipfs.w3s.link/Voidwalker_Kekzin_FRONT.webp",
+      "image": "https://bafybeicfgc57dxnl3ekrdgloco2o2aerqcsef7goaolt5v5zm5g36yedo4.ipfs.nftstorage.link/Voidwalker_Kekzin_FRONT.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -19074,7 +19074,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeicfgc57dxnl3ekrdgloco2o2aerqcsef7goaolt5v5zm5g36yedo4.ipfs.w3s.link/Voidwalker_Kekzin_FRONT.webp"
+          "value": "https://bafybeicfgc57dxnl3ekrdgloco2o2aerqcsef7goaolt5v5zm5g36yedo4.ipfs.nftstorage.link/Voidwalker_Kekzin_FRONT.webp"
         }
       ],
       "typeCard": "wood"
@@ -19603,7 +19603,7 @@
       "name": "Demona",
       "type": "ERC1155",
       "description": "[Vampire | Support] Passive: While Demona is on the field, all Vampire type Guardians gain +15 HP.",
-      "image": "https://bafybeibybngr6dg3gcrwfryusxh2smvn3vwlqlbj5d6m77kh67i53gfsey.ipfs.w3s.link/FRONT%20DEMONA.webp",
+      "image": "https://bafybeibybngr6dg3gcrwfryusxh2smvn3vwlqlbj5d6m77kh67i53gfsey.ipfs.nftstorage.link/FRONT%20DEMONA.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -19698,7 +19698,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeibybngr6dg3gcrwfryusxh2smvn3vwlqlbj5d6m77kh67i53gfsey.ipfs.w3s.link/FRONT%20DEMONA.webp"
+          "value": "https://bafybeibybngr6dg3gcrwfryusxh2smvn3vwlqlbj5d6m77kh67i53gfsey.ipfs.nftstorage.link/FRONT%20DEMONA.webp"
         }
       ],
       "typeCard": "wood"
@@ -20955,7 +20955,7 @@
       "name": "Ven'Pion",
       "type": "ERC1155",
       "description": "[Insect | Fighter] \"Venom Stinger\" Activate: Your next attack inflicts Venom dealing 10 DMG per turn during each of your Standby Phases. If Ven'Pion is attacked, this ability resets.",
-      "image": "https://bafybeiaodtgnm4wz6eazzx5i3eesdjfngxm6q5ohipflfhvd5cru3ihhnm.ipfs.w3s.link/Ven'Pion.webp",
+      "image": "https://bafybeiaodtgnm4wz6eazzx5i3eesdjfngxm6q5ohipflfhvd5cru3ihhnm.ipfs.nftstorage.link/Ven'Pion.webp",
       "symbol": "GATE",
       "properties": {
         "id": {
@@ -21050,7 +21050,7 @@
         },
         {
           "trait_type": "image",
-          "value": "https://bafybeiaodtgnm4wz6eazzx5i3eesdjfngxm6q5ohipflfhvd5cru3ihhnm.ipfs.w3s.link/Ven'Pion.webp"
+          "value": "https://bafybeiaodtgnm4wz6eazzx5i3eesdjfngxm6q5ohipflfhvd5cru3ihhnm.ipfs.nftstorage.link/Ven'Pion.webp"
         }
       ],
       "typeCard": "wood"
