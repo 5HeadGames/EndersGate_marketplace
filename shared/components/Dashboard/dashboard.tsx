@@ -2,7 +2,6 @@ import React from "react";
 import { useAppSelector } from "@redux/store";
 import { getAddressesMatic } from "@shared/web3";
 import packs from "../../packs.json";
-import { useStats } from "@shared/hooks/useStats";
 import NFTCard from "../Marketplace/itemCard";
 import Link from "next/link";
 import { Icons } from "@shared/const/Icons";
@@ -24,19 +23,19 @@ const DashboardComponent = () => {
   const { nfts } = useAppSelector((state) => state);
   const cards = convertArrayCards();
 
-  const { recentlyListed, recentlySold } = useStats({
-    nfts,
-    listedSelected: "trading_cards",
-    soldSelected: "trading_cards",
-    columnSelected: "last_7d",
-  });
+  // const { recentlyListed, recentlySold } = useStats({
+  //   nfts,
+  //   listedSelected: "trading_cards",
+  //   soldSelected: "trading_cards",
+  //   columnSelected: "last_7d",
+  // });
 
-  const { recentlyListed: recentlyListedCards } = useStats({
-    nfts,
-    listedSelected: "trading_cards",
-    soldSelected: "trading_cards",
-    columnSelected: "last_7d",
-  });
+  // const { recentlyListed: recentlyListedCards } = useStats({
+  //   nfts,
+  //   listedSelected: "trading_cards",
+  //   soldSelected: "trading_cards",
+  //   columnSelected: "last_7d",
+  // });
 
   const { pack } = getAddressesMatic();
 
