@@ -186,20 +186,21 @@ input::-webkit-inner-spin-button {
   }
 }
 
-@for $i from 0 through 10000 {
-  .animating-#{$i + 1} {
-    top: 0;
-    bottom: 0;
-    margin: auto;
-    position: absolute;
-    animation-name: cardsAnimation;
-    animation-duration: 6s;
-  }
+.animating-notCard {
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  position: absolute;
+  animation-name: cardsAnimation;
+  animation-duration: 2s;
 }
 
 @keyframes cardsAnimation {
   50% {
     left: 50000px;
+  }
+  90% {
+    left: 55000px;
   }
   100% {
     left: 60000px;
@@ -218,6 +219,7 @@ input::-webkit-inner-spin-button {
 
 @for $i from 0 through 10000 {
   .animating-#{$i + 1} {
+    position: absolute;
     top: 100px;
     left: calc((((#{$i}* 300) / 1920) * 100vw) + (#{$i}* 20px));
   }
@@ -225,23 +227,15 @@ input::-webkit-inner-spin-button {
 
 @for $i from 0 through 10000 {
   .animatingCardToOpen-#{$i} {
-    animation-name: toMiddle-#{$i};
-    animation-duration: 2.2s;
-  }
-}
-
-@for $i from 0 through 10000 {
-  @keyframes toMiddle-#{$i} {
-    100% {
-      top: 100px;
-      left: calc(50% - ((170 / 1920) * 100vw));
-    }
+    position: absolute;
+    animation-name: toMiddle;
+    animation-duration: 2.5s;
   }
 }
 
 @keyframes toMiddle {
   100% {
-    top: 100px;
+    top: 200px;
     left: calc(50% - ((170 / 1920) * 100vw));
   }
 }

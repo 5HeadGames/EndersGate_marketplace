@@ -39,7 +39,7 @@ export const PackOpeningComponent: React.FC<any> = ({
     setPackAnimation(id);
     try {
       const web3 = await getWeb3();
-      await packContract.methods.unpack(id, 1).send({ from: account });
+      // await packContract.methods.unpack(id, 1).send({ from: account });
       const block = await web3.eth.getBlockNumber();
       const eventsTransfer = await NFTContract.getPastEvents("TransferSingle", {
         filter: {
@@ -106,6 +106,8 @@ export const PackOpeningComponent: React.FC<any> = ({
     }
   }, [video]);
 
+  const muteUnmute = () => {};
+
   return (
     <>
       {!video && (
@@ -137,6 +139,8 @@ export const PackOpeningComponent: React.FC<any> = ({
           setNoAudio={setVideo}
           endPackOpening={endPackOpening}
           video={video}
+          backgroundSound={backgroundSound}
+          setBackgroundSound={setBackgroundSound}
           isLoading={isLoadingPack}
           setIsLoading={setIsLoadingPack}
           videoPlaying={videoPlaying}
@@ -148,10 +152,11 @@ export const PackOpeningComponent: React.FC<any> = ({
           startFlashingPack={startFlashingPack}
           packAnimation={packAnimation}
           show={show}
+          refAudioLoop={refAudioLoop}
         />
         <PackOpeningMobile
           cards={cards}
-          refAudioLoopMobile={refAudioLoop}
+          refAudioLoop={refAudioLoop}
           updateBalance={updateBalance}
           packContract={packContract}
           backgroundSound={backgroundSound}

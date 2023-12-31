@@ -14,6 +14,9 @@ export const PackOpening = ({
   isLoading,
   videoPlaying,
   setVideoPlaying,
+  refAudioLoop,
+  backgroundSound,
+  setBackgroundSound,
   cardToOpen,
   startFlashing,
   setStartFlashing,
@@ -23,6 +26,7 @@ export const PackOpening = ({
   packAnimation,
   video,
   show,
+  mute,
 }: any) => {
   const vidRef1 = React.useRef<any>(null);
   const vidRef2 = React.useRef<any>(null);
@@ -71,7 +75,9 @@ export const PackOpening = ({
   return (
     <div
       className={clsx(
-        "w-full min-h-screen relative overflow-hidden md:block hidden",
+        { "min-h-screen": !(videoPlaying === 3 && video) },
+        { "h-[calc(100vh-56px)]": videoPlaying === 3 && video },
+        "w-full  relative overflow-hidden md:block hidden",
       )}
       style={{ backgroundColor: "#111" }}
     >
@@ -95,6 +101,30 @@ export const PackOpening = ({
           alt="history title"
         />
       </div>
+      <div className="absolute top-12 right-12 z-50 w-8">
+        <img
+          src={
+            backgroundSound
+              ? "/images/packs/Mute-Off-Icon.png"
+              : "/images/packs/Mute-On-Icon.png"
+          }
+          className="cursor-pointer"
+          onClick={() => {
+            if (backgroundSound) {
+              if (refAudioLoop) {
+                setBackgroundSound(false);
+                refAudioLoop.current.pause();
+              }
+            } else {
+              if (refAudioLoop) {
+                setBackgroundSound(true);
+                refAudioLoop.current.play();
+              }
+            }
+          }}
+          alt=""
+        />
+      </div>
       <div className="absolute left-0 right-0 mx-auto z-0 flex items-center justify-center w-full  bgPackContainer">
         {!video && (
           <img
@@ -115,7 +145,9 @@ export const PackOpening = ({
       </div>
       <div
         className={clsx(
-          "w-full min-h-screen flex md:items-center md:justify-center relative",
+          { "min-h-screen": !(videoPlaying === 3 && video) },
+          { "h-[calc(100vh-56px)]": videoPlaying === 3 && video },
+          "w-full flex md:items-center md:justify-center relative",
           { "!items-start !justify-start": video },
         )}
       >
@@ -219,10 +251,8 @@ export const PackOpening = ({
                         className={clsx(
                           animating
                             ? cardToOpen[index]
-                              ? `animating-${index + 1} animatingCardToOpen-${
-                                  index + 1
-                                }`
-                              : `animating-${index + 1}`
+                              ? `animating-${index} animatingCardToOpen-${index}`
+                              : `animating-${index} animating-notCard`
                             : "",
                           `cursor-pointer pack z-40`,
                         )}
@@ -299,24 +329,6 @@ export const PackOpening = ({
             </div>
           )}
         </>
-        {/*) : (
-          // <div
-          //   className={clsx(
-          //     "flex gap-10 items-center justify-start relative containerPacks w-full overflow-scroll h-screen px-10"
-          //   )}
-          // >
-          //   {new Array(5 * (5 - packAvailable)).fill(false).map((a, index) => {
-          //     return (
-          //       <img
-          //         key={index}
-          //         src="./videos/eclipso_front.png"
-          //         className={clsx("cursor-pointer xl:w-60 w-32")}
-          //         alt=""
-          //       />
-          //     );
-          //   })}
-          // </div>
-        )*/}
       </div>
     </div>
   );
