@@ -101,30 +101,32 @@ export const PackOpening = ({
           alt="history title"
         />
       </div>
-      <div className="absolute top-12 right-12 z-50 w-8">
-        <img
-          src={
-            backgroundSound
-              ? "/images/packs/Mute-Off-Icon.png"
-              : "/images/packs/Mute-On-Icon.png"
-          }
-          className="cursor-pointer"
-          onClick={() => {
-            if (backgroundSound) {
-              if (refAudioLoop) {
-                setBackgroundSound(false);
-                refAudioLoop.current.pause();
-              }
-            } else {
-              if (refAudioLoop) {
-                setBackgroundSound(true);
-                refAudioLoop.current.play();
-              }
+      {!video && (
+        <div className="absolute top-12 right-12 z-50 w-8">
+          <img
+            src={
+              backgroundSound
+                ? "/images/packs/Mute-Off-Icon.png"
+                : "/images/packs/Mute-On-Icon.png"
             }
-          }}
-          alt=""
-        />
-      </div>
+            className="cursor-pointer"
+            onClick={() => {
+              if (backgroundSound) {
+                if (refAudioLoop) {
+                  setBackgroundSound(false);
+                  refAudioLoop.current.pause();
+                }
+              } else {
+                if (refAudioLoop) {
+                  setBackgroundSound(true);
+                  refAudioLoop.current.play();
+                }
+              }
+            }}
+            alt=""
+          />
+        </div>
+      )}
       <div className="absolute left-0 right-0 mx-auto z-0 flex items-center justify-center w-full  bgPackContainer">
         {!video && (
           <img
@@ -162,27 +164,22 @@ export const PackOpening = ({
                     "h-full absolute z-20 videoPack",
                   )}
                   // controls
-                  src={`/videos/packVideos/common_pack_green.webm`}
+                  src={`./videos/packVideos/card_${packAnimation}_normal.webm`}
                   muted={videoPlaying !== 0}
                   onEnded={
                     videoPlaying === 0 ? () => endPackOpening() : undefined
                   }
                 ></video>
 
-                {/* <video
+                <video
                   ref={vidRef2}
                   className={clsx(
-                    { ["hidden"]: videoPlaying !== 1 },
+                    { hidden: videoPlaying !== 1 },
                     "h-full absolute z-20 videoPack",
                   )}
                   // controls
                   muted={videoPlaying !== 1}
-                  src={`./assets/packVideos/card_${
-                    packAnimation + 1
-                  }_purple.mp4`}
-                  onLoad={() => {
-                    console.log("terminó_purple");
-                  }}
+                  src={`./videos/packVideos/card_${packAnimation}_epic.webm`}
                   onEnded={
                     videoPlaying === 1 ? () => endPackOpening() : undefined
                   }
@@ -191,21 +188,16 @@ export const PackOpening = ({
                 <video
                   ref={vidRef3}
                   className={clsx(
-                    { ["hidden"]: videoPlaying !== 2 },
+                    { hidden: videoPlaying !== 2 },
                     "h-full absolute z-20 videoPack",
                   )}
                   // controls
                   muted={videoPlaying !== 2}
-                  src={`./assets/packVideos/card_${
-                    packAnimation + 1
-                  }_green.mp4`}
-                  onLoad={() => {
-                    console.log("terminó_green");
-                  }}
+                  src={`./videos/packVideos/card_${packAnimation}_legendary.webm`}
                   onEnded={
                     videoPlaying === 2 ? () => endPackOpening() : undefined
                   }
-                ></video> */}
+                ></video>
 
                 <video
                   ref={vidRef4}
@@ -214,7 +206,7 @@ export const PackOpening = ({
                     "h-full videoDesktop videoPack",
                   )}
                   // controls
-                  // muted={videoPlaying !== 3}
+                  muted={videoPlaying !== 3}
                   src="./videos/packVideos/Comp.mp4"
                 ></video>
               </div>

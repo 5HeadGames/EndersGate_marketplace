@@ -6,6 +6,7 @@ import { TransactionText } from "../common/specialFields/SpecialFields";
 import { convertArrayCards } from "../common/convertCards";
 import { getWeb3 } from "@shared/web3";
 import { useModal } from "@shared/hooks/modal";
+import { getTypePackAnimation } from "@shared/utils/packopening";
 
 export const PackOpeningComponent: React.FC<any> = ({
   arrayPacks,
@@ -39,7 +40,7 @@ export const PackOpeningComponent: React.FC<any> = ({
     setPackAnimation(id);
     try {
       const web3 = await getWeb3();
-      // await packContract.methods.unpack(id, 1).send({ from: account });
+      await packContract.methods.unpack(id, 1).send({ from: account });
       const block = await web3.eth.getBlockNumber();
       const eventsTransfer = await NFTContract.getPastEvents("TransferSingle", {
         filter: {
@@ -80,7 +81,7 @@ export const PackOpeningComponent: React.FC<any> = ({
         return newArray;
       });
       setTimeout(() => {
-        setVideoPlaying(0);
+        setVideoPlaying(getTypePackAnimation(id, packIDs));
         setCardToOpen(new Array(5).fill(false));
         setAnimating(false);
         setVideo(true);
@@ -105,8 +106,6 @@ export const PackOpeningComponent: React.FC<any> = ({
       audio.volume = 0.1;
     }
   }, [video]);
-
-  const muteUnmute = () => {};
 
   return (
     <>
