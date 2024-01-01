@@ -122,10 +122,10 @@ export default function AppLayout({ children }) {
       link: "/profile/rents",
       notification: userRentsNotificationArray.length,
     },
-    {
-      name: "SWAP",
-      link: "/profile/swap",
-    },
+    // {
+    //   name: "SWAP",
+    //   link: "/profile/swap",
+    // },
     {
       name: "COMPETITIONS",
       link: "/competitive",
