@@ -277,8 +277,8 @@ const MarketplaceComponent = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-col min-h-screen pt-36 pb-10 gap-8 w-full">
-        <div className="flex w-full lg:px-20 px-4">
+      <div className="flex flex-col min-h-screen pt-28 pb-10 gap-8 w-full">
+        {/*        <div className="flex w-full lg:px-20 px-4">
           <TransactionsBoard
             totalSale={transactionsBoard.totalSale}
             totalVolume={transactionsBoard.totalVolume}
@@ -287,7 +287,7 @@ const MarketplaceComponent = () => {
             columnSelected={columnSelected}
             setColumnSelected={setColumnSelected}
           />
-        </div>
+  </div>*/}
 
         <div className="w-full flex justify-between items-center sm:flex-row flex-col gap-10 lg:px-20 px-4">
           <div
