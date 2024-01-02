@@ -2,6 +2,7 @@ import React from "react";
 import {
   CaretDownOutlined,
   CaretLeftOutlined,
+  FilterOutlined,
   LeftOutlined,
   RightOutlined,
   SearchOutlined,
@@ -20,7 +21,7 @@ import Web3 from "web3";
 import { Icons } from "@shared/const/Icons";
 import TransactionsBoard from "../Dashboard/TransactionsBoard/TransactionsBoard";
 import { useStats } from "@shared/hooks/useStats";
-import { XIcon } from "@heroicons/react/solid";
+import { FilterIcon, XIcon } from "@heroicons/react/solid";
 import { OpenseaApiService } from "@shared/api/opensea/openseaServices";
 import { filterCards, filterPacks } from "@shared/utils/filtersCards";
 
@@ -37,6 +38,7 @@ const MarketplaceComponent = () => {
   });
   const [search, setSearch] = React.useState<any>("");
   const [openFilters, setOpenFilters] = React.useState(true);
+  const [openFiltersMobile, setOpenFiltersMobile] = React.useState(false);
 
   const [columnSelected, setColumnSelected] = React.useState("forever");
   const [listingType, setListingType] = React.useState("all");
@@ -277,7 +279,7 @@ const MarketplaceComponent = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex flex-col min-h-screen pt-28 pb-10 gap-8 w-full">
+      <div className="flex flex-col min-h-screen md:pt-28 pt-20 pb-10 gap-8 w-full">
         {/*        <div className="flex w-full lg:px-20 px-4">
           <TransactionsBoard
             totalSale={transactionsBoard.totalSale}
@@ -289,9 +291,9 @@ const MarketplaceComponent = () => {
           />
   </div>*/}
 
-        <div className="w-full flex justify-between items-center sm:flex-row flex-col gap-10 lg:px-20 px-4">
+        <div className="w-full flex justify-between items-center sm:flex-row flex-col md:gap-10 gap-4 lg:px-20 sm:px-4 px-2">
           <div
-            className="flex justify-center items-center cursor-pointer rounded-md border border-overlay-border bg-overlay-2 p-3 text-red-primary hover:text-orange-500"
+            className="md:flex hidden justify-center items-center cursor-pointer rounded-md border border-overlay-border bg-overlay-2 p-3 text-red-primary hover:text-orange-500"
             onClick={() => setOpenFilters((prev) => !prev)}
           >
             {openFilters ? <CaretLeftOutlined /> : <CaretDownOutlined />}
@@ -299,27 +301,40 @@ const MarketplaceComponent = () => {
               Filters
             </Typography>
           </div>
-          <div className="border flex items-center text-lg justify-center border-overlay-border bg-overlay-2 rounded-xl w-full">
-            <div className="text-white flex items-center w-full py-3 px-4 rounded-xl bg-overlay border-r border-overlay-border">
-              <input
-                type="text"
-                className="text-white w-full bg-transparent focus:outline-none"
-                placeholder="Search"
-                value={search}
-                onChange={(e) => {
-                  setPage(0);
-                  setSearch(e.target.value);
-                }}
-              />
-              <div
-                className="text-white cursor-pointer flex items-center"
-                onClick={() => setSearch("")}
-              >
-                <XIcon color="#fff" width={"16px"} />
-              </div>
+          <div className="flex gap-2">
+            <div
+              className="flex md:hidden justify-center items-center cursor-pointer rounded-md border border-overlay-border bg-overlay-2 p-2 text-red-primary hover:text-orange-500"
+              onClick={() => setOpenFiltersMobile((prev) => !prev)}
+            >
+              {openFiltersMobile ? (
+                <CaretLeftOutlined />
+              ) : (
+                <CaretDownOutlined />
+              )}
+              <FilterOutlined className="w-5" />
             </div>
-            <div className="text-white text-xl flex items-center justify-center px-2">
-              <SearchOutlined />
+            <div className="border flex items-center text-lg justify-center border-overlay-border bg-overlay-2 rounded-xl w-full">
+              <div className="text-white flex items-center w-full py-3 px-4 rounded-xl bg-overlay border-r border-overlay-border">
+                <input
+                  type="text"
+                  className="text-white w-full bg-transparent focus:outline-none"
+                  placeholder="Search"
+                  value={search}
+                  onChange={(e) => {
+                    setPage(0);
+                    setSearch(e.target.value);
+                  }}
+                />
+                <div
+                  className="text-white cursor-pointer flex items-center"
+                  onClick={() => setSearch("")}
+                >
+                  <XIcon color="#fff" width={"16px"} />
+                </div>
+              </div>
+              <div className="text-white text-xl flex items-center justify-center px-2">
+                <SearchOutlined />
+              </div>
             </div>
           </div>
           <div className="flex">
@@ -350,8 +365,27 @@ const MarketplaceComponent = () => {
         <div className="w-full flex xl:flex-row flex-col lg:px-20 px-4">
           <div
             className={clsx(
-              { ["flex xl:w-auto w-full"]: openFilters },
+              { ["md:flex hidden xl:w-auto w-full"]: openFilters },
               { ["hidden"]: !openFilters },
+            )}
+          >
+            <FiltersBoard
+              filters={filters}
+              setFilters={setFilters}
+              setCardType={setCardType}
+              cardType={cardType}
+              setPage={setPage}
+              type={type}
+              setType={setType}
+              setPriceSettings={setPriceSettings}
+              listingType={listingType}
+              setListingType={setListingType}
+            />
+          </div>
+          <div
+            className={clsx(
+              { ["md:hidden flex xl:w-auto w-full"]: openFiltersMobile },
+              { ["hidden"]: !openFiltersMobile },
             )}
           >
             <FiltersBoard

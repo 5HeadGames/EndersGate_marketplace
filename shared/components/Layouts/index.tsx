@@ -388,7 +388,7 @@ export default function AppLayout({ children }) {
 
           <div className="flex gap-2 items-center justify-center py-2 border-y border-overlay-border relative">
             <img
-              src="/images/swap/SwapModalImage1.png"
+              src="/images/swap/SwapGraphic.webp"
               className="w-full flex"
               alt=""
             />
