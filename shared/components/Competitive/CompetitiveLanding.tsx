@@ -180,7 +180,7 @@ export const CompetitiveLanding = () => {
           </Link>
           <Link
             target={"_blank"}
-            href=" https://testflight.apple.com/join/pUbzHdCV"
+            href="https://testflight.apple.com/join/pUbzHdCV"
           >
             <Box>
               <Image
