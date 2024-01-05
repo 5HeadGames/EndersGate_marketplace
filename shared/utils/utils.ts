@@ -256,7 +256,7 @@ export const FAQS = [
   {
     title: "How do 5HeadGames virtual collectibles affect the environment?",
     content:
-      'We mint our virtual collectibles on EVM compatible blockchains, specifically Polygon, and Findora, which use a “proof-of-stake" consensus mechanism. This is more energy efficient than a “proof-of-work” mechanism. As a result, EVM compatible blockchains, like Polygon and Findora, require less energy to mint virtual collectibles than it does for you to post an image on Instagram. For more information, visit our partners: https://polygon.technology/sustainability.',
+      'We mint our virtual collectibles on EVM compatible blockchains, specifically Polygon, SKALE Network, ImmutableX zkevm, and Linea which all use a “proof-of-stake" consensus mechanism. This is more energy efficient than a “proof-of-work” mechanism. As a result, EVM-compatible blockchains, like Polygon and Findora, require less energy to mint virtual collectibles than it does for you to post an image on Instagram. For more information, visit our partners: https://polygon.technology/sustainability.',
   },
   {
     title: "Is a virtual collectible the same thing as cryptocurrency?",
