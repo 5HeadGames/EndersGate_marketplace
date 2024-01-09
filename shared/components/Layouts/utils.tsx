@@ -1,5 +1,6 @@
 import { AreaChartOutlined } from "@ant-design/icons";
 import { Icons } from "@shared/const/Icons";
+import { logoutIMXPassport } from "@shared/web3";
 import clsx from "clsx";
 import Link from "next/link";
 
@@ -15,23 +16,29 @@ export const handleSignOut = async ({
   router,
   setDisabled,
 }) => {
-  if (providerName === "magic") {
-    const toggleLogout = handleDisabled("logout", setDisabled);
-    toggleLogout(true);
-    logout(updateUser);
-    toggleLogout(false);
-  } else {
-    updateUser({
-      ethAddress: "",
-      email: "",
-      provider: "",
-      providerName: "",
-    });
+  try {
+    if (providerName === "magic") {
+      const toggleLogout = handleDisabled("logout", setDisabled);
+      toggleLogout(true);
+      logout(updateUser);
+      toggleLogout(false);
+    } else if (providerName === "passport") {
+      logoutIMXPassport({ updateUser });
+    } else {
+      updateUser({
+        ethAddress: "",
+        email: "",
+        provider: "",
+        providerName: "",
+      });
+    }
+    localStorage.removeItem("typeOfConnection");
+    localStorage.removeItem("loginTime");
+    localStorage.removeItem("chain");
+    router.push("/");
+  } catch (error) {
+    console.log(error);
   }
-  localStorage.removeItem("typeOfConnection");
-  localStorage.removeItem("loginTime");
-  localStorage.removeItem("chain");
-  router.push("/");
 };
 
 export const navItems = [

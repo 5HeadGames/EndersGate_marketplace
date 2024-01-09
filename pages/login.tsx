@@ -8,26 +8,12 @@ import useMagicLink from "@shared/hooks/useMagicLink";
 import { WALLETS } from "@shared/utils/connection/utils";
 import { LoadingOutlined } from "@ant-design/icons";
 import { onGetAssets, onLogged } from "@redux/actions";
-import { switchChain } from "@shared/web3";
+import { loginIMXPassport, switchChain } from "@shared/web3";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import { useWeb3React } from "@web3-react/core";
 import { useUser } from "@shared/context/useUser";
-import { config, passport } from "@imtbl/sdk";
-
-const baseConfig = {
-  environment: config.Environment.SANDBOX,
-  publishableKey: "pk_imapik-test-T4T232i3Ud_@jpQozNrd",
-};
-
-const passportInstance = new passport.Passport({
-  baseConfig,
-  clientId: "HXHIOulzVI5FUDSTVmFc0XRoyd7zFEwz",
-  redirectUri: "http://localhost:3000",
-  logoutMode: "silent",
-  audience: "platform_api",
-  scope: "openid offline_access email transact",
-});
+import { toast } from "react-hot-toast";
 
 const Login = () => {
   const [loading, setLoading] = React.useState(false);
@@ -68,6 +54,18 @@ const Login = () => {
     if (isAuthenticated) router.push("/");
   }, [isAuthenticated]);
 
+  React.useEffect(() => {
+    if (query.imx === "true") {
+      toast(
+        "To use Immutable X zkEVM, please logout and login with the Immutable X Passport",
+        {
+          icon: "ℹ️",
+          duration: 8000,
+        },
+      );
+    }
+  }, [query.imx]);
+
   const handleConnection = async (connection: any, title: any) => {
     setLoading(true);
     try {
@@ -86,7 +84,7 @@ const Login = () => {
       const queryAddress: any = query?.redirectAddress?.toString();
       setTimeout(async () => {
         try {
-          await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+          await updateBlockchain(blockchain !== "imx" ? blockchain : "matic");
         } catch (e) {
           console.log(e.message);
         }
@@ -96,7 +94,12 @@ const Login = () => {
           provider: provider?.provider,
           providerName: "web3react",
         });
-        dispatch(onGetAssets({ address: account, blockchain }));
+        dispatch(
+          onGetAssets({
+            address: account,
+            blockchain: blockchain !== "imx" ? blockchain : "matic",
+          }),
+        );
         if (query.redirect === "true" && query.redirectAddress != null) {
           router.push(queryAddress !== undefined ? queryAddress : "/");
         } else {
@@ -157,27 +160,13 @@ const Login = () => {
                 size="medium"
                 className="w-full mb-2 bg-overlay rounded-xl  text-white hover:text-overlay"
                 onClick={async () => {
-                  try {
-                    const provider = passportInstance.connectEvm();
-                    const accounts = await provider.request({
-                      method: "eth_requestAccounts",
-                    });
-                    localStorage.setItem("typeOfConnection", "passport");
-                    localStorage.setItem(
-                      "loginTime",
-                      new Date().getTime().toString(),
-                    );
-                    updateUser({
-                      ethAddress: accounts[0],
-                      email: "",
-                      provider: provider,
-                      providerName: "passport",
-                    });
-                    updateBlockchain("imx");
-                    console.log(accounts);
-                  } catch (err) {
-                    console.log(err);
-                  }
+                  loginIMXPassport({
+                    updateUser,
+                    updateBlockchain,
+                    onSuccess: () => {
+                      router.push("/");
+                    },
+                  });
                 }}
               >
                 {loading ? "..." : "Login with Immutable X Passport"}

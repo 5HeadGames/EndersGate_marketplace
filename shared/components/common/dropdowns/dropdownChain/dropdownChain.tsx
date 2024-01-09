@@ -5,6 +5,7 @@ import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
 import { Image, Text, Tooltip } from "@chakra-ui/react";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { blockchains } from "@shared/utils/chains";
+import Link from "next/link";
 
 export const DropdownChain: React.FC<any> = () => {
   const { blockchain, updateBlockchain } = useBlockchain();
@@ -71,8 +72,8 @@ export const DropdownChain: React.FC<any> = () => {
                   <Menu.Items className="absolute top-0 right-3 z-20 md:mt-7 origin-top-right bg-overlay divide-y shadow-lg rounded-xl focus:outline-none">
                     <div>
                       <div className="flex flex-col items-center justify-center border border-overlay-border rounded-xl overflow-hidden">
-                        {blockchains.map(({ name, value, image }) => {
-                          return (
+                        {blockchains.map(({ name, value, image, link }) => {
+                          return !link ? (
                             <div
                               className="flex !shrink-0 items-center gap-2 p-2 w-48 hover:bg-overlay-2 !px-6 cursor-pointer"
                               onClick={() => handleSelect(value)}
@@ -87,6 +88,20 @@ export const DropdownChain: React.FC<any> = () => {
                                 {name}
                               </Text>
                             </div>
+                          ) : (
+                            <Link href={link}>
+                              <div className="flex !shrink-0 items-center gap-2 p-2 w-48 hover:bg-overlay-2 !px-6 cursor-pointer">
+                                <Image
+                                  boxSize="1.5rem"
+                                  borderRadius="full"
+                                  src={image}
+                                  alt="logo1"
+                                />
+                                <Text className="text-white whitespace-nowrap shrink-0">
+                                  {name}
+                                </Text>
+                              </div>
+                            </Link>
                           );
                         })}
                       </div>

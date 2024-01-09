@@ -11,6 +11,61 @@ import {
 import { findSum } from "@shared/components/common/specialFields/SpecialFields";
 import { child, get, getDatabase, ref, set } from "firebase/database";
 
+import { config, passport } from "@imtbl/sdk";
+
+const baseConfig = {
+  environment: config.Environment.SANDBOX,
+  publishableKey: "pk_imapik-test-T4T232i3Ud_@jpQozNrd",
+};
+
+const passportInstance = new passport.Passport({
+  baseConfig,
+  clientId: "HXHIOulzVI5FUDSTVmFc0XRoyd7zFEwz",
+  redirectUri: "http://localhost:3000",
+  logoutMode: "silent",
+  audience: "platform_api",
+  scope: "openid offline_access email transact",
+});
+
+export const loginIMXPassport: any = async ({
+  updateUser,
+  updateBlockchain,
+  onSuccess,
+}) => {
+  try {
+    const provider = passportInstance.connectEvm();
+    const accounts = await provider.request({
+      method: "eth_requestAccounts",
+    });
+    localStorage.setItem("typeOfConnection", "passport");
+    localStorage.setItem("loginTime", new Date().getTime().toString());
+    updateUser({
+      ethAddress: accounts[0],
+      email: "",
+      provider: provider,
+      providerName: "passport",
+    });
+    updateBlockchain("imx");
+    if (onSuccess) onSuccess();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const logoutIMXPassport: any = async ({ updateUser }) => {
+  try {
+    passportInstance.logout();
+    updateUser({
+      ethAddress: "",
+      email: "",
+      provider: "",
+      providerName: "",
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const loginMetamaskWallet = async () => {
   const provider = await (window as any).ethereum;
   if (!provider) return false;

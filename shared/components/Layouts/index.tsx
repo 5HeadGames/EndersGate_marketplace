@@ -17,7 +17,7 @@ import { Cart } from "./cart";
 import ChainSelect from "./chainSelect";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
-import { getRentsPendingByUser } from "@shared/web3";
+import { getRentsPendingByUser, loginIMXPassport } from "@shared/web3";
 import { useUser } from "@shared/context/useUser";
 import { handleSignOut, Logo, NavbarItem, navItems } from "./utils";
 import ModalShop from "../Shop/ModalShop";
@@ -94,6 +94,9 @@ export default function AppLayout({ children }) {
         });
         if (typeOfConnection === "magic") {
           login(updateUser);
+        }
+        if (typeOfConnection === "passport") {
+          loginIMXPassport({ updateUser, updateBlockchain });
         }
       } else {
         localStorage.removeItem("typeOfConnection");
@@ -278,7 +281,7 @@ export default function AppLayout({ children }) {
                             )}
                             onClick={item.onClick}
                           >
-                            <h3 className={clsx("text-md font-bold")}>
+                            <h3 className={clsx("text-md font-[500]")}>
                               {item.name}
                             </h3>
                           </div>

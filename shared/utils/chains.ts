@@ -207,6 +207,7 @@ export const blockchains = [
     name: "IMMUTABLE X",
     value: "imx",
     image: "/images/imx.png",
+    link: "/login?redirect=true&redirectAddress=/&imx=true",
   },
   {
     name: "NEBULA HUB",
