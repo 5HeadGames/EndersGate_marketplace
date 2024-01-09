@@ -1,7 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { Icons } from "@shared/const/Icons";
-import { EditOutlined, LoginOutlined } from "@ant-design/icons";
+import { CopyOutlined, EditOutlined, LoginOutlined } from "@ant-design/icons";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import Web3 from "web3";
 import { useSelector } from "react-redux";
@@ -147,8 +147,14 @@ const ProfileLayout = ({ children }) => {
                   </form>
                 )}
               </div>
-              <h2 className="text-primary-disabled font-[500] md:text-[14px] text-[12px]">
-                <AddressText text={user} />
+              <h2 className="text-primary-disabled font-[500] md:text-[14px] text-[12px] flex items-center gap-2">
+                <AddressText text={user} />{" "}
+                <CopyOutlined
+                  onClick={() => {
+                    navigator.clipboard.writeText(user);
+                    toast.success("Copied successfully!");
+                  }}
+                />
               </h2>
               {providerName === "magic" && (
                 <Button

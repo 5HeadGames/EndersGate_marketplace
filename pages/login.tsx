@@ -13,6 +13,21 @@ import { useBlockchain } from "@shared/context/useBlockchain";
 import { CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import { useWeb3React } from "@web3-react/core";
 import { useUser } from "@shared/context/useUser";
+import { config, passport } from "@imtbl/sdk";
+
+const baseConfig = {
+  environment: config.Environment.SANDBOX,
+  publishableKey: "pk_imapik-test-T4T232i3Ud_@jpQozNrd",
+};
+
+const passportInstance = new passport.Passport({
+  baseConfig,
+  clientId: "HXHIOulzVI5FUDSTVmFc0XRoyd7zFEwz",
+  redirectUri: "http://localhost:3000",
+  logoutMode: "silent",
+  audience: "platform_api",
+  scope: "openid offline_access email transact",
+});
 
 const Login = () => {
   const [loading, setLoading] = React.useState(false);
@@ -23,7 +38,7 @@ const Login = () => {
 
   const { account, provider } = useWeb3React();
 
-  const { blockchain } = useBlockchain();
+  const { blockchain, updateBlockchain } = useBlockchain();
 
   const { query } = useRouter();
 
@@ -108,32 +123,64 @@ const Login = () => {
         </h1>
         <div
           className={clsx(
-            "flex flex-col gap-4 relative h-80 items-center justify-center",
+            "flex flex-col gap-4 relative h-auto items-center justify-center pt-10",
           )}
         >
           {loading === true ? (
             <LoadingOutlined className="text-5xl text-white" />
           ) : (
             <>
+              <Button
+                disabled={loading}
+                decoration="line-white"
+                size="medium"
+                className="w-full mb-2 bg-overlay rounded-xl  text-white hover:text-overlay"
+                onClick={() => handleLogin()}
+              >
+                {loading ? "..." : "Login with Email"}
+              </Button>
               {WALLETS.map((k, i) => (
                 <Button
                   disabled={loading}
                   decoration="line-white"
                   size="medium"
-                  className="w-full mb-2 bg-overlay rounded-md  text-white hover:text-overlay"
+                  className="w-full mb-2 bg-overlay rounded-xl  text-white hover:text-overlay"
                   onClick={() => handleConnection(k.connection, k.title)}
                 >
                   {loading ? "..." : "Login with " + k.title}
                 </Button>
               ))}
+
               <Button
                 disabled={loading}
                 decoration="line-white"
                 size="medium"
-                className="w-full mb-2 bg-overlay rounded-md  text-white hover:text-overlay"
-                onClick={() => handleLogin()}
+                className="w-full mb-2 bg-overlay rounded-xl  text-white hover:text-overlay"
+                onClick={async () => {
+                  try {
+                    const provider = passportInstance.connectEvm();
+                    const accounts = await provider.request({
+                      method: "eth_requestAccounts",
+                    });
+                    localStorage.setItem("typeOfConnection", "passport");
+                    localStorage.setItem(
+                      "loginTime",
+                      new Date().getTime().toString(),
+                    );
+                    updateUser({
+                      ethAddress: accounts[0],
+                      email: "",
+                      provider: provider,
+                      providerName: "passport",
+                    });
+                    updateBlockchain("imx");
+                    console.log(accounts);
+                  } catch (err) {
+                    console.log(err);
+                  }
+                }}
               >
-                {loading ? "..." : "Login with Email"}
+                {loading ? "..." : "Login with Immutable X Passport"}
               </Button>
             </>
           )}

@@ -19,7 +19,7 @@ const ETH: any = {
 };
 
 const IMX: any = {
-  name: "Inmutable X Token",
+  name: "Immutable X Token",
   symbol: "tIMX",
   decimals: 18,
 };
@@ -99,15 +99,25 @@ export const CHAINS: {
     type: "both",
   },
 
-  // 13472: {
-  //   urls: [" https://rpc.testnet.immutable.com"],
-  //   name: "Inmutable X Testnet",
-  //   rpcUrls: [" https://rpc.testnet.immutable.com"],
-  //   nativeCurrency: IMX,
-  //   blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
-  //   blockExplorer: "https://explorer.testnet.immutable.com/",
-  //   type: "testnet",
-  // },
+  13473: {
+    urls: [" https://rpc.testnet.immutable.com"],
+    name: "Immutable X Testnet",
+    rpcUrls: [" https://rpc.testnet.immutable.com"],
+    nativeCurrency: IMX,
+    blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
+    blockExplorer: "https://explorer.testnet.immutable.com/",
+    type: "testnet",
+  },
+
+  13371: {
+    urls: ["https://rpc.immutable.com"],
+    name: "Immutable X",
+    rpcUrls: ["https://rpc.immutable.com"],
+    nativeCurrency: IMX,
+    blockExplorerUrls: ["https://explorer.immutable.com"],
+    blockExplorer: "https://explorer.immutable.com",
+    type: "mainnet",
+  },
   137: {
     urls: [
       process.env.NEXT_PUBLIC_POLYGON_PROVIDER || "",
@@ -159,7 +169,7 @@ export const CHAIN_IDS_BY_NAME: {
 } = {
   matic: process.env.NEXT_PUBLIC_ENV === "production" ? 137 : 80001,
   eth: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
-  imx: 13472,
+  imx: process.env.NEXT_PUBLIC_ENV === "production" ? 13371 : 13473,
   skl: 503129905,
 };
 
@@ -172,7 +182,8 @@ export const CHAIN_NAME_BY_ID: {
   80001: "matic",
   1: "eth",
   11155111: "eth",
-  13472: "imx",
+  13473: "imx",
+  13371: "imx",
   503129905: "skl",
 };
 
@@ -192,11 +203,11 @@ export const blockchains = [
   //   value: "findora",
   //   image: "/images/findora.png",
   // },
-  // {
-  //   name: "INMUTABLE X",
-  //   value: "imx",
-  //   image: "/images/imx.png",
-  // },
+  {
+    name: "IMMUTABLE X",
+    value: "imx",
+    image: "/images/imx.png",
+  },
   {
     name: "NEBULA HUB",
     value: "skl",

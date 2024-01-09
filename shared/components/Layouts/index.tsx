@@ -24,6 +24,7 @@ import ModalShop from "../Shop/ModalShop";
 import { useModal } from "@shared/hooks/modal";
 import { Button } from "../common/button/button";
 import Link from "next/link";
+import { config, passport } from "@imtbl/sdk";
 
 const styles = {
   content: {
@@ -43,6 +44,7 @@ export default function AppLayout({ children }) {
     logout: false,
     userData: false,
   });
+
   const [search, setSearch] = React.useState("");
 
   const router = useRouter();
@@ -66,6 +68,18 @@ export default function AppLayout({ children }) {
   const dispatch = useAppDispatch();
 
   let isFullscreen;
+
+  const passportInstance = new passport.Passport({
+    baseConfig: {
+      environment: config.Environment.SANDBOX,
+      publishableKey: "pk_imapik-test-T4T232i3Ud_@jpQozNrd",
+    },
+    clientId: "HXHIOulzVI5FUDSTVmFc0XRoyd7zFEwz",
+    redirectUri: "http://localhost:3000/",
+    logoutRedirectUri: "http://localhost:3000/login",
+    audience: "platform_api",
+    scope: "openid offline_access email transact",
+  });
 
   const reconnect = async () => {
     try {
@@ -95,6 +109,18 @@ export default function AppLayout({ children }) {
     show();
     reconnect();
   }, []);
+
+  const loginPassportCallback = async () => {
+    await passportInstance.loginCallback();
+    const accessToken: string | undefined =
+      await passportInstance.getAccessToken();
+    const idToken: string | undefined = await passportInstance.getIdToken();
+    console.log(accessToken, idToken, "Instance");
+  };
+
+  React.useEffect(() => {
+    if (router.query.code) loginPassportCallback();
+  }, [router.query]);
 
   const loadSales = async () => {
     await dispatch(onLoadSales());

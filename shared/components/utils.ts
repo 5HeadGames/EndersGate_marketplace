@@ -1,8 +1,20 @@
+import { config } from "@imtbl/sdk";
 import { CoinbaseWallet } from "@web3-react/coinbase-wallet";
 import { GnosisSafe } from "@web3-react/gnosis-safe";
 import { MetaMask } from "@web3-react/metamask";
 import { Network } from "@web3-react/network";
 import { WalletConnect } from "@web3-react/walletconnect";
+
+// passport.PassportModuleConfiguration
+interface PassportModuleConfiguration {
+  baseConfig: config.ImmutableConfiguration;
+  clientId: string;
+  logoutRedirectUri?: string; // defaults to first logout redirect URI specified in the Immutable Developer Hub
+  logoutMode?: "redirect" | "silent"; // defaults to 'redirect'
+  redirectUri: string;
+  scope?: string;
+  audience?: string;
+}
 
 export function getName(connector: any) {
   if (connector instanceof MetaMask) return "MetaMask";

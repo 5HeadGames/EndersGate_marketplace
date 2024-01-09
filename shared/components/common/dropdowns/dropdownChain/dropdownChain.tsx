@@ -20,12 +20,24 @@ export const DropdownChain: React.FC<any> = () => {
           return (
             <>
               <div className="flex justify-center items-center">
-                <Menu.Button className="inline-flex justify-center items-center w-full font-medium bg-transparent focus:outline-none">
-                  <Tooltip label="Select Blockchain">
+                <Menu.Button
+                  className={clsx(
+                    { "cursor-pointer": blockchain !== "imx" },
+                    { "cursor-default": blockchain === "imx" },
+                    "inline-flex justify-center items-center w-full font-medium bg-transparent focus:outline-none",
+                  )}
+                >
+                  <Tooltip
+                    label={
+                      blockchain !== "imx"
+                        ? "Select Blockchain"
+                        : "Immutable X zkEVM"
+                    }
+                  >
                     <div
                       className={clsx(
-                        "flex justify-center items-center cursor-pointer rounded-xl gap-1",
-                        "text-white ",
+                        "flex justify-center items-center  rounded-xl gap-1",
+                        "text-white",
                       )}
                     >
                       <Image
@@ -33,49 +45,55 @@ export const DropdownChain: React.FC<any> = () => {
                         className="w-6"
                       ></Image>
 
-                      {open ? (
-                        <CaretUpOutlined className="opacity-50 hover:opacity-100" />
-                      ) : (
-                        <CaretDownOutlined className="opacity-50 hover:opacity-100" />
+                      {blockchain !== "imx" && (
+                        <>
+                          {open ? (
+                            <CaretUpOutlined className="opacity-50 hover:opacity-100" />
+                          ) : (
+                            <CaretDownOutlined className="opacity-50 hover:opacity-100" />
+                          )}
+                        </>
                       )}
                     </div>
                   </Tooltip>
                 </Menu.Button>
               </div>
-              <Transition
-                as={Fragment}
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <Menu.Items className="absolute top-0 right-3 z-20 md:mt-7 origin-top-right bg-overlay divide-y shadow-lg rounded-xl focus:outline-none">
-                  <div>
-                    <div className="flex flex-col items-center justify-center border border-overlay-border rounded-xl overflow-hidden">
-                      {blockchains.map(({ name, value, image }) => {
-                        return (
-                          <div
-                            className="flex !shrink-0 items-center gap-2 p-2 w-48 hover:bg-overlay-2 !px-6 cursor-pointer"
-                            onClick={() => handleSelect(value)}
-                          >
-                            <Image
-                              boxSize="1.5rem"
-                              borderRadius="full"
-                              src={image}
-                              alt="logo1"
-                            />
-                            <Text className="text-white whitespace-nowrap shrink-0">
-                              {name}
-                            </Text>
-                          </div>
-                        );
-                      })}
+              {blockchain !== "imx" && (
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="absolute top-0 right-3 z-20 md:mt-7 origin-top-right bg-overlay divide-y shadow-lg rounded-xl focus:outline-none">
+                    <div>
+                      <div className="flex flex-col items-center justify-center border border-overlay-border rounded-xl overflow-hidden">
+                        {blockchains.map(({ name, value, image }) => {
+                          return (
+                            <div
+                              className="flex !shrink-0 items-center gap-2 p-2 w-48 hover:bg-overlay-2 !px-6 cursor-pointer"
+                              onClick={() => handleSelect(value)}
+                            >
+                              <Image
+                                boxSize="1.5rem"
+                                borderRadius="full"
+                                src={image}
+                                alt="logo1"
+                              />
+                              <Text className="text-white whitespace-nowrap shrink-0">
+                                {name}
+                              </Text>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                </Menu.Items>
-              </Transition>
+                  </Menu.Items>
+                </Transition>
+              )}
             </>
           );
         }}
