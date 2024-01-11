@@ -5,7 +5,7 @@ import { useRouter } from "next/dist/client/router";
 import clsx from "clsx";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppDispatch } from "redux/store";
-import { onLoadSales } from "redux/actions";
+import { onGetAssets, onLoadSales } from "redux/actions";
 import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
@@ -49,7 +49,7 @@ export default function AppLayout({ children }) {
 
   const { login, logout } = useMagicLink();
 
-  const { updateUser } = useUser();
+  const { updateUser, user } = useUser();
 
   const {
     user: { ethAddress, providerName },
@@ -95,6 +95,16 @@ export default function AppLayout({ children }) {
     show();
     reconnect();
   }, []);
+
+  React.useEffect(() => {
+    if (providerName.toLowerCase() === "web3react") {
+      (window as any).ethereum?.on("accountsChanged", function (accounts) {
+        onGetAssets({ address: accounts[0], blockchain });
+        console.log(user, { ...user, ethAddress: accounts[0] });
+        updateUser({ ...user, ethAddress: accounts[0] });
+      });
+    }
+  }, [user]);
 
   const loadSales = async () => {
     await dispatch(onLoadSales());

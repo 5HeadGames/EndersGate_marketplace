@@ -33,6 +33,7 @@ const Inventory = () => {
   const [search, setSearch] = React.useState("");
   const dispatch = useDispatch();
   const {
+    user,
     user: { ethAddress },
   } = useUser();
   const { blockchain } = useBlockchain();
@@ -41,7 +42,7 @@ const Inventory = () => {
 
   React.useEffect(() => {
     dispatch(onGetAssets({ address: ethAddress, blockchain }));
-  }, []);
+  }, [user, ethAddress]);
 
   React.useEffect(() => {
     const arrayPacks = [];

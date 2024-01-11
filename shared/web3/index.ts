@@ -10,6 +10,7 @@ import {
 } from "@redux/actions";
 import { findSum } from "@shared/components/common/specialFields/SpecialFields";
 import { child, get, getDatabase, ref, set } from "firebase/database";
+import { toast } from "react-hot-toast";
 
 export const loginMetamaskWallet = async () => {
   const provider = await (window as any).ethereum;
@@ -497,5 +498,35 @@ export const checkFirebaseInfluencerCode = async ({
   } else {
     setError("influencer_code", { message: "Invalid Code." });
     return false;
+  }
+};
+
+export const getSFUEL = async (address) => {
+  const pk = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+  const skale = CHAINS[CHAIN_IDS_BY_NAME["skl"]];
+  const web3 = getWeb3(skale.urls[0]);
+  console.log(address);
+  const balance = await web3.eth.getBalance(address);
+  console.log(balance);
+
+  const params = {
+    to: address,
+    value: Web3.utils.toHex(Web3.utils.toWei("0.01", "ether")),
+    gas: Web3.utils.toHex(21000), // optional
+    gasPrice: Web3.utils.toHex(20 * Math.pow(10, 9)), // optional
+  };
+
+  if (parseFloat(Web3.utils.fromWei(balance, "ether")) <= 0.0001) {
+    const signedTx = await web3.eth.accounts.signTransaction(params, pk);
+    web3.eth
+      .sendSignedTransaction(signedTx.rawTransaction)
+      .on("transactionHash", () => {
+        toast.success("Gas request succesfully sent!");
+      })
+      .on("error", () => {
+        toast.error("An error has ocurred");
+      });
+  } else {
+    toast.error("You have enough sFUEL to make txs");
   }
 };
