@@ -14,7 +14,9 @@ import {
   getAddresses,
   getContractCustom,
   getNativeBlockchain,
+  getTokensAllowed,
   getTokensAllowedMatic,
+  hasAggregatorFeed,
 } from "@shared/web3";
 import { useSelector } from "react-redux";
 import React from "react";
@@ -28,6 +30,7 @@ import { useBlockchain } from "@shared/context/useBlockchain";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { toast } from "react-hot-toast";
 import { useUser } from "@shared/context/useUser";
+import { ButtonSFUELCart } from "../common/ButtonSFUEL";
 
 export const Cart = ({
   tokenSelected,
@@ -39,7 +42,6 @@ export const Cart = ({
 
   const { addToast } = useToasts();
   const dispatch = useAppDispatch();
-  const tokensAllowed = getTokensAllowedMatic();
   const { showWallet } = useMagicLink();
   const {
     user: { ethAddress, provider, providerName },
@@ -58,6 +60,8 @@ export const Cart = ({
 
   const { blockchain } = useBlockchain();
 
+  const tokensAllowed = getTokensAllowed(blockchain);
+
   const { pack, marketplace, MATICUSD } = getAddresses(blockchain);
 
   const refCartMobile = React.useRef(null);
@@ -65,7 +69,7 @@ export const Cart = ({
   const cards = convertArrayCards();
 
   React.useEffect(() => {
-    if (cart.length > 0 && !getNativeBlockchain(blockchain)) {
+    if (cart.length > 0 && hasAggregatorFeed(blockchain)) {
       getPriceMatic();
     } else {
       setPriceMatic(0);
@@ -249,6 +253,7 @@ export const Cart = ({
           )}
           Sales
         </div>
+        {blockchain === "skl" && <ButtonSFUELCart user={ethAddress} />}
       </div>
       {cart.length ? (
         <div className="flex flex-col items-center border border-overlay-border rounded-md md:min-w-[500px] md:w-max py-2">

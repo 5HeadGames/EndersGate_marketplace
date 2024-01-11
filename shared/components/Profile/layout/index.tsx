@@ -22,6 +22,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { getSFUEL } from "@shared/web3";
+import { ButtonSFUEL } from "@shared/components/common/ButtonSFUEL";
 
 const ProfileLayout = ({ children }) => {
   const {
@@ -274,27 +275,6 @@ export const Activity = ({ date, type, metadata, pack }) => {
         </div>
       </div>
     </a>
-  );
-};
-
-const ButtonSFUEL = ({ user }) => {
-  const [justClicked, setJustClicked] = React.useState(false);
-  return (
-    <Button
-      type="submit"
-      decoration="line-white"
-      className="rounded-xl bg-overlay-2 text-white hover:text-overlay text-[12px] border border-overlay-border py-1 px-3 whitespace-nowrap mt-2"
-      onClick={() => {
-        setJustClicked(true);
-        getSFUEL(user);
-        setTimeout(() => {
-          setJustClicked(false);
-        }, 10000);
-      }}
-      disabled={justClicked}
-    >
-      Get sFUEL
-    </Button>
   );
 };
 
