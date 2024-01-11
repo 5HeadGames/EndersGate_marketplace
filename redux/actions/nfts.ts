@@ -122,12 +122,12 @@ export const onLoadSales = createAsyncThunk(
       cardsSold = 0;
     try {
       for (const element of blockchains) {
-        console.log(element);
+        console.log(element, "blockchain");
         const blockchain: any = element;
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
 
-        console.log(CHAIN_NAME_BY_ID[blockchain]);
+        console.log(CHAIN_NAME_BY_ID[blockchain], addresses);
 
         /* SALES */
         const marketplace = getContract(
@@ -140,6 +140,10 @@ export const onLoadSales = createAsyncThunk(
           CHAIN_NAME_BY_ID[blockchain],
         );
 
+        console.log(marketplace);
+
+        console.log(await marketplace.methods.tokenIdTracker().call());
+
         const lastSale = Number(
           await marketplace.methods.tokenIdTracker().call(),
         );
@@ -148,7 +152,6 @@ export const onLoadSales = createAsyncThunk(
           const rawSales = await marketplace.methods
             .getSales(new Array(lastSale).fill(0).map((a, i) => i))
             .call();
-
           rawSales.forEach((sale: any[], i) => {
             const saleFormated = !getNativeBlockchain(blockchain)
               ? parseSaleTokens(sale)

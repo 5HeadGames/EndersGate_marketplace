@@ -30,8 +30,11 @@ export const authStillValid = () => {
   const savedLoginTime = localStorage.getItem("loginTime");
   const currentTime = new Date().getTime();
   const TWELVE_HOURS = 12 * 60 * 60 * 1000;
-
-  console.log(typeOfConnection, savedLoginTime);
+  console.log(
+    typeOfConnection,
+    savedLoginTime,
+    currentTime - parseInt(savedLoginTime) <= TWELVE_HOURS,
+  );
 
   return (
     typeOfConnection &&

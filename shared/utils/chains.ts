@@ -98,26 +98,6 @@ export const CHAINS: {
       "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
     type: "both",
   },
-
-  13473: {
-    urls: [" https://rpc.testnet.immutable.com"],
-    name: "Immutable X Testnet",
-    rpcUrls: [" https://rpc.testnet.immutable.com"],
-    nativeCurrency: IMX,
-    blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
-    blockExplorer: "https://explorer.testnet.immutable.com/",
-    type: "testnet",
-  },
-
-  13371: {
-    urls: ["https://rpc.immutable.com"],
-    name: "Immutable X",
-    rpcUrls: ["https://rpc.immutable.com"],
-    nativeCurrency: IMX,
-    blockExplorerUrls: ["https://explorer.immutable.com"],
-    blockExplorer: "https://explorer.immutable.com",
-    type: "mainnet",
-  },
   137: {
     urls: [
       process.env.NEXT_PUBLIC_POLYGON_PROVIDER || "",
@@ -142,6 +122,26 @@ export const CHAINS: {
     blockExplorerUrls: ["https://mumbai.polygonscan.com"],
     blockExplorer: "https://mumbai.polygonscan.com",
     type: "testnet",
+  },
+
+  13473: {
+    urls: ["https://rpc.testnet.immutable.com/"],
+    name: "Immutable X Testnet",
+    rpcUrls: ["https://rpc.testnet.immutable.com/"],
+    nativeCurrency: IMX,
+    blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
+    blockExplorer: "https://explorer.testnet.immutable.com/",
+    type: "testnet",
+  },
+
+  13371: {
+    urls: ["https://rpc.immutable.com"],
+    name: "Immutable X",
+    rpcUrls: ["https://rpc.immutable.com"],
+    nativeCurrency: IMX,
+    blockExplorerUrls: ["https://explorer.immutable.com"],
+    blockExplorer: "https://explorer.immutable.com",
+    type: "mainnet",
   },
 };
 

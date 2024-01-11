@@ -54,13 +54,13 @@ export const loginIMXPassport: any = async ({
 
 export const logoutIMXPassport: any = async ({ updateUser }) => {
   try {
-    passportInstance.logout();
     updateUser({
       ethAddress: "",
       email: "",
       provider: "",
       providerName: "",
     });
+    await passportInstance.logout();
   } catch (err) {
     console.log(err);
   }
