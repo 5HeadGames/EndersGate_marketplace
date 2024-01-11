@@ -132,10 +132,10 @@ export default function AppLayout({ children }) {
       link: "/profile/rents",
       notification: userRentsNotificationArray.length,
     },
-    {
-      name: "SWAP",
-      link: "/profile/swap",
-    },
+    // {
+    //   name: "SWAP",
+    //   link: "/profile/swap",
+    // },
     {
       name: "COMPETITIONS",
       link: "/competitive",
@@ -354,7 +354,7 @@ export default function AppLayout({ children }) {
         setCartOpen={setCartOpen}
       ></Cart>
 
-      <ModalSwap isShow={isShow} withoutX>
+      {/* <ModalSwap isShow={isShow} withoutX>
         <div className="flex flex-col items-center bg-secondary rounded-xl border border-overlay-border w-full relative md:max-w-[700px] md:min-w-[500px] max-w-[350px] min-w-[350px]">
           <div className="flex items-center justify-center border-b border-overlay-border w-full py-4 px-4 relative">
             <h2 className="font-bold text-primary text-center text-3xl">
@@ -416,7 +416,7 @@ export default function AppLayout({ children }) {
             </Link>
           </div>
         </div>
-      </ModalSwap>
+      </ModalSwap> */}
 
       <div className={clsx("bg-overlay flex flex-col")} style={styles.content}>
         {children}

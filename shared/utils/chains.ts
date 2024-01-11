@@ -113,7 +113,7 @@ export const CHAINS: {
       process.env.NEXT_PUBLIC_POLYGON_PROVIDER || "",
       "https://polygon-rpc.com",
     ].filter((url) => url !== ""),
-    rpcUrls: ["https://endpoints.omniatech.io/v1/matic/mumbai/public"],
+    rpcUrls: ["https://polygon-rpc.com"],
 
     name: "Polygon Mainnet",
     nativeCurrency: MATIC,

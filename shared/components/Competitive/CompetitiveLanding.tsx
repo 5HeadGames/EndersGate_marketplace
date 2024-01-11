@@ -178,7 +178,10 @@ export const CompetitiveLanding = () => {
               />
             </Box>
           </Link>
-          <Link target={"_blank"} href=" https://forms.gle/N6fh6FjKPw82j9EW9">
+          <Link
+            target={"_blank"}
+            href="https://testflight.apple.com/join/pUbzHdCV"
+          >
             <Box>
               <Image
                 src={"./images/storeLogos/apple.svg"}
