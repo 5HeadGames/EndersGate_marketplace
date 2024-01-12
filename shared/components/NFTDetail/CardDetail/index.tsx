@@ -31,7 +31,7 @@ import { AddressText } from "../../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { ChevronLeftIcon, ExclamationCircleIcon } from "@heroicons/react/solid";
+import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { useModal } from "@shared/hooks/modal";
 import { CongratsListing } from "./Congrats";
 import { toast } from "react-hot-toast";

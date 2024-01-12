@@ -1,10 +1,7 @@
 import { XIcon } from "@heroicons/react/solid";
 import { Image } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 
 export const CongratsListing = ({ hide, name, image }) => {
-  const router = useRouter();
-
   return (
     <div
       style={{ width: "90vw", maxWidth: "375px" }}
