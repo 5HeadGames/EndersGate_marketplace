@@ -18,7 +18,7 @@ import { useModal } from "@shared/hooks/modal";
 import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
 import Styles from "../styles.module.scss";
-import Tilt from "react-parallax-tilt";
+// import Tilt from "react-parallax-tilt";
 import { DropdownActions } from "../../common/dropdowns/dropdownActions/dropdownActions";
 import ReactCardFlip from "react-card-flip";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../../utils/chains";
@@ -203,7 +203,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   alt=""
                 />
                 {isPack ? (
-                  <Tilt className="flex items-center justify-center">
+                  <div className="flex items-center justify-center">
                     <div className="sm:sticky sm:top-32 h-min w-auto">
                       <img
                         src={
@@ -227,13 +227,13 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         alt=""
                       />
                     </div>
-                  </Tilt>
+                  </div>
                 ) : (
                   <ReactCardFlip
                     isFlipped={flippedCard}
                     flipDirection="horizontal"
                   >
-                    <Tilt className="flex items-center justify-center">
+                    <div className="flex items-center justify-center">
                       <img
                         src={cards[sale.nftId]?.image || Icons.logo}
                         className={clsx(
@@ -251,9 +251,9 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         )}
                         alt=""
                       />
-                    </Tilt>
+                    </div>
 
-                    <Tilt className="flex items-center justify-center">
+                    <div className="flex items-center justify-center">
                       <img
                         src={`/images/${cards[
                           sale.nftId
@@ -272,7 +272,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         )}
                         alt=""
                       />
-                    </Tilt>
+                    </div>
                   </ReactCardFlip>
                 )}
               </div>

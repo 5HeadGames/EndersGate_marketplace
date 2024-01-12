@@ -27,7 +27,7 @@ import packs from "../../packs.json";
 import { approveERC1155 } from "@shared/web3";
 import Styles from "../NFTDetail/styles.module.scss";
 import clsx from "clsx";
-import Tilt from "react-parallax-tilt";
+// import Tilt from "react-parallax-tilt";
 import { AddressText } from "../common/specialFields/SpecialFields";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
@@ -187,7 +187,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                   className="absolute xl:top-[-20%] top-[-25%] bottom-0 xl:left-[-55%] left-[-35%] right-0 margin-auto opacity-50 xl:min-w-[1050px] min-w-[175%]"
                   alt=""
                 />
-                <Tilt className="flex items-center justify-center">
+                <div className="flex items-center justify-center">
                   <div className="sm:sticky sm:top-32 h-min w-auto">
                     <img
                       src={packs[id].image || Icons.logo}
@@ -195,7 +195,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                       alt=""
                     />
                   </div>
-                </Tilt>
+                </div>
               </div>
             </div>
             <div className="flex flex-col xl:w-[500px] gap-6 w-full py-10">

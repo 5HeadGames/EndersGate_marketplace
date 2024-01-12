@@ -26,7 +26,7 @@ import { approveERC1155 } from "@shared/web3";
 import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
 import Styles from "../styles.module.scss";
-import Tilt from "react-parallax-tilt";
+// import Tilt from "react-parallax-tilt";
 import { AddressText } from "../../common/specialFields/SpecialFields";
 import ReactCardFlip from "react-card-flip";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../../utils/chains";
@@ -103,40 +103,40 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                     isFlipped={flippedCard}
                     flipDirection="horizontal"
                   >
-                    <Tilt className="flex items-center justify-center">
-                      <img
-                        src={cards[id].image || Icons.logo}
-                        className={clsx(
-                          Styles.animatedImageMain,
-                          { ["hidden"]: flippedCard },
+                    {/* div className="flex items-center justify-center"> */}
+                    <img
+                      src={cards[id].image || Icons.logo}
+                      className={clsx(
+                        Styles.animatedImageMain,
+                        { ["hidden"]: flippedCard },
 
-                          {
-                            "rounded-full": cards[id].typeCard == "avatar",
-                          },
-                          {
-                            "rounded-md": cards[id].typeCard != "avatar",
-                          },
-                        )}
-                        alt=""
-                      />
-                    </Tilt>
+                        {
+                          "rounded-full": cards[id].typeCard == "avatar",
+                        },
+                        {
+                          "rounded-md": cards[id].typeCard != "avatar",
+                        },
+                      )}
+                      alt=""
+                    />
+                    {/* </Tilt> */}
 
-                    <Tilt className="flex items-center justify-center">
-                      <img
-                        src={`/images/${cards[id].typeCard.toLowerCase()}.png`}
-                        className={clsx(
-                          Styles.animatedImageMain,
-                          { ["hidden"]: !flippedCard },
-                          {
-                            "rounded-full": cards[id].typeCard == "avatar",
-                          },
-                          {
-                            "rounded-md": cards[id].typeCard != "avatar",
-                          },
-                        )}
-                        alt=""
-                      />
-                    </Tilt>
+                    {/* div className="flex items-center justify-center"> */}
+                    <img
+                      src={`/images/${cards[id].typeCard.toLowerCase()}.png`}
+                      className={clsx(
+                        Styles.animatedImageMain,
+                        { ["hidden"]: !flippedCard },
+                        {
+                          "rounded-full": cards[id].typeCard == "avatar",
+                        },
+                        {
+                          "rounded-md": cards[id].typeCard != "avatar",
+                        },
+                      )}
+                      alt=""
+                    />
+                    {/* </Tilt> */}
                   </ReactCardFlip>
                 </div>
               </div>

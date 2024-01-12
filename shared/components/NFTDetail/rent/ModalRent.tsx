@@ -10,7 +10,7 @@ import { formatPrice, multiply } from "@shared/utils/formatPrice";
 import clsx from "clsx";
 import React from "react";
 import Styles from "../styles.module.scss";
-import Tilt from "react-parallax-tilt";
+// import Tilt from "react-parallax-tilt";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import packs from "../../../packs.json";
 import { getTokensAllowedMatic } from "@shared/web3";
@@ -41,7 +41,7 @@ export const ModalRent = ({
           : cards[rent?.nftId]?.properties?.name?.value}
       </h2>
       <div className="flex sm:flex-row flex-col gap-4 w-full items-center justify-center md:w-[750px]">
-        <Tilt className="w-60">
+        <div className="w-60">
           <div className="w-full h-96 flex items-center">
             <img
               src={
@@ -66,7 +66,7 @@ export const ModalRent = ({
               alt=""
             />
           </div>
-        </Tilt>
+        </div>
         {/* </div> */}
         {isLoading ? (
           <div className="flex flex-col gap-4 items-center justify-center w-[50%]">
