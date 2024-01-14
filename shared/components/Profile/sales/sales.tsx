@@ -72,8 +72,8 @@ const Sales = () => {
 
   React.useEffect(() => {
     const arrayPacks = [];
-    nfts.saleCreated.forEach((sale, index) => {
-      if (sale.seller.toLowerCase() === user.toLowerCase()) {
+    nfts.allSales.forEach((sale, index) => {
+      if (sale.seller.toLowerCase() == user.toLowerCase()) {
         if (sale.status !== 3 && sale.saleId !== undefined) {
           arrayPacks.push(sale);
         }
