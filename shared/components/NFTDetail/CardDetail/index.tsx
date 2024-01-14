@@ -103,7 +103,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                     isFlipped={flippedCard}
                     flipDirection="horizontal"
                   >
-                    {/* div className="flex items-center justify-center"> */}
+                    {/* <Tilt className="flex items-center justify-center"> */}
                     <img
                       src={cards[id].image || Icons.logo}
                       className={clsx(
@@ -121,7 +121,7 @@ const NFTDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                     />
                     {/* </Tilt> */}
 
-                    {/* div className="flex items-center justify-center"> */}
+                    {/* <Tilt className="flex items-center justify-center"> */}
                     <img
                       src={`/images/${cards[id].typeCard.toLowerCase()}.png`}
                       className={clsx(
