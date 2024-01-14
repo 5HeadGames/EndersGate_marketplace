@@ -14,7 +14,6 @@ import { getAddresses, getAddressesMatic, switchChain } from "@shared/web3";
 import { useModal } from "@shared/hooks/modal";
 import { onCancelSale, onLoadSales, onGetAssets } from "@redux/actions";
 import { convertArrayCards } from "@shared/components/common/convertCards";
-import { useWeb3React } from "@web3-react/core";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { toast } from "react-hot-toast";
@@ -75,7 +74,7 @@ const Sales = () => {
     const arrayPacks = [];
     nfts.saleCreated.forEach((sale, index) => {
       if (sale.seller.toLowerCase() === user.toLowerCase()) {
-        if (sale.status !== 3) {
+        if (sale.status !== 3 && sale.saleId !== undefined) {
           arrayPacks.push(sale);
         }
       }
@@ -145,6 +144,7 @@ const Sales = () => {
           <div className="w-full overflow-x-auto border border-overlay-border rounded-xl py-4">
             <table className="w-full min-w-max">
               <thead className="text-white font-bold">
+                <th className="text-center px-10">CHAIN</th>
                 <th className="text-center px-10">NFT</th>
                 <th className="text-center px-10">SALE ID</th>
                 {/* <th className="text-center px-10"></th> */}
@@ -155,6 +155,7 @@ const Sales = () => {
               </thead>
               <tbody>
                 {sales.map((sale, i) => {
+                  console.log(sale, "sale in my sales");
                   const { pack: packsAddress } = getAddresses(sale.blockchain);
                   const pack = sale.nft == packsAddress;
                   return (
@@ -164,11 +165,7 @@ const Sales = () => {
                           i < sales.length - 1,
                       })}
                     >
-                      {sale && (
-                        <Sale
-                          {...{ sale, pack, setCancelId: setCancel, show }}
-                        />
-                      )}
+                      <Sale {...{ sale, pack, setCancelId: setCancel, show }} />
                     </tr>
                   );
                 })}
@@ -198,6 +195,17 @@ const Sale = ({ sale, pack, setCancelId, show }) => {
 
   return (
     <>
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center gap-y-2 w-full">
+          <div className="rounded-full flex flex-col text-gray-100 relative overflow-hidden h-10 w-10">
+            <img
+              src={`/images/${sale.blockchain}.png`}
+              className={`w-full`}
+              alt=""
+            />
+          </div>
+        </div>
+      </td>
       <td className="py-4 px-4">
         <div className="flex flex-col items-center gap-y-2 w-full">
           <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
