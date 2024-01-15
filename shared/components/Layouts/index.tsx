@@ -45,6 +45,17 @@ export default function AppLayout({ children }) {
   });
   const [search, setSearch] = React.useState("");
 
+  const nfts = useSelector((state: any) => state.nfts);
+
+  console.log(
+    nfts.allSales.filter((s) => s.blockchain === "matic" && s.nftId === "215"),
+    "Dracul",
+  );
+  console.log(
+    nfts.allSales.filter((s) => s.blockchain === "matic" && s.nftId === "230"),
+    "Eross",
+  );
+
   const router = useRouter();
 
   const { login, logout } = useMagicLink();
