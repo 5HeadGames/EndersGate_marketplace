@@ -24,6 +24,7 @@ interface Props
   onTimeChange?: any;
   sale?: any;
   blockchain?: any;
+  isRent: any;
 }
 
 const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
@@ -119,7 +120,9 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
           onMouseOver={() => setHoverAll(true)}
           onMouseLeave={() => setHoverAll(false)}
         >
-          <Link href={`/sale/${props.transactionId}`}>
+          <Link
+            href={`/${props.isRent ? "rent" : "sale"}/${props.transactionId}`}
+          >
             <div
               className={clsx(
                 "rounded-xl flex flex-col text-gray-100 w-72 bg-secondary cursor-pointer relative overflow-hidden border z-[2] border-gray-500 hover:border-green-button transition duration-500",

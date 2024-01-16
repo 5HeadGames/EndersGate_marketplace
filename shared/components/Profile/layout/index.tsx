@@ -20,6 +20,7 @@ import { toast } from "react-hot-toast";
 import { useUser } from "@shared/context/useUser";
 import clsx from "clsx";
 import Link from "next/link";
+import { useBlockchain } from "@shared/context/useBlockchain";
 
 const ProfileLayout = ({ children }) => {
   const {
@@ -32,6 +33,7 @@ const ProfileLayout = ({ children }) => {
   const [editable, setEditable] = React.useState(false);
   const [userName, setUserName] = React.useState("EG Enthusiast");
   const db = getDatabase();
+  const { blockchain } = useBlockchain();
 
   React.useEffect(() => {
     if (!account && !user && !authStillValid()) {
@@ -107,7 +109,7 @@ const ProfileLayout = ({ children }) => {
               src={profileImage}
               alt=""
             />{" "}
-            <div className="flex sm:flex-row flex-col sm:items-end items-start justify-center sm:pt-10">
+            <div className="flex sm:flex-row flex-col sm:items-end items-start justify-center sm:pt-10 gap-2">
               <div className="flex flex-col justify-center items-center">
                 {!editable ? (
                   <h2 className="text-white font-bold text-xl flex justify-start items-center gap-2 w-52 overflow-hidden">
