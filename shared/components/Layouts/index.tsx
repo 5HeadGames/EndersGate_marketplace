@@ -66,6 +66,8 @@ export default function AppLayout({ children }) {
     user: { ethAddress, providerName },
   } = useUser();
 
+  console.log(router, "router");
+
   const { cart, cartRent } = useSelector((state: any) => state.layout);
 
   const { Modal: ModalSwap, show, isShow, hide } = useModal();
@@ -287,8 +289,8 @@ export default function AppLayout({ children }) {
             <NavbarItem
               name={"LOG IN"}
               link={
-                router.pathname !== "/login"
-                  ? `/login?redirect=true&redirectAddress=${router.pathname}`
+                router.asPath !== "/login"
+                  ? `/login?redirect=true&redirectAddress=${router.asPath}`
                   : router.asPath
               }
               route={router.asPath}
