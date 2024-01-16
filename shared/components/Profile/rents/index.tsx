@@ -29,8 +29,10 @@ import { useUser } from "@shared/context/useUser";
 const Rents = () => {
   const nfts = useAppSelector((state) => state.nfts);
   const {
-    user: { ethAddress: user, provider },
+    user: { provider },
   } = useUser();
+
+  const user = "0xd5ff1999E4C3C166dD23Bec87eb5d0715Ae3Fa6c";
 
   const [typeOfRequest, setTypeOfRequest] = React.useState("");
 
@@ -372,7 +374,7 @@ const Rent = ({
             >
               Cancel
             </Button>
-          ) : rent.status === "1" ? (
+          ) : (rent.status === "0" && notAvailable) || rent.status === "1" ? (
             <Button
               decoration="line-white"
               className="text-white hover:text-overlay rounded-xl"
