@@ -28,6 +28,10 @@ import { formatPrice } from "@shared/utils/formatPrice";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { ModalSale } from "./ModalSale";
 import { useUser } from "@shared/context/useUser";
+import {
+  RentStatusInfo,
+  SaleStatusInfo,
+} from "@shared/components/Profile/rents";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const {
@@ -137,9 +141,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   };
 
   const notAvailable =
-    sale?.status != 0 ||
     Math.floor(new Date().getTime() / 1000) >=
-      parseInt(sale?.duration) + parseInt(sale?.startedAt);
+    parseInt(sale?.duration) + parseInt(sale?.startedAt);
 
   const tokensAllowed = getTokensAllowedMatic();
 
@@ -381,15 +384,21 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         />
                       </div>
                       <div className="flex flex-col gap-4 w-full items-center md:pl-10 md:pr-16 pr-4">
-                        <Button
-                          decoration="fill"
-                          className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
-                          onClick={() => {
-                            show();
-                          }}
-                        >
-                          Buy Now
-                        </Button>
+                        {sale.status == 0 && !notAvailable ? (
+                          <Button
+                            decoration="fill"
+                            className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                            onClick={() => {
+                              show();
+                            }}
+                          >
+                            Buy Now
+                          </Button>
+                        ) : (
+                          <h2 className="text-white font-bold text-xl">
+                            {SaleStatusInfo({ status: sale.status, sale })}
+                          </h2>
+                        )}
                         {/* <Button
                           decoration="line-white"
                           className="bg-dark md:text-lg text-md md:w-48 w-32 py-[6px] rounded-lg text-white hover:text-overlay border-none"

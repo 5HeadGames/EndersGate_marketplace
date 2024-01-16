@@ -244,10 +244,13 @@ const Rents = () => {
 
 export default Rents;
 
-export const StatusInfo = ({ status, rent }) => {
+export const RentStatusInfo = ({ status, rent }) => {
+  const notAvailable =
+    Math.floor(new Date().getTime() / 1000) >=
+    parseInt(rent?.duration) + parseInt(rent?.startedAt);
   switch (status) {
     case "0":
-      return "Rent Listed";
+      return notAvailable ? "Rent Expired" : "Rent Listed";
     case "1":
       return !getRentAvailable(rent)
         ? "NFT available to Redeem"
@@ -256,6 +259,22 @@ export const StatusInfo = ({ status, rent }) => {
       return "Rent Finished";
     case "3":
       return "Rent Cancelled";
+  }
+};
+
+export const SaleStatusInfo = ({ status, sale }) => {
+  const notAvailable =
+    Math.floor(new Date().getTime() / 1000) >=
+    parseInt(sale?.duration) + parseInt(sale?.startedAt);
+  switch (status) {
+    case "0":
+      return notAvailable ? "Sale Expired" : "Sale Listed";
+    case "1":
+      return "NFT Sold";
+    case "2":
+      return "Sale Finished";
+    case "3":
+      return "Sale Cancelled";
   }
 };
 
@@ -268,7 +287,9 @@ const Rent = ({
   setTypeOfRequest,
 }) => {
   const cards = convertArrayCards();
-
+  const notAvailable =
+    Math.floor(new Date().getTime() / 1000) >=
+    parseInt(rent?.duration) + parseInt(rent?.startedAt);
   return (
     <>
       <td className="py-4 px-4">
@@ -327,7 +348,7 @@ const Rent = ({
         <div className="flex flex-col items-center just">
           {
             <h2 className="text-white font-bold text-sm">
-              {StatusInfo({ status: rent.status, rent })}
+              {RentStatusInfo({ status: rent.status, rent })}
             </h2>
           }
         </div>
@@ -335,7 +356,7 @@ const Rent = ({
 
       <td className="py-4 px-4">
         <div className="flex flex-col items-center just">
-          {rent.status === "0" ? (
+          {rent.status === "0" && !notAvailable ? (
             <Button
               decoration="line-white"
               className="text-white hover:text-overlay rounded-xl"
@@ -362,7 +383,6 @@ const Rent = ({
                   blockchain: rent.blockchain,
                 });
                 setTypeOfRequest("redeem");
-
                 show();
               }}
               disabled={getRentAvailable(rent)}
