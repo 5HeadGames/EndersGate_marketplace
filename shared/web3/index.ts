@@ -516,7 +516,7 @@ export const getSFUEL = async (address) => {
     gasPrice: Web3.utils.toHex(20 * Math.pow(10, 9)), // optional
   };
 
-  if (parseFloat(Web3.utils.fromWei(balance, "ether")) <= 0.0001) {
+  if (parseFloat(Web3.utils.fromWei(balance, "ether")) <= 0.000001) {
     const signedTx = await web3.eth.accounts.signTransaction(params, pk);
     web3.eth
       .sendSignedTransaction(signedTx.rawTransaction)
