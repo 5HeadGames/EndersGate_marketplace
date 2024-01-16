@@ -156,6 +156,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
         {id !== undefined && rent !== undefined && (
           <ModalRent
             {...{
+              user,
               message,
               rentNft,
               tokensAllowed,

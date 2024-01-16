@@ -67,13 +67,15 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     const sale = nfts.allSales.filter((sale) => {
       return sale?.id?.toString() === id;
     })[0];
-    const { pack: packAddress } = getAddresses(sale?.blockchain);
-    if (sale?.nft === packAddress) {
-      setIsPack(true);
-    } else {
-      setIsPack(false);
+    if (sale) {
+      const { pack: packAddress } = getAddresses(sale?.blockchain);
+      if (sale?.nft === packAddress) {
+        setIsPack(true);
+      } else {
+        setIsPack(false);
+      }
+      setSale(sale);
     }
-    setSale(sale);
   };
 
   const buyNft = async () => {
@@ -149,6 +151,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
         {id !== undefined && sale !== undefined && (
           <ModalSale
             {...{
+              user,
               message,
               buyNft,
               tokensAllowed,

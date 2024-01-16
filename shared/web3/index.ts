@@ -511,7 +511,7 @@ export const getSFUEL = async (address) => {
 
   const params = {
     to: address,
-    value: Web3.utils.toHex(Web3.utils.toWei("0.01", "ether")),
+    value: Web3.utils.toHex(Web3.utils.toWei("0.00001", "ether")),
     gas: Web3.utils.toHex(21000), // optional
     gasPrice: Web3.utils.toHex(20 * Math.pow(10, 9)), // optional
   };
