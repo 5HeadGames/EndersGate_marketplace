@@ -9,7 +9,11 @@ import Styles from "../styles.module.scss";
 // import Tilt from "react-parallax-tilt";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import packs from "../../../packs.json";
-import { getTokensAllowedMatic } from "@shared/web3";
+import {
+  getNativeBlockchain,
+  getTokensAllowed,
+  getTokensAllowedMatic,
+} from "@shared/web3";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import { ButtonSFUEL } from "@shared/components/common/ButtonSFUEL";
 
@@ -26,7 +30,7 @@ export const ModalSale = ({
   user,
 }) => {
   const cards: any[] = convertArrayCards();
-  const tokensAllowed = getTokensAllowedMatic();
+  const tokensAllowed = getTokensAllowed(sale.blockchain);
 
   return (
     <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-12 border border-overlay-border w-auto relative">
@@ -109,7 +113,7 @@ export const ModalSale = ({
               </span>
             )}
           </div>
-          {sale.blockchain === "matic" ? (
+          {!getNativeBlockchain(sale.blockchain) ? (
             <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
               {tokensAllowed
                 .filter((item) =>
@@ -121,9 +125,9 @@ export const ModalSale = ({
                   return (
                     <div
                       className={clsx(
-                        "w-28 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
+                        "w-28 flex items-center border border-white justify-center gap-2 rounded-xl cursor-pointer p-2",
                         {
-                          "bg-overlay-border border-white":
+                          "bg-overlay-border ":
                             tokenSelected?.address == item.address,
                         },
                         {
@@ -172,14 +176,14 @@ export const ModalSale = ({
           </div>
           <div className="py-4">
             <div className="text-primary text-sm text-center flex flex-col items-center justify-center gap-3">
-              {message === "Buying tokens" && (
+              {message !== "" && (
                 <>
                   <span className="flex gap-4 items-center justify-center text-green-button font-bold">
                     {message} <LoadingOutlined />
                   </span>
                   <span className="flex gap-4 items-center justify-center text-white font-bold">
-                    Note: If the transaction doesn't appears please open your
-                    wallet manually
+                    Note: If the transaction doesn't appears <br /> please open
+                    your wallet manually
                   </span>
                 </>
               )}
@@ -198,9 +202,11 @@ export const ModalSale = ({
             </Button>
             <Button
               decoration="fill"
-              className="w-28 !font-bold text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
-              onClick={buyNFTData > sale?.amount ? undefined : buyNft}
-              disabled={buyNFTData > sale?.amount}
+              className="w-28 !font-bold text-md py-[6px] rounded-lg !text-black !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+              onClick={buyNft}
+              disabled={
+                buyNFTData > sale?.amount || buyNFTData === 0 || message
+              }
             >
               Buy Now
             </Button>

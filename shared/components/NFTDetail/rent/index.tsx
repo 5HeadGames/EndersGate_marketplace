@@ -33,7 +33,7 @@ import { toast } from "react-hot-toast";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { ModalRent } from "./ModalRent";
-import { StatusInfo } from "@shared/components/Profile/rents";
+import { RentStatusInfo } from "@shared/components/Profile/rents";
 import { useUser } from "@shared/context/useUser";
 
 const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
@@ -149,6 +149,10 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   };
 
   const tokensAllowed = getTokensAllowedMatic();
+
+  const notAvailable =
+    Math.floor(new Date().getTime() / 1000) >=
+    parseInt(rent?.duration) + parseInt(rent?.startedAt);
 
   return (
     <>
@@ -379,9 +383,6 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                       <div className="flex flex-col gap-2">
                         <h2 className="md:text-3xl text-xl font-[450] text-white whitespace-nowrap">
                           {formatPrice(rent.price, rent.blockchain)}
-                          {/* <span className="!text-sm text-overlay-border">
-                            ($1.5k)
-                          </span> */}
                         </h2>
                         <div className="flex gap-2">
                           <img
@@ -403,7 +404,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                           "flex flex-col gap-4 w-full items-center",
                         )}
                       >
-                        {rent.status == 0 ? (
+                        {rent.status == 0 && !notAvailable ? (
                           <Button
                             decoration="fill"
                             className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
@@ -415,10 +416,22 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                           </Button>
                         ) : (
                           <h2 className="text-white font-bold text-xl">
-                            {StatusInfo({ status: rent.status, rent })}
+                            {RentStatusInfo({ status: rent.status, rent })}
                           </h2>
                         )}
                       </div>
+                    </div>
+                    <div className="flex flex-col w-full justify-end pt-6">
+                      <p className="text-primary-disabled md:text-lg text-md">
+                        Expires at:{" "}
+                        <span className="text-white font-bold md:text-xl text-lg">
+                          {new Date(
+                            (parseInt(rent?.duration) +
+                              parseInt(rent?.startedAt)) *
+                              1000,
+                          ).toDateString()}
+                        </span>
+                      </p>
                     </div>
                     <div className="flex flex-row gap-4 w-full justify-between">
                       <div className="flex flex-col gap-4 pb-2"></div>

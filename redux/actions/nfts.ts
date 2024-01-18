@@ -916,11 +916,15 @@ export const buyERC1155 = createAsyncThunk(
   }) {
     const { seller, tokenId, token, amount, bid, provider, user, blockchain } =
       args;
-
     try {
-      const { marketplace } = getAddressesMatic();
+      const { marketplace } = getAddresses(blockchain);
+      console.log(marketplace, "marketplace");
       const marketplaceContract = getContractCustom(
-        "ClockSale",
+        getNativeBlockchain(blockchain)
+          ? "ClockSaleFindora"
+          : onlyAcceptsERC20(blockchain)
+          ? "ClockSaleOnlyMultiToken"
+          : "ClockSale",
         marketplace,
         provider,
       );

@@ -21,7 +21,6 @@ import { useUser } from "@shared/context/useUser";
 import clsx from "clsx";
 import Link from "next/link";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { getSFUEL } from "@shared/web3";
 import { ButtonSFUEL } from "@shared/components/common/ButtonSFUEL";
 
 const ProfileLayout = ({ children }) => {

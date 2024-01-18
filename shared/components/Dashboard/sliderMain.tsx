@@ -74,10 +74,7 @@ export const SliderMain = ({ salesDefault, cards }) => {
             <NFTCardSlider
               classes={{ root: `cursor-pointer` }}
               id={arraySlider[arrayPos[3]]?.nftId}
-              transactionId={
-                arraySlider[arrayPos[3]]?.saleId ||
-                arraySlider[arrayPos[3]]?.rentId
-              }
+              transactionId={arraySlider[arrayPos[3]]?.id}
               isRent={Boolean(arraySlider[arrayPos[3]]?.rentId)}
               seller={arraySlider[arrayPos[3]]?.seller}
               icon={cards[arraySlider[arrayPos[3]]?.nftId]?.image}

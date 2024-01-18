@@ -12,7 +12,14 @@ import {
 import { Button } from "../../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import { AddressText } from "../../common/specialFields/SpecialFields";
-import { getAddresses, getTokensAllowedMatic, switchChain } from "@shared/web3";
+import {
+  buyNFTsMatic,
+  buyNFTsNative,
+  getAddresses,
+  getNativeBlockchain,
+  getTokensAllowedMatic,
+  switchChain,
+} from "@shared/web3";
 import packs from "../../../packs.json";
 import { useModal } from "@shared/hooks/modal";
 import { convertArrayCards } from "../../common/convertCards";
@@ -28,6 +35,12 @@ import { formatPrice } from "@shared/utils/formatPrice";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { ModalSale } from "./ModalSale";
 import { useUser } from "@shared/context/useUser";
+import {
+  RentStatusInfo,
+  SaleStatusInfo,
+} from "@shared/components/Profile/rents";
+import { useToast } from "@chakra-ui/react";
+import { useToasts } from "react-toast-notifications";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const {
@@ -54,8 +67,13 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const [message, setMessage] = React.useState("");
 
   const { blockchain, updateBlockchain } = useBlockchain();
+  const {
+    user: { ethAddress },
+  } = useUser();
 
   const nfts = useAppSelector((state) => state.nfts);
+
+  const { addToast } = useToasts();
 
   React.useEffect(() => {
     if (id && nfts?.allSales?.length) {
@@ -79,6 +97,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   };
 
   const buyNft = async () => {
+    console.log("BUY");
     if (!user) {
       router.push("/login?redirect=true&redirectAddress=" + router.pathname);
     }
@@ -91,41 +110,34 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
       }
       updateBlockchain(sale.blockchain);
 
-      setMessage("Buying tokens");
-      const { pack, endersGate } = getAddresses(sale.blockchain);
-      if (sale.blockchain !== "matic") {
-        await dispatch(
-          buyERC1155Native({
-            seller: sale.seller,
-            amount: buyNFTData,
-            bid: Web3.utils
-              .toBN(sale.price)
-              .mul(Web3.utils.toBN(buyNFTData))
-              .toString(),
-            blockchain,
-            tokenId: sale.saleId,
-            provider: provider,
-            nftContract: isPack ? pack : endersGate,
-            user: user,
-          }),
-        );
+      const { marketplace, MATICUSD } = getAddresses(sale.blockchain);
+      if (!getNativeBlockchain(blockchain)) {
+        if (!tokenSelected) {
+          return toast.error("Please select a token as a payment");
+        }
+
+        await buyNFTsMatic({
+          tokenSelected: tokenSelected.address,
+          addToast,
+          setMessageBuy: setMessage,
+          cart: [{ ...sale, quantity: buyNFTData }],
+          marketplace,
+          provider,
+          ethAddress,
+          tokensAllowed,
+          MATICUSD,
+          dispatch,
+          blockchain,
+        });
       } else {
-        await dispatch(
-          buyERC1155({
-            seller: sale.seller,
-            amount: buyNFTData,
-            bid: Web3.utils
-              .toBN(sale.price)
-              .mul(Web3.utils.toBN(buyNFTData))
-              .toString(),
-            tokenId: sale.saleId,
-            token: tokenSelected.address,
-            provider: provider,
-            nftContract: isPack ? pack : endersGate,
-            user: user,
-            blockchain,
-          }),
-        );
+        await buyNFTsNative({
+          setMessageBuy: setMessage,
+          cart: [{ ...sale, quantity: buyNFTData }],
+          marketplace,
+          provider,
+          ethAddress,
+          dispatch,
+        });
       }
     } catch (err) {
       toast.error(err.message);
@@ -139,9 +151,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   };
 
   const notAvailable =
-    sale?.status != 0 ||
     Math.floor(new Date().getTime() / 1000) >=
-      parseInt(sale?.duration) + parseInt(sale?.startedAt);
+    parseInt(sale?.duration) + parseInt(sale?.startedAt);
 
   const tokensAllowed = getTokensAllowedMatic();
 
@@ -384,15 +395,21 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         />
                       </div>
                       <div className="flex flex-col gap-4 w-full items-center md:pl-10 md:pr-16 pr-4">
-                        <Button
-                          decoration="fill"
-                          className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
-                          onClick={() => {
-                            show();
-                          }}
-                        >
-                          Buy Now
-                        </Button>
+                        {sale.status == 0 && !notAvailable ? (
+                          <Button
+                            decoration="fill"
+                            className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                            onClick={() => {
+                              show();
+                            }}
+                          >
+                            Buy Now
+                          </Button>
+                        ) : (
+                          <h2 className="text-white font-bold text-xl">
+                            {SaleStatusInfo({ status: sale.status, sale })}
+                          </h2>
+                        )}
                         {/* <Button
                           decoration="line-white"
                           className="bg-dark md:text-lg text-md md:w-48 w-32 py-[6px] rounded-lg text-white hover:text-overlay border-none"

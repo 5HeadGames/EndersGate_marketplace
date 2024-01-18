@@ -277,6 +277,7 @@ export const buyNFTsMatic = async ({
     return;
   }
   try {
+    console.log("initiated");
     setMessageBuy(`Processing your purchase...`);
 
     const { amounts, bid, token, tokensId } = {
@@ -293,14 +294,19 @@ export const buyNFTsMatic = async ({
     };
 
     const marketplaceContract = getContractCustom(
-      "ClockSale",
+      getNativeBlockchain(blockchain)
+        ? "ClockSaleFindora"
+        : onlyAcceptsERC20(blockchain)
+        ? "ClockSaleOnlyMultiToken"
+        : "ClockSale",
       marketplace,
       provider,
     );
     let price: any = 0;
+    console.log(marketplaceContract, "contract");
 
     const ERC20 = getContractCustom("ERC20", token, provider);
-    const addresses = getTokensAllowedMatic();
+    const addresses = getTokensAllowed(blockchain);
     if (
       !onlyAcceptsERC20(blockchain) &&
       tokenSelected ===
@@ -347,7 +353,9 @@ export const buyNFTsMatic = async ({
 
       dispatch(removeAll());
     }
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
   dispatch(onLoadSales());
   setMessageBuy(``);
 };

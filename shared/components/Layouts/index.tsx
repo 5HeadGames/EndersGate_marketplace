@@ -45,6 +45,17 @@ export default function AppLayout({ children }) {
   });
   const [search, setSearch] = React.useState("");
 
+  const nfts = useSelector((state: any) => state.nfts);
+
+  console.log(
+    nfts.allSales.filter((s) => s.blockchain === "matic" && s.nftId === "215"),
+    "Dracul",
+  );
+  console.log(
+    nfts.allSales.filter((s) => s.blockchain === "matic" && s.nftId === "230"),
+    "Eross",
+  );
+
   const router = useRouter();
 
   const { login, logout } = useMagicLink();
@@ -54,6 +65,8 @@ export default function AppLayout({ children }) {
   const {
     user: { ethAddress, providerName },
   } = useUser();
+
+  console.log(router, "router");
 
   const { cart, cartRent } = useSelector((state: any) => state.layout);
 
@@ -286,8 +299,8 @@ export default function AppLayout({ children }) {
             <NavbarItem
               name={"LOG IN"}
               link={
-                router.pathname !== "/login"
-                  ? `/login?redirect=true&redirectAddress=${router.pathname}`
+                router.asPath !== "/login"
+                  ? `/login?redirect=true&redirectAddress=${router.asPath}`
                   : router.asPath
               }
               route={router.asPath}
