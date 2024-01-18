@@ -32,7 +32,9 @@ const Rents = () => {
     user: { provider },
   } = useUser();
 
-  const user = "0xd5ff1999E4C3C166dD23Bec87eb5d0715Ae3Fa6c";
+  const {
+    user: { ethAddress: user },
+  } = useUser();
 
   const [typeOfRequest, setTypeOfRequest] = React.useState("");
 
