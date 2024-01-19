@@ -205,7 +205,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                     {packs[id]?.properties?.name?.value}
                   </h1>
                   <div className="flex flex-col md:px-6 md:py-10 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute md:top-4 md:right-6 top-2 right-4 text-overlay-border text-sm">
+                    <p className="absolute md:top-4 md:right-6 top-2 right-4 !text-overlay-border text-sm">
                       SELL PANEL
                     </p>
 
@@ -372,7 +372,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                         )}
                         <Button
                           decoration="fill"
-                          className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                          className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
                           onClick={sellNft}
                         >
                           Sell Now
@@ -385,7 +385,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
 
               <div className="flex flex-col">
                 <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                  <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                  <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                     TOKEN INFO
                   </p>
                   <div className="flex flex-col w-full">

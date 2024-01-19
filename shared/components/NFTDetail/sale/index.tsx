@@ -12,7 +12,14 @@ import {
 import { Button } from "../../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import { AddressText } from "../../common/specialFields/SpecialFields";
-import { getAddresses, getTokensAllowedMatic, switchChain } from "@shared/web3";
+import {
+  buyNFTsMatic,
+  buyNFTsNative,
+  getAddresses,
+  getNativeBlockchain,
+  getTokensAllowedMatic,
+  switchChain,
+} from "@shared/web3";
 import packs from "../../../packs.json";
 import { useModal } from "@shared/hooks/modal";
 import { convertArrayCards } from "../../common/convertCards";
@@ -32,6 +39,8 @@ import {
   RentStatusInfo,
   SaleStatusInfo,
 } from "@shared/components/Profile/rents";
+import { useToast } from "@chakra-ui/react";
+import { useToasts } from "react-toast-notifications";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const {
@@ -58,8 +67,13 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const [message, setMessage] = React.useState("");
 
   const { blockchain, updateBlockchain } = useBlockchain();
+  const {
+    user: { ethAddress },
+  } = useUser();
 
   const nfts = useAppSelector((state) => state.nfts);
+
+  const { addToast } = useToasts();
 
   React.useEffect(() => {
     if (id && nfts?.allSales?.length) {
@@ -71,16 +85,19 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     const sale = nfts.allSales.filter((sale) => {
       return sale?.id?.toString() === id;
     })[0];
-    const { pack: packAddress } = getAddresses(sale?.blockchain);
-    if (sale?.nft === packAddress) {
-      setIsPack(true);
-    } else {
-      setIsPack(false);
+    if (sale) {
+      const { pack: packAddress } = getAddresses(sale?.blockchain);
+      if (sale?.nft === packAddress) {
+        setIsPack(true);
+      } else {
+        setIsPack(false);
+      }
+      setSale(sale);
     }
-    setSale(sale);
   };
 
   const buyNft = async () => {
+    console.log("BUY");
     if (!user) {
       router.push("/login?redirect=true&redirectAddress=" + router.pathname);
     }
@@ -93,41 +110,34 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
       }
       updateBlockchain(sale.blockchain);
 
-      setMessage("Buying tokens");
-      const { pack, endersGate } = getAddresses(sale.blockchain);
-      if (sale.blockchain !== "matic") {
-        await dispatch(
-          buyERC1155Native({
-            seller: sale.seller,
-            amount: buyNFTData,
-            bid: Web3.utils
-              .toBN(sale.price)
-              .mul(Web3.utils.toBN(buyNFTData))
-              .toString(),
-            blockchain,
-            tokenId: sale.saleId,
-            provider: provider,
-            nftContract: isPack ? pack : endersGate,
-            user: user,
-          }),
-        );
+      const { marketplace, MATICUSD } = getAddresses(sale.blockchain);
+      if (!getNativeBlockchain(blockchain)) {
+        if (!tokenSelected) {
+          return toast.error("Please select a token as a payment");
+        }
+
+        await buyNFTsMatic({
+          tokenSelected: tokenSelected.address,
+          addToast,
+          setMessageBuy: setMessage,
+          cart: [{ ...sale, quantity: buyNFTData }],
+          marketplace,
+          provider,
+          ethAddress,
+          tokensAllowed,
+          MATICUSD,
+          dispatch,
+          blockchain,
+        });
       } else {
-        await dispatch(
-          buyERC1155({
-            seller: sale.seller,
-            amount: buyNFTData,
-            bid: Web3.utils
-              .toBN(sale.price)
-              .mul(Web3.utils.toBN(buyNFTData))
-              .toString(),
-            tokenId: sale.saleId,
-            token: tokenSelected.address,
-            provider: provider,
-            nftContract: isPack ? pack : endersGate,
-            user: user,
-            blockchain,
-          }),
-        );
+        await buyNFTsNative({
+          setMessageBuy: setMessage,
+          cart: [{ ...sale, quantity: buyNFTData }],
+          marketplace,
+          provider,
+          ethAddress,
+          dispatch,
+        });
       }
     } catch (err) {
       toast.error(err.message);
@@ -152,6 +162,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
         {id !== undefined && sale !== undefined && (
           <ModalSale
             {...{
+              user,
               message,
               buyNft,
               tokensAllowed,
@@ -281,7 +292,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
               </div>
               <div className="flex flex-col xl:max-w-[500px] xl:min-h-[450px] xl:max-h-[450px]">
                 <div className="flex h-full gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                  <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                  <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                     CARD INFO
                   </p>
                   <div className="flex flex-col w-full gap-2 h-full justify-between">
@@ -361,7 +372,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       : cards[sale?.nftId]?.properties?.name?.value}
                   </h1>
                   <div className="flex flex-col md:px-6 md:py-4 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       BUY PANEL
                     </p>
                     <div className="flex flex-row gap-4 w-full">
@@ -373,7 +384,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       <div className="flex flex-col">
                         <h2 className="md:text-3xl text-xl font-[450] text-white whitespace-nowrap">
                           {formatPrice(sale.price, sale.blockchain)}
-                          {/* <span className="!text-sm text-overlay-border">
+                          {/* <span className="!text-sm !text-overlay-border">
                             ($1.5k)
                           </span> */}
                         </h2>
@@ -387,7 +398,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         {sale.status == 0 && !notAvailable ? (
                           <Button
                             decoration="fill"
-                            className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                            className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
                             onClick={() => {
                               show();
                             }}
@@ -401,7 +412,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         )}
                         {/* <Button
                           decoration="line-white"
-                          className="bg-dark md:text-lg text-md md:w-48 w-32 py-[6px] rounded-lg text-white hover:text-overlay border-none"
+                          className="bg-dark md:text-lg text-md md:w-48 w-32 py-[6px] rounded-lg text-white hover:!text-overlay border-none"
                         >
                           Make Offer
                         </Button> */}
@@ -432,7 +443,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex flex-col pt-2 h-full">
                   <div className="flex flex-col px-6 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative min-h-full">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       OFFERS
                     </p>
                     <div className="flex flex-row gap-4 w-full pb-2">
@@ -466,7 +477,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
               <div className="flex flex-col justify-between w-full xl:min-h-[474px] xl:max-h-[474px]">
                 <div className="flex flex-col pt-6">
                   <div className="flex items-center gap-4 px-4 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       OWNER INFO
                     </p>
                     <img src={Icons.logoCard} className="w-16 h-16" alt="" />
@@ -482,7 +493,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       TOKEN INFO
                     </p>
                     <div className="flex flex-col w-full">

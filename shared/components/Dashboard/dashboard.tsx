@@ -52,6 +52,8 @@ const DashboardComponent = () => {
     }
   }, [recentlyListed, recentlySold, salesType]);
 
+  console.log(recentlyListed);
+
   React.useEffect(() => {
     setSalesDefault(recentlyListedCards.filter((row, i) => i < 4));
   }, [recentlyListedCards]);
@@ -213,6 +215,7 @@ const DashboardComponent = () => {
             {sales.map((sale, id) => {
               return (
                 <NFTCard
+                  isRent={Boolean(sale.rentId)}
                   classes={{ root: "m-4 cursor-pointer" }}
                   icon={
                     sale.nft === pack
@@ -232,7 +235,7 @@ const DashboardComponent = () => {
           </div>
           <div className="flex items-center justify-center">
             <Link href={"/marketplace"}>
-              <p className="p-3 px-6 font-[450] hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border text-overlay-border rounded-md cursor-pointer">
+              <p className="p-3 px-6 font-[450] hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border !text-overlay-border rounded-md cursor-pointer">
                 Browse More
               </p>
             </Link>

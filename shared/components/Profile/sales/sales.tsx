@@ -106,7 +106,7 @@ const Sales = () => {
             <div className="flex justify-center items-center gap-4">
               <Button
                 decoration="line-white"
-                className="hover:text-overlay !font-bold text-white rounded-xl"
+                className="hover:!text-overlay !font-bold text-white rounded-xl"
                 size="small"
                 onClick={() => {
                   hide();
@@ -117,7 +117,7 @@ const Sales = () => {
               <Button
                 // decoration="fill"
                 size="small"
-                className="hover:text-red-primary !font-bold !hover:border-red-primary text-overlay bg-red-primary rounded-xl"
+                className="hover:text-red-primary !font-bold !hover:border-red-primary !text-overlay bg-red-primary rounded-xl"
                 onClick={() => {
                   cancelSale();
                 }}
@@ -251,7 +251,7 @@ const Sale = ({ sale, pack, setCancelId, show }) => {
         <div className="flex flex-col items-center just">
           <Button
             decoration="line-white"
-            className="text-white hover:text-overlay rounded-xl"
+            className="text-white hover:!text-overlay rounded-xl"
             size="small"
             onClick={() => {
               setCancelId({

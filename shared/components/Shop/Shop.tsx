@@ -31,7 +31,6 @@ import { useUser } from "@shared/context/useUser";
 import { packsShop, updateSales } from "@shared/utils/utils";
 import { DropdownShop } from "@shared/components/common/dropdowns/dropdownShop";
 import { nFormatter } from "@shared/components/common/specialFields/SpecialFields";
-import Web3 from "web3";
 import ModalShop from "./ModalShop";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 
@@ -39,13 +38,8 @@ const Shop = () => {
   const [sales, setSales] = useState([]);
   const [saleToShow, setSale] = useState(packsShop[0]);
   const [counters, setCounters] = useState([1, 1, 1, 1]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const { blockchain } = useBlockchain();
-
-  const {
-    user: { provider },
-  } = useUser();
 
   const { Modal, show, isShow, hide } = useCartModal();
 

@@ -13,13 +13,15 @@ import Styles from "../styles.module.scss";
 // import Tilt from "react-parallax-tilt";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import packs from "../../../packs.json";
-import { getTokensAllowedMatic } from "@shared/web3";
+import { getNativeBlockchain } from "@shared/web3";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import { ArrowRightIcon } from "@heroicons/react/solid";
+import { ButtonSFUEL } from "@shared/components/common/ButtonSFUEL";
 
 export const ModalRent = ({
   isPack,
   rent,
+  tokensAllowed,
   setRentNFTDays,
   message,
   rentNFTDays,
@@ -28,14 +30,17 @@ export const ModalRent = ({
   setTokenSelected,
   tokenSelected,
   isLoading,
+  user,
 }) => {
   const cards: any[] = convertArrayCards();
-  const tokensAllowed = getTokensAllowedMatic();
 
   return (
     <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-12 border border-overlay-border w-auto relative">
       <h2 className="font-bold text-primary text-center uppercase text-3xl">
-        BUY{" "}
+        <div className="absolute lg:top-10 lg:left-10 top-4 left-4">
+          <ButtonSFUEL user={user} />
+        </div>
+        RENT{" "}
         {isPack
           ? packs[rent?.nftId].properties.name.value
           : cards[rent?.nftId]?.properties?.name?.value}
@@ -116,10 +121,10 @@ export const ModalRent = ({
                 </span>
               )}
             </div>
-            {rent.blockchain === "matic" ? (
+            {!getNativeBlockchain(rent.blockchain) ? (
               <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
                 {tokensAllowed
-                  .filter((item) =>
+                  ?.filter((item) =>
                     rent?.tokens
                       ?.map((item) => item.toLowerCase())
                       ?.includes(item.address.toLowerCase()),
@@ -128,9 +133,9 @@ export const ModalRent = ({
                     return (
                       <div
                         className={clsx(
-                          "w-28 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
+                          "w-28 flex items-center border border-white justify-center gap-2 rounded-xl cursor-pointer p-2",
                           {
-                            "bg-overlay-border border-white":
+                            "bg-overlay-border ":
                               tokenSelected?.address == item.address,
                           },
                           {
@@ -184,14 +189,14 @@ export const ModalRent = ({
             </div>
             <div className="py-4">
               <div className="text-primary text-sm text-center flex flex-col items-center justify-center">
-                {message === "Buying tokens" && (
+                {message !== "" && (
                   <>
-                    <span className="flex gap-4 items-center justify-center">
+                    <span className="flex gap-4 items-center justify-center text-green-button font-bold">
                       {message} <LoadingOutlined />
                     </span>
-                    <span className="flex gap-4 items-center justify-center">
-                      Note: If the transaction doesn't appears please open your
-                      wallet manually
+                    <span className="flex gap-4 items-center justify-center text-white font-bold">
+                      Note: If the transaction doesn't appears <br /> please
+                      open your wallet manually
                     </span>
                   </>
                 )}
@@ -200,7 +205,7 @@ export const ModalRent = ({
             <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
               <Button
                 decoration="line-white"
-                className="bg-dark  !font-bold md:text-lg w-28 text-md py-[6px] rounded-lg text-white hover:text-overlay border-none"
+                className="bg-dark  !font-bold md:text-lg w-28 text-md py-[6px] rounded-lg text-white hover:!text-overlay border-none"
                 onClick={() => {
                   setRentNFTDays(0);
                   hide();
@@ -212,6 +217,7 @@ export const ModalRent = ({
                 decoration="fill"
                 className="w-28 !font-bold text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
                 onClick={rentNft}
+                disabled={!rentNFTDays || message || !tokenSelected?.address}
               >
                 Rent Now
               </Button>

@@ -19,10 +19,9 @@ import { Input } from "./form/input";
 import { Button } from "./button";
 import { WalletOutlined } from "@ant-design/icons";
 import { useUser } from "@shared/context/useUser";
+import { ButtonSFUEL, ButtonSFUELCart } from "./ButtonSFUEL";
 
 export const useCartModal = () => {
-  const { showWallet } = useMagicLink();
-
   const dispatch = useDispatch();
 
   const [isShow, setIsShow] = useState(false);
@@ -379,12 +378,17 @@ export const useCartModal = () => {
                             disabled={errors.influencer_code && !isValidCode}
                             decoration="fillGreen"
                             className={
-                              "w-auto px-6 py-2 flex justify-center items-center rounded-xl !font-bold"
+                              "w-auto px-6 py-2 flex justify-center items-center rounded-xl !font-bold !text-black hover:!text-green-button"
                             }
                           >
                             Complete Purchase
                           </Button>
                         </div>
+                        {blockchain === "skl" && (
+                          <div className="absolute top-2 left-4">
+                            <ButtonSFUEL user={user} />
+                          </div>
+                        )}
                       </form>
                     ) : (
                       <div className="h-full flex flex-col items-center justify-center text-white font-bold gap-4 text-md text-center w-64 p-4 border border-transparent-color-gray-200 rounded-xl">

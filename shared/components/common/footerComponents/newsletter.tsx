@@ -38,7 +38,7 @@ export const Newsletter = () => {
         <Button
           type="submit"
           decoration="line-white"
-          className="rounded-xl bg-overlay-2 text-white hover:text-overlay text-[20px] border border-overlay-border py-3 px-10 whitespace-nowrap"
+          className="rounded-xl bg-overlay-2 text-white hover:!text-overlay text-[20px] border border-overlay-border py-3 px-10 whitespace-nowrap"
         >
           Sign up
         </Button>

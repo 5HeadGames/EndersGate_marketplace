@@ -9,7 +9,12 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import Styles from "./styles.module.scss";
 import packs from "../../../packs.json";
-import { getAddresses, getRentAvailable, switchChain } from "@shared/web3";
+import {
+  getAddresses,
+  getRentAvailable,
+  redeemNFT,
+  switchChain,
+} from "@shared/web3";
 
 import { useModal } from "@shared/hooks/modal";
 import {
@@ -35,7 +40,6 @@ const Rents = () => {
   const {
     user: { ethAddress: user },
   } = useUser();
-
   const [typeOfRequest, setTypeOfRequest] = React.useState("");
 
   const [cancel, setCancel] = React.useState({ id: -1, blockchain: "" });
@@ -91,14 +95,13 @@ const Rents = () => {
         );
       }
       updateBlockchain(cancel.blockchain);
-      const tx = await dispatch(
-        redeemRent({
-          tokenId: cancel.id,
-          provider: provider,
-          user: user,
-          blockchain: cancel.blockchain,
-        }),
-      );
+      console.log(cancel, "redeem");
+      const tx = await redeemNFT({
+        tokenId: cancel.id,
+        provider: provider,
+        user: user,
+        blockchain: cancel.blockchain,
+      });
       if ((tx as any).error) {
         throw Error(
           "An error has occurred while cancelling the sale, please try again",
@@ -107,10 +110,12 @@ const Rents = () => {
       dispatch(onLoadSales());
       dispatch(onGetAssets({ address: user, blockchain }));
       toast.success("Your sale has been redeemed successfully");
+      setIsLoading(false);
     } catch (err) {
+      setIsLoading(false);
+      console.log(err);
       toast.error(err.message);
     }
-    setIsLoading(false);
 
     hide();
   };
@@ -149,7 +154,7 @@ const Rents = () => {
             <div className="flex justify-center items-center gap-4">
               <Button
                 decoration="line-white"
-                className="hover:text-overlay !font-bold text-white rounded-xl"
+                className="hover:!text-overlay !font-bold text-white rounded-xl"
                 size="small"
                 onClick={() => {
                   hide();
@@ -160,7 +165,7 @@ const Rents = () => {
               <Button
                 // decoration="fill"
                 size="small"
-                className="hover:text-red-primary !font-bold !hover:border-red-primary text-overlay bg-red-primary rounded-xl"
+                className="hover:text-red-primary !font-bold !hover:border-red-primary !text-overlay bg-red-primary rounded-xl"
                 onClick={() => {
                   switch (typeOfRequest) {
                     case "cancel":
@@ -203,8 +208,6 @@ const Rents = () => {
               </thead>
               <tbody>
                 {rents.map((rent, i) => {
-                  const { pack: packsAddress } = getAddresses(rent.blockchain);
-                  const pack = rent.nft == packsAddress;
                   return (
                     <tr
                       className={clsx({
@@ -216,7 +219,6 @@ const Rents = () => {
                         <Rent
                           {...{
                             rent,
-                            pack,
                             setCancelId: setCancel,
                             setRedeemId: setCancel,
                             setTypeOfRequest,
@@ -249,12 +251,9 @@ const Rents = () => {
 export default Rents;
 
 export const RentStatusInfo = ({ status, rent }) => {
-  const notAvailable =
-    Math.floor(new Date().getTime() / 1000) >=
-    parseInt(rent?.duration) + parseInt(rent?.startedAt);
   switch (status) {
     case "0":
-      return notAvailable ? "Rent Expired" : "Rent Listed";
+      return "Rent Listed";
     case "1":
       return !getRentAvailable(rent)
         ? "NFT available to Redeem"
@@ -282,14 +281,7 @@ export const SaleStatusInfo = ({ status, sale }) => {
   }
 };
 
-const Rent = ({
-  rent,
-  pack,
-  setCancelId,
-  setRedeemId,
-  show,
-  setTypeOfRequest,
-}) => {
+const Rent = ({ rent, setCancelId, setRedeemId, show, setTypeOfRequest }) => {
   const cards = convertArrayCards();
   const notAvailable =
     Math.floor(new Date().getTime() / 1000) >=
@@ -311,20 +303,14 @@ const Rent = ({
         <div className="flex flex-col items-center gap-y-2 w-full">
           <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
             <img
-              src={
-                pack
-                  ? packs[rent.nftId]?.properties?.image?.value
-                  : cards[rent.nftId]?.image
-              }
+              src={cards[rent.nftId]?.image}
               className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
               alt=""
             />
           </div>
           <div className="flex flex-col items-center gap-4">
             <h2 className="text-primary-disabled text-xl font-bold">
-              {pack
-                ? packs[rent.nftId]?.properties?.name?.value
-                : cards[rent.nftId]?.properties.name?.value}
+              {cards[rent.nftId]?.properties.name?.value}
             </h2>
           </div>
         </div>
@@ -360,10 +346,10 @@ const Rent = ({
 
       <td className="py-4 px-4">
         <div className="flex flex-col items-center just">
-          {rent.status === "0" && !notAvailable ? (
+          {rent.status === "0" ? (
             <Button
               decoration="line-white"
-              className="text-white hover:text-overlay rounded-xl"
+              className="text-white hover:!text-overlay rounded-xl"
               size="small"
               onClick={() => {
                 setCancelId({
@@ -376,10 +362,10 @@ const Rent = ({
             >
               Cancel
             </Button>
-          ) : (rent.status === "0" && notAvailable) || rent.status === "1" ? (
+          ) : rent.status === "1" ? (
             <Button
               decoration="line-white"
-              className="text-white hover:text-overlay rounded-xl"
+              className="text-white hover:!text-overlay rounded-xl"
               size="small"
               onClick={() => {
                 setRedeemId({

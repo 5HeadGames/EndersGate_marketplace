@@ -4,11 +4,5 @@
     "name": "USDC",
     "logo": "/images/usdc.png",
     "main": true
-  },
-  {
-    "address": "0xb128A36c4BF5e2ddBe54BB368518f00C5cA76937",
-    "name": "TestUS",
-    "logo": "/images/usdc.png",
-    "main": false
   }
 ]

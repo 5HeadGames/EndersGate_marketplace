@@ -120,7 +120,7 @@ const Login = () => {
                   disabled={loading}
                   decoration="line-white"
                   size="medium"
-                  className="w-full mb-2 bg-overlay rounded-md  text-white hover:text-overlay"
+                  className="w-full mb-2 bg-overlay rounded-md  text-white hover:!text-overlay"
                   onClick={() => handleConnection(k.connection, k.title)}
                 >
                   {loading ? "..." : "Login with " + k.title}
@@ -130,7 +130,7 @@ const Login = () => {
                 disabled={loading}
                 decoration="line-white"
                 size="medium"
-                className="w-full mb-2 bg-overlay rounded-md  text-white hover:text-overlay"
+                className="w-full mb-2 bg-overlay rounded-md  text-white hover:!text-overlay"
                 onClick={() => handleLogin()}
               >
                 {loading ? "..." : "Login with Email"}

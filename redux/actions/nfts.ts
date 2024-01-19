@@ -4,7 +4,6 @@ import Web3 from "web3";
 
 import * as actionTypes from "../constants";
 import {
-  getAddressesMatic,
   getContract,
   getContractCustom,
   getAddresses,
@@ -173,6 +172,7 @@ export const onLoadSales = createAsyncThunk(
                 .getRents(new Array(lastRent).fill(0).map((a, i) => i))
                 .call();
 
+<<<<<<< HEAD
               rawRents.forEach((sale: any[], i) => {
                 const rentFormated = parseRent(sale);
                 allRents.push({
@@ -181,6 +181,26 @@ export const onLoadSales = createAsyncThunk(
                   blockchain: CHAIN_NAME_BY_ID[blockchain],
                   ...rentFormated,
                 });
+=======
+            rawRents.forEach((sale: any[], i) => {
+              const rentFormated = parseRent(sale);
+              if (CHAIN_NAME_BY_ID[blockchain] === "skl") {
+                console.log(
+                  {
+                    rentId: i,
+                    rent: true,
+                    blockchain: CHAIN_NAME_BY_ID[blockchain],
+                    ...rentFormated,
+                  },
+                  "rents",
+                );
+              }
+              allRents.push({
+                rentId: i,
+                rent: true,
+                blockchain: CHAIN_NAME_BY_ID[blockchain],
+                ...rentFormated,
+>>>>>>> skale
               });
             }
           } else {
@@ -911,11 +931,15 @@ export const buyERC1155 = createAsyncThunk(
   }) {
     const { seller, tokenId, token, amount, bid, provider, user, blockchain } =
       args;
-
     try {
-      const { marketplace } = getAddressesMatic();
+      const { marketplace } = getAddresses(blockchain);
+      console.log(marketplace, "marketplace");
       const marketplaceContract = getContractCustom(
-        "ClockSale",
+        getNativeBlockchain(blockchain)
+          ? "ClockSaleFindora"
+          : onlyAcceptsERC20(blockchain)
+          ? "ClockSaleOnlyMultiToken"
+          : "ClockSale",
         marketplace,
         provider,
       );
@@ -988,23 +1012,28 @@ export const rentERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      const { rent } = getAddressesMatic();
-      const rentContract = getContractCustom("Rent", rent, provider);
+      const { rent } = getAddresses(blockchain);
+      const rentContract = getContractCustom(
+        onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+        rent,
+        provider,
+      );
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addresses = getTokensAllowed(blockchain);
 
       if (
         !onlyAcceptsERC20(blockchain) &&
-        token === addresses.filter((item) => item.name === "MATIC")[0].address
+        token === addresses.filter((item) => item.name === "MATIC")[0]?.address
       ) {
         await rentContract.methods
           .rent(tokenId, daysOfRent, token)
           .send({ from: user, value: bid });
       } else {
         const allowance = await ERC20.methods.allowance(user, rent).call();
-        const price = (
-          await rentContract.methods.getRatePrice(tokenId, token).call()
-        ).mul(daysOfRent);
+        const price =
+          Number(
+            await rentContract.methods.getRatePrice(tokenId, token).call(),
+          ) * parseInt(daysOfRent as string);
         if (allowance < price) {
           await ERC20.methods
             .increaseAllowance(
@@ -1105,7 +1134,13 @@ export const rentBatchERC1155 = createAsyncThunk(
     try {
       const { rent, NATIVEUSD: NATIVE_TO_USD } = getAddresses(blockchain);
 
-      const rentContract = getContractCustom("Rent", rent, provider);
+      console.log("token");
+
+      const rentContract = getContractCustom(
+        onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+        rent,
+        provider,
+      );
       const tokensAllowed = getTokensAllowed(blockchain);
 
       setMessageBuy(`Processing your purchase...`);
@@ -1120,7 +1155,8 @@ export const rentBatchERC1155 = createAsyncThunk(
       const addressesAllowed = getTokensAllowed(blockchain);
       if (
         tokenSelected ===
-          addressesAllowed.filter((item) => item.name === "MATIC")[0].address &&
+          addressesAllowed.filter((item) => item.name === "MATIC")[0]
+            ?.address &&
         hasAggregatorFeed(blockchain)
       ) {
         const Aggregator = getContractCustom(
@@ -1372,7 +1408,11 @@ export const cancelRent = createAsyncThunk(
   }) {
     const { tokenId, provider, user, blockchain } = args;
     const { rent } = getAddresses(blockchain);
-    const rentContract = getContractCustom("Rent", rent, provider);
+    const rentContract = getContractCustom(
+      onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+      rent,
+      provider,
+    );
     return rentContract.methods.cancelRent(tokenId).send({ from: user });
   },
 );
@@ -1387,7 +1427,15 @@ export const redeemRent = createAsyncThunk(
   }) {
     const { tokenId, provider, user, blockchain } = args;
     const { rent } = getAddresses(blockchain);
-    const rentContract = getContractCustom("Rent", rent, provider);
-    return rentContract.methods.redeemRent(tokenId).send({ from: user });
+    const rentContract = getContractCustom(
+      onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+      rent,
+      provider,
+    );
+    console.log(tokenId, "pre redeem");
+    const tx = await rentContract.methods
+      .redeemRent(tokenId)
+      .send({ from: user });
+    return tx;
   },
 );

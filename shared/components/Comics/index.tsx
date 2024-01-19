@@ -222,11 +222,11 @@ function Comics() {
         onClick={show}
       >
         {cartComics.length > 0 && (
-          <div className="rounded-full px-[8px] py-[2px] absolute flex items-center justify-center top-[-10px] text-[11px] text-overlay bg-white left-[-10px] border border-overlay">
+          <div className="rounded-full px-[8px] py-[2px] absolute flex items-center justify-center top-[-10px] text-[11px] !text-overlay bg-white left-[-10px] border border-overlay">
             {cartComics.length}
           </div>
         )}
-        <ShopOutlined className="text-2xl flex items-center text-overlay justify-center relative" />
+        <ShopOutlined className="text-2xl flex items-center !text-overlay justify-center relative" />
       </Flex>
     </Flex>
   );

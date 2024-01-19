@@ -21,6 +21,7 @@ import { useUser } from "@shared/context/useUser";
 import clsx from "clsx";
 import Link from "next/link";
 import { useBlockchain } from "@shared/context/useBlockchain";
+import { ButtonSFUEL } from "@shared/components/common/ButtonSFUEL";
 
 const ProfileLayout = ({ children }) => {
   const {
@@ -156,12 +157,13 @@ const ProfileLayout = ({ children }) => {
                 <Button
                   type="submit"
                   decoration="line-white"
-                  className="rounded-xl bg-overlay-2 text-white hover:text-overlay text-[12px] border border-overlay-border py-2 px-4 whitespace-nowrap"
+                  className="rounded-xl bg-overlay-2 text-white hover:!text-overlay text-[12px] border border-overlay-border py-2 px-4 whitespace-nowrap"
                   onClick={() => showWallet()}
                 >
                   Show Wallet
                 </Button>
               )}
+              {blockchain === "skl" && <ButtonSFUEL user={user} />}
             </div>
           </div>
         </div>
@@ -174,7 +176,7 @@ const ProfileLayout = ({ children }) => {
                 <p
                   className={clsx(
                     { "text-white": link === router.asPath },
-                    { "text-overlay-border": link !== router.asPath },
+                    { "!text-overlay-border": link !== router.asPath },
                     "text-lg px-4 font-bold cursor-pointer",
                   )}
                 >
