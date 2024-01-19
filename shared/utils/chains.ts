@@ -98,7 +98,6 @@ export const CHAINS: {
   //     "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
   //   type: "both",
   // },
-
   // 13472: {
   //   urls: [" https://rpc.testnet.immutable.com"],
   //   name: "Inmutable X Testnet",
@@ -108,6 +107,17 @@ export const CHAINS: {
   //   blockExplorer: "https://explorer.testnet.immutable.com/",
   //   type: "testnet",
   // },
+
+  59144: {
+    urls: ["https://linea.blockpi.network/v1/rpc/public"],
+    name: "Linea",
+    rpcUrls: ["https://linea.blockpi.network/v1/rpc/public"],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ["https://lineascan.build/"],
+    blockExplorer: "https://lineascan.build/",
+    type: "mainnet",
+  },
+
   137: {
     urls: [
       process.env.NEXT_PUBLIC_POLYGON_PROVIDER || "",
@@ -168,6 +178,7 @@ export const CHAIN_NAME_BY_ID: {
 } = {
   // 1204: "findora",
   // 1205: "findora",
+  59144: "linea",
   137: "matic",
   80001: "matic",
   1: "eth",
@@ -186,6 +197,11 @@ export const blockchains = [
     name: "MATIC",
     value: "matic",
     image: "/images/matic.png",
+  },
+  {
+    name: "LINEA",
+    value: "linea",
+    image: "/images/linea.png",
   },
   // {
   //   name: "FINDORA GSC",
