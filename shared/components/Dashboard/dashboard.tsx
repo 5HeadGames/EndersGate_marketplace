@@ -52,6 +52,8 @@ const DashboardComponent = () => {
     }
   }, [recentlyListed, recentlySold, salesType]);
 
+  console.log(recentlyListed);
+
   React.useEffect(() => {
     setSalesDefault(recentlyListedCards.filter((row, i) => i < 4));
   }, [recentlyListedCards]);
@@ -213,6 +215,7 @@ const DashboardComponent = () => {
             {sales.map((sale, id) => {
               return (
                 <NFTCard
+                  isRent={Boolean(sale.rentId)}
                   classes={{ root: "m-4 cursor-pointer" }}
                   icon={
                     sale.nft === pack
