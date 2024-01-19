@@ -188,7 +188,7 @@ export const CHAIN_IDS_BY_NAME: {
   eth: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
   imx: 13472,
   skl: 503129905,
-  linea: 59140,
+  linea: process.env.NEXT_PUBLIC_ENV === "production" ? 59144 : 59140,
 };
 
 export const CHAIN_NAME_BY_ID: {
@@ -196,6 +196,7 @@ export const CHAIN_NAME_BY_ID: {
 } = {
   // 1204: "findora",
   // 1205: "findora",
+  59140: "linea",
   59144: "linea",
   137: "matic",
   80001: "matic",
@@ -203,7 +204,6 @@ export const CHAIN_NAME_BY_ID: {
   11155111: "eth",
   13472: "imx",
   503129905: "skl",
-  59140: "linea",
 };
 
 export const blockchains = [
@@ -217,26 +217,26 @@ export const blockchains = [
     value: "matic",
     image: "/images/matic.png",
   },
-  {
-    name: "LINEA",
-    value: "linea",
-    image: "/images/linea.png",
-  },
+  // {
+  //   name: "LINEA",
+  //   value: "linea",
+  //   image: "/images/linea.png",
+  // },
   // {
   //   name: "FINDORA GSC",
   //   value: "findora",
   //   image: "/images/findora.png",
   // },
-  {
-    name: "INMUTABLE X",
-    value: "imx",
-    image: "/images/imx.png",
-  },
-  {
-    name: "NEBULA HUB",
-    value: "skl",
-    image: "/images/skl.svg",
-  },
+  // {
+  //   name: "INMUTABLE X",
+  //   value: "imx",
+  //   image: "/images/imx.png",
+  // },
+  // {
+  //   name: "NEBULA HUB",
+  //   value: "skl",
+  //   image: "/images/skl.svg",
+  // },
 ];
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(

@@ -122,8 +122,8 @@ export const onLoadSales = createAsyncThunk(
       cardsSold = 0;
     try {
       for (const element of blockchains) {
-        console.log(element);
         const blockchain: any = element;
+        console.log(CHAIN_NAME_BY_ID[blockchain]);
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
 
@@ -160,49 +160,51 @@ export const onLoadSales = createAsyncThunk(
         }
 
         /* RENTS */
-        if (!getNativeBlockchain(blockchain)) {
-          const rent = getContract(
-            onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
-            addresses.rent,
-            CHAIN_NAME_BY_ID[blockchain],
-          );
-          const lastRent = Number(await rent.methods.tokenIdTracker().call());
-          if (lastRent > 0) {
-            const rawRents = await rent.methods
-              .getRents(new Array(lastRent).fill(0).map((a, i) => i))
-              .call();
+        if (CHAIN_NAME_BY_ID[blockchain] !== "linea") {
+          if (!getNativeBlockchain(blockchain)) {
+            const rent = getContract(
+              onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+              addresses.rent,
+              CHAIN_NAME_BY_ID[blockchain],
+            );
+            const lastRent = Number(await rent.methods.tokenIdTracker().call());
+            if (lastRent > 0) {
+              const rawRents = await rent.methods
+                .getRents(new Array(lastRent).fill(0).map((a, i) => i))
+                .call();
 
-            rawRents.forEach((sale: any[], i) => {
-              const rentFormated = parseRent(sale);
-              allRents.push({
-                rentId: i,
-                rent: true,
-                blockchain: CHAIN_NAME_BY_ID[blockchain],
-                ...rentFormated,
+              rawRents.forEach((sale: any[], i) => {
+                const rentFormated = parseRent(sale);
+                allRents.push({
+                  rentId: i,
+                  rent: true,
+                  blockchain: CHAIN_NAME_BY_ID[blockchain],
+                  ...rentFormated,
+                });
               });
-            });
-          }
-        } else {
-          const rent = getContract(
-            "RentNative",
-            addresses.rent,
-            CHAIN_NAME_BY_ID[blockchain],
-          );
-          const lastRent = Number(await rent.methods.tokenIdTracker().call());
-          if (lastRent > 0) {
-            const rawRents = await rent.methods
-              .getRents(new Array(lastRent).fill(0).map((a, i) => i))
-              .call();
+            }
+          } else {
+            const rent = getContract(
+              "RentNative",
+              addresses.rent,
+              CHAIN_NAME_BY_ID[blockchain],
+            );
+            const lastRent = Number(await rent.methods.tokenIdTracker().call());
+            if (lastRent > 0) {
+              const rawRents = await rent.methods
+                .getRents(new Array(lastRent).fill(0).map((a, i) => i))
+                .call();
 
-            rawRents.forEach((sale: any[], i) => {
-              const rentFormated = parseRentNative(sale);
-              allRents.push({
-                rentId: i,
-                rent: true,
-                blockchain: CHAIN_NAME_BY_ID[blockchain],
-                ...rentFormated,
+              rawRents.forEach((sale: any[], i) => {
+                const rentFormated = parseRentNative(sale);
+                allRents.push({
+                  rentId: i,
+                  rent: true,
+                  blockchain: CHAIN_NAME_BY_ID[blockchain],
+                  ...rentFormated,
+                });
               });
-            });
+            }
           }
         }
       }

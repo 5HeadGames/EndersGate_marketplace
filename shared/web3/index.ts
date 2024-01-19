@@ -130,8 +130,12 @@ export const getAddressesSkale = () => {
 };
 
 export const getAddressesLinea = () => {
-  const addresses = require("../../Contracts/addresses.linea_test.json");
-  return addresses;
+  const testAddresses = require("../../Contracts/addresses.linea_test.json");
+  const addresses = require("../../Contracts/addresses.linea.json");
+
+  return process.env.NEXT_PUBLIC_ENV === "production"
+    ? addresses
+    : testAddresses;
 };
 
 export const getTokensAllowed = (blockchain) => {
