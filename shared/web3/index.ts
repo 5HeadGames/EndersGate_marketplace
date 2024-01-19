@@ -83,6 +83,8 @@ export const getAddresses = (blockchain) => {
       return getAddressesIMX();
     case "skl":
       return getAddressesSkale();
+    case "linea":
+      return getAddressesLinea();
     default:
       return undefined;
   }
@@ -127,6 +129,11 @@ export const getAddressesSkale = () => {
   return addresses;
 };
 
+export const getAddressesLinea = () => {
+  const addresses = require("../../Contracts/addresses.linea_test.json");
+  return addresses;
+};
+
 export const getTokensAllowed = (blockchain) => {
   switch (blockchain) {
     case "matic":
@@ -135,6 +142,8 @@ export const getTokensAllowed = (blockchain) => {
       return getTokensAllowedEth();
     case "skl":
       return getTokensAllowedSkale();
+    case "linea":
+      return getTokensAllowedLinea();
   }
 };
 
@@ -157,6 +166,11 @@ export const getTokensAllowedEth = () => {
 
 export const getTokensAllowedSkale = () => {
   const addresses = require("../../Contracts/tokensAllowed.skale.json");
+  return addresses;
+};
+
+export const getTokensAllowedLinea = () => {
+  const addresses = require("../../Contracts/tokensAllowed.linea_test.json");
   return addresses;
 };
 
@@ -267,7 +281,7 @@ export const buyNFTsMatic = async ({
   provider,
   ethAddress,
   tokensAllowed,
-  MATICUSD,
+  NATIVEUSD,
   dispatch,
   blockchain,
 }) => {
@@ -305,7 +319,7 @@ export const buyNFTsMatic = async ({
       tokenSelected ===
         addresses.filter((item) => item.name === "MATIC")[0].address
     ) {
-      const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
+      const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
       const priceMATIC = await Aggregator.methods.latestAnswer().call();
       price = Web3.utils.toWei(
         ((bid * 10 ** 8) / priceMATIC).toString(),
@@ -425,12 +439,15 @@ export const getNativeBlockchain = (blockchain) => {
       return true;
     case "skl":
       return false;
+    case "linea":
+      return false;
     default:
       return undefined;
   }
 };
 
 export const hasAggregatorFeed = (blockchain) => {
+  console.log(blockchain, "blockchain agg");
   switch (blockchain) {
     case "matic":
       return true;
@@ -442,6 +459,8 @@ export const hasAggregatorFeed = (blockchain) => {
       return false;
     case "skl":
       return false;
+    case "linea":
+      return true;
     default:
       return undefined;
   }
@@ -459,6 +478,8 @@ export const onlyAcceptsERC20 = (blockchain) => {
       return false;
     case "skl":
       return true;
+    case "linea":
+      return false;
     default:
       return undefined;
   }

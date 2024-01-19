@@ -59,7 +59,7 @@ function Comics() {
 
   const { blockchain } = useBlockchain();
 
-  const { comics: comicsAddress, MATICUSD: NATIVEUSD } =
+  const { comics: comicsAddress, NATIVEUSD: NATIVEUSD } =
     getAddresses(blockchain);
 
   const getComicsNFTs = async () => {

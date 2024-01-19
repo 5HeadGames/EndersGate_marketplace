@@ -127,8 +127,6 @@ export const onLoadSales = createAsyncThunk(
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
 
-        console.log(CHAIN_NAME_BY_ID[blockchain]);
-
         /* SALES */
         const marketplace = getContract(
           getNativeBlockchain(blockchain)
@@ -749,8 +747,7 @@ export const buyFromShop = createAsyncThunk(
     let tx;
 
     try {
-      const { shop: shopAddress, MATICUSD: NATIVE_TO_USD } =
-        getAddresses(blockchain);
+      const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
 
       const shop = getContractCustom("Shop", shopAddress, provider);
       const tokensAllowed = getTokensAllowed(blockchain);
@@ -769,13 +766,9 @@ export const buyFromShop = createAsyncThunk(
       if (
         !onlyAcceptsERC20(blockchain) &&
         tokenSelected ===
-          addressesAllowed.filter((item) => item.name === "MATIC")[0].address
+          addressesAllowed.filter((item) => item.main)[0]?.address
       ) {
-        const Aggregator = getContractCustom(
-          "Aggregator",
-          NATIVE_TO_USD,
-          provider,
-        );
+        const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
         const preprice =
           BigInt(
@@ -1108,7 +1101,7 @@ export const rentBatchERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      const { rent, MATICUSD: NATIVE_TO_USD } = getAddresses(blockchain);
+      const { rent, NATIVEUSD: NATIVE_TO_USD } = getAddresses(blockchain);
 
       const rentContract = getContractCustom("Rent", rent, provider);
       const tokensAllowed = getTokensAllowed(blockchain);

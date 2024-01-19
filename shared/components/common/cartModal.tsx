@@ -55,6 +55,8 @@ export const useCartModal = () => {
       errors,
       isValidCode,
     }) => {
+      console.log(blockchain, "blockchain");
+
       return (
         <Transition.Root show={isShow} as={Fragment}>
           <Dialog
@@ -194,10 +196,7 @@ export const useCartModal = () => {
                             </h3>
                           </div>
                           <div className="flex flex-col gap items-end">
-                            {tokensAllowed?.filter(
-                              (item: any) =>
-                                item.name === "MATIC" || item.name === "ETH",
-                            ).length > 0 && (
+                            {!getNativeBlockchain(blockchain) && (
                               <h3
                                 className="text-sm font-[700] text-white flex gap-1 items-center justify-center"
                                 style={{ fontSize: "14px" }}

@@ -54,7 +54,7 @@ export const Modals = ({
 
   const { cartComics, provider } = useSelector((state: any) => state.layout);
 
-  const { comics: comicsAddress, MATICUSD } = getAddresses(blockchain);
+  const { comics: comicsAddress, NATIVEUSD } = getAddresses(blockchain);
 
   const db = getDatabase();
 
@@ -116,7 +116,7 @@ export const Modals = ({
           tokenSelected === addressesAllowed[0]?.address &&
           hasAggregatorFeed(blockchain)
         ) {
-          const Aggregator = getContract("Aggregator", MATICUSD, blockchain);
+          const Aggregator = getContract("Aggregator", NATIVEUSD, blockchain);
 
           const priceMATIC = await Aggregator.methods.latestAnswer().call();
 
