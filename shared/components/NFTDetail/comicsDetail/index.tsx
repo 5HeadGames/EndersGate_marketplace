@@ -136,7 +136,7 @@ const ComicDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             <p className="text-sm font-bold text-white">
                               Peer to Peer Card Sales:
                             </p>
-                            <span className="text-sm text-overlay-border font-[500]">
+                            <span className="text-sm !text-overlay-border font-[500]">
                               Exchange cards with other payers.
                             </span>
                           </div>
@@ -156,7 +156,7 @@ const ComicDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             <p className="text-sm font-bold text-white">
                               Peer to Peer Card Rentals:
                             </p>
-                            <span className="text-sm text-overlay-border font-[500]">
+                            <span className="text-sm !text-overlay-border font-[500]">
                               Rent out the card for a fixed period of time.
                             </span>
                           </div>
@@ -353,10 +353,10 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
         <div className="flex flex-col md:px-6 py-10 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
           <ChevronLeftIcon
             onClick={() => setState("choose")}
-            className="absolute md:top-3 left-2 top-2 text-overlay-border text-sm w-6 text-white cursor-pointer"
+            className="absolute md:top-3 left-2 top-2 !text-overlay-border text-sm w-6 text-white cursor-pointer"
           />
 
-          <p className="absolute md:bottom-3 md:right-6 bottom-2 right-4 text-overlay-border text-[10px]">
+          <p className="absolute md:bottom-3 md:right-6 bottom-2 right-4 !text-overlay-border text-[10px]">
             SELL PANEL
           </p>
           <div className="absolute md:top-3 right-2 top-2">
@@ -515,7 +515,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
               </div>
               <Button
                 decoration="fill"
-                className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
                 onClick={sellNft}
               >
                 Sell Now
@@ -659,13 +659,13 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
         <div className="flex flex-col px-6 py-10  border border-overlay-border bg-secondary rounded-xl mt-4 relative">
           <ChevronLeftIcon
             onClick={() => setState("choose")}
-            className="absolute md:top-3 left-2 top-2 text-overlay-border text-sm w-6 text-white cursor-pointer"
+            className="absolute md:top-3 left-2 top-2 !text-overlay-border text-sm w-6 text-white cursor-pointer"
           />
           <div className="absolute md:top-3 right-2 top-2">
             <ChainSelect />
           </div>
 
-          <p className="absolute md:bottom-3 md:right-4 bottom-2 right-4 text-overlay-border text-[10px]">
+          <p className="absolute md:bottom-3 md:right-4 bottom-2 right-4 !text-overlay-border text-[10px]">
             RENT PANEL
           </p>
 
@@ -777,7 +777,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
               </div>
               <Button
                 decoration="fill"
-                className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
                 onClick={listNFTtoRent}
               >
                 List Now
@@ -794,7 +794,7 @@ const TokenInfo = ({ id, blockchain, NFTs, comics }) => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl relative">
-        <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+        <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
           TOKEN INFO
         </p>
         <div className="flex flex-col w-full">

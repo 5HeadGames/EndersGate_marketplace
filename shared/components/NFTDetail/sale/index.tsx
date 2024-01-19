@@ -292,7 +292,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
               </div>
               <div className="flex flex-col xl:max-w-[500px] xl:min-h-[450px] xl:max-h-[450px]">
                 <div className="flex h-full gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                  <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                  <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                     CARD INFO
                   </p>
                   <div className="flex flex-col w-full gap-2 h-full justify-between">
@@ -372,7 +372,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       : cards[sale?.nftId]?.properties?.name?.value}
                   </h1>
                   <div className="flex flex-col md:px-6 md:py-4 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       BUY PANEL
                     </p>
                     <div className="flex flex-row gap-4 w-full">
@@ -384,7 +384,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       <div className="flex flex-col">
                         <h2 className="md:text-3xl text-xl font-[450] text-white whitespace-nowrap">
                           {formatPrice(sale.price, sale.blockchain)}
-                          {/* <span className="!text-sm text-overlay-border">
+                          {/* <span className="!text-sm !text-overlay-border">
                             ($1.5k)
                           </span> */}
                         </h2>
@@ -412,7 +412,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         )}
                         {/* <Button
                           decoration="line-white"
-                          className="bg-dark md:text-lg text-md md:w-48 w-32 py-[6px] rounded-lg text-white hover:text-overlay border-none"
+                          className="bg-dark md:text-lg text-md md:w-48 w-32 py-[6px] rounded-lg text-white hover:!text-overlay border-none"
                         >
                           Make Offer
                         </Button> */}
@@ -443,7 +443,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex flex-col pt-2 h-full">
                   <div className="flex flex-col px-6 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative min-h-full">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       OFFERS
                     </p>
                     <div className="flex flex-row gap-4 w-full pb-2">
@@ -477,7 +477,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
               <div className="flex flex-col justify-between w-full xl:min-h-[474px] xl:max-h-[474px]">
                 <div className="flex flex-col pt-6">
                   <div className="flex items-center gap-4 px-4 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       OWNER INFO
                     </p>
                     <img src={Icons.logoCard} className="w-16 h-16" alt="" />
@@ -493,7 +493,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       TOKEN INFO
                     </p>
                     <div className="flex flex-col w-full">

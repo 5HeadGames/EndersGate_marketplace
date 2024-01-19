@@ -157,7 +157,7 @@ const ProfileLayout = ({ children }) => {
                 <Button
                   type="submit"
                   decoration="line-white"
-                  className="rounded-xl bg-overlay-2 text-white hover:text-overlay text-[12px] border border-overlay-border py-2 px-4 whitespace-nowrap"
+                  className="rounded-xl bg-overlay-2 text-white hover:!text-overlay text-[12px] border border-overlay-border py-2 px-4 whitespace-nowrap"
                   onClick={() => showWallet()}
                 >
                   Show Wallet
@@ -176,7 +176,7 @@ const ProfileLayout = ({ children }) => {
                 <p
                   className={clsx(
                     { "text-white": link === router.asPath },
-                    { "text-overlay-border": link !== router.asPath },
+                    { "!text-overlay-border": link !== router.asPath },
                     "text-lg px-4 font-bold cursor-pointer",
                   )}
                 >

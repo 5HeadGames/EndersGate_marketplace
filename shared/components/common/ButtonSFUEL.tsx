@@ -9,7 +9,7 @@ export const ButtonSFUEL = ({ user }) => {
     <Button
       type="submit"
       decoration="line-white"
-      className="rounded-xl bg-overlay-2 text-white hover:text-overlay text-[12px] border border-overlay-border py-1 px-3 whitespace-nowrap mt-2"
+      className="rounded-xl bg-overlay-2 text-white hover:!text-overlay text-[12px] border border-overlay-border py-1 px-3 whitespace-nowrap mt-2"
       onClick={() => {
         setJustClicked(true);
         getSFUEL(user);

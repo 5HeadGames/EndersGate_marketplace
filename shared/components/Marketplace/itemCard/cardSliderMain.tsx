@@ -146,7 +146,7 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
               <Link href={`/sale/${props.transactionId}`}>
                 <div
                   onClick={() => {}}
-                  className="w-1/2 px-2 pb-1 flex text-sm justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-green-button hover:text-overlay transition-all duration-500"
+                  className="w-1/2 px-2 pb-1 flex text-sm justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-green-button hover:!text-overlay transition-all duration-500"
                 >
                   Buy Now
                 </div>

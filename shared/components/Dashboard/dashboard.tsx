@@ -232,7 +232,7 @@ const DashboardComponent = () => {
           </div>
           <div className="flex items-center justify-center">
             <Link href={"/marketplace"}>
-              <p className="p-3 px-6 font-[450] hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border text-overlay-border rounded-md cursor-pointer">
+              <p className="p-3 px-6 font-[450] hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border !text-overlay-border rounded-md cursor-pointer">
                 Browse More
               </p>
             </Link>

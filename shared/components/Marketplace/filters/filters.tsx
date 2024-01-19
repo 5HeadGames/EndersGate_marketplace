@@ -421,7 +421,7 @@ const FiltersBoard = ({
                       });
                     }}
                   />
-                  <p className="w-6 text-[10px] text-overlay-border">USD</p>
+                  <p className="w-6 text-[10px] !text-overlay-border">USD</p>
                 </div>
               </div>
               <div className="flex flex-col w-1/2">
@@ -438,7 +438,7 @@ const FiltersBoard = ({
                       });
                     }}
                   />
-                  <p className="w-6 text-[10px] text-overlay-border">USD</p>
+                  <p className="w-6 text-[10px] !text-overlay-border">USD</p>
                 </div>
               </div>
             </div>

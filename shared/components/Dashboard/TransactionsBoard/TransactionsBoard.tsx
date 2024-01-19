@@ -75,7 +75,7 @@ const TransactionsBoard: React.FC<any> = ({
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <div className="xl:max-w-[900px] w-full rounded-xl border border-overlay-border relative">
-        <p className="absolute sm:top-4 top-2 sm:right-6 right-2 text-overlay-border sm:text-sm text-[10px]">
+        <p className="absolute sm:top-4 top-2 sm:right-6 right-2 !text-overlay-border sm:text-sm text-[10px]">
           STATS PANEL
         </p>
         {/* <div className="flex border-b-2 border-overlay-border">
@@ -90,7 +90,7 @@ const TransactionsBoard: React.FC<any> = ({
                   type="subTitle"
                   className={clsx(
                     {
-                      "bg-primary text-overlay": columnSelected === item.value,
+                      "bg-primary !text-overlay": columnSelected === item.value,
                     },
                     {
                       "text-primary": columnSelected !== item.value,

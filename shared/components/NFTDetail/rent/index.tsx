@@ -16,6 +16,7 @@ import { AddressText } from "../../common/specialFields/SpecialFields";
 import {
   getAddresses,
   getNativeBlockchain,
+  getTokensAllowed,
   getTokensAllowedMatic,
   switchChain,
 } from "@shared/web3";
@@ -101,7 +102,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
       setMessage("Renting tokens");
       const { pack, endersGate } = getAddresses(rent.blockchain);
 
-      if (getNativeBlockchain(blockchain)) {
+      if (getNativeBlockchain(rent.blockchain)) {
         await dispatch(
           rentERC1155Native({
             seller: rent.seller,
@@ -148,11 +149,9 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
     setRentNFTDays(0);
   };
 
-  const tokensAllowed = getTokensAllowedMatic();
+  const tokensAllowed = getTokensAllowed(rent?.blockchain);
 
-  const notAvailable =
-    Math.floor(new Date().getTime() / 1000) >=
-    parseInt(rent?.duration) + parseInt(rent?.startedAt);
+  console.log(tokensAllowed, "a?");
 
   return (
     <>
@@ -291,7 +290,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
               </div>
               <div className="flex flex-col xl:max-w-[500px] xl:min-h-[450px] xl:max-h-[450px]">
                 <div className="flex h-full gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                  <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                  <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                     CARD INFO
                   </p>
                   <div className="flex flex-col w-full gap-2 h-full justify-between">
@@ -371,7 +370,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                       : cards[rent?.nftId]?.properties?.name?.value}
                   </h1>
                   <div className="flex flex-col md:px-6 md:py-4 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 gap-2 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       RENT PANEL
                     </p>
                     <div className="flex flex-row gap-4 w-full">
@@ -404,10 +403,10 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                           "flex flex-col gap-4 w-full items-center",
                         )}
                       >
-                        {rent.status == 0 && !notAvailable ? (
+                        {rent.status == 0 ? (
                           <Button
                             decoration="fill"
-                            className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                            className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
                             onClick={() => {
                               show();
                             }}
@@ -440,7 +439,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex flex-col pt-2 h-full">
                   <div className="flex flex-col px-6 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative min-h-full">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       OFFERS
                     </p>
                     <div className="flex flex-row gap-4 w-full pb-2">
@@ -474,7 +473,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
               <div className="flex flex-col justify-between w-full xl:min-h-[474px] xl:max-h-[474px]">
                 <div className="flex flex-col pt-6">
                   <div className="flex items-center gap-4 px-4 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       OWNER INFO
                     </p>
                     <img src={Icons.logoCard} className="w-16 h-16" alt="" />
@@ -490,7 +489,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       TOKEN INFO
                     </p>
                     <div className="flex flex-col w-full">

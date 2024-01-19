@@ -192,7 +192,7 @@ export const ModalSale = ({
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
             <Button
               decoration="line-white"
-              className="bg-dark  !font-bold md:text-lg w-28 text-md py-[6px] rounded-lg text-white hover:text-overlay border-none"
+              className="bg-dark  !font-bold md:text-lg w-28 text-md py-[6px] rounded-lg text-white hover:!text-overlay border-none"
               onClick={() => {
                 setBuyNFTData(0);
                 hide();
@@ -205,7 +205,10 @@ export const ModalSale = ({
               className="w-28 !font-bold text-md py-[6px] rounded-lg !text-black !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
               onClick={buyNft}
               disabled={
-                buyNFTData > sale?.amount || buyNFTData === 0 || message
+                buyNFTData > sale?.amount ||
+                buyNFTData === 0 ||
+                message ||
+                !tokenSelected?.address
               }
             >
               Buy Now

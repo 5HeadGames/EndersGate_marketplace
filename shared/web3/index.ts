@@ -400,6 +400,24 @@ export const buyNFTsNative = async ({
   setMessageBuy(``);
 };
 
+export const redeemNFT = async ({ tokenId, provider, user, blockchain }) => {
+  try {
+    const { rent } = getAddresses(blockchain);
+    const rentContract = getContractCustom(
+      onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+      rent,
+      provider,
+    );
+    console.log(tokenId, rentContract, "pre redeem");
+    const tx = await rentContract.methods
+      .redeemRent(tokenId.toString())
+      .send({ from: user });
+    return tx;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const isPack = (address: string) => {
   return (
     address === getAddressesMatic().pack ||

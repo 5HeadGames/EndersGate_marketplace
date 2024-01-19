@@ -134,7 +134,7 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
                   Card #
                   {rent.id !== undefined ? rent.nftId + "-" + rent.id : "12345"}
                 </span>
-                <div className="rounded-md bg-white font-bold text-overlay text-sm px-2 flex items-center justify-center">
+                <div className="rounded-md bg-white font-bold !text-overlay text-sm px-2 flex items-center justify-center">
                   For Rent
                 </div>
               </div>
@@ -284,7 +284,7 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
           >
             <div
               onClick={() => {}}
-              className="w-1/2 px-2 pb-1 flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-green-button hover:text-overlay transition-all duration-500"
+              className="w-1/2 px-2 pb-1 flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-green-button hover:!text-overlay transition-all duration-500"
             >
               Buy Now
             </div>
