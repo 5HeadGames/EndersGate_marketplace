@@ -172,7 +172,6 @@ export const onLoadSales = createAsyncThunk(
                 .getRents(new Array(lastRent).fill(0).map((a, i) => i))
                 .call();
 
-<<<<<<< HEAD
               rawRents.forEach((sale: any[], i) => {
                 const rentFormated = parseRent(sale);
                 allRents.push({
@@ -181,26 +180,6 @@ export const onLoadSales = createAsyncThunk(
                   blockchain: CHAIN_NAME_BY_ID[blockchain],
                   ...rentFormated,
                 });
-=======
-            rawRents.forEach((sale: any[], i) => {
-              const rentFormated = parseRent(sale);
-              if (CHAIN_NAME_BY_ID[blockchain] === "skl") {
-                console.log(
-                  {
-                    rentId: i,
-                    rent: true,
-                    blockchain: CHAIN_NAME_BY_ID[blockchain],
-                    ...rentFormated,
-                  },
-                  "rents",
-                );
-              }
-              allRents.push({
-                rentId: i,
-                rent: true,
-                blockchain: CHAIN_NAME_BY_ID[blockchain],
-                ...rentFormated,
->>>>>>> skale
               });
             }
           } else {

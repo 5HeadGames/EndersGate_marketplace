@@ -62,6 +62,8 @@ export const Cart = ({
 
   const { pack, marketplace, NATIVEUSD } = getAddresses(blockchain);
 
+  const tokensAllowed = getTokensAllowed(blockchain);
+
   const refCartMobile = React.useRef(null);
 
   const cards = convertArrayCards();
@@ -488,7 +490,7 @@ const CartItem = ({ item, pack, cards, blockchain, handleRemove }) => {
           </span>
           <div className="flex gap-2 items-end">
             <img src={Icons.logo} className="w-8 h-8" alt="" />
-            <img src="icons/POLYGON.svg" className="w-6 h-6" alt="" />
+            <img src={`/icons/${blockchain}.svg`} className="w-6 h-6" alt="" />
           </div>
         </div>
       </div>

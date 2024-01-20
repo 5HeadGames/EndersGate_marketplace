@@ -385,7 +385,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                         </h2>
                         <div className="flex gap-2">
                           <img
-                            src="/icons/POLYGON.svg"
+                            src={`/icons/${blockchain}.svg`}
                             className="md:h-10 md:w-10 w-8 h-8"
                             alt=""
                           />

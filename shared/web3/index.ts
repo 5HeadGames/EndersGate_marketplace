@@ -436,11 +436,8 @@ export const redeemNFT = async ({ tokenId, provider, user, blockchain }) => {
   }
 };
 
-export const isPack = (address: string) => {
-  return (
-    address === getAddressesMatic().pack ||
-    address === getAddressesFindora().pack
-  );
+export const isPack = (address: string, blockchain: string) => {
+  return address === getAddresses(blockchain)?.pack;
 };
 
 export const getRentsPendingByUser = ({ user, rents }) => {

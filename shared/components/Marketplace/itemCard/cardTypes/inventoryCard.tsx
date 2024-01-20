@@ -1,5 +1,6 @@
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
 import { Icons } from "@shared/const/Icons";
+import { useBlockchain } from "@shared/context/useBlockchain";
 import clsx from "clsx";
 import Link from "next/link";
 import Web3 from "web3";
@@ -7,7 +8,7 @@ import Styles from "../styles.module.scss";
 
 export const InventoryCard = (props) => {
   const { classes } = props;
-
+  const { blockchain } = useBlockchain();
   return (
     <Link href={`/card/${props.id}`}>
       <div
@@ -64,7 +65,11 @@ export const InventoryCard = (props) => {
             {props.price && (
               <div className="flex justify-between text-md text-white ">
                 <div className="flex items-center gap-2">
-                  <img src="/icons/POLYGON.svg" className="h-8 w-8" alt="" />
+                  <img
+                    src={`/icons/${blockchain}.svg`}
+                    className="h-8 w-8"
+                    alt=""
+                  />
                   <div className="flex flex-col text-md font-medium">
                     <p>Price:</p>
                     <span>

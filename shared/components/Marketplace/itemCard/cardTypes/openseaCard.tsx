@@ -1,6 +1,7 @@
 import { SearchIcon } from "@heroicons/react/solid";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
 import { Icons } from "@shared/const/Icons";
+import { useBlockchain } from "@shared/context/useBlockchain";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import React from "react";
@@ -9,6 +10,7 @@ export const OpenseaCard = (props) => {
   const { classes } = props;
   const [hoverAll, setHoverAll] = React.useState(false);
   const router = useRouter();
+  const { blockchain } = useBlockchain();
 
   return (
     <div
@@ -100,7 +102,7 @@ export const OpenseaCard = (props) => {
               >
                 <div className="flex items-center gap-2">
                   <img
-                    src="/icons/POLYGON.svg"
+                    src={`/icons/${blockchain}.svg`}
                     className="lg:h-8 lg:w-8 w-6 h-6"
                     alt=""
                   />
