@@ -261,7 +261,7 @@ const MarketplaceComponent = () => {
       );
     })
     .filter((sale, i) => {
-      return !isPack(sale.nft)
+      return !isPack(sale.nft, sale.blockchain)
         ? filterCards({
             card: cards[sale.nftId],
             filters,
@@ -425,19 +425,19 @@ const MarketplaceComponent = () => {
                           classes={{ root: "m-4 cursor-pointer" }}
                           setPage={setPage}
                           icon={
-                            isPack(sale.nft)
+                            isPack(sale.nft, sale.blockchain)
                               ? packs[sale.nftId]?.properties?.image?.value
                               : cards[sale.nftId]?.image
                           }
                           name={
-                            isPack(sale.nft)
+                            isPack(sale.nft, sale.blockchain)
                               ? packs[sale.nftId]?.properties?.name?.value
                               : cards[sale.nftId]?.properties?.name?.value
                           }
                           byId={false}
                           type={sale.type}
                           sale={sale}
-                          rent={sale.rent}
+                          isRent={sale.rentId !== undefined}
                         />
                       );
                     })

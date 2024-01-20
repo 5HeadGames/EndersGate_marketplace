@@ -226,6 +226,7 @@ const DashboardComponent = () => {
                   }
                   byId={false}
                   sale={sale}
+                  isRent={sale.rentId !== undefined}
                 />
               );
             })}

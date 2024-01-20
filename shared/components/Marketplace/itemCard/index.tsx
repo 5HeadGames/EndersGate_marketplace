@@ -17,18 +17,18 @@ interface Props
   sale: any;
   setPage?: any;
   currency?: any;
-  rent?: any;
+  isRent?: boolean;
 }
 
 const NFTCard: React.FunctionComponent<Props> = (props) => {
-  const { classes, sale, icon, name, setPage } = props;
+  const { classes, sale, icon, name, setPage, isRent } = props;
   return (
     <>
       {props.byId ? (
         <InventoryCard {...props} />
       ) : props.type != "opensea" ? (
         <>
-          {props.rent ? (
+          {isRent ? (
             <RentCard
               rent={sale}
               classes={classes}
