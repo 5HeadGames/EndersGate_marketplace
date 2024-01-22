@@ -1,7 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React from "react";
-import { useParams, useRouter } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useAppDispatch, store } from "redux/store";
 import { Button } from "shared/components/common/button";
 import clsx from "clsx";
@@ -26,9 +31,11 @@ const Login = () => {
 
   const { blockchain } = useBlockchain();
 
-  const query = useParams();
-
+  const query: any = useSearchParams();
   const router = useRouter();
+
+  console.log(query, router);
+
   const dispatch = useAppDispatch();
   const { updateUser } = useUser();
 
@@ -38,8 +45,11 @@ const Login = () => {
       await login(updateUser);
       localStorage.setItem("typeOfConnection", "magic");
       localStorage.setItem("loginTime", new Date().getTime().toString());
-      const queryAddress: any = query.redirectAddress?.toString();
-      if (query.redirect === "true" && query.redirectAddress != null) {
+      const queryAddress: any = query.get("redirectAddress")?.toString();
+      if (
+        query.get("redirect") === "true" &&
+        query.get("redirectAddress") != null
+      ) {
         router.push(queryAddress !== undefined ? queryAddress : "/");
       }
       router.push("/");
@@ -83,10 +93,12 @@ const Login = () => {
           providerName: "web3react",
         });
         dispatch(onGetAssets({ address: account, blockchain }));
-        if (query.redirect === "true" && query.redirectAddress != null) {
+        const queryAddress: any = query.get("redirectAddress")?.toString();
+        if (
+          query.get("redirect") === "true" &&
+          query.get("redirectAddress") != null
+        ) {
           router.push(queryAddress !== undefined ? queryAddress : "/");
-        } else {
-          router.push("/");
         }
         setLoading(false);
       }, 1000);
