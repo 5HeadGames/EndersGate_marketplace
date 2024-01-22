@@ -117,7 +117,7 @@ const Login = () => {
             <LoadingOutlined className="text-5xl text-white" />
           ) : (
             <>
-              {/* {WALLETS.map((k, i) => (
+              {WALLETS.map((k, i) => (
                 <Button
                   disabled={loading}
                   decoration="line-white"
@@ -127,7 +127,7 @@ const Login = () => {
                 >
                   {loading ? "..." : "Login with " + k.title}
                 </Button>
-              ))} */}
+              ))}
               <Button
                 disabled={loading}
                 decoration="line-white"
