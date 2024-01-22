@@ -7,7 +7,6 @@ import { convertArrayCards } from "@shared/components/common/convertCards";
 import Web3 from "web3";
 import { useSelector } from "react-redux";
 import useMagicLink from "@shared/hooks/useMagicLink";
-// // import { useWeb3React } from "@web3-react/core";
 import packs from "../../../packs.json";
 import { Tooltip } from "@mui/material";
 import { Button } from "@shared/components/common/button/button";
@@ -21,13 +20,14 @@ import { toast } from "react-hot-toast";
 import { useUser } from "@shared/context/useUser";
 import clsx from "clsx";
 import Link from "next/link";
+import { useWeb3React } from "@web3-react/core";
 
 const ProfileLayout = ({ children }) => {
   const {
     user: { ethAddress: user, providerName },
   } = useUser();
   const { showWallet } = useMagicLink();
-  // const { account } = useWeb3React();
+  const { account } = useWeb3React();
   const { register, handleSubmit } = useForm();
   const router = useRouter();
   const pathname = usePathname();
@@ -35,11 +35,11 @@ const ProfileLayout = ({ children }) => {
   const [userName, setUserName] = React.useState("EG Enthusiast");
   const db = getDatabase();
 
-  // React.useEffect(() => {
-  //   if (!account && !user && !authStillValid()) {
-  //     router.push("/login?redirect=true&redirectAddress=/profile");
-  //   }
-  // }, [account, user]);
+  React.useEffect(() => {
+    if (!account && !user && !authStillValid()) {
+      router.push("/login?redirect=true&redirectAddress=/profile");
+    }
+  }, [account, user]);
 
   const profileImage = Icons.profile;
 

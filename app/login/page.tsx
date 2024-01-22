@@ -12,8 +12,8 @@ import { onGetAssets, onLogged } from "@redux/actions";
 import { switchChain } from "@shared/web3";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
-// // import { useWeb3React } from "@web3-react/core";
 import { useUser } from "@shared/context/useUser";
+import { useWeb3React } from "@web3-react/core";
 
 const Login = () => {
   const [loading, setLoading] = React.useState(false);
@@ -22,7 +22,7 @@ const Login = () => {
     store.getState()["networks"].networkId,
   );
 
-  // const { account, provider } = useWeb3React();
+  const { account, provider } = useWeb3React();
 
   const { blockchain } = useBlockchain();
 
@@ -67,31 +67,31 @@ const Login = () => {
     }
   };
 
-  // React.useEffect(() => {
-  //   if (account && isLogged) {
-  //     const queryAddress: any = query?.redirectAddress?.toString();
-  //     setTimeout(async () => {
-  //       try {
-  //         await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
-  //       } catch (e) {
-  //         console.log(e.message);
-  //       }
-  //       updateUser({
-  //         ethAddress: account,
-  //         email: "",
-  //         provider: provider?.provider,
-  //         providerName: "web3react",
-  //       });
-  //       dispatch(onGetAssets({ address: account, blockchain }));
-  //       if (query.redirect === "true" && query.redirectAddress != null) {
-  //         router.push(queryAddress !== undefined ? queryAddress : "/");
-  //       } else {
-  //         router.push("/");
-  //       }
-  //       setLoading(false);
-  //     }, 1000);
-  //   }
-  // }, [account, isLogged]);
+  React.useEffect(() => {
+    if (account && isLogged) {
+      const queryAddress: any = query?.redirectAddress?.toString();
+      setTimeout(async () => {
+        try {
+          await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+        } catch (e) {
+          console.log(e.message);
+        }
+        updateUser({
+          ethAddress: account,
+          email: "",
+          provider: provider?.provider,
+          providerName: "web3react",
+        });
+        dispatch(onGetAssets({ address: account, blockchain }));
+        if (query.redirect === "true" && query.redirectAddress != null) {
+          router.push(queryAddress !== undefined ? queryAddress : "/");
+        } else {
+          router.push("/");
+        }
+        setLoading(false);
+      }, 1000);
+    }
+  }, [account, isLogged]);
 
   return (
     <div className="min-h-screen">

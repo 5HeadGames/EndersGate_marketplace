@@ -204,15 +204,14 @@ export default function AppLayout({ children }) {
         <div className="lg:flex hidden gap-4 shrink-0 items-center">
           {navItems.map((item: any, index) => {
             return (
-              <>
+              <React.Fragment key={item.name}>
                 <NavbarItem
-                  key={item.name}
                   name={item.name}
                   link={item.link}
                   route={pathname}
                   notification={false}
                 />
-              </>
+              </React.Fragment>
             );
           })}
           {ethAddress ? (
@@ -250,7 +249,7 @@ export default function AppLayout({ children }) {
                 <div className="flex flex-col items-center px-4 border border-overlay-border rounded-xl">
                   {profileItems.map((item: any, index) => {
                     return (
-                      <>
+                      <React.Fragment key={item.name + index}>
                         {item.onClick ? (
                           <div
                             className={clsx(
@@ -271,7 +270,7 @@ export default function AppLayout({ children }) {
                             notification={item.notification}
                           />
                         )}
-                      </>
+                      </React.Fragment>
                     );
                   })}
                 </div>

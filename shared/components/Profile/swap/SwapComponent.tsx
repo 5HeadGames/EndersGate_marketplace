@@ -9,7 +9,6 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 
-// import { useWeb3React } from "@web3-react/core";
 import { XIcon } from "@heroicons/react/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "@shared/hooks/modal";
@@ -57,24 +56,6 @@ const SwapComponent = () => {
       result: "/images/0.png",
       address: common_pack,
     },
-    // {
-    //   name: "Gen 0 Rare Pass",
-    //   nameKey: "Rare Pack",
-    //   image: "/images/RarePass.png",
-    //   address: rare_pack,
-    // },
-    // {
-    //   name: "Gen 0 Epic Pass",
-    //   nameKey: "Epic Pack",
-    //   image: "/images/EpicPass.png",
-    //   address: epic_pack,
-    // },
-    // {
-    //   name: "Gen 0 Legendary Pass",
-    //   nameKey: "Legendary Pack",
-    //   image: "/images/LegendaryPass.png",
-    //   address: legendary_pack,
-    // },
   ];
 
   const passEG = [

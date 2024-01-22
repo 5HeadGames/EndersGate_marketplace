@@ -6,7 +6,7 @@ import React from "react";
 // import { useMoralis } from "react-moralis";
 import Styles from "./styles.module.scss";
 import { Activity } from "../layout/index";
-// import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from "@web3-react/core";
 import { getAddressesMatic } from "@shared/web3";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
@@ -17,37 +17,11 @@ const navItems = [
 ];
 
 const Activities = () => {
-  // const { account: user } = useWeb3React();
+  const { account: user } = useWeb3React();
   const [activities, setActivities] = React.useState<Activity[]>([]);
   const [page, setPage] = React.useState(0);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
   const { pack } = getAddressesMatic();
-  const user = false;
-
-  const loadEvents = async () => {
-    // // const relation = user.relation("events");
-    // const query = relation.query();
-    // const activities = await query.find({});
-    // setActivities(
-    //   activities
-    //     .map((act) => ({
-    //       createdAt: act.get("createdAt"),
-    //       type: act.get("type"),
-    //       metadata: JSON.parse(act.get("metadata")),
-    //     }))
-    //     .sort((a, b) => {
-    //       return (
-    //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    //       );
-    //     }),
-    // );
-  };
-
-  React.useEffect(() => {
-    if (user) {
-      loadEvents();
-    }
-  }, [user]);
 
   return (
     <div className="flex flex-col items-center w-full">
