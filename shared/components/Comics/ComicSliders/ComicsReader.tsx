@@ -1,7 +1,8 @@
+"use client";
 import React from "react";
 import "react-photo-view/dist/react-photo-view.css";
 import { PhotoSlider } from "react-photo-view";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { BsGrid1X2, BsGrid1X2Fill } from "react-icons/bs";
 import clsx from "clsx";
 

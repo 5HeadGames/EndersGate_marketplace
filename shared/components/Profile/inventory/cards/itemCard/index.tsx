@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import clsx from "clsx";
 import Web3 from "web3";

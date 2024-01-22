@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@shared/components/common/button";
 import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
@@ -8,7 +9,7 @@ import { InputEmail } from "@shared/components/common/form/input-email";
 import { InputPassword } from "@shared/components/common/form/input-password";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useSelector } from "react-redux";
-import { useWeb3React } from "@web3-react/core";
+// import { useWeb3React } from "@web3-react/core";
 import { LoadingOutlined } from "@ant-design/icons";
 
 const AccountSettingsComponent = () => {
@@ -21,7 +22,8 @@ const AccountSettingsComponent = () => {
   } = useForm();
   const [loadingForm, setLoading] = React.useState(false);
   const [successPassword, setSuccessPassword] = React.useState(false);
-  const { account: user } = useWeb3React();
+  // const { account: user } = useWeb3React();
+  const user = false;
 
   const handleChangePicture = async (e: React.ChangeEvent<any>) => {};
 

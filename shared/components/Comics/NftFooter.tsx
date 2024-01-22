@@ -1,3 +1,4 @@
+"use client";
 import { Flex, Text, Image, Box, Link } from "@chakra-ui/react";
 import React from "react";
 

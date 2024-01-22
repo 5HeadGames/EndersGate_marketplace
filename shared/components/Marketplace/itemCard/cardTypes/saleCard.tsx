@@ -1,3 +1,4 @@
+"use client";
 import { CheckIcon, PlusIcon, SearchIcon, XIcon } from "@heroicons/react/solid";
 import { addCart, removeFromCart } from "@redux/actions";
 import { useAppDispatch } from "@redux/store";
@@ -14,11 +15,11 @@ import {
 } from "@shared/web3";
 import clsx from "clsx";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { useToasts } from "react-toast-notifications";
 
 export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
   const dispatch = useAppDispatch();
@@ -29,7 +30,6 @@ export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
   const [quantity, setQuantity] = React.useState(1);
   const router = useRouter();
   const { register } = useForm();
-  const { addToast } = useToasts();
 
   const { blockchain } = useBlockchain();
 
@@ -37,9 +37,7 @@ export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
     e.preventDefault();
     if (user?.ethAddress) {
       if (sale.blockchain !== blockchain) {
-        addToast("Please select sales in the same blockchain", {
-          appearance: "error",
-        });
+        toast.error("Please select sales in the same blockchain");
         return false;
       }
 
@@ -64,9 +62,7 @@ export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
             }),
           );
         } else {
-          addToast("Please select sales with the same currency", {
-            appearance: "error",
-          });
+          toast.error("Please select sales with the same currency");
         }
       } else {
         dispatch(
@@ -114,18 +110,19 @@ export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
       onMouseOver={() => setHoverAll(true)}
       onMouseLeave={() => setHoverAll(false)}
     >
-      <Link href={`/sale/${sale.id}`}>
-        <div
-          className={clsx(
-            "rounded-xl flex flex-col text-gray-100 lg:w-96 w-64 bg-secondary relative overflow-hidden border border-gray-500 z-[2] cursor-pointer",
-            {
-              "!border-green-button":
-                cart.filter((e) => e.id === sale.id).length > 0,
-            },
-            // Styles.cardHover,
-            classes?.root,
-          )}
-        >
+      <Link
+        className={clsx(
+          "rounded-xl flex flex-col text-gray-100 lg:w-96 w-64 bg-secondary relative overflow-hidden border border-gray-500 z-[2] cursor-pointer",
+          {
+            "!border-green-button":
+              cart.filter((e) => e.id === sale.id).length > 0,
+          },
+          // Styles.cardHover,
+          classes?.root,
+        )}
+        href={`/sale/${sale.id}`}
+      >
+        <>
           <img
             src={icon || Icons.logo}
             className="absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto opacity-50 min-w-[175%]"
@@ -213,9 +210,8 @@ export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
                               if (
                                 parseInt(e.target.value) > parseInt(sale.amount)
                               ) {
-                                addToast(
+                                toast.error(
                                   "Your amount exceeds the amount of NFTs of the sale",
-                                  { appearance: "error" },
                                 );
                               } else {
                                 setQuantity(parseInt(e.target.value));
@@ -306,7 +302,7 @@ export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
               )}
             </div>
           </div>
-        </div>
+        </>
       </Link>
 
       {sale?.status == 0 &&
@@ -325,10 +321,11 @@ export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
             >
               Buy Now
             </div>
-            <Link href={`/sale/${sale.id}`}>
-              <div className="w-1/2 px-2 pb-1  flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-overlay-2 transition-all duration-500">
-                Details
-              </div>
+            <Link
+              className="w-1/2 px-2 pb-1  flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-overlay-2 transition-all duration-500"
+              href={`/sale/${sale.id}`}
+            >
+              <>Details</>
             </Link>
           </div>
         )}

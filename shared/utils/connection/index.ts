@@ -26,7 +26,7 @@ const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
       actions,
       options: {
         rpc: {
-          "80001": process.env.NEXT_PUBLIC_POLYGON_PROVIDER,
+          "80001": process.env.NEXT_PUBLIC_POLYGON_PROVIDER as any,
         },
       },
     }),

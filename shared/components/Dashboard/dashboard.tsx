@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useAppSelector } from "@redux/store";
 import { getAddressesMatic } from "@shared/web3";
@@ -210,7 +211,7 @@ const DashboardComponent = () => {
             </Dropdown>
           </div>
           <div className="flex flex-wrap w-full justify-center items-center relative md:px-40">
-            {sales.map((sale, id) => {
+            {sales.map((sale: any, id) => {
               return (
                 <NFTCard
                   classes={{ root: "m-4 cursor-pointer" }}

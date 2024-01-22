@@ -1,3 +1,4 @@
+"use client";
 import { CheckIcon, PlusIcon, SearchIcon, XIcon } from "@heroicons/react/solid";
 import { addCart, addCartRent, removeFromCart } from "@redux/actions";
 import { useAppDispatch } from "@redux/store";
@@ -13,10 +14,10 @@ import {
 } from "@shared/web3";
 import clsx from "clsx";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
+import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { useToasts } from "react-toast-notifications";
 
 export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
   const dispatch = useAppDispatch();
@@ -25,7 +26,6 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
   const [hoverAll, setHoverAll] = React.useState(false);
   const [hoverBuy, setHoverBuy] = React.useState(false);
   const router = useRouter();
-  const { addToast } = useToasts();
 
   const { blockchain } = useBlockchain();
 
@@ -33,9 +33,7 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
     e.preventDefault();
     if (user?.ethAddress) {
       if (rent.blockchain !== blockchain) {
-        addToast("Please select sales in the same blockchain", {
-          appearance: "error",
-        });
+        toast.error("Please select sales in the same blockchain");
         return false;
       }
 
@@ -60,9 +58,7 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
             }),
           );
         } else {
-          addToast("Please select sales with the same currency", {
-            appearance: "error",
-          });
+          toast.error("Please select sales with the same currency");
         }
       } else {
         dispatch(

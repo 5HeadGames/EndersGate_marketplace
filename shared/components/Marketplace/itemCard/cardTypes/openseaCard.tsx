@@ -1,8 +1,9 @@
+"use client";
 import { SearchIcon } from "@heroicons/react/solid";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
 import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 export const OpenseaCard = (props) => {

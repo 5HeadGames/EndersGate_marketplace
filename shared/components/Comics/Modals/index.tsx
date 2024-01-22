@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-no-undef */
+"use client";
 import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +24,7 @@ import { toast } from "react-hot-toast";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Image } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { useUser } from "@shared/context/useUser";
 
@@ -126,7 +127,7 @@ export const Modals = ({
                 ?.map((item) => {
                   return (parseInt(item.price) / 10 ** 6) * item.quantity;
                 })
-                ?.reduce((item, acc) => {
+                ?.reduce((item: any, acc) => {
                   return item + acc;
                 }),
             ) *
@@ -173,10 +174,10 @@ export const Modals = ({
         }
       } else {
         price = cartComics
-          ?.map((item, i) => {
+          ?.map((item: any, i) => {
             return BigInt(item.price) * BigInt(item.quantity);
           })
-          .reduce((item, acc) => {
+          .reduce((item: any, acc) => {
             return BigInt(item) + BigInt(acc);
           });
         await comics.methods

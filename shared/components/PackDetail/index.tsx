@@ -1,10 +1,11 @@
+"use client";
 import React from "react";
 import {
   LeftCircleFilled,
   LeftOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Web3 from "web3";
 
 import { useAppDispatch, useAppSelector } from "redux/store";
@@ -38,7 +39,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
   const {
     user: { ethAddress: user, provider },
   } = useUser();
-  const NFTs = useAppSelector((state) => state.nfts);
+  const NFTs: any = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -54,7 +55,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
 
   const { blockchain } = useBlockchain();
 
-  const [tokensSelected, setTokensSelected] = React.useState([]);
+  const [tokensSelected, setTokensSelected] = React.useState<any>([]);
 
   const { pack } = getAddressesMatic();
 
@@ -294,7 +295,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                               payment for this listing
                             </div>
                             <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
-                              {tokensAllowed.map((item, index) => {
+                              {tokensAllowed.map((item: any, index) => {
                                 return (
                                   <div
                                     className={clsx(
@@ -322,7 +323,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                                         );
                                       } else {
                                         setTokensSelected((prev) => {
-                                          const newArray = [];
+                                          const newArray: any = [];
                                           prev.forEach((item2) =>
                                             newArray.push(item2),
                                           );

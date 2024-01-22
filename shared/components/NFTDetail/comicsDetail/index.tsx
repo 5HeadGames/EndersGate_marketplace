@@ -1,6 +1,7 @@
+"use client";
 import React from "react";
 import { ExclamationCircleOutlined, LoadingOutlined } from "@ant-design/icons";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Web3 from "web3";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import {
@@ -37,7 +38,7 @@ import ChainSelect from "@shared/components/Layouts/chainSelect";
 import { useUser } from "@shared/context/useUser";
 
 const ComicDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
-  const NFTs = useAppSelector((state) => state.nfts);
+  const NFTs: any = useAppSelector((state) => state.nfts);
   // const [state, setState] = React.useState("choose");
   const router = useRouter();
 
@@ -214,7 +215,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
     "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
   );
 
-  const [tokensSelected, setTokensSelected] = React.useState([]);
+  const [tokensSelected, setTokensSelected] = React.useState<any>([]);
 
   const [sellNFTData, setSellNFTData] = React.useState({
     startingPrice: 0,
@@ -450,7 +451,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
                     for this listing
                   </div>
                   <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
-                    {tokensAllowed.map((item, index) => {
+                    {tokensAllowed.map((item: any, index) => {
                       return (
                         <div
                           className={clsx(
@@ -473,7 +474,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
                               );
                             } else {
                               setTokensSelected((prev) => {
-                                const newArray = [];
+                                const newArray: any = [];
                                 prev.forEach((item2) => newArray.push(item2));
                                 newArray.push(item.address);
                                 return newArray;
@@ -543,7 +544,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
     "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
   );
 
-  const [tokensSelected, setTokensSelected] = React.useState([]);
+  const [tokensSelected, setTokensSelected] = React.useState<any>([]);
 
   const [sellNFTData, setSellNFTData] = React.useState({
     pricePerDay: 0,
@@ -712,7 +713,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
                     for this listing
                   </div>
                   <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
-                    {tokensAllowed.map((item, index) => {
+                    {tokensAllowed.map((item: any, index) => {
                       return (
                         <div
                           className={clsx(
@@ -735,7 +736,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
                               );
                             } else {
                               setTokensSelected((prev) => {
-                                const newArray = [];
+                                const newArray: any = [];
                                 prev.forEach((item2) => newArray.push(item2));
                                 newArray.push(item.address);
                                 return newArray;

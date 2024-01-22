@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Image } from "@chakra-ui/react";
 import { XIcon } from "@heroicons/react/outline";
@@ -114,8 +115,8 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
               }}
             ></InputModal>
             <GooglePlaceAPI
-              errors={errors.address}
-              tokenGoogleAPI={process.env.NEXT_PUBLIC_GOOGLE_API_KEY}
+              errors={errors.address as any}
+              tokenGoogleAPI={process.env.NEXT_PUBLIC_GOOGLE_API_KEY as any}
               {...{
                 register,
                 rules: {

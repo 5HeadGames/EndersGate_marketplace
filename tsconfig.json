@@ -26,9 +26,16 @@
       "@shared/*": ["shared/*"],
       "@redux/*": ["redux/*"],
       "utils/*": ["shared/utils/*"],
-      "components/*": ["shared/components/*"]
-    }
+      "components/*": ["shared/components/*"],
+      "react": ["./node_modules/@types/react"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
   },
   "exclude": ["node_modules", "Contracts/typechain", "Contracts/**/*.ts"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"]
 }

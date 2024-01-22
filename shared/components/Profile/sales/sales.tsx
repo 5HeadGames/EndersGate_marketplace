@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@shared/components/common/button";
 import { Typography } from "@shared/components/common/typography";
 import { Icons } from "@shared/const/Icons";
@@ -71,8 +72,8 @@ const Sales = () => {
   };
 
   React.useEffect(() => {
-    const arrayPacks = [];
-    nfts.allSales.forEach((sale, index) => {
+    const arrayPacks: any = [];
+    nfts.allSales.forEach((sale: any, index) => {
       if (sale.seller.toLowerCase() == user.toLowerCase()) {
         if (sale.status !== 3 && sale.saleId !== undefined) {
           arrayPacks.push(sale);
@@ -154,7 +155,7 @@ const Sales = () => {
                 <th className="text-center"></th>
               </thead>
               <tbody>
-                {sales.map((sale, i) => {
+                {sales.map((sale: any, i) => {
                   console.log(sale, "sale in my sales");
                   const { pack: packsAddress } = getAddresses(sale.blockchain);
                   const pack = sale.nft == packsAddress;
@@ -267,8 +268,11 @@ const Sale = ({ sale, pack, setCancelId, show }) => {
       </td>
 
       <td className="py-4 pr-4">
-        <Link href={`/sale/${sale.id}`}>
-          <div className="flex flex-col items-center just">
+        <Link
+          className="flex flex-col items-center justify-center"
+          href={`/sale/${sale.id}`}
+        >
+          <>
             <Button
               decoration="fill"
               className="!text-overlay hover:!text-white rounded-xl"
@@ -276,7 +280,7 @@ const Sale = ({ sale, pack, setCancelId, show }) => {
             >
               Go to Sale
             </Button>
-          </div>
+          </>
         </Link>
       </td>
     </>

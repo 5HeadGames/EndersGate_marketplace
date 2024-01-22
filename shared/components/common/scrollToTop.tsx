@@ -1,8 +1,8 @@
-import { useRouter } from "next/router";
+import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ScrollToTop() {
-  const { asPath } = useRouter();
+  const { asPath } = useParams();
 
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import Script from "next/script";
 import {
@@ -74,7 +75,7 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
     autocomplete.setBounds(newBounds);
 
     autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
+      const place: any = autocomplete.getPlace();
       validCountry = true;
 
       clearErrors("address");

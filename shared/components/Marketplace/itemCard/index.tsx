@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { RentCard } from "./cardTypes/rentCard";
 import { OpenseaCard } from "./cardTypes/openseaCard";

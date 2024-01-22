@@ -10,6 +10,7 @@ import {
 } from "@redux/actions";
 import { findSum } from "@shared/components/common/specialFields/SpecialFields";
 import { child, get, getDatabase, ref, set } from "firebase/database";
+import { toast } from "react-hot-toast";
 
 export const loginMetamaskWallet = async () => {
   const provider = await (window as any).ethereum;
@@ -278,7 +279,6 @@ export const loadSale = async function prepare({ tokenId, blockchain }: any) {
 
 export const buyNFTsMatic = async ({
   tokenSelected,
-  addToast,
   setMessageBuy,
   cart,
   marketplace,
@@ -290,7 +290,7 @@ export const buyNFTsMatic = async ({
   blockchain,
 }) => {
   if (tokenSelected === "") {
-    addToast("Please Select a Payment Method", { appearance: "error" });
+    toast.error("Please Select a Payment Method");
     return;
   }
   try {

@@ -1,4 +1,5 @@
 /* eslint-disable no-useless-computed-key */
+"use client";
 import React from "react";
 import clsx from "clsx";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/outline";
@@ -451,7 +452,7 @@ const FiltersBoard = ({
               {[
                 { text: "Sale", value: "sale" },
                 { text: "Rent", value: "rent" },
-              ].map((item, index) => (
+              ].map((item: any, index) => (
                 <div
                   onClick={() => {
                     if (listingType !== item.value) {
@@ -538,7 +539,7 @@ const FiltersBoard = ({
                 { text: "Reaction Card", value: "reaction" },
                 { text: "Action Cards", value: "action" },
                 { text: "Avatar Cards", value: "avatar" },
-              ].map((item, index) => (
+              ].map((item: any, index) => (
                 <div
                   onClick={() => {
                     if (item.value !== cardType) {
@@ -581,7 +582,7 @@ const FiltersBoard = ({
                 </div>
               ))}
               {[{ text: "Guardian Cards", value: "guardian_cards" }].map(
-                (item, index) => (
+                (item: any, index) => (
                   <div
                     onClick={() => {
                       if (item.value !== type) {
@@ -635,7 +636,7 @@ const FiltersBoard = ({
                 { text: "Rare (silver)", value: "iron" },
                 { text: "Epic (gold)", value: "gold" },
                 { text: "Legendary", value: "legendary" },
-              ].map((item, index) => (
+              ].map((item: any, index) => (
                 <div
                   onClick={() => {
                     handleRarityChange(
@@ -740,7 +741,7 @@ const FiltersBoard = ({
                 { text: "Rare", value: "rare pack" },
                 { text: "Epic", value: "epic pack" },
                 { text: "Legendary", value: "legendary pack" },
-              ].map((item, index) => (
+              ].map((item: any, index) => (
                 <div
                   onClick={() => {
                     handlePackRarityChange(
