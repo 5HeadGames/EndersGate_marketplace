@@ -18,6 +18,7 @@ import {
   buyNFTsNative,
   getAddresses,
   getNativeBlockchain,
+  getTokensAllowed,
   getTokensAllowedMatic,
   switchChain,
 } from "@shared/web3";
@@ -66,6 +67,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const [message, setMessage] = React.useState("");
 
+  const tokensAllowed = getTokensAllowed(sale?.blockchain);
+
   const { blockchain, updateBlockchain } = useBlockchain();
   const {
     user: { ethAddress },
@@ -81,10 +84,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const getSale = async () => {
     const sale = nfts.allSales.filter((sale: any) => {
-      console.log(nfts, sale?.id?.toString(), id);
       return sale?.id?.toString() === id;
     })[0] as any;
-    console.log(sale);
     if (sale) {
       const { pack: packAddress } = getAddresses(sale?.blockchain);
       if (sale?.nft === packAddress) {
@@ -113,9 +114,9 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
       const { marketplace, MATICUSD } = getAddresses(sale.blockchain);
       if (!getNativeBlockchain(blockchain)) {
         if (!tokenSelected) {
+          setMessage("");
           return toast.error("Please select a token as a payment");
         }
-
         await buyNFTsMatic({
           tokenSelected: tokenSelected.address,
           setMessageBuy: setMessage,
@@ -152,8 +153,6 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const notAvailable =
     Math.floor(new Date().getTime() / 1000) >=
     parseInt(sale?.duration) + parseInt(sale?.startedAt);
-
-  const tokensAllowed = getTokensAllowedMatic();
 
   return (
     <>

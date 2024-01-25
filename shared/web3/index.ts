@@ -320,14 +320,14 @@ export const buyNFTsMatic = async ({
       provider,
     );
     let price: any = 0;
-    console.log(marketplaceContract, "contract");
+    console.log(marketplaceContract, "contract", token);
 
-    const ERC20 = getContractCustom("ERC20", token, provider);
+    const ERC20 = getContract("ERC20", token, blockchain);
     const addresses = getTokensAllowed(blockchain);
     if (
       !onlyAcceptsERC20(blockchain) &&
       tokenSelected ===
-        addresses.filter((item) => item.name === "MATIC")[0].address
+        addresses.filter((item) => item.name === "MATIC")[0]?.address
     ) {
       const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
       const priceMATIC = await Aggregator.methods.latestAnswer().call();
@@ -342,14 +342,16 @@ export const buyNFTsMatic = async ({
       const allowance = await ERC20.methods
         .allowance(ethAddress, marketplace)
         .call();
+
       if (allowance < 1000000000000) {
         setMessageBuy(
           `Increasing the allowance of ${
-            tokensAllowed.filter((item) => item.address === tokenSelected)[0]
-              .name
+            tokensAllowed.filter((item) => item.address == token)[0].name
           } 1/2`,
         );
-        await ERC20.methods
+        const ERC20Token = getContractCustom("ERC20", token, provider);
+
+        await ERC20Token.methods
           .increaseAllowance(
             marketplace,
             "1000000000000000000000000000000000000000000000000",
@@ -371,7 +373,7 @@ export const buyNFTsMatic = async ({
       dispatch(removeAll());
     }
   } catch (err) {
-    console.log(err);
+    console.log(err, "catch");
   }
   dispatch(onLoadSales());
   setMessageBuy(``);

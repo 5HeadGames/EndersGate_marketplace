@@ -67,6 +67,8 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
 
   const nfts = useAppSelector((state) => state.nfts);
 
+  const tokensAllowed = getTokensAllowed(rent?.blockchain);
+
   React.useEffect(() => {
     if (id && nfts?.allRents?.length) {
       getRent();
@@ -149,10 +151,6 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
     dispatch(onGetAssets({ address: user, blockchain }));
     setRentNFTDays(0);
   };
-
-  const tokensAllowed = getTokensAllowed(rent?.blockchain);
-
-  console.log(tokensAllowed, "a?");
 
   return (
     <>

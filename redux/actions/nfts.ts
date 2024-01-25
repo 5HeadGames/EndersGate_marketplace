@@ -1122,7 +1122,8 @@ export const rentBatchERC1155 = createAsyncThunk(
       };
 
       let price = "0";
-      const ERC20 = getContractCustom("ERC20", token, provider);
+      const ERC20 = getContract("ERC20", token, blockchain);
+
       const addressesAllowed = getTokensAllowed(blockchain);
       if (
         tokenSelected ===
@@ -1163,7 +1164,8 @@ export const rentBatchERC1155 = createAsyncThunk(
                 .name
             } 1/2`,
           );
-          await ERC20.methods
+          const ERC20Token = getContractCustom("ERC20", token, provider);
+          await ERC20Token.methods
             .increaseAllowance(
               rent,
               "1000000000000000000000000000000000000000000000000",

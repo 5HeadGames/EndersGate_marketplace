@@ -204,7 +204,7 @@ export const ModalSale = ({
             <Button
               decoration="fill"
               className="w-28 !font-bold text-md py-[6px] rounded-lg !text-black !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
-              onClick={buyNft}
+              onClick={() => buyNft()}
               disabled={
                 buyNFTData > sale?.amount ||
                 buyNFTData === 0 ||
