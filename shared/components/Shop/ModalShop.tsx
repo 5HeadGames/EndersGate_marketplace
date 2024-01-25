@@ -26,7 +26,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { useToasts } from "react-toast-notifications";
+
 import Web3 from "web3";
 
 const ModalShop = ({ Modal, isShow, hide, setSales }) => {
@@ -36,14 +36,14 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
   const [isValidCode, setValidCode] = useState(false);
   const [tokenSelected, setTokenSelected] = React.useState("");
   const [messageBuy, setMessageBuy] = React.useState("");
-  const { addToast } = useToasts();
+
   const [priceNative, setPriceNative] = React.useState("0");
 
   const { blockchain, updateBlockchain } = useBlockchain();
 
   const tokensAllowed = getTokensAllowed(blockchain);
 
-  console.log()
+  console.log();
 
   const { cartShop } = useSelector((state: any) => state.layout);
 
@@ -67,10 +67,10 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
     const price =
       BigInt(
         cartShop
-          ?.map((item, i) => {
+          ?.map((item: any, i) => {
             return BigInt(item.price) * BigInt(item.quantity);
           })
-          .reduce((item, acc) => {
+          .reduce((item: any, acc) => {
             return BigInt(item) + BigInt(acc);
           }) * BigInt(10 ** 8),
       ) / BigInt(priceMATIC);
@@ -138,7 +138,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
       updateBlockchain(blockchain);
 
       if (tokenSelected === "") {
-        addToast("Please Select a Payment Method", { appearance: "error" });
+        toast.error("Please Select a Payment Method");
         return;
       }
 
@@ -204,7 +204,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
         errors={errors}
         user={account}
         isValidCode={isValidCode}
-        itemsCart={cartShop.map((item, index) => {
+        itemsCart={cartShop.map((item: any, index) => {
           return (
             <div
               key={"pack-shop-" + item.nftId}
@@ -233,7 +233,11 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
                       className="sm:w-8 sm:h-8 w-7 h-7"
                       alt=""
                     />
-                    <img src="icons/POLYGON.svg" className="w-6 h-6" alt="" />
+                    <img
+                      src={`/icons/${blockchain}.svg`}
+                      className="w-6 h-6"
+                      alt=""
+                    />
                   </div>
                 </div>
               </div>

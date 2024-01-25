@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@shared/components/common/button";
 import { Typography } from "@shared/components/common/typography";
 import { Icons } from "@shared/const/Icons";
@@ -121,8 +122,8 @@ const Rents = () => {
   };
 
   React.useEffect(() => {
-    const arrayPacks = [];
-    nfts.allRents.forEach((sale, index) => {
+    const arrayPacks: any = [];
+    nfts.allRents.forEach((sale: any, index) => {
       if (sale.seller.toLowerCase() === user.toLowerCase()) {
         arrayPacks.push(sale);
       }
@@ -207,7 +208,9 @@ const Rents = () => {
                 <th className="text-center"></th>
               </thead>
               <tbody>
-                {rents.map((rent, i) => {
+                {rents.map((rent: any, i) => {
+                  const { pack: packsAddress } = getAddresses(rent.blockchain);
+                  const pack = rent.nft == packsAddress;
                   return (
                     <tr
                       className={clsx({
@@ -386,8 +389,11 @@ const Rent = ({ rent, setCancelId, setRedeemId, show, setTypeOfRequest }) => {
       </td>
 
       <td className="py-4 pr-4">
-        <Link href={`/rent/${rent.id}`}>
-          <div className="flex flex-col items-center just">
+        <Link
+          className="flex flex-col items-center justify-center"
+          href={`/rent/${rent.id}`}
+        >
+          <>
             <Button
               decoration="fill"
               className="!text-overlay hover:!text-white rounded-xl"
@@ -395,7 +401,7 @@ const Rent = ({ rent, setCancelId, setRedeemId, show, setTypeOfRequest }) => {
             >
               Go to Rent
             </Button>
-          </div>
+          </>
         </Link>
       </td>
     </>

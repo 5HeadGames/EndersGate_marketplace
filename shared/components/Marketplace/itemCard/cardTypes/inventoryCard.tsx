@@ -1,3 +1,4 @@
+"use client";
 import { AddressText } from "@shared/components/common/specialFields/SpecialFields";
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";

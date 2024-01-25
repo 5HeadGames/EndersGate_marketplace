@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import React from "react";
 import Web3 from "web3";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import {
   onLoadSales,
@@ -73,9 +74,9 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   }, [id, nfts.allRents]);
 
   const getRent = async () => {
-    const rent = nfts.allRents.filter((rent) => {
+    const rent = nfts.allRents.filter((rent: any) => {
       return rent?.id?.toString() === id;
-    })[0];
+    })[0] as any;
     const { pack: packAddress } = getAddresses(rent?.blockchain);
     if (rent?.nft === packAddress) {
       setIsPack(true);

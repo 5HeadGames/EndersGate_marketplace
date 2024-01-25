@@ -1,6 +1,6 @@
 import { XIcon } from "@heroicons/react/solid";
 import { Image } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export const CongratsListing = ({ hide, name, image }) => {
   const router = useRouter();

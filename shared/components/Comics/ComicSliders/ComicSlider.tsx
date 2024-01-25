@@ -1,16 +1,17 @@
+"use client";
 import { authStillValid } from "@shared/components/utils";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { useUser } from "@shared/context/useUser";
 import { getAddresses, getContract } from "@shared/web3";
 import { useWeb3React } from "@web3-react/core";
-import { useRouter } from "next/router";
+import { useParams, useRouter } from "next/navigation";
 import React from "react";
 import { useSelector } from "react-redux";
 import comicDetails from "../../../comics.json";
 import Reader from "./ComicsReader";
 
 export const ComicSlider = () => {
-  const { name: comicName, issue } = useRouter().query;
+  const { name: comicName, issue } = useParams().query as any;
   const router = useRouter();
   const {
     user: { ethAddress: user },

@@ -1,7 +1,8 @@
+"use client";
 import React from "react";
 import Web3 from "web3";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import {
   buyERC1155,
@@ -39,8 +40,6 @@ import {
   RentStatusInfo,
   SaleStatusInfo,
 } from "@shared/components/Profile/rents";
-import { useToast } from "@chakra-ui/react";
-import { useToasts } from "react-toast-notifications";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const {
@@ -53,6 +52,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const [isPack, setIsPack] = React.useState(false);
   const [flippedCard, setFlippedCard] = React.useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const dispatch = useAppDispatch();
   const [currentOrder, setCurrentOrder] = React.useState("lowest_price");
   const orderMapper = {
@@ -73,8 +73,6 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const nfts = useAppSelector((state) => state.nfts);
 
-  const { addToast } = useToasts();
-
   React.useEffect(() => {
     if (id && nfts?.allSales?.length) {
       getSale();
@@ -82,9 +80,11 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   }, [id, nfts.allSales]);
 
   const getSale = async () => {
-    const sale = nfts.allSales.filter((sale) => {
+    const sale = nfts.allSales.filter((sale: any) => {
+      console.log(nfts, sale?.id?.toString(), id);
       return sale?.id?.toString() === id;
-    })[0];
+    })[0] as any;
+    console.log(sale);
     if (sale) {
       const { pack: packAddress } = getAddresses(sale?.blockchain);
       if (sale?.nft === packAddress) {
@@ -99,7 +99,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const buyNft = async () => {
     console.log("BUY");
     if (!user) {
-      router.push("/login?redirect=true&redirectAddress=" + router.pathname);
+      router.push("/login?redirect=true&redirectAddress=" + pathname);
     }
     try {
       const changed = await switchChain(CHAIN_IDS_BY_NAME[sale.blockchain]);
@@ -118,7 +118,6 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
         await buyNFTsMatic({
           tokenSelected: tokenSelected.address,
-          addToast,
           setMessageBuy: setMessage,
           cart: [{ ...sale, quantity: buyNFTData }],
           marketplace,

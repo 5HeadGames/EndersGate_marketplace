@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@shared/components/common/button";
 import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";

@@ -1,3 +1,4 @@
+"use client";
 import { LoadingOutlined } from "@ant-design/icons";
 import clsx from "clsx";
 import React from "react";
@@ -5,10 +6,10 @@ import { timer } from "../common/CustomTimeout";
 import NFTCardSlider from "../Marketplace/itemCard/cardSliderMain";
 
 export const SliderMain = ({ salesDefault, cards }) => {
-  const [arraySlider, setArraySlider] = React.useState([]);
+  const [arraySlider, setArraySlider] = React.useState<any>([]);
   const [arrayPos, setArrayPos] = React.useState([0, 1, 2, 3]);
 
-  const timeoutRef = React.useRef(null);
+  const timeoutRef: any = React.useRef(null);
 
   function resetTimeout() {
     timeoutRef.current.pause();

@@ -1,3 +1,4 @@
+"use client";
 import { InputProps } from "@shared/interfaces/common";
 import * as React from "react";
 import { Switch } from "@headlessui/react";

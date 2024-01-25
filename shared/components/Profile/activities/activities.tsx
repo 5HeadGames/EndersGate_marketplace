@@ -1,3 +1,4 @@
+"use client";
 import { Typography } from "@shared/components/common/typography";
 import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
@@ -21,31 +22,6 @@ const Activities = () => {
   const [page, setPage] = React.useState(0);
   const [columnSelected, setColumnSelected] = React.useState("trading_cards");
   const { pack } = getAddressesMatic();
-
-  const loadEvents = async () => {
-    // // const relation = user.relation("events");
-    // const query = relation.query();
-    // const activities = await query.find({});
-    // setActivities(
-    //   activities
-    //     .map((act) => ({
-    //       createdAt: act.get("createdAt"),
-    //       type: act.get("type"),
-    //       metadata: JSON.parse(act.get("metadata")),
-    //     }))
-    //     .sort((a, b) => {
-    //       return (
-    //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    //       );
-    //     }),
-    // );
-  };
-
-  React.useEffect(() => {
-    if (user) {
-      loadEvents();
-    }
-  }, [user]);
 
   return (
     <div className="flex flex-col items-center w-full">

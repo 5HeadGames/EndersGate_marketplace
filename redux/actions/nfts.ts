@@ -1,3 +1,4 @@
+"use client";
 /* eslint-disable no-loop-func */
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Web3 from "web3";
@@ -110,13 +111,13 @@ export const onLoadSales = createAsyncThunk(
         ? MAINNET_CHAIN_IDS
         : TESTNET_CHAIN_IDS;
 
-    let listsCreated = [],
-      listsSuccessful = [],
-      allSales = [],
-      rentsListed = [],
-      rentsInRent = [],
-      allRents = [],
-      rentsFinished = [],
+    let listsCreated: any = [],
+      listsSuccessful: any = [],
+      allSales: any = [],
+      rentsListed: any = [],
+      rentsInRent: any = [],
+      allRents: any = [],
+      rentsFinished: any = [],
       dailyVolume = 0,
       cardsSold = 0;
     try {
@@ -250,17 +251,20 @@ export const onLoadSales = createAsyncThunk(
 
       const listsCreatedPartial = allSalesSorted
         .concat(allRentsSorted)
-        ?.filter(
-          (sale: Sale | Rent) =>
-            sale.status === "0" &&
+        ?.filter((sale: Sale | Rent) => {
+          return (
+            sale.status == "0" &&
             (Math.floor(new Date().getTime() / 1000) <=
               parseInt(sale?.duration) + parseInt(sale?.startedAt) ||
-              (sale as Rent).rent),
-        );
+              (sale as Rent).rent)
+          );
+        });
 
       const listsSuccessfulPartial = allSalesSorted
         .concat(allRentsSorted)
         ?.filter((sale: Sale) => sale.status === "1");
+
+      console.log(listsCreatedPartial, "lists");
 
       listsCreatedPartial.forEach((sale: Sale) => {
         listsCreated = [...listsCreated, sale];
@@ -282,7 +286,7 @@ export const onLoadSales = createAsyncThunk(
         cardsSoldPartial.toString(),
       ) as any;
 
-      console.log(allSalesSorted);
+      console.log(listsCreated, "lists");
 
       return {
         allSales: allSalesSorted,
@@ -408,7 +412,7 @@ export const onGetAssets = createAsyncThunk(
         //   )
         //   .call();
 
-        let balanceWrapped = [];
+        let balanceWrapped: any = [];
 
         balanceWrapped = await rentContract.methods
           .balanceOfBatch(
@@ -774,11 +778,11 @@ export const buyFromShop = createAsyncThunk(
         const preprice =
           BigInt(
             cartShop
-              ?.map((item, i) => {
+              ?.map((item: any, i) => {
                 console.log(item.price, "item");
                 return BigInt(item.price) * BigInt(item.quantity);
               })
-              .reduce((item, acc) => {
+              .reduce((item: any, acc) => {
                 return BigInt(item) + BigInt(acc);
               }) * BigInt(10 ** 8),
           ) / BigInt(priceMATIC);
@@ -1146,10 +1150,10 @@ export const rentBatchERC1155 = createAsyncThunk(
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
         const preprice =
           (cartRent
-            ?.map((item, i) => {
+            ?.map((item: any, i) => {
               return (parseInt(item.price) / 10 ** 6) * daysOfRent;
             })
-            .reduce((item, acc) => {
+            .reduce((item: any, acc) => {
               return item + acc;
             }) *
             10 ** 8) /
@@ -1243,10 +1247,10 @@ export const rentBatchERC1155Native = createAsyncThunk(
       };
 
       const price = cartRent
-        ?.map((item, i) => {
+        ?.map((item: any, i) => {
           return BigInt(item.price) * BigInt(daysOfRent);
         })
-        .reduce((item, acc) => {
+        .reduce((item: any, acc) => {
           return BigInt(item) + BigInt(acc);
         })
         .toString();

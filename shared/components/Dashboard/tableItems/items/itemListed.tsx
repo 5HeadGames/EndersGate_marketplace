@@ -1,3 +1,4 @@
+"use client";
 import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
@@ -112,10 +113,11 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
           </td>
 
           <td className="bg-secondary  cursor-pointer py-4 text-center w-8">
-            <Link href={`/sale/${id}`}>
-              <a href={`/sale/${id}`} className="flex justify-center shrink-0">
-                <img src={Icons.arrowLeft} className="w-5" alt="" />
-              </a>
+            <Link
+              className="bg-secondary  cursor-pointer py-4 text-center w-8"
+              href={`/sale/${id}`}
+            >
+              <img src={Icons.arrowLeft} className="w-5" alt="" />
             </Link>
           </td>
         </>

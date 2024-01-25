@@ -1,10 +1,11 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 
 import Modal from "components/common/modal";
 import { WALLETS } from "utils/connection/utils";
 import { Connection } from "utils/connection";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface WalletModalProps {
   showModal: boolean;

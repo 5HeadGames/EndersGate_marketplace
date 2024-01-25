@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import React from "react";
 import useMagicLink from "@shared/hooks/useMagicLink";
-import { useRouter } from "next/dist/client/router";
 import clsx from "clsx";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppDispatch } from "redux/store";
@@ -24,6 +24,7 @@ import ModalShop from "../Shop/ModalShop";
 import { useModal } from "@shared/hooks/modal";
 import { Button } from "../common/button/button";
 import Link from "next/link";
+import { useRouter, useParams, usePathname } from "next/navigation";
 
 const styles = {
   content: {
@@ -45,18 +46,8 @@ export default function AppLayout({ children }) {
   });
   const [search, setSearch] = React.useState("");
 
-  const nfts = useSelector((state: any) => state.nfts);
-
-  console.log(
-    nfts.allSales.filter((s) => s.blockchain === "matic" && s.nftId === "215"),
-    "Dracul",
-  );
-  console.log(
-    nfts.allSales.filter((s) => s.blockchain === "matic" && s.nftId === "230"),
-    "Eross",
-  );
-
   const router = useRouter();
+  const pathname = usePathname();
 
   const { login, logout } = useMagicLink();
 
@@ -65,8 +56,6 @@ export default function AppLayout({ children }) {
   const {
     user: { ethAddress, providerName },
   } = useUser();
-
-  console.log(router, "router");
 
   const { cart, cartRent } = useSelector((state: any) => state.layout);
 
@@ -87,8 +76,12 @@ export default function AppLayout({ children }) {
       if (authStillValid()) {
         updateBlockchain(chain || "matic");
         WALLETS.forEach(async (wallet) => {
-          if (wallet.title === typeOfConnection) {
-            await wallet.connection.connector.activate();
+          try {
+            if (wallet.title === typeOfConnection) {
+              await wallet.connection.connector.activate();
+            }
+          } catch (err) {
+            console.log(err);
           }
         });
         if (typeOfConnection === "magic") {
@@ -207,7 +200,7 @@ export default function AppLayout({ children }) {
               className="text-dark text-xl flex items-center justify-center px-2 cursor-pointer"
               onClick={() => {
                 if (search) {
-                  if (router.asPath === "/marketplace?search=" + search) {
+                  if (pathname === "/marketplace?search=" + search) {
                     router.push("/marketplace");
                   }
                   router.push("/marketplace?search=" + search);
@@ -219,17 +212,16 @@ export default function AppLayout({ children }) {
           </div>
         </div>
         <div className="lg:flex hidden gap-4 shrink-0 items-center">
-          {navItems.map((item, index) => {
+          {navItems.map((item: any, index) => {
             return (
-              <>
+              <React.Fragment key={item.name}>
                 <NavbarItem
-                  key={item.name}
                   name={item.name}
                   link={item.link}
-                  route={router.asPath}
+                  route={pathname}
                   notification={false}
                 />
-              </>
+              </React.Fragment>
             );
           })}
           {ethAddress ? (
@@ -240,7 +232,7 @@ export default function AppLayout({ children }) {
                     "!opacity-100":
                       cartOpen || cart.length + cartRent.length > 0,
                   },
-                  { "!hidden": router.pathname == "/shop" },
+                  { "!hidden": pathname == "/shop" },
                   "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
                 )}
                 onClick={() => {
@@ -265,9 +257,9 @@ export default function AppLayout({ children }) {
                 notification={userRentsNotificationArray.length}
               >
                 <div className="flex flex-col items-center px-4 border border-overlay-border rounded-xl">
-                  {profileItems.map((item, index) => {
+                  {profileItems.map((item: any, index) => {
                     return (
-                      <>
+                      <React.Fragment key={item.name + index}>
                         {item.onClick ? (
                           <div
                             className={clsx(
@@ -284,11 +276,11 @@ export default function AppLayout({ children }) {
                             key={item.name}
                             name={item.name}
                             link={item.link}
-                            route={router.asPath}
+                            route={pathname}
                             notification={item.notification}
                           />
                         )}
-                      </>
+                      </React.Fragment>
                     );
                   })}
                 </div>
@@ -299,11 +291,11 @@ export default function AppLayout({ children }) {
             <NavbarItem
               name={"LOG IN"}
               link={
-                router.asPath !== "/login"
-                  ? `/login?redirect=true&redirectAddress=${router.asPath}`
-                  : router.asPath
+                pathname !== "/login"
+                  ? `/login?redirect=true&redirectAddress=${pathname}`
+                  : pathname
               }
-              route={router.asPath}
+              route={pathname}
               notification={false}
             />
           )}
@@ -312,7 +304,7 @@ export default function AppLayout({ children }) {
           <div
             className={clsx(
               { "!opacity-100": cartOpen || cart.length > 0 },
-              { hidden: router.pathname === "/shop" },
+              { hidden: pathname === "/shop" },
               "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
             )}
             onClick={() => {
@@ -416,26 +408,27 @@ export default function AppLayout({ children }) {
               alt=""
             />
           </div>
-          <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4">
-            <Link href="/login?redirect=true&redirectAddress=/profile/swap">
-              <Button
-                className="w-1/3 py-2 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md text-white font-bold"
-                onClick={() => {
-                  hide();
-                }}
-              >
-                Login
-              </Button>
-            </Link>
-          </div>
+          <Link
+            href="/login?redirect=true&redirectAddress=/profile/swap"
+            className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4"
+          >
+            <Button
+              className="w-1/3 py-2 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md text-white font-bold"
+              onClick={() => {
+                hide();
+              }}
+            >
+              Login
+            </Button>
+          </Link>
         </div>
       </ModalSwap>
 
       <div className={clsx("bg-overlay flex flex-col")} style={styles.content}>
         {children}
       </div>
-      {!router.asPath.includes("/comics") &&
-        !router.asPath.includes("/pack_opening") && <Footer />}
+      {!pathname?.includes("/comics") &&
+        !pathname?.includes("/pack_opening") && <Footer />}
     </div>
   );
 }

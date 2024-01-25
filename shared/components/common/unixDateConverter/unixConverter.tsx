@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+"use client";
 import React from "react";
 
 export const TimeConverter: React.FC<any> = ({ UNIX_timestamp }) => {

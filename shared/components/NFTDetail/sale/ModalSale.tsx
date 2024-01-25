@@ -1,3 +1,4 @@
+"use client";
 import { ExclamationCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button } from "@shared/components/common/button/button";
 import { Icons } from "@shared/const/Icons";
@@ -102,7 +103,7 @@ export const ModalSale = ({
             {sale && sale.price && (
               <span className="text-white w-24 text-center font-bold text-green-button">
                 {isNaN(
-                  parseInt(formatPrice(sale.price, sale.blockchain)) *
+                  parseInt(formatPrice(sale.price, sale.blockchain) as any) *
                     buyNFTData,
                 )
                   ? 0
@@ -121,7 +122,7 @@ export const ModalSale = ({
                     ?.map((item) => item.toLowerCase())
                     ?.includes(item.address.toLowerCase()),
                 )
-                .map((item, index) => {
+                .map((item: any, index) => {
                   return (
                     <div
                       className={clsx(

@@ -1,3 +1,4 @@
+"use client";
 import clsx from "clsx";
 import Link from "next/link";
 import * as React from "react";
@@ -207,23 +208,21 @@ export const ButtonContent: React.FC<
     <>
       {href ? (
         <Link href={href}>
-          <a>
-            <Button
-              size={size}
-              label={label}
-              disabled={disabled}
-              href={href}
-              decoration={decoration}
-              social={social}
-              icon={icon}
-              tag={tag}
-              className={className}
-              type={type}
-              {...props}
-            >
-              {children}
-            </Button>
-          </a>
+          <Button
+            size={size}
+            label={label}
+            disabled={disabled}
+            href={href}
+            decoration={decoration}
+            social={social}
+            icon={icon}
+            tag={tag}
+            className={className}
+            type={type}
+            {...props}
+          >
+            {children}
+          </Button>
         </Link>
       ) : (
         <Button

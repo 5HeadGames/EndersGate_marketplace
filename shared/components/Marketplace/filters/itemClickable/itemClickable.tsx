@@ -1,3 +1,4 @@
+"use client";
 import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import { Icons } from "@shared/const/Icons";

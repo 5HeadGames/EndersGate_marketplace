@@ -1,3 +1,4 @@
+"use client";
 /* eslint-disable react-hooks/exhaustive-deps */
 import { DropdownCart } from "../common/dropdowns/dropdownCart/dropdownCart";
 import { useAppDispatch } from "redux/store";
@@ -7,7 +8,6 @@ import {
   AddressText,
   findSum,
 } from "@shared/components/common/specialFields/SpecialFields";
-import { useToasts } from "react-toast-notifications";
 import {
   buyNFTsMatic,
   buyNFTsNative,
@@ -40,7 +40,6 @@ export const Cart = ({
 }) => {
   const [messageBuy, setMessageBuy] = React.useState("");
 
-  const { addToast } = useToasts();
   const dispatch = useAppDispatch();
   const { showWallet } = useMagicLink();
   const {
@@ -119,7 +118,7 @@ export const Cart = ({
       }
       buyNFTsMatic({
         tokenSelected,
-        addToast,
+
         setMessageBuy,
         cart: cartSales,
         marketplace,
@@ -274,7 +273,7 @@ export const Cart = ({
             </h2>{" "}
           </div>
           <div className="px-4 py-2 pb-4 gap-2 flex flex-col items-center w-full">
-            {cart.map((item, index) => {
+            {cart.map((item: any, index) => {
               return (
                 <CartItem
                   pack={pack}
@@ -421,7 +420,7 @@ const TokenSelection = ({
                 });
                 return intersection;
               })
-              .map((item, index) => {
+              .map((item: any, index) => {
                 return (
                   <div
                     key={tokenSelected + item.name}

@@ -1,3 +1,4 @@
+"use client";
 import {
   ExclamationCircleOutlined,
   LoadingOutlined,
@@ -107,7 +108,7 @@ export const ModalRent = ({
                 <span className="text-white w-24 text-center font-bold text-green-button">
                   {isNaN(
                     parseInt(
-                      formatPrice(parseInt(rent.price), rent.blockchain),
+                      formatPrice(parseInt(rent.price), rent.blockchain) as any,
                     ) * rentNFTDays,
                   )
                     ? 0
@@ -129,7 +130,7 @@ export const ModalRent = ({
                       ?.map((item) => item.toLowerCase())
                       ?.includes(item.address.toLowerCase()),
                   )
-                  .map((item, index) => {
+                  .map((item: any, index) => {
                     return (
                       <div
                         className={clsx(

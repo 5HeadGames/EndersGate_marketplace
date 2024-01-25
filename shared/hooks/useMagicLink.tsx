@@ -21,7 +21,7 @@ export default function useMagicLink(networkId: number = 137) {
   const [magic, setMagic] = useState<any>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<any>(false);
 
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState<any>(null);
 
   const { blockchain } = useBlockchain();
 

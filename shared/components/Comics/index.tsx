@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import React from "react";
 import NftMainBanner from "./NftMainBanner";
 import NftFooter from "./NftFooter";
@@ -121,7 +122,7 @@ function Comics() {
               ?.map((item) => {
                 return (parseInt(item.price) / 10 ** 6) * item.quantity;
               })
-              ?.reduce((item, acc) => {
+              ?.reduce((item: any, acc) => {
                 return item + acc;
               }),
           ) *
@@ -138,11 +139,11 @@ function Comics() {
           ?.map((item) => {
             return BigInt(item.price) * BigInt(item.quantity);
           })
-          ?.reduce((item, acc) => {
+          ?.reduce((item: any, acc) => {
             return BigInt(item) + BigInt(acc);
           });
 
-        setPriceNative(formatPrice(price, blockchain));
+        setPriceNative(formatPrice(price, blockchain) as any);
       }
     } catch (e) {}
   };

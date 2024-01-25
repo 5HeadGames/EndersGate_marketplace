@@ -279,7 +279,6 @@ export const loadSale = async function prepare({ tokenId, blockchain }: any) {
 
 export const buyNFTsMatic = async ({
   tokenSelected,
-  addToast,
   setMessageBuy,
   cart,
   marketplace,
@@ -291,7 +290,7 @@ export const buyNFTsMatic = async ({
   blockchain,
 }) => {
   if (tokenSelected === "") {
-    addToast("Please Select a Payment Method", { appearance: "error" });
+    toast.error("Please Select a Payment Method");
     return;
   }
   try {
@@ -550,7 +549,7 @@ export const checkFirebaseInfluencerCode = async ({
 };
 
 export const getSFUEL = async (address) => {
-  const pk = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+  const pk: any = process.env.NEXT_PUBLIC_PRIVATE_KEY;
   const skale = CHAINS[CHAIN_IDS_BY_NAME["skl"]];
   const web3 = getWeb3(skale.urls[0]);
   console.log(address);
@@ -565,7 +564,7 @@ export const getSFUEL = async (address) => {
   };
 
   if (parseFloat(Web3.utils.fromWei(balance, "ether")) <= 0.000001) {
-    const signedTx = await web3.eth.accounts.signTransaction(params, pk);
+    const signedTx: any = await web3.eth.accounts.signTransaction(params, pk);
     web3.eth
       .sendSignedTransaction(signedTx.rawTransaction)
       .on("transactionHash", () => {
