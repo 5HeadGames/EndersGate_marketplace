@@ -232,11 +232,11 @@ export const blockchains = [
   //   value: "imx",
   //   image: "/images/imx.png",
   // },
-  // {
-  //   name: "NEBULA HUB",
-  //   value: "skl",
-  //   image: "/images/skl.png",
-  // },
+  {
+    name: "NEBULA HUB",
+    value: "skl",
+    image: "/images/skl.png",
+  },
 ];
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(
