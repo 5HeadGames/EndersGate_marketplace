@@ -7,10 +7,18 @@ import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 
 const getMagicConfig = (networkId: any) => {
   const network = CHAINS[networkId];
-  return {
-    rpcUrl: network.urls[0],
-    chainId: networkId,
-  };
+  if (network) {
+    return {
+      rpcUrl: network?.urls[0],
+      chainId: networkId,
+    };
+  } else {
+    const network = CHAINS[CHAIN_IDS_BY_NAME["matic"]];
+    return {
+      rpcUrl: network?.urls[0],
+      chainId: networkId,
+    };
+  }
 };
 
 export default function useMagicLink(networkId: number = 137) {

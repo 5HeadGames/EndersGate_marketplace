@@ -90,20 +90,20 @@ export const CHAINS: {
   //   blockExplorerUrls: ["https://gsc-mainnet.evm.findorascan.io/"],
   //   blockExplorer: "https://gsc-mainnet.evm.findorascan.io/",
   // },
-  503129905: {
-    urls: ["https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird"],
-    name: "Nebula Hub",
-    rpcUrls: [
-      "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
-    ],
-    nativeCurrency: SKL,
-    blockExplorerUrls: [
-      "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
-    ],
-    blockExplorer:
-      "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
-    type: "both",
-  },
+  // 503129905: {
+  //   urls: ["https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird"],
+  //   name: "Nebula Hub",
+  //   rpcUrls: [
+  //     "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
+  //   ],
+  //   nativeCurrency: SKL,
+  //   blockExplorerUrls: [
+  //     "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
+  //   ],
+  //   blockExplorer:
+  //     "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
+  //   type: "both",
+  // },
   // 13472: {
   //   urls: [" https://rpc.testnet.immutable.com"],
   //   name: "Inmutable X Testnet",
@@ -114,25 +114,25 @@ export const CHAINS: {
   //   type: "testnet",
   // },
 
-  59144: {
-    urls: ["https://linea.blockpi.network/v1/rpc/public"],
-    name: "Linea",
-    rpcUrls: ["https://linea.blockpi.network/v1/rpc/public"],
-    nativeCurrency: ETH,
-    blockExplorerUrls: ["https://lineascan.build/"],
-    blockExplorer: "https://lineascan.build/",
-    type: "mainnet",
-  },
+  // 59144: {
+  //   urls: ["https://linea.blockpi.network/v1/rpc/public"],
+  //   name: "Linea",
+  //   rpcUrls: ["https://linea.blockpi.network/v1/rpc/public"],
+  //   nativeCurrency: ETH,
+  //   blockExplorerUrls: ["https://lineascan.build/"],
+  //   blockExplorer: "https://lineascan.build/",
+  //   type: "mainnet",
+  // },
 
-  59140: {
-    urls: ["https://rpc.goerli.linea.build"],
-    name: "Linea Goerli",
-    rpcUrls: ["https://rpc.goerli.linea.build"],
-    nativeCurrency: LINEA,
-    blockExplorerUrls: ["https://explorer.goerli.linea.build/"],
-    blockExplorer: "https://explorer.goerli.linea.build/",
-    type: "testnet",
-  },
+  // 59140: {
+  //   urls: ["https://rpc.goerli.linea.build"],
+  //   name: "Linea Goerli",
+  //   rpcUrls: ["https://rpc.goerli.linea.build"],
+  //   nativeCurrency: LINEA,
+  //   blockExplorerUrls: ["https://explorer.goerli.linea.build/"],
+  //   blockExplorer: "https://explorer.goerli.linea.build/",
+  //   type: "testnet",
+  // },
 
   137: {
     urls: [
@@ -232,11 +232,11 @@ export const blockchains = [
   //   value: "imx",
   //   image: "/images/imx.png",
   // },
-  {
-    name: "NEBULA HUB",
-    value: "skl",
-    image: "/images/skl.png",
-  },
+  // {
+  //   name: "NEBULA HUB",
+  //   value: "skl",
+  //   image: "/images/skl.png",
+  // },
 ];
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(
