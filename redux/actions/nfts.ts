@@ -583,13 +583,9 @@ export const onApproveERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      const marketplaceContract = getContractCustom(
-        "ERC721Seadrop",
-        pack,
-        provider,
-      );
+      const ERC721SeaDrop = getContractCustom("ERC721Seadrop", pack, provider);
 
-      await marketplaceContract.methods
+      await ERC721SeaDrop.methods
         .setApprovalForAll(exchange, true)
         .send({ from: from });
 

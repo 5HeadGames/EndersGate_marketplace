@@ -12,7 +12,11 @@ import {
 import { XIcon } from "@heroicons/react/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "@shared/hooks/modal";
-import { getAddressesMatic, getContractCustom } from "@shared/web3";
+import {
+  getAddressesMatic,
+  getContract,
+  getContractCustom,
+} from "@shared/web3";
 import Web3 from "web3";
 import {
   onApproveERC1155,
@@ -173,7 +177,6 @@ const SwapComponent = () => {
   };
 
   const exchangeAllPacks = async () => {
-    console.log("a?");
     setLoading(true);
     try {
       const packsToExchange = passPacks.filter(
@@ -241,13 +244,16 @@ const SwapComponent = () => {
         (item) => balanceEG[item.nameKey] > 0,
       );
 
+      if (cardsToExchange.length == 0) {
+        return toast.error("You don't have cards to exchange.");
+      }
+
       for (const element of cardsToExchange) {
         const item = element;
-        const eg = getContractCustom("ERC721Seadrop", item.address, provider);
+        const eg = getContract("ERC721Seadrop", item.address, blockchain);
         const isApproved = await eg.methods
           .isApprovedForAll(user, exchangeEG)
           .call();
-        console.log(isApproved, user, exchangeEG, "approved?");
         if (isApproved == false) {
           const res: any = dispatch(
             onApproveERC1155({
