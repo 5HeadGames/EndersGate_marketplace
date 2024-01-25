@@ -105,9 +105,22 @@ export default function AppLayout({ children }) {
   React.useEffect(() => {
     if (providerName.toLowerCase() === "web3react") {
       (window as any).ethereum?.on("accountsChanged", function (accounts) {
-        onGetAssets({ address: accounts[0], blockchain });
-        console.log(user, { ...user, ethAddress: accounts[0] });
-        updateUser({ ...user, ethAddress: accounts[0] });
+        if (accounts) {
+          onGetAssets({ address: accounts[0], blockchain });
+          console.log(user, { ...user, ethAddress: accounts[0] });
+          updateUser({ ...user, ethAddress: accounts[0] });
+        } else {
+          updateUser({
+            ethAddress: "",
+            email: "",
+            provider: "",
+            providerName: "",
+          });
+          localStorage.removeItem("typeOfConnection");
+          localStorage.removeItem("loginTime");
+          localStorage.removeItem("chain");
+          router.push("/");
+        }
       });
     }
   }, [user]);
