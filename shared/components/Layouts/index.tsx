@@ -104,8 +104,10 @@ export default function AppLayout({ children }) {
 
   React.useEffect(() => {
     if (providerName.toLowerCase() === "web3react") {
+      console.log("inside");
       (window as any).ethereum?.on("accountsChanged", function (accounts) {
-        if (accounts) {
+        console.log(accounts, "accounts");
+        if (accounts.length > 0) {
           onGetAssets({ address: accounts[0], blockchain });
           console.log(user, { ...user, ethAddress: accounts[0] });
           updateUser({ ...user, ethAddress: accounts[0] });
@@ -119,7 +121,7 @@ export default function AppLayout({ children }) {
           localStorage.removeItem("typeOfConnection");
           localStorage.removeItem("loginTime");
           localStorage.removeItem("chain");
-          router.push("/");
+          (window as any).location.reload();
         }
       });
     }
