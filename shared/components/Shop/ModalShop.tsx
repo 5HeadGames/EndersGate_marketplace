@@ -234,7 +234,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
                       alt=""
                     />
                     <img
-                      src={`/icons/${blockchain}.svg`}
+                      src={`/images/${blockchain}.png`}
                       className="w-6 h-6"
                       alt=""
                     />

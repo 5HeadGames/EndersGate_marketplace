@@ -365,7 +365,7 @@ const CartComic = ({
                   {priceNative}
                   <img
                     src={
-                      `images/${blockchain}.png`
+                      `/images/${blockchain}.png`
                       // :"icons/eth.png"
                     }
                     className="w-3 h-3"

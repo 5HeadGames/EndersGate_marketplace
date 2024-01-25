@@ -435,6 +435,38 @@ export const redeemNFT = async ({ tokenId, provider, user, blockchain }) => {
   }
 };
 
+export const onCancelSale = async (args: {
+  tokenId;
+  provider;
+  user;
+  blockchain;
+}) => {
+  try {
+    const { tokenId, provider, user, blockchain } = args;
+
+    const { marketplace } = getAddresses(blockchain);
+    const marketplaceContract = getContractCustom(
+      getNativeBlockchain(blockchain)
+        ? "ClockSaleFindora"
+        : onlyAcceptsERC20(blockchain)
+        ? "ClockSaleOnlyMultiToken"
+        : "ClockSale",
+      marketplace,
+      provider,
+    );
+    console.log("before tx");
+    const tx = await marketplaceContract.methods
+      .cancelSale(tokenId)
+      .send({ from: user });
+
+    console.log(tx, marketplace, marketplaceContract);
+    return tx;
+  } catch (err) {
+    console.log(err);
+    return { err };
+  }
+};
+
 export const isPack = (address: string, blockchain: string) => {
   return address === getAddresses(blockchain)?.pack;
 };

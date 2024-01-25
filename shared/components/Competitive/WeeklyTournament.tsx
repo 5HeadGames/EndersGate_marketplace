@@ -190,7 +190,7 @@ export const WeeklyTournament = ({ lastWinners }: any) => {
                       <div className="flex gap-2 items-end">
                         <img src="/icons/logo.png" className="w-10" alt="" />
                         <img
-                          src={`/icons/${blockchain}.svg`}
+                          src={`/images/${blockchain}.png`}
                           className="w-7"
                           alt=""
                         />
@@ -226,7 +226,7 @@ export const WeeklyTournament = ({ lastWinners }: any) => {
                       <div className="flex gap-2 items-end">
                         <img src="/icons/logo.png" className="w-10" alt="" />
                         <img
-                          src={`/icons/${blockchain}.svg`}
+                          src={`/images/${blockchain}.png`}
                           className="w-7"
                           alt=""
                         />
@@ -262,7 +262,7 @@ export const WeeklyTournament = ({ lastWinners }: any) => {
                       <div className="flex gap-2 items-end">
                         <img src="/icons/logo.png" className="w-10" alt="" />
                         <img
-                          src={`/icons/${blockchain}.svg`}
+                          src={`/images/${blockchain}.png`}
                           className="w-7"
                           alt=""
                         />

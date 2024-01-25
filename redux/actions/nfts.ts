@@ -123,7 +123,6 @@ export const onLoadSales = createAsyncThunk(
     try {
       for (const element of blockchains) {
         const blockchain: any = element;
-        console.log(CHAIN_NAME_BY_ID[blockchain]);
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
 
@@ -209,8 +208,6 @@ export const onLoadSales = createAsyncThunk(
         }
       }
 
-      console.log("all got");
-
       /* SALES */
       const allSalesSorted = allSales
         .sort((a, b) => a.startedAt - b.startedAt)
@@ -264,8 +261,6 @@ export const onLoadSales = createAsyncThunk(
         .concat(allRentsSorted)
         ?.filter((sale: Sale) => sale.status === "1");
 
-      console.log(listsCreatedPartial, "lists");
-
       listsCreatedPartial.forEach((sale: Sale) => {
         listsCreated = [...listsCreated, sale];
       });
@@ -285,8 +280,6 @@ export const onLoadSales = createAsyncThunk(
         cardsSold.toString(),
         cardsSoldPartial.toString(),
       ) as any;
-
-      console.log(listsCreated, "lists");
 
       return {
         allSales: allSalesSorted,
@@ -779,7 +772,6 @@ export const buyFromShop = createAsyncThunk(
           BigInt(
             cartShop
               ?.map((item: any, i) => {
-                console.log(item.price, "item");
                 return BigInt(item.price) * BigInt(item.quantity);
               })
               .reduce((item: any, acc) => {
@@ -787,8 +779,6 @@ export const buyFromShop = createAsyncThunk(
               }) * BigInt(10 ** 8),
           ) / BigInt(priceMATIC);
 
-        console.log(preprice, "preprice");
-        console.log("pre wei", (preprice * BigInt(10 ** 12)).toString());
         price = Web3.utils.toWei(
           (
             parseFloat(
@@ -1071,8 +1061,6 @@ export const rentERC1155Native = createAsyncThunk(
     try {
       const { rent } = getAddresses(blockchain);
       const rentContract = getContractCustom("RentNative", rent, provider);
-
-      console.log(user, daysOfRent, token, bid);
 
       await rentContract.methods
         .rent(tokenId, daysOfRent)
@@ -1357,30 +1345,6 @@ export const buyERC1155Native = createAsyncThunk(
   },
 );
 
-export const onCancelSale = createAsyncThunk(
-  actionTypes.CANCEL_NFT,
-  async function prepare(args: {
-    tokenId: number | string;
-    provider: any;
-    user: any;
-    blockchain: any;
-  }) {
-    const { tokenId, provider, user, blockchain } = args;
-
-    const { marketplace } = getAddresses(blockchain);
-    const marketplaceContract = getContractCustom(
-      getNativeBlockchain(blockchain)
-        ? "ClockSaleFindora"
-        : onlyAcceptsERC20(blockchain)
-        ? "ClockSaleOnlyMultiToken"
-        : "ClockSale",
-      marketplace,
-      provider,
-    );
-    return marketplaceContract.methods.cancelSale(tokenId).send({ from: user });
-  },
-);
-
 export const cancelRent = createAsyncThunk(
   actionTypes.CANCEL_RENT_NFT,
   async function prepare(args: {
@@ -1415,7 +1379,6 @@ export const redeemRent = createAsyncThunk(
       rent,
       provider,
     );
-    console.log(tokenId, "pre redeem");
     const tx = await rentContract.methods
       .redeemRent(tokenId)
       .send({ from: user });

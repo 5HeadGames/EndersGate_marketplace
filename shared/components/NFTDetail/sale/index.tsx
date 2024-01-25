@@ -388,7 +388,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                           </span> */}
                         </h2>
                         <img
-                          src={`/icons/${blockchain}.svg`}
+                          src={`/images/${sale.blockchain}.png`}
                           className="md:h-10 md:w-10 w-8 h-8"
                           alt=""
                         />

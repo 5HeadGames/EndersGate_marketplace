@@ -247,7 +247,7 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
                     </div>
                   </div>
                   <div className="flex lg:text-md items-center gap-2 text-sm font-medium">
-                    {getTokensAllowedMatic()
+                    {getTokensAllowed(rent.blockchain)
                       .filter((item) => {
                         return rent?.tokens
                           ?.map((token) => token.toLowerCase())

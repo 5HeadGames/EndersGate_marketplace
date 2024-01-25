@@ -284,7 +284,7 @@ export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
                     </div>
                   </div>
                   <div className="flex lg:text-md items-center gap-2 text-sm font-medium">
-                    {getTokensAllowedMatic()
+                    {getTokensAllowed(sale.blockchain)
                       .filter((item) => {
                         return sale?.tokens
                           ?.map((token) => token.toLowerCase())

@@ -67,7 +67,7 @@ export const InventoryCard = (props) => {
               <div className="flex justify-between text-md text-white ">
                 <div className="flex items-center gap-2">
                   <img
-                    src={`/icons/${blockchain}.svg`}
+                    src={`/images/${blockchain}.png`}
                     className="h-8 w-8"
                     alt=""
                   />

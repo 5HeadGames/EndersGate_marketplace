@@ -103,7 +103,7 @@ export const OpenseaCard = (props) => {
               >
                 <div className="flex items-center gap-2">
                   <img
-                    src={`/icons/${blockchain}.svg`}
+                    src={`/images/${blockchain}.png`}
                     className="lg:h-8 lg:w-8 w-6 h-6"
                     alt=""
                   />

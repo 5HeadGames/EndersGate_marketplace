@@ -489,7 +489,7 @@ const CartItem = ({ item, pack, cards, blockchain, handleRemove }) => {
           </span>
           <div className="flex gap-2 items-end">
             <img src={Icons.logo} className="w-8 h-8" alt="" />
-            <img src={`/icons/${blockchain}.svg`} className="w-6 h-6" alt="" />
+            <img src={`/images/${blockchain}.png`} className="w-6 h-6" alt="" />
           </div>
         </div>
       </div>
