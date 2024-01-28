@@ -27,7 +27,7 @@ const Shop = () => {
 
   const { cartShop } = useSelector((state: any) => state.layout);
 
-  const { shop: shopAddress, MATICUSD } = getAddresses(blockchain);
+  const { shop: shopAddress } = getAddresses(blockchain);
 
   const dispatch = useDispatch();
 

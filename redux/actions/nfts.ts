@@ -917,7 +917,7 @@ export const buyERC1155 = createAsyncThunk(
       const addresses = getTokensAllowed(blockchain);
       if (
         !onlyAcceptsERC20(blockchain) &&
-        token === addresses.filter((item) => item.name === "MATIC")[0].address
+        token === addresses.filter((item) => item.main)[0].address
       ) {
         await marketplaceContract.methods
           .buy(tokenId, amount, token)
@@ -993,7 +993,7 @@ export const rentERC1155 = createAsyncThunk(
 
       if (
         !onlyAcceptsERC20(blockchain) &&
-        token === addresses.filter((item) => item.name === "MATIC")[0]?.address
+        token === addresses.filter((item) => item.main)[0]?.address
       ) {
         await rentContract.methods
           .rent(tokenId, daysOfRent, token)
@@ -1124,8 +1124,7 @@ export const rentBatchERC1155 = createAsyncThunk(
       const addressesAllowed = getTokensAllowed(blockchain);
       if (
         tokenSelected ===
-          addressesAllowed.filter((item) => item.name === "MATIC")[0]
-            ?.address &&
+          addressesAllowed.filter((item) => item.main)[0]?.address &&
         hasAggregatorFeed(blockchain)
       ) {
         const Aggregator = getContractCustom(

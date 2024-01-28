@@ -47,7 +47,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
 
   const { cartShop } = useSelector((state: any) => state.layout);
 
-  const { shop: shopAddress, MATICUSD } = getAddresses(blockchain);
+  const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
 
   React.useEffect(() => {
     if (
@@ -62,7 +62,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
   }, [cartShop]);
 
   const getPriceMatic = async () => {
-    const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
+    const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
     const priceMATIC = await Aggregator.methods.latestAnswer().call();
     const price =
       BigInt(

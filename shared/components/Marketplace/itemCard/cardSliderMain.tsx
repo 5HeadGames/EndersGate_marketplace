@@ -134,7 +134,29 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
           </div>
         </Link>
 
-        {props?.sale?.status == 0 &&
+        {props.sale.rentId && props?.sale?.status == 0 ? (
+          <div
+            className={clsx(
+              { ["bottom-[0px]"]: hoverAll },
+              { ["bottom-[50px]"]: !hoverAll },
+              "flex w-full gap-2 absolute transition-all duration-500  px-2 z-[1]  font-bold text-white",
+            )}
+          >
+            <Link
+              className="w-1/2 px-2 pb-1 flex text-sm justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-green-button hover:!text-overlay transition-all duration-500"
+              href={`/rent/${props.transactionId}`}
+            >
+              Rent Now
+            </Link>
+            <Link
+              href={`/sale/${props.transactionId}`}
+              className="w-1/2 px-2 pb-1 text-sm flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-overlay-2 transition-all duration-500"
+            >
+              Details
+            </Link>
+          </div>
+        ) : (
+          props?.sale?.status == 0 &&
           Math.floor(new Date().getTime() / 1000) <=
             parseInt(props.sale?.duration) +
               parseInt(props.sale?.startedAt) && (
@@ -145,21 +167,21 @@ const NFTCardSlider: React.FunctionComponent<Props> = (props) => {
                 "flex w-full gap-2 absolute transition-all duration-500  px-2 z-[1]  font-bold text-white",
               )}
             >
-              <Link href={`/sale/${props.transactionId}`}>
-                <div
-                  onClick={() => {}}
-                  className="w-1/2 px-2 pb-1 flex text-sm justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-green-button hover:!text-overlay transition-all duration-500"
-                >
-                  Buy Now
-                </div>
+              <Link
+                className="w-1/2 px-2 pb-1 flex text-sm justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-green-button hover:!text-overlay transition-all duration-500"
+                href={`/sale/${props.transactionId}`}
+              >
+                Buy Now
               </Link>
-              <Link href={`/sale/${props.transactionId}`}>
-                <div className="w-1/2 px-2 pb-1 text-sm flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-overlay-2 transition-all duration-500">
-                  Details
-                </div>
+              <Link
+                className="w-1/2 px-2 pb-1 text-sm flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer bg-overlay hover:bg-overlay-2 transition-all duration-500"
+                href={`/sale/${props.transactionId}`}
+              >
+                Details
               </Link>
             </div>
-          )}
+          )
+        )}
       </div>
     </>
   );

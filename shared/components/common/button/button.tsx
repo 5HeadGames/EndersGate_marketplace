@@ -20,7 +20,8 @@ export interface ButtonProps {
     | "line-primary"
     | "fillPrimary"
     | "greenLine"
-    | "fillGreen";
+    | "fillGreen"
+    | "fillPrimaryDisabled";
   social?: "facebook" | "google";
   icon?: any;
   className?: string;
@@ -85,6 +86,10 @@ export const Button: React.FC<
           {
             " hover:border-green-button hover:bg-overlay hover:text-green-button ":
               decoration === "fillGreen" && !social && !disabled,
+          },
+          {
+            "!border-none !bg-[#ffffff2c] hover:!opacity-100 !opacity-90":
+              decoration === "fillPrimaryDisabled",
           },
           {
             "hover:text-primary hover:border-primary hover:bg-transparent":

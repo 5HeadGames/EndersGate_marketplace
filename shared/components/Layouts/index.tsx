@@ -25,6 +25,7 @@ import { useModal } from "@shared/hooks/modal";
 import { Button } from "../common/button/button";
 import Link from "next/link";
 import { useRouter, useParams, usePathname } from "next/navigation";
+import LoginModal from "../Login/loginModal";
 
 const styles = {
   content: {
@@ -60,6 +61,12 @@ export default function AppLayout({ children }) {
   const { cart, cartRent } = useSelector((state: any) => state.layout);
 
   const { Modal: ModalSwap, show, isShow, hide } = useModal();
+  const {
+    Modal: ModalAuth,
+    show: showAuth,
+    isShow: isShowAuth,
+    hide: hideAuth,
+  } = useModal();
 
   const { allRents } = useSelector((state: any) => state.nfts);
 
@@ -99,7 +106,9 @@ export default function AppLayout({ children }) {
 
   React.useEffect(() => {
     show();
-    reconnect();
+    setTimeout(() => {
+      reconnect();
+    }, 10000);
   }, []);
 
   React.useEffect(() => {
@@ -303,16 +312,15 @@ export default function AppLayout({ children }) {
               <ChainSelect />
             </>
           ) : (
-            <NavbarItem
-              name={"LOG IN"}
-              link={
-                pathname !== "/login"
-                  ? `/login?redirect=true&redirectAddress=${pathname}`
-                  : pathname
-              }
-              route={pathname}
-              notification={false}
-            />
+            <div
+              onClick={() => showAuth()}
+              className={clsx(
+                "py-2 relative",
+                "text-md font-[600] text-white opacity-50 cursor-pointer",
+              )}
+            >
+              LOG IN
+            </div>
           )}
         </div>
         <div className="lg:hidden flex gap-4">
@@ -354,6 +362,10 @@ export default function AppLayout({ children }) {
           )}
         </div>
       </nav>
+
+      <ModalAuth isShow={isShowAuth} withoutX>
+        <LoginModal hide={hideAuth} />
+      </ModalAuth>
 
       <SidebarMobile
         initialFocus={refSidebarMobile}
