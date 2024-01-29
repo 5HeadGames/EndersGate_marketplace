@@ -70,7 +70,6 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const [isPack, setIsPack] = React.useState(false);
   const [flippedCard, setFlippedCard] = React.useState(false);
   const router = useRouter();
-  const pathname = usePathname();
   const dispatch = useAppDispatch();
   const [currentOrder, setCurrentOrder] = React.useState("lowest_price");
   const orderMapper = {
@@ -152,9 +151,6 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const buyNft = async () => {
     console.log("BUY");
     try {
-      if (!user) {
-        return router.push("/login?redirect=true&redirectAddress=" + pathname);
-      }
       if (!(await hasBalance())) {
         console.log("no has");
         if (blockchain != "skl" && tokenSelected.transak == true) {
@@ -254,9 +250,8 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   };
 
   const hasBalanceToken = async (price, token) => {
-    const ERC20 = await getContract("ERC20", token, provider);
-    var balance = ERC20.methods.balanceOf(ethAddress).call();
-    console.log(balance, price, token, "token");
+    const ERC20 = await getContract("ERC20", token, blockchain);
+    var balance = await ERC20.methods.balanceOf(ethAddress).call();
     setBalance(balance);
     if (price < balance) {
       return false;

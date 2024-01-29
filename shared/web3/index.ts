@@ -58,6 +58,7 @@ export const getContractCustom = (
 };
 
 export const getProvider = (blockchain) => {
+  console.log(blockchain, CHAINS[CHAIN_IDS_BY_NAME[blockchain]]);
   return new Web3.providers.HttpProvider(
     CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0],
   );
