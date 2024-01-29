@@ -2,7 +2,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { DropdownCart } from "../common/dropdowns/dropdownCart/dropdownCart";
 import { useAppDispatch } from "redux/store";
-import { rentBatchERC1155, rentBatchERC1155Native } from "redux/actions";
+import {
+  removeAll,
+  removeAllComics,
+  removeAllRent,
+  removeAllShop,
+  rentBatchERC1155,
+  rentBatchERC1155Native,
+} from "redux/actions";
 import { removeFromCart, removeFromCartRent } from "@redux/actions";
 import {
   AddressText,
@@ -12,10 +19,12 @@ import {
   buyNFTsMatic,
   buyNFTsNative,
   getAddresses,
+  getContract,
   getContractCustom,
   getNativeBlockchain,
   getTokensAllowed,
   getTokensAllowedMatic,
+  getWeb3,
   hasAggregatorFeed,
 } from "@shared/web3";
 import { useSelector } from "react-redux";
@@ -27,10 +36,14 @@ import { XIcon } from "@heroicons/react/solid";
 import { Icons } from "@shared/const/Icons";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { formatPrice } from "@shared/utils/formatPrice";
+import { formatPrice, multiply } from "@shared/utils/formatPrice";
 import { toast } from "react-hot-toast";
 import { useUser } from "@shared/context/useUser";
 import { ButtonSFUELCart } from "../common/ButtonSFUEL";
+import Web3 from "web3";
+import { useModal } from "@shared/hooks/modal";
+import { CHAIN_TRANSAK_BY_NAME } from "@shared/utils/chains";
+import { AddFundsModal } from "../common/addFunds";
 
 export const Cart = ({
   tokenSelected,
@@ -48,8 +61,16 @@ export const Cart = ({
   const { cart: cartSales, cartRent } = useSelector(
     (state: any) => state.layout,
   );
+  const {
+    Modal: ModalFunds,
+    show: showFunds,
+    hide: hideFunds,
+    isShow: isShowFunds,
+  } = useModal();
 
-  const [priceMatic, setPriceMatic] = React.useState(0);
+  const [priceNative, setPriceNative] = React.useState(0);
+
+  const [balance, setBalance] = React.useState(0);
 
   const [daysOfRent, setDaysOfRent] = React.useState(1);
 
@@ -69,31 +90,26 @@ export const Cart = ({
 
   React.useEffect(() => {
     if (cart.length > 0 && hasAggregatorFeed(blockchain)) {
-      getPriceMatic();
-    } else {
-      setPriceMatic(0);
-    }
-  }, [cart]);
-
-  const getPriceMatic = async () => {
-    const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
-    const priceMATIC = await Aggregator.methods.latestAnswer().call();
-    const price: any = (
-      (parseInt(
+      getPriceNative(
         cart
-          ?.map((item: any) =>
+          ?.map((item: any, i) =>
             ((parseInt(item.price) / 10 ** 6) * item.quantity).toString(),
           )
           .reduce((item: any, acc: any) => {
             return findSum(item, acc) as any;
           }),
-      ) *
-        10 ** 8) /
-      priceMATIC
-    ).toFixed(2);
+      );
+    } else {
+      setPriceNative(0);
+    }
+  }, [cart]);
 
-    setPriceMatic(price);
-  };
+  React.useEffect(() => {
+    dispatch(removeAll());
+    dispatch(removeAllComics());
+    dispatch(removeAllRent());
+    dispatch(removeAllShop());
+  }, [blockchain]);
 
   const handleRemove = (item) => {
     if (cartSelected === "sales") {
@@ -103,22 +119,37 @@ export const Cart = ({
     }
   };
 
-  const handleSubmit = () => {
-    if (cartSelected === "sales") {
-      buyNFTs();
-    } else {
-      rentNFTs();
+  const handleSubmit = async () => {
+    try {
+      if (!(await hasBalance())) {
+        console.log("no has");
+        if (blockchain != "skl" && tokenSelected.transak == true) {
+          showFunds();
+        } else {
+          toast.error(
+            "You don't have enough funds to buy, please fill your wallet",
+          );
+        }
+      } else {
+        console.log("has balance");
+        if (cartSelected === "sales") {
+          buyNFTs();
+        } else {
+          rentNFTs();
+        }
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
-  const buyNFTs = () => {
+  const buyNFTs = async () => {
     if (!getNativeBlockchain(blockchain)) {
-      if (!tokenSelected) {
+      if (!tokenSelected.address) {
         return toast.error("Please select a token as a payment");
       }
-      buyNFTsMatic({
-        tokenSelected,
-
+      await buyNFTsMatic({
+        tokenSelected: tokenSelected.address,
         setMessageBuy,
         cart: cartSales,
         marketplace,
@@ -130,7 +161,7 @@ export const Cart = ({
         blockchain,
       });
     } else {
-      buyNFTsNative({
+      await buyNFTsNative({
         setMessageBuy,
         cart: cartSales,
         marketplace,
@@ -150,7 +181,7 @@ export const Cart = ({
         rentBatchERC1155({
           blockchain,
           account: ethAddress,
-          tokenSelected,
+          tokenSelected: tokenSelected.address,
           provider,
           daysOfRent,
           setMessageBuy,
@@ -169,6 +200,102 @@ export const Cart = ({
           cartRent,
           dispatch,
         }),
+      );
+    }
+  };
+
+  const getPriceNative = async (price: any) => {
+    const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
+    const priceMATIC = await Aggregator.methods.latestAnswer().call();
+    const priceNative = (BigInt(price) * BigInt(10 ** 8)) / BigInt(priceMATIC);
+    const returnedPrice = parseFloat(
+      (
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) +
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) *
+          0.0005
+      ).toFixed(6),
+    );
+    setPriceNative(returnedPrice);
+    return returnedPrice;
+  };
+
+  const hasBalanceNative = async (price) => {
+    const web3 = await getWeb3(provider);
+    var balance = await web3.eth.getBalance(ethAddress);
+
+    if (hasAggregatorFeed(blockchain)) {
+      console.log("agg");
+      const priceNative = await getPriceNative(price);
+      setBalance(parseFloat(Web3.utils.fromWei(balance, "ether")));
+      if (priceNative < parseFloat(Web3.utils.fromWei(balance, "ether"))) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      console.log("no agg");
+      if (price < balance) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  const hasBalanceToken = async (price, token) => {
+    const ERC20 = await getContract("ERC20", token, blockchain);
+    var balance = await ERC20.methods.balanceOf(ethAddress).call();
+    console.log(
+      parseInt(price),
+      parseInt(balance),
+      parseInt(balance) - parseInt(price) > 0,
+      parseInt(balance) >= parseInt(price),
+      "price token",
+    );
+    setBalance(balance);
+    if (parseInt(balance) >= parseInt(price)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const hasBalance = async () => {
+    console.log("has balance join");
+    const addresses = getTokensAllowed(blockchain);
+    if (
+      tokenSelected.address ===
+      addresses.filter((item) => item.main)[0]?.address
+    ) {
+      return await hasBalanceNative(
+        cart
+          ?.map((item: any, i) =>
+            (parseInt(item.price) * item.quantity).toString(),
+          )
+          .reduce((item: any, acc: any) => {
+            return findSum(item, acc) as any;
+          }),
+      );
+    } else {
+      return await hasBalanceToken(
+        cart
+          ?.map((item: any, i) =>
+            (parseInt(item.price) * item.quantity).toString(),
+          )
+          .reduce((item: any, acc: any) => {
+            return findSum(item, acc) as any;
+          }),
+        tokenSelected.address,
       );
     }
   };
@@ -217,111 +344,158 @@ export const Cart = ({
   );
 
   return (
-    <DropdownCart
-      sidebarOpen={cartOpen}
-      initialFocus={refCartMobile}
-      items={cart.length}
-      setSideBar={setCartOpen}
-    >
-      <div className="w-full py-2 flex gap-4 justify-center">
-        <div
-          onClick={() => setCartSelected("rents")}
-          className={clsx(
-            { "bg-white font-bold !text-overlay": cartSelected !== "sales" },
-            "text-white text-center rounded-xl p-2 border border-white cursor-pointer min-w-[33%] transition-all duration-500 relative",
-          )}
-        >
-          {cartRent.length > 0 && (
-            <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary text-white">
-              {cartRent.length}
-            </div>
-          )}
-          Rents
-        </div>
-        <div
-          onClick={() => setCartSelected("sales")}
-          className={clsx(
-            { "bg-white font-bold !text-overlay": cartSelected === "sales" },
-            "text-white text-center rounded-xl p-2 border border-white cursor-pointer min-w-[33%] transition-all duration-500 relative",
-          )}
-        >
-          {cartSales.length > 0 && (
-            <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary text-white">
-              {cartSales.length}
-            </div>
-          )}
-          Sales
-        </div>
-        {blockchain === "skl" && <ButtonSFUELCart user={ethAddress} />}
-      </div>
-      {cart.length ? (
-        <div className="flex flex-col items-center border border-overlay-border rounded-md md:min-w-[500px] md:w-max py-2">
-          <div className="flex justify-between gap-4 w-full">
-            <h2 className="text-xl font-bold text-white py-4 px-4">
-              Your {cartSelected === "sales" ? "Sale" : "Rent"} Cart
-            </h2>
-            <h2 className="text-lg font-bold text-primary-disabled py-4 px-4">
-              {cart
-                .map((item) => item.quantity)
-                .reduce((acc, red) => acc + red)}{" "}
-              Item
-              {cart
-                .map((item) => item.quantity)
-                .reduce((acc, red) => acc + red) > 1
-                ? "s"
-                : ""}
-            </h2>{" "}
-          </div>
-          <div className="px-4 py-2 pb-4 gap-2 flex flex-col items-center w-full">
-            {cart.map((item: any, index) => {
-              return (
-                <CartItem
-                  pack={pack}
-                  item={item}
-                  blockchain={blockchain}
-                  handleRemove={handleRemove}
-                  cards={cards}
-                />
+    <>
+      <ModalFunds isShow={isShowFunds} withoutX>
+        <AddFundsModal
+          amount={
+            tokenSelected.address ==
+            getTokensAllowed(blockchain)?.filter((item) => item.main)[0]
+              ?.address
+              ? priceNative
+              : cart.length > 0
+              ? multiply(
+                  cart
+                    ?.map((item: any, i) =>
+                      (
+                        (parseInt(item.price) / 10 ** 6) *
+                        item.quantity
+                      ).toString(),
+                    )
+                    .reduce((item: any, acc: any) => {
+                      return findSum(item, acc) as any;
+                    }) || "0",
+                  daysOfRent.toString() || "0",
+                )
+              : "0"
+          }
+          reload={hasBalance}
+          token={tokenSelected.name}
+          network={CHAIN_TRANSAK_BY_NAME[blockchain]}
+          wallet={ethAddress}
+          balance={balance}
+          loading={false}
+          onClick={async () => {
+            if (await hasBalance()) {
+              if (cartSelected === "sales") {
+                buyNFTs();
+              } else {
+                rentNFTs();
+              }
+            } else {
+              toast.error(
+                "You don't have enough funds to buy, please fill your wallet",
               );
-            })}
-            {SelectDaysOfRent}
+            }
+          }}
+          hide={hideFunds}
+        />
+      </ModalFunds>
+      <DropdownCart
+        sidebarOpen={cartOpen}
+        initialFocus={refCartMobile}
+        items={cart.length}
+        setSideBar={setCartOpen}
+      >
+        <div className="w-full py-2 flex gap-4 justify-center">
+          <div
+            onClick={() => setCartSelected("rents")}
+            className={clsx(
+              { "bg-white font-bold !text-overlay": cartSelected !== "sales" },
+              "text-white text-center rounded-xl p-2 border border-white cursor-pointer min-w-[33%] transition-all duration-500 relative",
+            )}
+          >
+            {cartRent.length > 0 && (
+              <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary text-white">
+                {cartRent.length}
+              </div>
+            )}
+            Rents
           </div>
-          <TokenSelection
-            blockchain={blockchain}
-            tokensAllowed={tokensAllowed}
-            cart={cart}
-            tokenSelected={tokenSelected}
-            setTokenSelected={setTokenSelected}
-          />
+          <div
+            onClick={() => setCartSelected("sales")}
+            className={clsx(
+              { "bg-white font-bold !text-overlay": cartSelected === "sales" },
+              "text-white text-center rounded-xl p-2 border border-white cursor-pointer min-w-[33%] transition-all duration-500 relative",
+            )}
+          >
+            {cartSales.length > 0 && (
+              <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9px] bg-red-primary text-white">
+                {cartSales.length}
+              </div>
+            )}
+            Sales
+          </div>
+          {blockchain === "skl" && <ButtonSFUELCart user={ethAddress} />}
+        </div>
+        {cart.length ? (
+          <div className="flex flex-col items-center border border-overlay-border rounded-md md:min-w-[500px] md:w-max py-2">
+            <div className="flex justify-between gap-4 w-full">
+              <h2 className="text-xl font-bold text-white py-4 px-4">
+                Your {cartSelected === "sales" ? "Sale" : "Rent"} Cart
+              </h2>
+              <h2 className="text-lg font-bold text-primary-disabled py-4 px-4">
+                {cart
+                  .map((item) => item.quantity)
+                  .reduce((acc, red) => acc + red)}{" "}
+                Item
+                {cart
+                  .map((item) => item.quantity)
+                  .reduce((acc, red) => acc + red) > 1
+                  ? "s"
+                  : ""}
+              </h2>{" "}
+            </div>
+            <div className="px-4 py-2 pb-4 gap-2 flex flex-col items-center w-full">
+              {cart.map((item: any, index) => {
+                return (
+                  <CartItem
+                    pack={pack}
+                    item={item}
+                    blockchain={blockchain}
+                    handleRemove={handleRemove}
+                    cards={cards}
+                  />
+                );
+              })}
+              {SelectDaysOfRent}
+            </div>
+            <TokenSelection
+              blockchain={blockchain}
+              tokensAllowed={tokensAllowed}
+              cart={cart}
+              tokenSelected={tokenSelected}
+              setTokenSelected={setTokenSelected}
+            />
 
-          <TotalPrice
-            cart={cart}
-            blockchain={blockchain}
-            tokensAllowed={tokensAllowed}
-            priceMatic={priceMatic}
-            daysOfRent={daysOfRent}
-            isRentCart={cartSelected === "rents"}
-          />
-          {magicFundOption}
-          {infoMessage}
-          <div className="w-full flex items-center justify-center py-2">
-            <div
-              onClick={() => {
-                handleSubmit();
-              }}
-              className="w-auto px-6 py-2 flex justify-center items-center rounded-xl hover:border-green-button hover:bg-overlay hover:text-green-button border border-overlay-border cursor-pointer bg-green-button font-bold !text-overlay transition-all duration-500"
-            >
-              Complete {cartSelected === "sales" ? "Purchase" : "Rent"}
+            <TotalPrice
+              cart={cart}
+              blockchain={blockchain}
+              tokensAllowed={tokensAllowed}
+              priceMatic={priceNative}
+              daysOfRent={daysOfRent}
+              isRentCart={cartSelected === "rents"}
+            />
+            {magicFundOption}
+            {infoMessage}
+            <div className="w-full flex items-center justify-center py-2">
+              <div
+                onClick={() => {
+                  handleSubmit();
+                }}
+                className="w-auto px-6 py-2 flex justify-center items-center rounded-xl hover:border-green-button hover:bg-overlay hover:!text-green-button border border-overlay-border cursor-pointer bg-green-button font-bold text-overlay transition-all duration-500"
+              >
+                Complete {cartSelected === "sales" ? "Purchase" : "Rent"}
+              </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="h-full flex flex-col items-center justify-center text-white font-bold gap-4 text-md text-center w-64 p-4 border border-overlay-border rounded-md">
-          <img src={Icons.logoCard} className="w-20 h-20" alt="" />
-          There aren't items in your cart.
-        </div>
-      )}
-    </DropdownCart>
+        ) : (
+          <div className="h-full flex flex-col items-center justify-center text-white font-bold gap-4 text-md text-center w-64 p-4 border border-overlay-border rounded-md">
+            <img src={Icons.logoCard} className="w-20 h-20" alt="" />
+            There aren't items in your cart.
+          </div>
+        )}
+      </DropdownCart>
+    </>
   );
 };
 
@@ -423,21 +597,21 @@ const TokenSelection = ({
               .map((item: any, index) => {
                 return (
                   <div
-                    key={tokenSelected + item.name}
+                    key={tokenSelected.address + item.name}
                     className={clsx(
                       "w-20 flex items-center justify-center gap-1 rounded-xl cursor-pointer py-1 border border-white",
 
                       {
                         "bg-overlay-border border-none":
-                          tokenSelected !== item.address,
+                          tokenSelected.address !== item.address,
                       },
                       {
                         "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
-                          tokenSelected === item.address,
+                          tokenSelected.address === item.address,
                       },
                     )}
                     onClick={() => {
-                      setTokenSelected(item.address);
+                      setTokenSelected(item);
                     }}
                   >
                     <img src={item.logo} className="w-6 h-6" alt="" />

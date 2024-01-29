@@ -267,7 +267,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
     const ERC20 = await getContract("ERC20", token, blockchain);
     var balance = await ERC20.methods.balanceOf(ethAddress).call();
     setBalance(balance);
-    if (price < balance) {
+    if (parseInt(balance) >= parseInt(price)) {
       return false;
     } else {
       return true;

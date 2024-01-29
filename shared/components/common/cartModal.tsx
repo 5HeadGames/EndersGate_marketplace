@@ -378,7 +378,7 @@ export const useCartModal = () => {
                             disabled={errors.influencer_code && !isValidCode}
                             decoration="fillGreen"
                             className={
-                              "w-auto px-6 py-2 flex justify-center items-center rounded-xl !font-bold !text-black hover:!text-green-button"
+                              "w-auto px-6 py-2 flex justify-center items-center rounded-xl !font-bold"
                             }
                           >
                             Complete Purchase

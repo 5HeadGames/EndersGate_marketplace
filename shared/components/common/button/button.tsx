@@ -79,7 +79,7 @@ export const Button: React.FC<
               decoration === "fillPrimary" && !social && !disabled,
           },
           {
-            "shadow-md border border-transparent-color-gray-200 cursor-pointer bg-green-button !text-overlay transition-all duration-500":
+            "shadow-md border border-transparent-color-gray-200 cursor-pointer bg-green-button text-overlay hover:text-green-button transition-all duration-500":
               decoration === "fillGreen" && !social && !disabled,
           },
 
