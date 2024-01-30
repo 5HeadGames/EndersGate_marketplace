@@ -9,14 +9,17 @@ import {
 } from "@redux/actions";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { useUser } from "@shared/context/useUser";
-import { CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
-import { formatPrice } from "@shared/utils/formatPrice";
+import { useModal } from "@shared/hooks/modal";
+import { CHAIN_IDS_BY_NAME, CHAIN_TRANSAK_BY_NAME } from "@shared/utils/chains";
+import { formatPrice, multiply } from "@shared/utils/formatPrice";
 import { packsShop, updateSales } from "@shared/utils/utils";
 import {
   getAddresses,
+  getContract,
   getContractCustom,
   getNativeBlockchain,
   getTokensAllowed,
+  getWeb3,
   hasAggregatorFeed,
   sendFirebaseTx,
   switchChain,
@@ -28,16 +31,32 @@ import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 import Web3 from "web3";
+import { AddFundsModal } from "../common/addFunds";
+import { findSum } from "../common/specialFields/SpecialFields";
 
 const ModalShop = ({ Modal, isShow, hide, setSales }) => {
   const {
     user: { ethAddress: account, provider, providerName },
   } = useUser();
   const [isValidCode, setValidCode] = useState(false);
-  const [tokenSelected, setTokenSelected] = React.useState("");
+  const [tokenSelected, setTokenSelected] = React.useState({
+    address: "",
+    name: "",
+    transak: false,
+    main: false,
+  });
+  const {
+    Modal: ModalFunds,
+    show: showFunds,
+    hide: hideFunds,
+    isShow: isShowFunds,
+  } = useModal();
   const [messageBuy, setMessageBuy] = React.useState("");
 
-  const [priceNative, setPriceNative] = React.useState("0");
+  const [balance, setBalance] = React.useState(0);
+  const [priceNative, setPriceNative] = React.useState(0);
+  const [priceToken, setPriceToken] = React.useState(0);
+  const [data, setData] = React.useState(undefined);
 
   const { blockchain, updateBlockchain } = useBlockchain();
 
@@ -50,45 +69,20 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
   const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
 
   React.useEffect(() => {
-    if (
-      cartShop.length > 0 &&
-      !getNativeBlockchain(blockchain) &&
-      hasAggregatorFeed(blockchain)
-    ) {
-      getPriceMatic();
+    if (cartShop.length > 0 && hasAggregatorFeed(blockchain)) {
+      getPriceNative(
+        cartShop
+          ?.map((item: any, i) =>
+            ((parseInt(item.price) / 10 ** 6) * item.quantity).toString(),
+          )
+          .reduce((item: any, acc: any) => {
+            return findSum(item, acc) as any;
+          }),
+      );
     } else {
-      setPriceNative("0");
+      setPriceNative(0);
     }
   }, [cartShop]);
-
-  const getPriceMatic = async () => {
-    const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
-    const priceMATIC = await Aggregator.methods.latestAnswer().call();
-    const price =
-      BigInt(
-        cartShop
-          ?.map((item: any, i) => {
-            return BigInt(item.price) * BigInt(item.quantity);
-          })
-          .reduce((item: any, acc) => {
-            return BigInt(item) + BigInt(acc);
-          }) * BigInt(10 ** 8),
-      ) / BigInt(priceMATIC);
-    console.log(price);
-    setPriceNative(
-      (
-        parseFloat(
-          Web3.utils.fromWei((price * BigInt(10 ** 12)).toString(), "ether"),
-        ) +
-        parseFloat(
-          Web3.utils.fromWei((price * BigInt(10 ** 12)).toString(), "ether"),
-        ) *
-          0.0005
-      )
-        .toFixed(6)
-        .toString(),
-    );
-  };
 
   const {
     // register,
@@ -104,7 +98,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
 
   React.useEffect(() => {
     if (tokensAllowed) {
-      setTokenSelected(tokensAllowed[0].address);
+      setTokenSelected(tokensAllowed[0]);
     }
   }, [tokensAllowed]);
 
@@ -127,7 +121,111 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain]);
 
+  const getPriceNative = async (price: any) => {
+    const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
+    const priceMATIC = await Aggregator.methods.latestAnswer().call();
+    const priceNative = (BigInt(price) * BigInt(10 ** 8)) / BigInt(priceMATIC);
+    const returnedPrice = parseFloat(
+      (
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) +
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) *
+          0.0005
+      ).toFixed(6),
+    );
+    setPriceNative(returnedPrice);
+    return returnedPrice;
+  };
+
+  const hasBalanceNative = async (price) => {
+    const web3 = await getWeb3(provider);
+    var balance = await web3.eth.getBalance(account);
+
+    if (hasAggregatorFeed(blockchain)) {
+      console.log("agg");
+      const priceNative = await getPriceNative(price);
+      setBalance(parseFloat(Web3.utils.fromWei(balance, "ether")));
+      if (priceNative < parseFloat(Web3.utils.fromWei(balance, "ether"))) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      console.log("no agg");
+      if (price < balance) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  const hasBalanceToken = async (price, token) => {
+    const ERC20 = await getContract("ERC20", token, blockchain);
+    var balance = await ERC20.methods.balanceOf(account).call();
+    var decimals = await ERC20.methods.decimals().call();
+    setBalance(balance / 10 ** decimals);
+    if (parseInt(balance) >= parseInt(price)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const hasBalance = async () => {
+    console.log("has balance join");
+    const addresses = getTokensAllowed(blockchain);
+    if (
+      tokenSelected.address ===
+      addresses.filter((item) => item.main)[0]?.address
+    ) {
+      return await hasBalanceNative(
+        cartShop
+          ?.map((item: any, i) =>
+            (parseInt(item.price) * item.quantity).toString(),
+          )
+          .reduce((item: any, acc: any) => {
+            return findSum(item, acc) as any;
+          }),
+      );
+    } else {
+      return await hasBalanceToken(
+        cartShop
+          ?.map((item: any, i) =>
+            (parseInt(item.price) * item.quantity).toString(),
+          )
+          .reduce((item: any, acc: any) => {
+            return findSum(item, acc) as any;
+          }),
+        tokenSelected.address,
+      );
+    }
+  };
+
   const buyPacks = async (data) => {
+    try {
+      if (!(await hasBalance())) {
+        showFunds();
+        setData(data);
+      } else {
+        console.log("has balance");
+        await buyPacksProcess(data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const buyPacksProcess = async (data) => {
     const { influencer_code } = data;
 
     try {
@@ -137,10 +235,12 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
       if (influencer_code && !isValidCode) return;
       updateBlockchain(blockchain);
 
-      if (tokenSelected === "") {
+      if (tokenSelected.address === "") {
         toast.error("Please Select a Payment Method");
         return;
       }
+
+      console.log(tokenSelected);
 
       let tx: any = "";
       if (!getNativeBlockchain(blockchain)) {
@@ -148,7 +248,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
           buyFromShop({
             blockchain,
             account,
-            tokenSelected,
+            tokenSelected: tokenSelected.address,
             provider,
             setMessageBuy,
             cartShop,
@@ -159,7 +259,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
           buyFromShopNative({
             blockchain,
             account,
-            tokenSelected,
+            tokenSelected: tokenSelected.address,
             provider,
             setMessageBuy,
             cartShop,
@@ -187,6 +287,48 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
 
   return (
     <>
+      <ModalFunds isShow={isShowFunds} withoutX>
+        <AddFundsModal
+          amount={
+            tokenSelected.address ==
+            getTokensAllowed(blockchain)?.filter((item) => item.main)[0]
+              ?.address
+              ? priceNative
+              : cartShop.length > 0
+              ? cartShop
+                  ?.map((item: any, i) =>
+                    (
+                      (parseInt(item.price) / 10 ** 6) *
+                      item.quantity
+                    ).toString(),
+                  )
+                  .reduce((item: any, acc: any) => {
+                    return findSum(item, acc) as any;
+                  }) || "0"
+              : "0"
+          }
+          reload={hasBalance}
+          token={tokenSelected.name}
+          tokenSelected={tokenSelected}
+          network={CHAIN_TRANSAK_BY_NAME[blockchain]}
+          wallet={account}
+          balance={balance}
+          loading={false}
+          onClick={async () => {
+            try {
+              if (!(await hasBalance())) {
+                toast.error("You don't have enough balance to buy.");
+              } else {
+                console.log("has balance");
+                await buyPacksProcess(data);
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          }}
+          hide={hideFunds}
+        />
+      </ModalFunds>
       <Modal
         blockchain={blockchain}
         isShow={isShow}

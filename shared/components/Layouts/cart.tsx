@@ -255,14 +255,8 @@ export const Cart = ({
   const hasBalanceToken = async (price, token) => {
     const ERC20 = await getContract("ERC20", token, blockchain);
     var balance = await ERC20.methods.balanceOf(ethAddress).call();
-    console.log(
-      parseInt(price),
-      parseInt(balance),
-      parseInt(balance) - parseInt(price) > 0,
-      parseInt(balance) >= parseInt(price),
-      "price token",
-    );
-    setBalance(balance);
+    var decimals = await ERC20.methods.decimals().call();
+    setBalance(balance / 10 ** decimals);
     if (parseInt(balance) >= parseInt(price)) {
       return true;
     } else {
@@ -370,6 +364,7 @@ export const Cart = ({
           }
           reload={hasBalance}
           token={tokenSelected.name}
+          tokenSelected={tokenSelected}
           network={CHAIN_TRANSAK_BY_NAME[blockchain]}
           wallet={ethAddress}
           balance={balance}

@@ -60,6 +60,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const [buyNFTData, setBuyNFTData] = React.useState(0);
   const [balance, setBalance] = React.useState(0);
   const [priceNative, setPriceNative] = React.useState(0);
+  const [priceToken, setPriceToken] = React.useState(0);
   const { Modal, show, hide, isShow } = useModal();
   const {
     Modal: ModalFunds,
@@ -152,14 +153,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     console.log("BUY");
     try {
       if (!(await hasBalance())) {
-        console.log("no has");
-        if (blockchain != "skl" && tokenSelected.transak == true) {
-          showFunds();
-        } else {
-          toast.error(
-            "You don't have enough funds to buy, please fill your wallet",
-          );
-        }
+        showFunds();
       } else {
         console.log("has balance");
 
@@ -251,12 +245,14 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const hasBalanceToken = async (price, token) => {
     const ERC20 = await getContract("ERC20", token, blockchain);
-    var balance = await ERC20.methods.balanceOf(ethAddress).call();
-    setBalance(balance);
-    if (parseInt(balance) >= parseInt(price)) {
-      return false;
-    } else {
+    var balanceERC20 = await ERC20.methods.balanceOf(ethAddress).call();
+    var decimals = await ERC20.methods.decimals().call();
+    setBalance(balanceERC20 / 10 ** decimals);
+    setPriceToken(price / 10 ** decimals);
+    if (parseInt(balanceERC20) >= parseInt(price)) {
       return true;
+    } else {
+      return false;
     }
   };
 
@@ -296,15 +292,28 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
             getTokensAllowed(sale?.blockchain)?.filter((item) => item.main)[0]
               ?.address
               ? priceNative
-              : multiply(sale?.price || "0", buyNFTData.toString() || "0")
+              : priceToken
           }
           reload={hasBalance}
           token={tokenSelected.name}
+          tokenSelected={tokenSelected}
           network={CHAIN_TRANSAK_BY_NAME[blockchain]}
           wallet={user}
           balance={balance}
           loading={false}
-          onClick={() => {}}
+          onClick={async () => {
+            try {
+              if (!(await hasBalance())) {
+                toast.error("You don't have enough balance to buy this NFT.");
+              } else {
+                console.log("has balance");
+
+                await buyNFTProcess();
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          }}
           hide={hideFunds}
         />
       </ModalFunds>

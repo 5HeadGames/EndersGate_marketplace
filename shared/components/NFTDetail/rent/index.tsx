@@ -82,6 +82,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
     transak: false,
     main: false,
   });
+  const [priceToken, setPriceToken] = React.useState(0);
 
   const [message, setMessage] = React.useState("");
 
@@ -266,7 +267,9 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   const hasBalanceToken = async (price, token) => {
     const ERC20 = await getContract("ERC20", token, blockchain);
     var balance = await ERC20.methods.balanceOf(ethAddress).call();
-    setBalance(balance);
+    var decimals = await ERC20.methods.decimals().call();
+    setBalance(balance / 10 ** decimals);
+    setPriceToken(price / 10 ** decimals);
     if (parseInt(balance) >= parseInt(price)) {
       return false;
     } else {
@@ -310,11 +313,22 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
           }
           reload={hasBalance}
           token={tokenSelected.name}
+          tokenSelected={tokenSelected}
           network={CHAIN_TRANSAK_BY_NAME[blockchain]}
           wallet={user}
           balance={balance}
           loading={false}
-          onClick={() => {}}
+          onClick={async () => {
+            try {
+              if (!(await hasBalance())) {
+                toast.error("You don't have enough balance to rent this NFT.");
+              } else {
+                await rentNFTProcess();
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          }}
           hide={hideFunds}
         />
       </ModalFunds>

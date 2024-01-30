@@ -16,6 +16,7 @@ export const AddFundsModal = ({
   onClick,
   network,
   reload,
+  tokenSelected,
 }) => {
   const { Modal, show, isShow, hide: hideTransak } = useModal();
   return (
@@ -71,15 +72,26 @@ export const AddFundsModal = ({
         >
           Continue
         </Button>
-        <div
-          className="text-[16px] text-green-button font-bold flex items-center justify-center gap-2 cursor-pointer pt-2"
-          onClick={() => {
-            show();
-          }}
-        >
-          <img src="/icons/wallet.png" className="w-6 pb-2" alt="" /> Add funds
-          to your wallet
-        </div>
+        {tokenSelected.transak ? (
+          <div
+            className="text-[16px] text-green-button font-bold flex items-center justify-center gap-2 cursor-pointer pt-2"
+            onClick={() => {
+              show();
+            }}
+          >
+            <img src="/icons/wallet.png" className="w-6 pb-2" alt="" /> Add
+            funds to your wallet
+          </div>
+        ) : (
+          <a
+            className="text-[16px] text-green-button font-bold flex items-center justify-center gap-2 cursor-pointer pt-2"
+            href={tokenSelected.link}
+            target={"_blank"}
+          >
+            <img src="/icons/wallet.png" className="w-6 pb-2" alt="" /> Add
+            funds to your wallet
+          </a>
+        )}
       </div>
     </>
   );

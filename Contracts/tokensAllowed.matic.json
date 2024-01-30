@@ -15,6 +15,7 @@
   {
     "address": "0x9C9e5fD8bbc25984B178FdCE6117Defa39d2db39",
     "name": "BUSD",
-    "logo": "/images/busd.png"
+    "logo": "/images/busd.png",
+    "link": "https://www.bnbchain.org/en/bnb-chain-bridges"
   }
 ]

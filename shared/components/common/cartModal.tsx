@@ -63,7 +63,7 @@ export const useCartModal = () => {
             static
             className="fixed inset-0 overflow-y-auto"
             style={{
-              zIndex: 15000,
+              zIndex: 10,
             }}
             initialFocus={cancelButtonRef}
             open={isShow}
@@ -154,15 +154,17 @@ export const useCartModal = () => {
 
                                       {
                                         "bg-transparent-color-gray-200 border-none":
-                                          tokenSelected !== item.address,
+                                          tokenSelected.address !==
+                                          item.address,
                                       },
                                       {
                                         "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
-                                          tokenSelected === item.address,
+                                          tokenSelected.address ===
+                                          item.address,
                                       },
                                     )}
                                     onClick={() => {
-                                      setTokenSelected(item.address);
+                                      setTokenSelected(item);
                                     }}
                                   >
                                     <img
@@ -264,39 +266,6 @@ export const useCartModal = () => {
                         ) : (
                           ""
                         )}
-                        {blockchain === "matic" &&
-                          tokensAllowed.filter((token) => {
-                            return token.address === tokenSelected;
-                          })[0]?.transak && (
-                            <>
-                              <a
-                                href={`https://global.transak.com?apiKey=${
-                                  process.env.NEXT_PUBLIC_TRANSAK_API_KEY
-                                }&walletAddress=${user}&redirectURL=https://marketplace.endersgate.gg/&defaultCryptoAmount=${priceMatic}&cryptoCurrencyCode=${
-                                  tokensAllowed.filter((token) => {
-                                    return token.address === tokenSelected;
-                                  })[0]?.name
-                                }&network=polygon&defaultFiatCurrency=USD`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-green-button font-bold text-[13px] flex items-center justify-center gap-2 cursor-pointer py-2"
-                              >
-                                Not enough{" "}
-                                {
-                                  tokensAllowed.filter((token) => {
-                                    return token.address === tokenSelected;
-                                  })[0]?.name
-                                }
-                                ? Click here and buy for your purchase!{" "}
-                                <WalletOutlined />{" "}
-                              </a>
-                              <p className="text-green-button font-bold text-[13px] flex items-center justify-center gap-2 cursor-pointer">
-                                Note: Some crypto currencies require a minimum
-                                of value to buy that could exceed the cost of
-                                this purchase.
-                              </p>
-                            </>
-                          )}
                         {/* {router && router.asPath == "/shop" && (
                           <>
                             <AccordionMenu title="Promo Code / Referral">
@@ -375,7 +344,7 @@ export const useCartModal = () => {
                         <div className="w-full flex items-center justify-center py-2">
                           <Button
                             type="submit"
-                            disabled={errors.influencer_code && !isValidCode}
+                            // disabled={errors.influencer_code && !isValidCode}
                             decoration="fillGreen"
                             className={
                               "w-auto px-6 py-2 flex justify-center items-center rounded-xl !font-bold"

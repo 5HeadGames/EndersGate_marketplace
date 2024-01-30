@@ -39,7 +39,12 @@ const styles = {
 export default function AppLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [cartOpen, setCartOpen] = React.useState(false);
-  const [tokenSelected, setTokenSelected] = React.useState("");
+  const [tokenSelected, setTokenSelected] = React.useState({
+    address: "",
+    name: "",
+    transak: false,
+    main: false,
+  });
   const refSidebarMobile = React.useRef(null);
   const [disabled, setDisabled] = React.useState<ButtonsTypes>({
     logout: false,
