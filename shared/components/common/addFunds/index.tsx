@@ -46,9 +46,11 @@ export const AddFundsModal = ({
           Add funds to purchase
         </div>
         <p className="text-center text-xl font-bold text-white">
-          You need ({amount}) {token} +{" "}
+          You need ({amount}) {token}
           {blockchain !== "skl" && (
-            <span className="text-green-button">gas fees</span>
+            <>
+              + <span className="text-green-button">gas fees</span>
+            </>
           )}
         </p>
         <p className="text-center text-sm text-white py-4">
