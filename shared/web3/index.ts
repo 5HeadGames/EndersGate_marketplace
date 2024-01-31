@@ -58,6 +58,7 @@ export const getContractCustom = (
 };
 
 export const getProvider = (blockchain) => {
+  console.log(blockchain, CHAINS[CHAIN_IDS_BY_NAME[blockchain]]);
   return new Web3.providers.HttpProvider(
     CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0],
   );
@@ -295,7 +296,6 @@ export const buyNFTsMatic = async ({
   }
   try {
     console.log("initiated");
-    setMessageBuy(`Processing your purchase...`);
 
     const { amounts, bid, token, tokensId } = {
       amounts: cart.map((item) => item.quantity),
@@ -320,14 +320,12 @@ export const buyNFTsMatic = async ({
       provider,
     );
     let price: any = 0;
-    console.log(marketplaceContract, "contract", token);
 
     const ERC20 = getContract("ERC20", token, blockchain);
     const addresses = getTokensAllowed(blockchain);
     if (
       !onlyAcceptsERC20(blockchain) &&
-      tokenSelected ===
-        addresses.filter((item) => item.name === "MATIC")[0]?.address
+      tokenSelected === addresses.filter((item) => item.main)[0]?.address
     ) {
       const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
       const priceMATIC = await Aggregator.methods.latestAnswer().call();
@@ -335,15 +333,23 @@ export const buyNFTsMatic = async ({
         ((bid * 10 ** 8) / priceMATIC).toString(),
         "ether",
       );
+
+      setMessageBuy(`Processing your purchase...`);
+
       await marketplaceContract.methods
         .buyBatch(tokensId, amounts, token)
         .send({ from: ethAddress, value: price });
     } else {
+      // const balanceOf = await ERC20.methods.balanceOf(ethAddress).call();
+      // if (balanceOf) {
+      // }
+      setMessageBuy(`Processing your purchase...`);
+
       const allowance = await ERC20.methods
         .allowance(ethAddress, marketplace)
         .call();
 
-      if (allowance < 1000000000000) {
+      if (allowance < 1000000000000000000) {
         setMessageBuy(
           `Increasing the allowance of ${
             tokensAllowed.filter((item) => item.address == token)[0].name

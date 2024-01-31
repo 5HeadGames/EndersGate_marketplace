@@ -94,10 +94,13 @@ export default function useMagicLink(networkId: number = 137) {
         provider: provider,
         providerName: "magic",
       });
+      setLoading(false);
+      return true;
     } catch (error) {
       console.log(error);
+      setLoading(false);
+      return false;
     }
-    setLoading(false);
   };
 
   const logout = async (updateUser: any) => {

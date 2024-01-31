@@ -743,10 +743,13 @@ export const buyFromShop = createAsyncThunk(
     try {
       const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
 
+      console.log(shopAddress, NATIVEUSD);
+
       const shop = getContractCustom("Shop", shopAddress, provider);
-      const tokensAllowed = getTokensAllowed(blockchain);
 
       setMessageBuy(`Processing your purchase...`);
+
+      console.log(tokenSelected);
 
       const { amounts, token, tokensId } = {
         amounts: cartShop.map((item) => item.quantity),
@@ -759,9 +762,11 @@ export const buyFromShop = createAsyncThunk(
       const addressesAllowed = getTokensAllowed(blockchain);
       if (
         !onlyAcceptsERC20(blockchain) &&
+        hasAggregatorFeed(blockchain) &&
         tokenSelected ===
           addressesAllowed.filter((item) => item.main)[0]?.address
       ) {
+        console.log("agg");
         const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
         const preprice =
@@ -799,15 +804,20 @@ export const buyFromShop = createAsyncThunk(
           .buyBatch(tokensId, amounts, token)
           .send({ from: account, value: price });
       } else {
+        console.log("no agg", token);
+
         const allowance = await ERC20.methods
           .allowance(account, shopAddress)
           .call();
 
+        console.log("allowance", allowance);
+
         if (allowance < 1000000000000) {
           setMessageBuy(
             `Increasing the allowance of ${
-              tokensAllowed.filter((item) => item.address === tokenSelected)[0]
-                .name
+              addressesAllowed.filter(
+                (item) => item.address === tokenSelected,
+              )[0].name
             } 1/2`,
           );
           const ERC20Token = getContractCustom("ERC20", token, provider);
@@ -917,7 +927,7 @@ export const buyERC1155 = createAsyncThunk(
       const addresses = getTokensAllowed(blockchain);
       if (
         !onlyAcceptsERC20(blockchain) &&
-        token === addresses.filter((item) => item.name === "MATIC")[0].address
+        token === addresses.filter((item) => item.main)[0].address
       ) {
         await marketplaceContract.methods
           .buy(tokenId, amount, token)
@@ -993,7 +1003,7 @@ export const rentERC1155 = createAsyncThunk(
 
       if (
         !onlyAcceptsERC20(blockchain) &&
-        token === addresses.filter((item) => item.name === "MATIC")[0]?.address
+        token === addresses.filter((item) => item.main)[0]?.address
       ) {
         await rentContract.methods
           .rent(tokenId, daysOfRent, token)
@@ -1124,8 +1134,7 @@ export const rentBatchERC1155 = createAsyncThunk(
       const addressesAllowed = getTokensAllowed(blockchain);
       if (
         tokenSelected ===
-          addressesAllowed.filter((item) => item.name === "MATIC")[0]
-            ?.address &&
+          addressesAllowed.filter((item) => item.main)[0]?.address &&
         hasAggregatorFeed(blockchain)
       ) {
         const Aggregator = getContractCustom(

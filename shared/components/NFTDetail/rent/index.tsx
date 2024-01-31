@@ -16,9 +16,13 @@ import { Icons } from "@shared/const/Icons";
 import { AddressText } from "../../common/specialFields/SpecialFields";
 import {
   getAddresses,
+  getContract,
+  getContractCustom,
   getNativeBlockchain,
   getTokensAllowed,
   getTokensAllowedMatic,
+  getWeb3,
+  hasAggregatorFeed,
   switchChain,
 } from "@shared/web3";
 import packs from "../../../packs.json";
@@ -29,14 +33,19 @@ import Styles from "../styles.module.scss";
 // import div from "react-parallax-div";
 import { DropdownActions } from "../../common/dropdowns/dropdownActions/dropdownActions";
 import ReactCardFlip from "react-card-flip";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "../../../utils/chains";
+import {
+  CHAINS,
+  CHAIN_IDS_BY_NAME,
+  CHAIN_TRANSAK_BY_NAME,
+} from "../../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
-import { formatPrice } from "@shared/utils/formatPrice";
+import { formatPrice, multiply } from "@shared/utils/formatPrice";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { ModalRent } from "./ModalRent";
 import { RentStatusInfo } from "@shared/components/Profile/rents";
 import { useUser } from "@shared/context/useUser";
+import { AddFundsModal } from "@shared/components/common/addFunds";
 
 const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   const {
@@ -47,6 +56,8 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   const [isLoading, setIsLoading] = React.useState<any>(false);
   const [rentNFTDays, setRentNFTDays] = React.useState(0);
   const { Modal, show, hide, isShow } = useModal();
+  const [balance, setBalance] = React.useState(0);
+  const [priceNative, setPriceNative] = React.useState(0);
   const [isPack, setIsPack] = React.useState(false);
   const [flippedCard, setFlippedCard] = React.useState(false);
   const router = useRouter();
@@ -56,18 +67,35 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
     lowest_price: "Price: Low to High",
     highest_price: "Price: High to Low",
   };
+  const {
+    Modal: ModalFunds,
+    show: showFunds,
+    hide: hideFunds,
+    isShow: isShowFunds,
+  } = useModal();
 
   const cards: any[] = convertArrayCards();
 
-  const [tokenSelected, setTokenSelected] = React.useState({ address: "" });
+  const [tokenSelected, setTokenSelected] = React.useState({
+    address: "",
+    name: "",
+    transak: false,
+    main: false,
+  });
+  const [priceToken, setPriceToken] = React.useState(0);
 
   const [message, setMessage] = React.useState("");
 
   const { blockchain, updateBlockchain } = useBlockchain();
 
+  const {
+    user: { ethAddress },
+  } = useUser();
+
   const nfts = useAppSelector((state) => state.nfts);
 
   const tokensAllowed = getTokensAllowed(rent?.blockchain);
+  const addresses = getAddresses(rent?.blockchain);
 
   React.useEffect(() => {
     if (id && nfts?.allRents?.length) {
@@ -89,6 +117,28 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   };
 
   const rentNft = async () => {
+    console.log("BUY");
+    try {
+      if (!(await hasBalance())) {
+        console.log("no has");
+        if (blockchain != "skl" && tokenSelected.transak == true) {
+          showFunds();
+        } else {
+          toast.error(
+            "You don't have enough funds to buy, please fill your wallet",
+          );
+        }
+      } else {
+        console.log("has balance");
+
+        await rentNFTProcess();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const rentNFTProcess = async () => {
     setIsLoading(true);
     if (!user) {
       router.push("/login");
@@ -104,6 +154,9 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
 
       setMessage("Renting tokens");
       const { pack, endersGate } = getAddresses(rent.blockchain);
+
+      const tokensAllowed = getTokensAllowed(rent?.blockchain);
+      const addresses = getAddresses(rent?.blockchain);
 
       if (getNativeBlockchain(rent.blockchain)) {
         await dispatch(
@@ -152,8 +205,133 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
     setRentNFTDays(0);
   };
 
+  const getPriceNative = async (price: any) => {
+    const Aggregator = getContractCustom(
+      "Aggregator",
+      addresses.NATIVEUSD,
+      provider,
+    );
+    const priceMATIC = await Aggregator.methods.latestAnswer().call();
+    const priceNative = (BigInt(price) * BigInt(10 ** 8)) / BigInt(priceMATIC);
+    console.log(price);
+    const returnedPrice = parseFloat(
+      (
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) +
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) *
+          0.0005
+      ).toFixed(6),
+    );
+    setPriceNative(returnedPrice);
+    return returnedPrice;
+  };
+
+  const hasBalanceNative = async (price) => {
+    const web3 = await getWeb3(provider);
+    var balance = await web3.eth.getBalance(ethAddress);
+
+    if (hasAggregatorFeed(rent?.blockchain)) {
+      console.log("agg");
+      const priceNative = await getPriceNative(price);
+      setBalance(parseFloat(Web3.utils.fromWei(balance, "ether")));
+      console.log(
+        price,
+        priceNative,
+        balance,
+        parseFloat(Web3.utils.fromWei(balance, "ether")),
+      );
+      if (priceNative < parseFloat(Web3.utils.fromWei(balance, "ether"))) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      console.log("no agg");
+      if (price < balance) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  const hasBalanceToken = async (price, token) => {
+    const ERC20 = await getContract("ERC20", token, blockchain);
+    var balance = await ERC20.methods.balanceOf(ethAddress).call();
+    var decimals = await ERC20.methods.decimals().call();
+    setBalance(balance / 10 ** decimals);
+    setPriceToken(price / 10 ** decimals);
+    if (parseInt(balance) >= parseInt(price)) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const hasBalance = async () => {
+    console.log("has balance join");
+    const addresses = getTokensAllowed(blockchain);
+    console.log(
+      tokenSelected,
+      addresses.filter((item) => item.main)[0]?.address,
+    );
+
+    if (
+      tokenSelected.address == addresses.filter((item) => item.main)[0]?.address
+    ) {
+      console.log("native", rent, rentNFTDays);
+      return hasBalanceNative(multiply(rent.price, rentNFTDays.toString()));
+    } else {
+      console.log("no native", rent);
+
+      return hasBalanceToken(
+        multiply(rent.price, rentNFTDays.toString()),
+        tokenSelected.address,
+      );
+    }
+  };
+
   return (
     <>
+      <ModalFunds isShow={isShowFunds} withoutX>
+        <AddFundsModal
+          amount={
+            tokenSelected.address ==
+            getTokensAllowed(rent?.blockchain)?.filter((item) => item.main)[0]
+              ?.address
+              ? priceNative
+              : multiply(rent?.price || "0", rentNFTDays.toString() || "0")
+          }
+          reload={hasBalance}
+          token={tokenSelected.name}
+          tokenSelected={tokenSelected}
+          network={CHAIN_TRANSAK_BY_NAME[blockchain]}
+          wallet={user}
+          balance={balance}
+          loading={false}
+          onClick={async () => {
+            try {
+              if (!(await hasBalance())) {
+                toast.error("You don't have enough balance to rent this NFT.");
+              } else {
+                await rentNFTProcess();
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          }}
+          hide={hideFunds}
+        />
+      </ModalFunds>
       <Modal isShow={isShow} withoutX>
         {id !== undefined && rent !== undefined && (
           <ModalRent

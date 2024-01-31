@@ -206,6 +206,16 @@ export const CHAIN_NAME_BY_ID: {
   503129905: "skl",
 };
 
+export const CHAIN_TRANSAK_BY_NAME: {
+  [chain: string]: any;
+} = {
+  matic: "polygon",
+  eth: "ethereum",
+  imx: "immutablezkevm",
+  skl: "skaleeuropa",
+  linea: "linea",
+};
+
 export const blockchains = [
   {
     name: "ETHEREUM",

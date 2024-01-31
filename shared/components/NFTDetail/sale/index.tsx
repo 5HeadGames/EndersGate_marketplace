@@ -17,9 +17,13 @@ import {
   buyNFTsMatic,
   buyNFTsNative,
   getAddresses,
+  getContract,
+  getContractCustom,
   getNativeBlockchain,
   getTokensAllowed,
   getTokensAllowedMatic,
+  getWeb3,
+  hasAggregatorFeed,
   switchChain,
 } from "@shared/web3";
 import packs from "../../../packs.json";
@@ -30,10 +34,14 @@ import Styles from "../styles.module.scss";
 // import Tilt from "react-parallax-tilt";
 import { DropdownActions } from "../../common/dropdowns/dropdownActions/dropdownActions";
 import ReactCardFlip from "react-card-flip";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "../../../utils/chains";
+import {
+  CHAINS,
+  CHAIN_IDS_BY_NAME,
+  CHAIN_TRANSAK_BY_NAME,
+} from "../../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
-import { formatPrice } from "@shared/utils/formatPrice";
+import { formatPrice, multiply } from "@shared/utils/formatPrice";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { ModalSale } from "./ModalSale";
 import { useUser } from "@shared/context/useUser";
@@ -41,6 +49,7 @@ import {
   RentStatusInfo,
   SaleStatusInfo,
 } from "@shared/components/Profile/rents";
+import { AddFundsModal } from "@shared/components/common/addFunds";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const {
@@ -49,11 +58,19 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const [sale, setSale] = React.useState<any>();
   const [buyNFTData, setBuyNFTData] = React.useState(0);
+  const [balance, setBalance] = React.useState(0);
+  const [priceNative, setPriceNative] = React.useState(0);
+  const [priceToken, setPriceToken] = React.useState(0);
   const { Modal, show, hide, isShow } = useModal();
+  const {
+    Modal: ModalFunds,
+    show: showFunds,
+    hide: hideFunds,
+    isShow: isShowFunds,
+  } = useModal();
   const [isPack, setIsPack] = React.useState(false);
   const [flippedCard, setFlippedCard] = React.useState(false);
   const router = useRouter();
-  const pathname = usePathname();
   const dispatch = useAppDispatch();
   const [currentOrder, setCurrentOrder] = React.useState("lowest_price");
   const orderMapper = {
@@ -63,12 +80,17 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const cards: any[] = convertArrayCards();
 
-  const [tokenSelected, setTokenSelected] = React.useState({ address: "" });
+  const [tokenSelected, setTokenSelected] = React.useState({
+    address: "",
+    name: "",
+    transak: false,
+    main: false,
+  });
 
   const [message, setMessage] = React.useState("");
 
   const tokensAllowed = getTokensAllowed(sale?.blockchain);
-
+  const addresses = getAddresses(sale?.blockchain);
   const { blockchain, updateBlockchain } = useBlockchain();
   const {
     user: { ethAddress },
@@ -97,11 +119,52 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     }
   };
 
+  const getPriceNative = async (price: any) => {
+    const Aggregator = getContractCustom(
+      "Aggregator",
+      addresses.NATIVEUSD,
+      provider,
+    );
+    const priceMATIC = await Aggregator.methods.latestAnswer().call();
+    const priceNative = (BigInt(price) * BigInt(10 ** 8)) / BigInt(priceMATIC);
+    console.log(price);
+    const returnedPrice = parseFloat(
+      (
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) +
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) *
+          0.0005
+      ).toFixed(6),
+    );
+    setPriceNative(returnedPrice);
+    return returnedPrice;
+  };
+
   const buyNft = async () => {
     console.log("BUY");
-    if (!user) {
-      router.push("/login?redirect=true&redirectAddress=" + pathname);
+    try {
+      if (!(await hasBalance())) {
+        showFunds();
+      } else {
+        console.log("has balance");
+
+        await buyNFTProcess();
+      }
+    } catch (err) {
+      console.log(err);
     }
+  };
+
+  const buyNFTProcess = async () => {
     try {
       const changed = await switchChain(CHAIN_IDS_BY_NAME[sale.blockchain]);
       if (!changed) {
@@ -111,12 +174,13 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
       }
       updateBlockchain(sale.blockchain);
 
-      const { marketplace, MATICUSD } = getAddresses(sale.blockchain);
+      const { marketplace, NATIVEUSD } = getAddresses(sale.blockchain);
       if (!getNativeBlockchain(blockchain)) {
         if (!tokenSelected) {
           setMessage("");
           return toast.error("Please select a token as a payment");
         }
+
         await buyNFTsMatic({
           tokenSelected: tokenSelected.address,
           setMessageBuy: setMessage,
@@ -125,7 +189,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
           provider,
           ethAddress,
           tokensAllowed,
-          NATIVEUSD: MATICUSD,
+          NATIVEUSD: NATIVEUSD,
           dispatch,
           blockchain,
         });
@@ -150,12 +214,109 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     setBuyNFTData(0);
   };
 
+  const hasBalanceNative = async (price) => {
+    const web3 = await getWeb3(provider);
+    var balance = await web3.eth.getBalance(ethAddress);
+
+    if (hasAggregatorFeed(sale?.blockchain)) {
+      console.log("agg");
+      const priceNative = await getPriceNative(price);
+      setBalance(parseFloat(Web3.utils.fromWei(balance, "ether")));
+      console.log(
+        price,
+        priceNative,
+        balance,
+        parseFloat(Web3.utils.fromWei(balance, "ether")),
+      );
+      if (priceNative < parseFloat(Web3.utils.fromWei(balance, "ether"))) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      console.log("no agg");
+      if (price < balance) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  const hasBalanceToken = async (price, token) => {
+    const ERC20 = await getContract("ERC20", token, blockchain);
+    var balanceERC20 = await ERC20.methods.balanceOf(ethAddress).call();
+    var decimals = await ERC20.methods.decimals().call();
+    setBalance(balanceERC20 / 10 ** decimals);
+    setPriceToken(price / 10 ** decimals);
+    if (parseInt(balanceERC20) >= parseInt(price)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const hasBalance = async () => {
+    console.log("has balance join");
+    const addresses = getTokensAllowed(blockchain);
+    console.log(
+      tokenSelected,
+      addresses.filter((item) => item.main)[0]?.address,
+    );
+
+    if (
+      tokenSelected.address == addresses.filter((item) => item.main)[0]?.address
+    ) {
+      console.log("native", sale, buyNFTData);
+      return hasBalanceNative(multiply(sale.price, buyNFTData.toString()));
+    } else {
+      console.log("no native", sale);
+
+      return hasBalanceToken(
+        multiply(sale.price, buyNFTData.toString()),
+        tokenSelected.address,
+      );
+    }
+  };
+
   const notAvailable =
     Math.floor(new Date().getTime() / 1000) >=
     parseInt(sale?.duration) + parseInt(sale?.startedAt);
 
   return (
     <>
+      <ModalFunds isShow={isShowFunds} withoutX>
+        <AddFundsModal
+          amount={
+            tokenSelected.address ==
+            getTokensAllowed(sale?.blockchain)?.filter((item) => item.main)[0]
+              ?.address
+              ? priceNative
+              : priceToken
+          }
+          reload={hasBalance}
+          token={tokenSelected.name}
+          tokenSelected={tokenSelected}
+          network={CHAIN_TRANSAK_BY_NAME[blockchain]}
+          wallet={user}
+          balance={balance}
+          loading={false}
+          onClick={async () => {
+            try {
+              if (!(await hasBalance())) {
+                toast.error("You don't have enough balance to buy this NFT.");
+              } else {
+                console.log("has balance");
+
+                await buyNFTProcess();
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          }}
+          hide={hideFunds}
+        />
+      </ModalFunds>
       <Modal isShow={isShow} withoutX>
         {id !== undefined && sale !== undefined && (
           <ModalSale

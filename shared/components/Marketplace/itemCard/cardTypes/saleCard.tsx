@@ -315,17 +315,18 @@ export const SaleCard = ({ classes, sale, icon, name, setPage, rent }: any) => {
               "flex w-full gap-4 absolute transition-all duration-500  px-8 z-[1]  font-bold text-white",
             )}
           >
-            <div
+            <Link
               onClick={() => {}}
               className="w-1/2 px-2 pb-1 flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-green-button hover:!text-overlay transition-all duration-500"
+              href={`/sale/${sale.id}`}
             >
               Buy Now
-            </div>
+            </Link>
             <Link
               className="w-1/2 px-2 pb-1  flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-overlay-2 transition-all duration-500"
               href={`/sale/${sale.id}`}
             >
-              <>Details</>
+              Details
             </Link>
           </div>
         )}

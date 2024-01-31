@@ -3,6 +3,7 @@
     "address": "0xf3cD27813B5ff6ADEA3805DCf181053AC62D6Ec3",
     "name": "MATIC",
     "logo": "/images/matic.png",
+    "main": true,
     "transak": true
   },
   {
@@ -14,7 +15,6 @@
   {
     "address": "0xBD3045b233bd07a15c8c782ec8702fb5D7Eef163",
     "name": "BUSD",
-    "logo": "/images/busd.png",
-    "main": false
+    "logo": "/images/busd.png"
   }
 ]
