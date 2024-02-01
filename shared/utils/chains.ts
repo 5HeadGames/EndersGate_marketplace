@@ -227,11 +227,11 @@ export const blockchains = [
     value: "matic",
     image: "/images/matic.png",
   },
-  {
-    name: "LINEA",
-    value: "linea",
-    image: "/images/linea.png",
-  },
+  // {
+  //   name: "LINEA",
+  //   value: "linea",
+  //   image: "/images/linea.png",
+  // },
   // {
   //   name: "FINDORA GSC",
   //   value: "findora",

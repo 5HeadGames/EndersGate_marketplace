@@ -185,23 +185,16 @@ const SwapComponent = () => {
 
       for (const element of packsToExchange) {
         const item = element;
-        const pack = getContractCustom("ERC721Seadrop", item.address, provider);
-        const isApproved = await pack.methods
-          .isApprovedForAll(user, exchange)
-          .call();
-
-        if (isApproved == false) {
-          const res: any = dispatch(
-            onApproveERC1155({
-              from: user,
-              pack: item.address,
-              provider: provider,
-              exchange,
-            }),
-          );
-          if (res?.payload?.err) {
-            throw new Error(res?.payload.err.message);
-          }
+        const res: any = dispatch(
+          onApproveERC1155({
+            from: user,
+            pack: item.address,
+            provider: provider,
+            exchange,
+          }),
+        );
+        if (res?.payload?.err) {
+          throw new Error(res?.payload.err.message);
         }
       }
 
@@ -250,22 +243,16 @@ const SwapComponent = () => {
 
       for (const element of cardsToExchange) {
         const item = element;
-        const eg = getContract("ERC721Seadrop", item.address, blockchain);
-        const isApproved = await eg.methods
-          .isApprovedForAll(user, exchangeEG)
-          .call();
-        if (isApproved == false) {
-          const res: any = dispatch(
-            onApproveERC1155({
-              from: user,
-              pack: item.address,
-              provider: provider,
-              exchange: exchangeEG,
-            }),
-          );
-          if (res?.payload?.err) {
-            throw new Error(res?.payload.err.message);
-          }
+        const res: any = dispatch(
+          onApproveERC1155({
+            from: user,
+            pack: item.address,
+            provider: provider,
+            exchange: exchangeEG,
+          }),
+        );
+        if (res?.payload?.err) {
+          throw new Error(res?.payload.err.message);
         }
       }
 
