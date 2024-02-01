@@ -43,7 +43,7 @@ const Inventory = () => {
 
   React.useEffect(() => {
     dispatch(onGetAssets({ address: ethAddress, blockchain }));
-  }, [user, ethAddress]);
+  }, [user, ethAddress, blockchain]);
 
   React.useEffect(() => {
     const arrayPacks: any = [];

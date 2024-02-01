@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ReloadOutlined } from "@ant-design/icons";
 import { XIcon } from "@heroicons/react/solid";
+import { useBlockchain } from "@shared/context/useBlockchain";
 import { useModal } from "@shared/hooks/modal";
 import React from "react";
 import { Button } from "../button";
@@ -19,6 +20,7 @@ export const AddFundsModal = ({
   tokenSelected,
 }) => {
   const { Modal, show, isShow, hide: hideTransak } = useModal();
+  const { blockchain } = useBlockchain();
   return (
     <>
       <Modal isShow={isShow} withoutX>
@@ -44,8 +46,12 @@ export const AddFundsModal = ({
           Add funds to purchase
         </div>
         <p className="text-center text-xl font-bold text-white">
-          You need ({amount}) {token} +{" "}
-          <span className="text-green-button">gas fees</span>
+          You need ({amount}) {token}
+          {blockchain !== "skl" && (
+            <>
+              + <span className="text-green-button">gas fees</span>
+            </>
+          )}
         </p>
         <p className="text-center text-sm text-white py-4">
           Add funds to your wallet or add funds with a card. Balance updates may

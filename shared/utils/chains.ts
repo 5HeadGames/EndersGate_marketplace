@@ -114,25 +114,25 @@ export const CHAINS: {
   //   type: "testnet",
   // },
 
-  // 59144: {
-  //   urls: ["https://linea.blockpi.network/v1/rpc/public"],
-  //   name: "Linea",
-  //   rpcUrls: ["https://linea.blockpi.network/v1/rpc/public"],
-  //   nativeCurrency: ETH,
-  //   blockExplorerUrls: ["https://lineascan.build/"],
-  //   blockExplorer: "https://lineascan.build/",
-  //   type: "mainnet",
-  // },
+  59144: {
+    urls: ["https://linea.blockpi.network/v1/rpc/public"],
+    name: "Linea",
+    rpcUrls: ["https://linea.blockpi.network/v1/rpc/public"],
+    nativeCurrency: ETH,
+    blockExplorerUrls: ["https://lineascan.build/"],
+    blockExplorer: "https://lineascan.build/",
+    type: "mainnet",
+  },
 
-  // 59140: {
-  //   urls: ["https://rpc.goerli.linea.build"],
-  //   name: "Linea Goerli",
-  //   rpcUrls: ["https://rpc.goerli.linea.build"],
-  //   nativeCurrency: LINEA,
-  //   blockExplorerUrls: ["https://explorer.goerli.linea.build/"],
-  //   blockExplorer: "https://explorer.goerli.linea.build/",
-  //   type: "testnet",
-  // },
+  59140: {
+    urls: ["https://rpc.goerli.linea.build"],
+    name: "Linea Goerli",
+    rpcUrls: ["https://rpc.goerli.linea.build"],
+    nativeCurrency: LINEA,
+    blockExplorerUrls: ["https://explorer.goerli.linea.build/"],
+    blockExplorer: "https://explorer.goerli.linea.build/",
+    type: "testnet",
+  },
 
   137: {
     urls: [
@@ -227,11 +227,11 @@ export const blockchains = [
     value: "matic",
     image: "/images/matic.png",
   },
-  // {
-  //   name: "LINEA",
-  //   value: "linea",
-  //   image: "/images/linea.png",
-  // },
+  {
+    name: "LINEA",
+    value: "linea",
+    image: "/images/linea.png",
+  },
   // {
   //   name: "FINDORA GSC",
   //   value: "findora",
