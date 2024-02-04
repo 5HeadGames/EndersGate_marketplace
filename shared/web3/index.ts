@@ -126,9 +126,12 @@ export const getAddressesEth = () => {
 };
 
 export const getAddressesSkale = () => {
-  const addresses = require("../../Contracts/addresses.skale.json");
+  const testAddresses = require("../../Contracts/addresses.nebula_test.json");
+  const addresses = require("../../Contracts/addresses.nebula.json");
 
-  return addresses;
+  return process.env.NEXT_PUBLIC_ENV === "production"
+    ? addresses
+    : testAddresses;
 };
 
 export const getAddressesLinea = () => {

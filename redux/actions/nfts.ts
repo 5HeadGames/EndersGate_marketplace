@@ -125,6 +125,7 @@ export const onLoadSales = createAsyncThunk(
         const blockchain: any = element;
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
+        console.log(addresses, "a?");
 
         /* SALES */
         const marketplace = getContract(
