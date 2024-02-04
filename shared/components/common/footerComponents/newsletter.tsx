@@ -5,6 +5,8 @@ import clsx from "clsx";
 import { useForm } from "react-hook-form";
 import { InputEmail } from "../form/input-email";
 import { Button } from "../button";
+import { child, get, getDatabase, ref, set } from "firebase/database";
+import { toast } from "react-hot-toast";
 
 export const Newsletter = () => {
   const {
@@ -13,6 +15,31 @@ export const Newsletter = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const sendNewsletterSign = async (data) => {
+    try {
+      const db = getDatabase();
+      const dbRef = ref(db);
+      const txs = (await get(child(dbRef, `newsletter`))).exists()
+        ? (await get(child(dbRef, `newsletter`))).val()
+        : [];
+      if (txs.length > 0) {
+        const newArray = Object.keys(txs).map((item) => {
+          return txs[item];
+        });
+        newArray.push(data);
+        set(ref(db, "newsletter"), newArray);
+      } else {
+        txs.push(data);
+        console.log(txs, "newsletter");
+        set(ref(db, "newsletter"), txs);
+      }
+      toast.success("You've been added to our newsletter succesfully!");
+    } catch (err) {
+      toast.error("There was an error in your request. Please try again later");
+    }
+  };
+
   return (
     <div
       className={clsx(
@@ -26,7 +53,7 @@ export const Newsletter = () => {
       </p>
       <form
         className="flex sm:flex-row flex-col items-center justify-center gap-4 w-full"
-        onSubmit={handleSubmit((data) => console.log(data))}
+        onSubmit={handleSubmit(sendNewsletterSign)}
       >
         <InputEmail
           register={register}
