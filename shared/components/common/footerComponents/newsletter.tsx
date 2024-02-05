@@ -16,26 +16,39 @@ export const Newsletter = () => {
     formState: { errors },
   } = useForm();
 
-  const sendNewsletterSign = async (data) => {
+  const sendNewsletterSign = async (data: any) => {
     try {
       const db = getDatabase();
       const dbRef = ref(db);
-      const txs = (await get(child(dbRef, `newsletter`))).exists()
+      console.log(
+        db,
+        "db",
+        (await get(child(dbRef, `newsletter`))).exists(),
+        "exists",
+        (await get(child(dbRef, `newsletter`))).val(),
+      );
+      const emails: any = (await get(child(dbRef, `newsletter`))).exists()
         ? (await get(child(dbRef, `newsletter`))).val()
         : [];
-      if (txs.length > 0) {
-        const newArray = Object.keys(txs).map((item) => {
-          return txs[item];
-        });
-        newArray.push(data);
-        set(ref(db, "newsletter"), newArray);
+      console.log(emails, data.email, "emails");
+      if (!emails.map((email) => email.email).includes(data.email)) {
+        if (emails?.length > 0) {
+          const newArray = Object.keys(emails).map((item) => {
+            return emails[item];
+          });
+          newArray.push(data);
+          set(ref(db, "newsletter"), newArray);
+        } else {
+          emails.push(data);
+          console.log(emails, "newsletter");
+          set(ref(db, "newsletter"), [data]);
+        }
+        toast.success("You've been added to our newsletter succesfully!");
       } else {
-        txs.push(data);
-        console.log(txs, "newsletter");
-        set(ref(db, "newsletter"), txs);
+        toast.error("You've email was already added to our newsletter!");
       }
-      toast.success("You've been added to our newsletter succesfully!");
     } catch (err) {
+      console.log("error:", err);
       toast.error("There was an error in your request. Please try again later");
     }
   };
@@ -58,11 +71,12 @@ export const Newsletter = () => {
         <InputEmail
           register={register}
           name="email"
+          type={"email"}
           reset={reset}
           error={errors.email}
           placeholder="Enter your Gmail address"
-          classNameContainer="rounded-xl py-3 px-2"
-          className="md:w-1/2 w-full font-[500] text-[20px] "
+          classNameContainer="rounded-xl py-3 px-4"
+          className="md:w-1/2 w-full font-[500] text-[16px] "
         />
         <Button
           type="submit"

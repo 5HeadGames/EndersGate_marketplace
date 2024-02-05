@@ -41,19 +41,6 @@ export default function RootLayout({ children }: { children: any }) {
     },
   });
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCtkRgLKQD7vMLqf9v4iNqWclGaRW8z2Zs",
-    authDomain: "endersgate-1ff81.firebaseapp.com",
-    databaseURL: "https://endersgate-1ff81-default-rtdb.firebaseio.com",
-    projectId: "endersgate-1ff81",
-    storageBucket: "endersgate-1ff81.appspot.com",
-    messagingSenderId: "248387184050",
-    appId: "1:248387184050:web:b872255ff8f7375880f0ab",
-    measurementId: "G-K1H6HYR0C8",
-  };
-
-  const app = initializeApp(firebaseConfig);
-
   return (
     <html lang="en">
       <head>
