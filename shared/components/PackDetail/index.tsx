@@ -18,9 +18,10 @@ import {
 import { Button } from "../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import {
-  getAddressesMatic,
+  getAddresses,
   getContractCustom,
   getNativeBlockchain,
+  getTokensAllowed,
   getTokensAllowedMatic,
 } from "@shared/web3";
 import { Typography } from "../common/typography";
@@ -57,7 +58,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
 
   const [tokensSelected, setTokensSelected] = React.useState<any>([]);
 
-  const { pack } = getAddressesMatic();
+  const { pack } = getAddresses(blockchain);
 
   const sellNft = async () => {
     if (sellNFTData.amount > NFTs.balancePacks[id]?.balance) {
@@ -77,7 +78,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
     }
     try {
       const tokenId = id;
-      const { pack, marketplace } = getAddressesMatic();
+      const { pack, marketplace } = getAddresses(blockchain);
       const endersgateInstance = getContractCustom(
         "EndersPack",
         pack,
@@ -162,10 +163,10 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
   };
 
   React.useEffect(() => {
-    setTokensSelected(getTokensAllowedMatic().map((item) => item.address));
+    setTokensSelected(getTokensAllowed(blockchain).map((item) => item.address));
   }, []);
 
-  const tokensAllowed = getTokensAllowedMatic();
+  const tokensAllowed = getTokensAllowed(blockchain);
 
   return (
     <>

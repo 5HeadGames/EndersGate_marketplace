@@ -174,8 +174,11 @@ export const getTokensAllowedEth = () => {
 };
 
 export const getTokensAllowedSkale = () => {
-  const addresses = require("../../Contracts/tokensAllowed.skale.json");
-  return addresses;
+  const testAddresses = require("../../Contracts/tokensAllowed.nebula_test.json");
+  const addresses = require("../../Contracts/tokensAllowed.nebula.json");
+  return process.env.NEXT_PUBLIC_ENV === "production"
+    ? addresses
+    : testAddresses;
 };
 
 export const getTokensAllowedLinea = () => {

@@ -62,8 +62,6 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
 
   const tokensAllowed = getTokensAllowed(blockchain);
 
-  console.log();
-
   const { cartShop } = useSelector((state: any) => state.layout);
 
   const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
@@ -183,6 +181,8 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
 
   const hasBalance = async () => {
     console.log("has balance join");
+    console.log("has balance", data, blockchain, getAddresses(blockchain));
+
     const addresses = getTokensAllowed(blockchain);
     if (
       tokenSelected.address ===
@@ -217,7 +217,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
         showFunds();
         setData(data);
       } else {
-        console.log("has balance");
+        console.log("has balance", data, blockchain, getAddresses(blockchain));
         await buyPacksProcess(data);
       }
     } catch (err) {
