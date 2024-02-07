@@ -197,6 +197,7 @@ export const approveERC1155 = async ({
   to: string;
   address: string;
 }) => {
+  await getSFUEL(from);
   const erc1155Contract = getContractCustom("EndersPack", address, provider);
   return await erc1155Contract.methods.setApprovalForAll(to, true).send({
     from: from,
@@ -301,6 +302,7 @@ export const buyNFTsMatic = async ({
     return;
   }
   try {
+    await getSFUEL(ethAddress);
     console.log("initiated");
 
     const { amounts, bid, token, tokensId } = {
@@ -400,6 +402,7 @@ export const buyNFTsNative = async ({
   dispatch,
 }) => {
   try {
+    await getSFUEL(ethAddress);
     setMessageBuy(`Processing your purchase...`);
 
     const { amounts, bid, tokensId } = {
@@ -433,6 +436,8 @@ export const buyNFTsNative = async ({
 
 export const redeemNFT = async ({ tokenId, provider, user, blockchain }) => {
   try {
+    await getSFUEL(user);
+
     const { rent } = getAddresses(blockchain);
     const rentContract = getContractCustom(
       onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
@@ -457,7 +462,7 @@ export const onCancelSale = async (args: {
 }) => {
   try {
     const { tokenId, provider, user, blockchain } = args;
-
+    await getSFUEL(user);
     const { marketplace } = getAddresses(blockchain);
     const marketplaceContract = getContractCustom(
       getNativeBlockchain(blockchain)
@@ -609,7 +614,7 @@ export const getSFUEL = async (address) => {
     gasPrice: Web3.utils.toHex(20 * Math.pow(10, 9)), // optional
   };
 
-  if (parseFloat(Web3.utils.fromWei(balance, "ether")) <= 0.000001) {
+  if (parseFloat(Web3.utils.fromWei(balance, "ether")) < 0.000001) {
     const signedTx: any = await web3.eth.accounts.signTransaction(params, pk);
     web3.eth
       .sendSignedTransaction(signedTx.rawTransaction)
@@ -619,7 +624,5 @@ export const getSFUEL = async (address) => {
       .on("error", () => {
         toast.error("An error has ocurred");
       });
-  } else {
-    toast.error("You have enough sFUEL to make txs");
   }
 };
