@@ -95,6 +95,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
           from: user,
           to: marketplace,
           address: pack,
+          blockchain,
         });
       }
       setMessage("Listing your tokens");
@@ -127,6 +128,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
             from: user,
             to: marketplace,
             address: pack,
+            blockchain,
           });
         }
         setMessage("Listing your tokens");

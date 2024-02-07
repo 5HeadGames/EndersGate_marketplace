@@ -547,7 +547,7 @@ export const onExchangeEGERC721to1155 = createAsyncThunk(
     } = args;
 
     try {
-      await getSFUEL(from);
+      await getSFUEL(from, blockchain);
       const { exchangeEG } = getAddresses(blockchain);
 
       const marketplaceContract = getContractCustom(
@@ -586,7 +586,6 @@ export const onApproveERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      await getSFUEL(from);
       const ERC721SeaDrop = getContractCustom("ERC721Seadrop", pack, provider);
 
       await ERC721SeaDrop.methods
@@ -630,7 +629,7 @@ export const sellERC1155 = createAsyncThunk(
       blockchain,
     } = args;
     try {
-      await getSFUEL(from);
+      await getSFUEL(from, blockchain);
       const { marketplace } = getAddresses(blockchain);
 
       const marketplaceContract = getContractCustom(
@@ -678,7 +677,7 @@ export const listRentERC1155 = createAsyncThunk(
       blockchain,
     } = args;
     try {
-      await getSFUEL(from);
+      await getSFUEL(from, blockchain);
       const { rent } = getAddresses(blockchain);
 
       const rentContract = getContractCustom("Rent", rent, provider);
@@ -707,7 +706,7 @@ export const listRentERC1155Native = createAsyncThunk(
   }) {
     const { from, tokenId, pricePerDay, address, provider, blockchain } = args;
     try {
-      await getSFUEL(from);
+      await getSFUEL(from, blockchain);
       const { rent } = getAddresses(blockchain);
 
       const rentContract = getContractCustom("RentNative", rent, provider);
@@ -748,7 +747,7 @@ export const buyFromShop = createAsyncThunk(
     let tx;
 
     try {
-      await getSFUEL(account);
+      await getSFUEL(account, blockchain);
       const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
 
       console.log(shopAddress, NATIVEUSD);
@@ -875,7 +874,7 @@ export const buyFromShopNative = createAsyncThunk(
     let tx;
 
     try {
-      await getSFUEL(account);
+      await getSFUEL(account, blockchain);
       const { shop: shopAddress } = getAddresses(blockchain);
 
       const shop = getContractCustom("ShopFindora", shopAddress, provider);
@@ -921,7 +920,7 @@ export const buyERC1155 = createAsyncThunk(
     const { seller, tokenId, token, amount, bid, provider, user, blockchain } =
       args;
     try {
-      await getSFUEL(user);
+      await getSFUEL(user, blockchain);
       const { marketplace } = getAddresses(blockchain);
       console.log(marketplace, "marketplace");
       const marketplaceContract = getContractCustom(
@@ -1002,7 +1001,7 @@ export const rentERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      await getSFUEL(user);
+      await getSFUEL(user, blockchain);
       const { rent } = getAddresses(blockchain);
       const rentContract = getContractCustom(
         onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
@@ -1077,7 +1076,7 @@ export const rentERC1155Native = createAsyncThunk(
     } = args;
 
     try {
-      await getSFUEL(user);
+      await getSFUEL(user, blockchain);
       const { rent } = getAddresses(blockchain);
       const rentContract = getContractCustom("RentNative", rent, provider);
 
@@ -1122,7 +1121,7 @@ export const rentBatchERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      await getSFUEL(account);
+      await getSFUEL(account, blockchain);
       const { rent, NATIVEUSD: NATIVE_TO_USD } = getAddresses(blockchain);
 
       console.log("token");
@@ -1245,7 +1244,7 @@ export const rentBatchERC1155Native = createAsyncThunk(
     } = args;
 
     try {
-      await getSFUEL(account);
+      await getSFUEL(account, blockchain);
       const { rent } = getAddresses(blockchain);
 
       const rentContract = getContractCustom("RentNative", rent, provider);
@@ -1313,7 +1312,7 @@ export const sellERC1155Native = createAsyncThunk(
     } = args;
 
     try {
-      await getSFUEL(from);
+      await getSFUEL(from, blockchain);
       const { marketplace } = getAddresses(blockchain);
 
       const marketplaceContract = getContractCustom(
@@ -1377,7 +1376,7 @@ export const cancelRent = createAsyncThunk(
     blockchain: any;
   }) {
     const { tokenId, provider, user, blockchain } = args;
-    await getSFUEL(user);
+    await getSFUEL(user, blockchain);
     const { rent } = getAddresses(blockchain);
     const rentContract = getContractCustom(
       onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
@@ -1397,7 +1396,7 @@ export const redeemRent = createAsyncThunk(
     blockchain: any;
   }) {
     const { tokenId, provider, user, blockchain } = args;
-    await getSFUEL(user);
+    await getSFUEL(user, blockchain);
     const { rent } = getAddresses(blockchain);
     const rentContract = getContractCustom(
       onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
