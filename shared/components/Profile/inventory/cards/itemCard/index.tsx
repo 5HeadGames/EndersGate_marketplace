@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import clsx from "clsx";
 import Web3 from "web3";
@@ -10,7 +11,7 @@ import {
   Container,
 } from "@chakra-ui/react";
 import ReactCardFlip from "react-card-flip";
-import Tilt from "react-parallax-tilt";
+// import Tilt from "react-parallax-tilt";
 import { LoadingOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { onGetAssets } from "@redux/actions";
@@ -327,22 +328,22 @@ export const CardInventory = (props) => {
                 </div>
               )}
               <ReactCardFlip isFlipped={isFlipped} flipDirection="horizontal">
-                <Tilt>
+                <div>
                   <img
                     onClick={() => setIsFlipped((prev) => !prev)}
                     src={props.icon}
                     className={clsx({ hidden: isFlipped }, "cardPreview")}
                     alt=""
                   />
-                </Tilt>
-                <Tilt>
+                </div>
+                <div>
                   <img
                     onClick={() => setIsFlipped((prev) => !prev)}
                     className={clsx({ hidden: !isFlipped }, "cardPreview")}
                     src={props.back || props.icon}
                     alt=""
                   />
-                </Tilt>
+                </div>
               </ReactCardFlip>
 
               <div className="relative w-80 mt-2">

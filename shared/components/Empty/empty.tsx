@@ -1,3 +1,4 @@
+"use client";
 import { Icons } from "@shared/const/Icons";
 import React from "react";
 

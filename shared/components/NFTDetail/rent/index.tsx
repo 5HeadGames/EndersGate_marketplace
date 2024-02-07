@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import React from "react";
 import Web3 from "web3";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import {
   onLoadSales,
@@ -15,8 +16,13 @@ import { Icons } from "@shared/const/Icons";
 import { AddressText } from "../../common/specialFields/SpecialFields";
 import {
   getAddresses,
+  getContract,
+  getContractCustom,
   getNativeBlockchain,
+  getTokensAllowed,
   getTokensAllowedMatic,
+  getWeb3,
+  hasAggregatorFeed,
   switchChain,
 } from "@shared/web3";
 import packs from "../../../packs.json";
@@ -24,17 +30,22 @@ import { useModal } from "@shared/hooks/modal";
 import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
 import Styles from "../styles.module.scss";
-import Tilt from "react-parallax-tilt";
+// import div from "react-parallax-div";
 import { DropdownActions } from "../../common/dropdowns/dropdownActions/dropdownActions";
 import ReactCardFlip from "react-card-flip";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "../../../utils/chains";
+import {
+  CHAINS,
+  CHAIN_IDS_BY_NAME,
+  CHAIN_TRANSAK_BY_NAME,
+} from "../../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
-import { formatPrice } from "@shared/utils/formatPrice";
+import { formatPrice, multiply } from "@shared/utils/formatPrice";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { ModalRent } from "./ModalRent";
-import { StatusInfo } from "@shared/components/Profile/rents";
+import { RentStatusInfo } from "@shared/components/Profile/rents";
 import { useUser } from "@shared/context/useUser";
+import { AddFundsModal } from "@shared/components/common/addFunds";
 
 const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   const {
@@ -45,6 +56,8 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   const [isLoading, setIsLoading] = React.useState<any>(false);
   const [rentNFTDays, setRentNFTDays] = React.useState(0);
   const { Modal, show, hide, isShow } = useModal();
+  const [balance, setBalance] = React.useState(0);
+  const [priceNative, setPriceNative] = React.useState(0);
   const [isPack, setIsPack] = React.useState(false);
   const [flippedCard, setFlippedCard] = React.useState(false);
   const router = useRouter();
@@ -54,16 +67,35 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
     lowest_price: "Price: Low to High",
     highest_price: "Price: High to Low",
   };
+  const {
+    Modal: ModalFunds,
+    show: showFunds,
+    hide: hideFunds,
+    isShow: isShowFunds,
+  } = useModal();
 
   const cards: any[] = convertArrayCards();
 
-  const [tokenSelected, setTokenSelected] = React.useState({ address: "" });
+  const [tokenSelected, setTokenSelected] = React.useState({
+    address: "",
+    name: "",
+    transak: false,
+    main: false,
+  });
+  const [priceToken, setPriceToken] = React.useState(0);
 
   const [message, setMessage] = React.useState("");
 
   const { blockchain, updateBlockchain } = useBlockchain();
 
+  const {
+    user: { ethAddress },
+  } = useUser();
+
   const nfts = useAppSelector((state) => state.nfts);
+
+  const tokensAllowed = getTokensAllowed(rent?.blockchain);
+  const addresses = getAddresses(rent?.blockchain);
 
   React.useEffect(() => {
     if (id && nfts?.allRents?.length) {
@@ -72,9 +104,9 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   }, [id, nfts.allRents]);
 
   const getRent = async () => {
-    const rent = nfts.allRents.filter((rent) => {
+    const rent = nfts.allRents.filter((rent: any) => {
       return rent?.id?.toString() === id;
-    })[0];
+    })[0] as any;
     const { pack: packAddress } = getAddresses(rent?.blockchain);
     if (rent?.nft === packAddress) {
       setIsPack(true);
@@ -85,6 +117,28 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
   };
 
   const rentNft = async () => {
+    console.log("BUY");
+    try {
+      if (!(await hasBalance())) {
+        console.log("no has");
+        if (blockchain != "skl" && tokenSelected.transak == true) {
+          showFunds();
+        } else {
+          toast.error(
+            "You don't have enough funds to buy, please fill your wallet",
+          );
+        }
+      } else {
+        console.log("has balance");
+
+        await rentNFTProcess();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const rentNFTProcess = async () => {
     setIsLoading(true);
     if (!user) {
       router.push("/login");
@@ -101,7 +155,10 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
       setMessage("Renting tokens");
       const { pack, endersGate } = getAddresses(rent.blockchain);
 
-      if (getNativeBlockchain(blockchain)) {
+      const tokensAllowed = getTokensAllowed(rent?.blockchain);
+      const addresses = getAddresses(rent?.blockchain);
+
+      if (getNativeBlockchain(rent.blockchain)) {
         await dispatch(
           rentERC1155Native({
             seller: rent.seller,
@@ -148,14 +205,138 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
     setRentNFTDays(0);
   };
 
-  const tokensAllowed = getTokensAllowedMatic();
+  const getPriceNative = async (price: any) => {
+    const Aggregator = getContractCustom(
+      "Aggregator",
+      addresses.NATIVEUSD,
+      provider,
+    );
+    const priceMATIC = await Aggregator.methods.latestAnswer().call();
+    const priceNative = (BigInt(price) * BigInt(10 ** 8)) / BigInt(priceMATIC);
+    console.log(price);
+    const returnedPrice = parseFloat(
+      (
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) +
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) *
+          0.0005
+      ).toFixed(6),
+    );
+    setPriceNative(returnedPrice);
+    return returnedPrice;
+  };
+
+  const hasBalanceNative = async (price) => {
+    const web3 = await getWeb3(provider);
+    var balance = await web3.eth.getBalance(ethAddress);
+
+    if (hasAggregatorFeed(rent?.blockchain)) {
+      console.log("agg");
+      const priceNative = await getPriceNative(price);
+      setBalance(parseFloat(Web3.utils.fromWei(balance, "ether")));
+      console.log(
+        price,
+        priceNative,
+        balance,
+        parseFloat(Web3.utils.fromWei(balance, "ether")),
+      );
+      if (priceNative < parseFloat(Web3.utils.fromWei(balance, "ether"))) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      console.log("no agg");
+      if (price < balance) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  const hasBalanceToken = async (price, token) => {
+    const ERC20 = await getContract("ERC20", token, blockchain);
+    var balance = await ERC20.methods.balanceOf(ethAddress).call();
+    var decimals = await ERC20.methods.decimals().call();
+    setBalance(balance / 10 ** decimals);
+    setPriceToken(price / 10 ** decimals);
+    if (parseInt(balance) >= parseInt(price)) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const hasBalance = async () => {
+    console.log("has balance join");
+    const addresses = getTokensAllowed(blockchain);
+    console.log(
+      tokenSelected,
+      addresses.filter((item) => item.main)[0]?.address,
+    );
+
+    if (
+      tokenSelected.address == addresses.filter((item) => item.main)[0]?.address
+    ) {
+      console.log("native", rent, rentNFTDays);
+      return hasBalanceNative(multiply(rent.price, rentNFTDays.toString()));
+    } else {
+      console.log("no native", rent);
+
+      return hasBalanceToken(
+        multiply(rent.price, rentNFTDays.toString()),
+        tokenSelected.address,
+      );
+    }
+  };
 
   return (
     <>
+      <ModalFunds isShow={isShowFunds} withoutX>
+        <AddFundsModal
+          amount={
+            tokenSelected.address ==
+            getTokensAllowed(rent?.blockchain)?.filter((item) => item.main)[0]
+              ?.address
+              ? priceNative
+              : multiply(rent?.price || "0", rentNFTDays.toString() || "0")
+          }
+          reload={hasBalance}
+          token={tokenSelected.name}
+          tokenSelected={tokenSelected}
+          network={CHAIN_TRANSAK_BY_NAME[blockchain]}
+          wallet={user}
+          balance={balance}
+          loading={false}
+          onClick={async () => {
+            try {
+              if (!(await hasBalance())) {
+                toast.error("You don't have enough balance to rent this NFT.");
+              } else {
+                await rentNFTProcess();
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          }}
+          hide={hideFunds}
+        />
+      </ModalFunds>
       <Modal isShow={isShow} withoutX>
         {id !== undefined && rent !== undefined && (
           <ModalRent
             {...{
+              user,
               message,
               rentNft,
               tokensAllowed,
@@ -211,7 +392,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                   alt=""
                 />
                 {isPack ? (
-                  <Tilt className="flex items-center justify-center">
+                  <div className="flex items-center justify-center">
                     <div className="sm:sticky sm:top-32 h-min w-auto">
                       <img
                         src={
@@ -235,13 +416,13 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                         alt=""
                       />
                     </div>
-                  </Tilt>
+                  </div>
                 ) : (
                   <ReactCardFlip
                     isFlipped={flippedCard}
                     flipDirection="horizontal"
                   >
-                    <Tilt className="flex items-center justify-center">
+                    <div className="flex items-center justify-center">
                       <img
                         src={cards[rent.nftId]?.image || Icons.logo}
                         className={clsx(
@@ -259,9 +440,9 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                         )}
                         alt=""
                       />
-                    </Tilt>
+                    </div>
 
-                    <Tilt className="flex items-center justify-center">
+                    <div className="flex items-center justify-center">
                       <img
                         src={`/images/${cards[
                           rent.nftId
@@ -280,13 +461,13 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                         )}
                         alt=""
                       />
-                    </Tilt>
+                    </div>
                   </ReactCardFlip>
                 )}
               </div>
               <div className="flex flex-col xl:max-w-[500px] xl:min-h-[450px] xl:max-h-[450px]">
                 <div className="flex h-full gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                  <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                  <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                     CARD INFO
                   </p>
                   <div className="flex flex-col w-full gap-2 h-full justify-between">
@@ -366,7 +547,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                       : cards[rent?.nftId]?.properties?.name?.value}
                   </h1>
                   <div className="flex flex-col md:px-6 md:py-4 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 gap-2 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       RENT PANEL
                     </p>
                     <div className="flex flex-row gap-4 w-full">
@@ -378,13 +559,10 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                       <div className="flex flex-col gap-2">
                         <h2 className="md:text-3xl text-xl font-[450] text-white whitespace-nowrap">
                           {formatPrice(rent.price, rent.blockchain)}
-                          {/* <span className="!text-sm text-overlay-border">
-                            ($1.5k)
-                          </span> */}
                         </h2>
                         <div className="flex gap-2">
                           <img
-                            src="/icons/POLYGON.svg"
+                            src={`/images/${rent.blockchain}.png`}
                             className="md:h-10 md:w-10 w-8 h-8"
                             alt=""
                           />
@@ -405,7 +583,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                         {rent.status == 0 ? (
                           <Button
                             decoration="fill"
-                            className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                            className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
                             onClick={() => {
                               show();
                             }}
@@ -414,10 +592,22 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                           </Button>
                         ) : (
                           <h2 className="text-white font-bold text-xl">
-                            {StatusInfo({ status: rent.status, rent })}
+                            {RentStatusInfo({ status: rent.status, rent })}
                           </h2>
                         )}
                       </div>
+                    </div>
+                    <div className="flex flex-col w-full justify-end pt-6">
+                      <p className="text-primary-disabled md:text-lg text-md">
+                        Expires at:{" "}
+                        <span className="text-white font-bold md:text-xl text-lg">
+                          {new Date(
+                            (parseInt(rent?.duration) +
+                              parseInt(rent?.startedAt)) *
+                              1000,
+                          ).toDateString()}
+                        </span>
+                      </p>
                     </div>
                     <div className="flex flex-row gap-4 w-full justify-between">
                       <div className="flex flex-col gap-4 pb-2"></div>
@@ -426,7 +616,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex flex-col pt-2 h-full">
                   <div className="flex flex-col px-6 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative min-h-full">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       OFFERS
                     </p>
                     <div className="flex flex-row gap-4 w-full pb-2">
@@ -460,7 +650,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
               <div className="flex flex-col justify-between w-full xl:min-h-[474px] xl:max-h-[474px]">
                 <div className="flex flex-col pt-6">
                   <div className="flex items-center gap-4 px-4 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       OWNER INFO
                     </p>
                     <img src={Icons.logoCard} className="w-16 h-16" alt="" />
@@ -476,7 +666,7 @@ const NFTDetailRentComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       TOKEN INFO
                     </p>
                     <div className="flex flex-col w-full">

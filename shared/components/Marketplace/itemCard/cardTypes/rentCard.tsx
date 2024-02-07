@@ -1,3 +1,4 @@
+"use client";
 import { CheckIcon, PlusIcon, SearchIcon, XIcon } from "@heroicons/react/solid";
 import { addCart, addCartRent, removeFromCart } from "@redux/actions";
 import { useAppDispatch } from "@redux/store";
@@ -13,10 +14,10 @@ import {
 } from "@shared/web3";
 import clsx from "clsx";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
+import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { useToasts } from "react-toast-notifications";
 
 export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
   const dispatch = useAppDispatch();
@@ -25,7 +26,6 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
   const [hoverAll, setHoverAll] = React.useState(false);
   const [hoverBuy, setHoverBuy] = React.useState(false);
   const router = useRouter();
-  const { addToast } = useToasts();
 
   const { blockchain } = useBlockchain();
 
@@ -33,9 +33,7 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
     e.preventDefault();
     if (user?.ethAddress) {
       if (rent.blockchain !== blockchain) {
-        addToast("Please select sales in the same blockchain", {
-          appearance: "error",
-        });
+        toast.error("Please select sales in the same blockchain");
         return false;
       }
 
@@ -60,9 +58,7 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
             }),
           );
         } else {
-          addToast("Please select sales with the same currency", {
-            appearance: "error",
-          });
+          toast.error("Please select sales with the same currency");
         }
       } else {
         dispatch(
@@ -134,7 +130,7 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
                   Card #
                   {rent.id !== undefined ? rent.nftId + "-" + rent.id : "12345"}
                 </span>
-                <div className="rounded-md bg-white font-bold text-overlay text-sm px-2 flex items-center justify-center">
+                <div className="rounded-md bg-white font-bold !text-overlay text-sm px-2 flex items-center justify-center">
                   For Rent
                 </div>
               </div>
@@ -251,7 +247,7 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
                     </div>
                   </div>
                   <div className="flex lg:text-md items-center gap-2 text-sm font-medium">
-                    {getTokensAllowedMatic()
+                    {getTokensAllowed(rent.blockchain)
                       .filter((item) => {
                         return rent?.tokens
                           ?.map((token) => token.toLowerCase())
@@ -272,29 +268,28 @@ export const RentCard = ({ classes, rent, icon, name, setPage }: any) => {
         </div>
       </Link>
 
-      {rent?.status == 0 &&
-        Math.floor(new Date().getTime() / 1000) <=
-          parseInt(rent?.duration) + parseInt(rent?.startedAt) && (
-          <div
-            className={clsx(
-              { "bottom-[8px]": hoverAll },
-              { "bottom-[50px]": !hoverAll },
-              "flex w-full gap-4 absolute transition-all duration-500  px-8 z-[1]  font-bold text-white",
-            )}
+      {rent?.status == 0 && (
+        <div
+          className={clsx(
+            { "bottom-[8px]": hoverAll },
+            { "bottom-[50px]": !hoverAll },
+            "flex w-full gap-4 absolute transition-all duration-500  px-8 z-[1]  font-bold text-white",
+          )}
+        >
+          <Link
+            href={`/rent/${rent.id}`}
+            className="w-1/2 px-2 pb-1 flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-green-button hover:!text-overlay transition-all duration-500"
           >
-            <div
-              onClick={() => {}}
-              className="w-1/2 px-2 pb-1 flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-green-button hover:text-overlay transition-all duration-500"
-            >
-              Buy Now
-            </div>
-            <Link href={`/sale/${rent.id}`}>
-              <div className="w-1/2 px-2 pb-1  flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-overlay-2 transition-all duration-500">
-                Details
-              </div>
-            </Link>
-          </div>
-        )}
+            Rent Now
+          </Link>
+          <Link
+            href={`/rent/${rent.id}`}
+            className="w-1/2 px-2 pb-1  flex justify-center items-center rounded-b-md pt-10 border border-overlay-border cursor-pointer hover:bg-overlay-2 transition-all duration-500"
+          >
+            Details
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

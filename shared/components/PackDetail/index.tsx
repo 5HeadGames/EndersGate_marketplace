@@ -1,10 +1,11 @@
+"use client";
 import React from "react";
 import {
   LeftCircleFilled,
   LeftOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Web3 from "web3";
 
 import { useAppDispatch, useAppSelector } from "redux/store";
@@ -27,7 +28,7 @@ import packs from "../../packs.json";
 import { approveERC1155 } from "@shared/web3";
 import Styles from "../NFTDetail/styles.module.scss";
 import clsx from "clsx";
-import Tilt from "react-parallax-tilt";
+// import Tilt from "react-parallax-tilt";
 import { AddressText } from "../common/specialFields/SpecialFields";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
@@ -38,7 +39,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
   const {
     user: { ethAddress: user, provider },
   } = useUser();
-  const NFTs = useAppSelector((state) => state.nfts);
+  const NFTs: any = useAppSelector((state) => state.nfts);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -54,7 +55,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
 
   const { blockchain } = useBlockchain();
 
-  const [tokensSelected, setTokensSelected] = React.useState([]);
+  const [tokensSelected, setTokensSelected] = React.useState<any>([]);
 
   const { pack } = getAddressesMatic();
 
@@ -187,7 +188,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                   className="absolute xl:top-[-20%] top-[-25%] bottom-0 xl:left-[-55%] left-[-35%] right-0 margin-auto opacity-50 xl:min-w-[1050px] min-w-[175%]"
                   alt=""
                 />
-                <Tilt className="flex items-center justify-center">
+                <div className="flex items-center justify-center">
                   <div className="sm:sticky sm:top-32 h-min w-auto">
                     <img
                       src={packs[id].image || Icons.logo}
@@ -195,7 +196,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                       alt=""
                     />
                   </div>
-                </Tilt>
+                </div>
               </div>
             </div>
             <div className="flex flex-col xl:w-[500px] gap-6 w-full py-10">
@@ -205,7 +206,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                     {packs[id]?.properties?.name?.value}
                   </h1>
                   <div className="flex flex-col md:px-6 md:py-10 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute md:top-4 md:right-6 top-2 right-4 text-overlay-border text-sm">
+                    <p className="absolute md:top-4 md:right-6 top-2 right-4 !text-overlay-border text-sm">
                       SELL PANEL
                     </p>
 
@@ -294,7 +295,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                               payment for this listing
                             </div>
                             <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
-                              {tokensAllowed.map((item, index) => {
+                              {tokensAllowed.map((item: any, index) => {
                                 return (
                                   <div
                                     className={clsx(
@@ -322,7 +323,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                                         );
                                       } else {
                                         setTokensSelected((prev) => {
-                                          const newArray = [];
+                                          const newArray: any = [];
                                           prev.forEach((item2) =>
                                             newArray.push(item2),
                                           );
@@ -372,7 +373,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
                         )}
                         <Button
                           decoration="fill"
-                          className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                          className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
                           onClick={sellNft}
                         >
                           Sell Now
@@ -385,7 +386,7 @@ const PackDetailComponent: React.FC<any> = ({ id, inventory }) => {
 
               <div className="flex flex-col">
                 <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                  <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                  <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                     TOKEN INFO
                   </p>
                   <div className="flex flex-col w-full">

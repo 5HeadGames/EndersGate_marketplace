@@ -1,10 +1,10 @@
+"use client";
 /* eslint-disable no-loop-func */
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Web3 from "web3";
 
 import * as actionTypes from "../constants";
 import {
-  getAddressesMatic,
   getContract,
   getContractCustom,
   getAddresses,
@@ -111,23 +111,20 @@ export const onLoadSales = createAsyncThunk(
         ? MAINNET_CHAIN_IDS
         : TESTNET_CHAIN_IDS;
 
-    let listsCreated = [],
-      listsSuccessful = [],
-      allSales = [],
-      rentsListed = [],
-      rentsInRent = [],
-      allRents = [],
-      rentsFinished = [],
+    let listsCreated: any = [],
+      listsSuccessful: any = [],
+      allSales: any = [],
+      rentsListed: any = [],
+      rentsInRent: any = [],
+      allRents: any = [],
+      rentsFinished: any = [],
       dailyVolume = 0,
       cardsSold = 0;
     try {
       for (const element of blockchains) {
-        console.log(element, "blockchain");
         const blockchain: any = element;
 
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
-
-        console.log(CHAIN_NAME_BY_ID[blockchain], addresses);
 
         /* SALES */
         const marketplace = getContract(
@@ -165,54 +162,54 @@ export const onLoadSales = createAsyncThunk(
         }
 
         /* RENTS */
-        if (!getNativeBlockchain(blockchain)) {
-          const rent = getContract(
-            onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
-            addresses.rent,
-            CHAIN_NAME_BY_ID[blockchain],
-          );
-          const lastRent = Number(await rent.methods.tokenIdTracker().call());
-          if (lastRent > 0) {
-            const rawRents = await rent.methods
-              .getRents(new Array(lastRent).fill(0).map((a, i) => i))
-              .call();
+        if (CHAIN_NAME_BY_ID[blockchain] !== "linea") {
+          if (!getNativeBlockchain(blockchain)) {
+            const rent = getContract(
+              onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+              addresses.rent,
+              CHAIN_NAME_BY_ID[blockchain],
+            );
+            const lastRent = Number(await rent.methods.tokenIdTracker().call());
+            if (lastRent > 0) {
+              const rawRents = await rent.methods
+                .getRents(new Array(lastRent).fill(0).map((a, i) => i))
+                .call();
 
-            rawRents.forEach((sale: any[], i) => {
-              const rentFormated = parseRent(sale);
-              allRents.push({
-                rentId: i,
-                rent: true,
-                blockchain: CHAIN_NAME_BY_ID[blockchain],
-                ...rentFormated,
+              rawRents.forEach((sale: any[], i) => {
+                const rentFormated = parseRent(sale);
+                allRents.push({
+                  rentId: i,
+                  rent: true,
+                  blockchain: CHAIN_NAME_BY_ID[blockchain],
+                  ...rentFormated,
+                });
               });
-            });
-          }
-        } else {
-          const rent = getContract(
-            "RentNative",
-            addresses.rent,
-            CHAIN_NAME_BY_ID[blockchain],
-          );
-          const lastRent = Number(await rent.methods.tokenIdTracker().call());
-          if (lastRent > 0) {
-            const rawRents = await rent.methods
-              .getRents(new Array(lastRent).fill(0).map((a, i) => i))
-              .call();
+            }
+          } else {
+            const rent = getContract(
+              "RentNative",
+              addresses.rent,
+              CHAIN_NAME_BY_ID[blockchain],
+            );
+            const lastRent = Number(await rent.methods.tokenIdTracker().call());
+            if (lastRent > 0) {
+              const rawRents = await rent.methods
+                .getRents(new Array(lastRent).fill(0).map((a, i) => i))
+                .call();
 
-            rawRents.forEach((sale: any[], i) => {
-              const rentFormated = parseRentNative(sale);
-              allRents.push({
-                rentId: i,
-                rent: true,
-                blockchain: CHAIN_NAME_BY_ID[blockchain],
-                ...rentFormated,
+              rawRents.forEach((sale: any[], i) => {
+                const rentFormated = parseRentNative(sale);
+                allRents.push({
+                  rentId: i,
+                  rent: true,
+                  blockchain: CHAIN_NAME_BY_ID[blockchain],
+                  ...rentFormated,
+                });
               });
-            });
+            }
           }
         }
       }
-
-      console.log("all got");
 
       /* SALES */
       const allSalesSorted = allSales
@@ -254,13 +251,14 @@ export const onLoadSales = createAsyncThunk(
 
       const listsCreatedPartial = allSalesSorted
         .concat(allRentsSorted)
-        ?.filter(
-          (sale: Sale | Rent) =>
-            sale.status === "0" &&
+        ?.filter((sale: Sale | Rent) => {
+          return (
+            sale.status == "0" &&
             (Math.floor(new Date().getTime() / 1000) <=
               parseInt(sale?.duration) + parseInt(sale?.startedAt) ||
-              (sale as Rent).rent),
-        );
+              (sale as Rent).rent)
+          );
+        });
 
       const listsSuccessfulPartial = allSalesSorted
         .concat(allRentsSorted)
@@ -285,8 +283,6 @@ export const onLoadSales = createAsyncThunk(
         cardsSold.toString(),
         cardsSoldPartial.toString(),
       ) as any;
-
-      console.log(allSalesSorted);
 
       return {
         allSales: allSalesSorted,
@@ -412,7 +408,7 @@ export const onGetAssets = createAsyncThunk(
         //   )
         //   .call();
 
-        let balanceWrapped = [];
+        let balanceWrapped: any = [];
 
         balanceWrapped = await rentContract.methods
           .balanceOfBatch(
@@ -590,13 +586,9 @@ export const onApproveERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      const marketplaceContract = getContractCustom(
-        "ERC721Seadrop",
-        pack,
-        provider,
-      );
+      const ERC721SeaDrop = getContractCustom("ERC721Seadrop", pack, provider);
 
-      await marketplaceContract.methods
+      await ERC721SeaDrop.methods
         .setApprovalForAll(exchange, true)
         .send({ from: from });
 
@@ -752,13 +744,15 @@ export const buyFromShop = createAsyncThunk(
     let tx;
 
     try {
-      const { shop: shopAddress, MATICUSD: NATIVE_TO_USD } =
-        getAddresses(blockchain);
+      const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
+
+      console.log(shopAddress, NATIVEUSD);
 
       const shop = getContractCustom("Shop", shopAddress, provider);
-      const tokensAllowed = getTokensAllowed(blockchain);
 
       setMessageBuy(`Processing your purchase...`);
+
+      console.log(tokenSelected);
 
       const { amounts, token, tokensId } = {
         amounts: cartShop.map((item) => item.quantity),
@@ -767,33 +761,28 @@ export const buyFromShop = createAsyncThunk(
       };
 
       let price = "0";
-      const ERC20 = getContractCustom("ERC20", token, provider);
+      const ERC20 = getContract("ERC20", token, blockchain);
       const addressesAllowed = getTokensAllowed(blockchain);
       if (
         !onlyAcceptsERC20(blockchain) &&
+        hasAggregatorFeed(blockchain) &&
         tokenSelected ===
-          addressesAllowed.filter((item) => item.name === "MATIC")[0].address
+          addressesAllowed.filter((item) => item.main)[0]?.address
       ) {
-        const Aggregator = getContractCustom(
-          "Aggregator",
-          NATIVE_TO_USD,
-          provider,
-        );
+        console.log("agg");
+        const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
         const preprice =
           BigInt(
             cartShop
-              ?.map((item, i) => {
-                console.log(item.price, "item");
+              ?.map((item: any, i) => {
                 return BigInt(item.price) * BigInt(item.quantity);
               })
-              .reduce((item, acc) => {
+              .reduce((item: any, acc) => {
                 return BigInt(item) + BigInt(acc);
               }) * BigInt(10 ** 8),
           ) / BigInt(priceMATIC);
 
-        console.log(preprice, "preprice");
-        console.log("pre wei", (preprice * BigInt(10 ** 12)).toString());
         price = Web3.utils.toWei(
           (
             parseFloat(
@@ -818,18 +807,24 @@ export const buyFromShop = createAsyncThunk(
           .buyBatch(tokensId, amounts, token)
           .send({ from: account, value: price });
       } else {
+        console.log("no agg", token);
+
         const allowance = await ERC20.methods
           .allowance(account, shopAddress)
           .call();
 
+        console.log("allowance", allowance);
+
         if (allowance < 1000000000000) {
           setMessageBuy(
             `Increasing the allowance of ${
-              tokensAllowed.filter((item) => item.address === tokenSelected)[0]
-                .name
+              addressesAllowed.filter(
+                (item) => item.address === tokenSelected,
+              )[0].name
             } 1/2`,
           );
-          await ERC20.methods
+          const ERC20Token = getContractCustom("ERC20", token, provider);
+          await ERC20Token.methods
             .increaseAllowance(
               shopAddress,
               "1000000000000000000000000000000000000000000000000",
@@ -919,11 +914,15 @@ export const buyERC1155 = createAsyncThunk(
   }) {
     const { seller, tokenId, token, amount, bid, provider, user, blockchain } =
       args;
-
     try {
-      const { marketplace } = getAddressesMatic();
+      const { marketplace } = getAddresses(blockchain);
+      console.log(marketplace, "marketplace");
       const marketplaceContract = getContractCustom(
-        "ClockSale",
+        getNativeBlockchain(blockchain)
+          ? "ClockSaleFindora"
+          : onlyAcceptsERC20(blockchain)
+          ? "ClockSaleOnlyMultiToken"
+          : "ClockSale",
         marketplace,
         provider,
       );
@@ -931,7 +930,7 @@ export const buyERC1155 = createAsyncThunk(
       const addresses = getTokensAllowed(blockchain);
       if (
         !onlyAcceptsERC20(blockchain) &&
-        token === addresses.filter((item) => item.name === "MATIC")[0].address
+        token === addresses.filter((item) => item.main)[0].address
       ) {
         await marketplaceContract.methods
           .buy(tokenId, amount, token)
@@ -996,23 +995,28 @@ export const rentERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      const { rent } = getAddressesMatic();
-      const rentContract = getContractCustom("Rent", rent, provider);
+      const { rent } = getAddresses(blockchain);
+      const rentContract = getContractCustom(
+        onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+        rent,
+        provider,
+      );
       const ERC20 = getContractCustom("ERC20", token, provider);
       const addresses = getTokensAllowed(blockchain);
 
       if (
         !onlyAcceptsERC20(blockchain) &&
-        token === addresses.filter((item) => item.name === "MATIC")[0].address
+        token === addresses.filter((item) => item.main)[0]?.address
       ) {
         await rentContract.methods
           .rent(tokenId, daysOfRent, token)
           .send({ from: user, value: bid });
       } else {
         const allowance = await ERC20.methods.allowance(user, rent).call();
-        const price = (
-          await rentContract.methods.getRatePrice(tokenId, token).call()
-        ).mul(daysOfRent);
+        const price =
+          Number(
+            await rentContract.methods.getRatePrice(tokenId, token).call(),
+          ) * parseInt(daysOfRent as string);
         if (allowance < price) {
           await ERC20.methods
             .increaseAllowance(
@@ -1068,8 +1072,6 @@ export const rentERC1155Native = createAsyncThunk(
       const { rent } = getAddresses(blockchain);
       const rentContract = getContractCustom("RentNative", rent, provider);
 
-      console.log(user, daysOfRent, token, bid);
-
       await rentContract.methods
         .rent(tokenId, daysOfRent)
         .send({ from: user, value: bid });
@@ -1111,9 +1113,15 @@ export const rentBatchERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      const { rent, MATICUSD: NATIVE_TO_USD } = getAddresses(blockchain);
+      const { rent, NATIVEUSD: NATIVE_TO_USD } = getAddresses(blockchain);
 
-      const rentContract = getContractCustom("Rent", rent, provider);
+      console.log("token");
+
+      const rentContract = getContractCustom(
+        onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+        rent,
+        provider,
+      );
       const tokensAllowed = getTokensAllowed(blockchain);
 
       setMessageBuy(`Processing your purchase...`);
@@ -1124,11 +1132,12 @@ export const rentBatchERC1155 = createAsyncThunk(
       };
 
       let price = "0";
-      const ERC20 = getContractCustom("ERC20", token, provider);
+      const ERC20 = getContract("ERC20", token, blockchain);
+
       const addressesAllowed = getTokensAllowed(blockchain);
       if (
         tokenSelected ===
-          addressesAllowed.filter((item) => item.name === "MATIC")[0].address &&
+          addressesAllowed.filter((item) => item.main)[0]?.address &&
         hasAggregatorFeed(blockchain)
       ) {
         const Aggregator = getContractCustom(
@@ -1139,10 +1148,10 @@ export const rentBatchERC1155 = createAsyncThunk(
         const priceMATIC = await Aggregator.methods.latestAnswer().call();
         const preprice =
           (cartRent
-            ?.map((item, i) => {
+            ?.map((item: any, i) => {
               return (parseInt(item.price) / 10 ** 6) * daysOfRent;
             })
-            .reduce((item, acc) => {
+            .reduce((item: any, acc) => {
               return item + acc;
             }) *
             10 ** 8) /
@@ -1164,7 +1173,8 @@ export const rentBatchERC1155 = createAsyncThunk(
                 .name
             } 1/2`,
           );
-          await ERC20.methods
+          const ERC20Token = getContractCustom("ERC20", token, provider);
+          await ERC20Token.methods
             .increaseAllowance(
               rent,
               "1000000000000000000000000000000000000000000000000",
@@ -1236,10 +1246,10 @@ export const rentBatchERC1155Native = createAsyncThunk(
       };
 
       const price = cartRent
-        ?.map((item, i) => {
+        ?.map((item: any, i) => {
           return BigInt(item.price) * BigInt(daysOfRent);
         })
-        .reduce((item, acc) => {
+        .reduce((item: any, acc) => {
           return BigInt(item) + BigInt(acc);
         })
         .toString();
@@ -1346,30 +1356,6 @@ export const buyERC1155Native = createAsyncThunk(
   },
 );
 
-export const onCancelSale = createAsyncThunk(
-  actionTypes.CANCEL_NFT,
-  async function prepare(args: {
-    tokenId: number | string;
-    provider: any;
-    user: any;
-    blockchain: any;
-  }) {
-    const { tokenId, provider, user, blockchain } = args;
-
-    const { marketplace } = getAddresses(blockchain);
-    const marketplaceContract = getContractCustom(
-      getNativeBlockchain(blockchain)
-        ? "ClockSaleFindora"
-        : onlyAcceptsERC20(blockchain)
-        ? "ClockSaleOnlyMultiToken"
-        : "ClockSale",
-      marketplace,
-      provider,
-    );
-    return marketplaceContract.methods.cancelSale(tokenId).send({ from: user });
-  },
-);
-
 export const cancelRent = createAsyncThunk(
   actionTypes.CANCEL_RENT_NFT,
   async function prepare(args: {
@@ -1380,7 +1366,11 @@ export const cancelRent = createAsyncThunk(
   }) {
     const { tokenId, provider, user, blockchain } = args;
     const { rent } = getAddresses(blockchain);
-    const rentContract = getContractCustom("Rent", rent, provider);
+    const rentContract = getContractCustom(
+      onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+      rent,
+      provider,
+    );
     return rentContract.methods.cancelRent(tokenId).send({ from: user });
   },
 );
@@ -1395,7 +1385,14 @@ export const redeemRent = createAsyncThunk(
   }) {
     const { tokenId, provider, user, blockchain } = args;
     const { rent } = getAddresses(blockchain);
-    const rentContract = getContractCustom("Rent", rent, provider);
-    return rentContract.methods.redeemRent(tokenId).send({ from: user });
+    const rentContract = getContractCustom(
+      onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+      rent,
+      provider,
+    );
+    const tx = await rentContract.methods
+      .redeemRent(tokenId)
+      .send({ from: user });
+    return tx;
   },
 );

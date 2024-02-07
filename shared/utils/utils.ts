@@ -71,6 +71,8 @@ export const updateSales = async ({ blockchain, shopAddress, setSales }) => {
       blockchain,
     );
 
+    console.log(blockchain, shopAddress, "shop");
+
     const lastSale = Number(await shop.methods.tokenIdTracker().call());
     const rawSales = await shop.methods
       .getSales(new Array(lastSale).fill(0).map((a, i) => i))
@@ -98,10 +100,11 @@ export const updateSales = async ({ blockchain, shopAddress, setSales }) => {
     setSales(created);
   } catch (error) {
     // Catch any errors for any of the above operations.
+
     alert(
       `Failed to load web3, accounts, or contract. Check console for details.`,
     );
-    console.error(error);
+    console.error(error, "error update sales");
   }
 };
 

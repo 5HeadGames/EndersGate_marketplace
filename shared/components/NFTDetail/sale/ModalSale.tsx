@@ -1,3 +1,4 @@
+"use client";
 import { ExclamationCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Button } from "@shared/components/common/button/button";
 import { Icons } from "@shared/const/Icons";
@@ -6,11 +7,16 @@ import { formatPrice, multiply } from "@shared/utils/formatPrice";
 import clsx from "clsx";
 import React from "react";
 import Styles from "../styles.module.scss";
-import Tilt from "react-parallax-tilt";
+// import Tilt from "react-parallax-tilt";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import packs from "../../../packs.json";
-import { getTokensAllowedMatic } from "@shared/web3";
+import {
+  getNativeBlockchain,
+  getTokensAllowed,
+  getTokensAllowedMatic,
+} from "@shared/web3";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
+import { ButtonSFUEL } from "@shared/components/common/ButtonSFUEL";
 
 export const ModalSale = ({
   isPack,
@@ -22,12 +28,16 @@ export const ModalSale = ({
   hide,
   setTokenSelected,
   tokenSelected,
+  user,
 }) => {
   const cards: any[] = convertArrayCards();
-  const tokensAllowed = getTokensAllowedMatic();
+  const tokensAllowed = getTokensAllowed(sale.blockchain);
 
   return (
     <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-12 border border-overlay-border w-auto relative">
+      <div className="absolute lg:top-10 lg:left-10 top-4 left-4">
+        <ButtonSFUEL user={user} />
+      </div>
       <h2 className="font-bold text-primary text-center uppercase text-3xl">
         BUY{" "}
         {isPack
@@ -35,7 +45,7 @@ export const ModalSale = ({
           : cards[sale?.nftId]?.properties?.name?.value}
       </h2>
       <div className="flex sm:flex-row flex-col gap-4 w-full items-center justify-center md:w-[750px]">
-        <Tilt className="w-60">
+        <div className="w-60">
           <div className="w-full h-96 flex items-center">
             <img
               src={
@@ -60,7 +70,7 @@ export const ModalSale = ({
               alt=""
             />
           </div>
-        </Tilt>
+        </div>
         {/* </div> */}
         <div className="flex flex-col gap-4  justify-between">
           <div className="flex flex-col gap-2 w-full">
@@ -93,7 +103,7 @@ export const ModalSale = ({
             {sale && sale.price && (
               <span className="text-white w-24 text-center font-bold text-green-button">
                 {isNaN(
-                  parseInt(formatPrice(sale.price, sale.blockchain)) *
+                  parseInt(formatPrice(sale.price, sale.blockchain) as any) *
                     buyNFTData,
                 )
                   ? 0
@@ -104,7 +114,7 @@ export const ModalSale = ({
               </span>
             )}
           </div>
-          {sale.blockchain === "matic" ? (
+          {!getNativeBlockchain(sale.blockchain) ? (
             <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
               {tokensAllowed
                 .filter((item) =>
@@ -112,13 +122,13 @@ export const ModalSale = ({
                     ?.map((item) => item.toLowerCase())
                     ?.includes(item.address.toLowerCase()),
                 )
-                .map((item, index) => {
+                .map((item: any, index) => {
                   return (
                     <div
                       className={clsx(
-                        "w-28 flex items-center justify-center gap-2 rounded-xl cursor-pointer p-2",
+                        "w-28 flex items-center border border-white justify-center gap-2 rounded-xl cursor-pointer p-2",
                         {
-                          "bg-overlay-border border-white":
+                          "bg-overlay-border ":
                             tokenSelected?.address == item.address,
                         },
                         {
@@ -167,14 +177,14 @@ export const ModalSale = ({
           </div>
           <div className="py-4">
             <div className="text-primary text-sm text-center flex flex-col items-center justify-center gap-3">
-              {message === "Buying tokens" && (
+              {message !== "" && (
                 <>
                   <span className="flex gap-4 items-center justify-center text-green-button font-bold">
                     {message} <LoadingOutlined />
                   </span>
                   <span className="flex gap-4 items-center justify-center text-white font-bold">
-                    Note: If the transaction doesn't appears please open your
-                    wallet manually
+                    Note: If the transaction doesn't appears <br /> please open
+                    your wallet manually
                   </span>
                 </>
               )}
@@ -183,7 +193,7 @@ export const ModalSale = ({
           <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center">
             <Button
               decoration="line-white"
-              className="bg-dark  !font-bold md:text-lg w-28 text-md py-[6px] rounded-lg text-white hover:text-overlay border-none"
+              className="bg-dark  !font-bold md:text-lg w-28 text-md py-[6px] rounded-lg text-white hover:!text-overlay border-none"
               onClick={() => {
                 setBuyNFTData(0);
                 hide();
@@ -193,9 +203,14 @@ export const ModalSale = ({
             </Button>
             <Button
               decoration="fill"
-              className="w-28 !font-bold text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
-              onClick={buyNFTData > sale?.amount ? undefined : buyNft}
-              disabled={buyNFTData > sale?.amount}
+              className="w-28 !font-bold text-md py-[6px] rounded-lg !text-black !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+              onClick={() => buyNft()}
+              disabled={
+                buyNFTData > sale?.amount ||
+                buyNFTData === 0 ||
+                message ||
+                !tokenSelected?.address
+              }
             >
               Buy Now
             </Button>

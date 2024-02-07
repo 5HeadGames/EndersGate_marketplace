@@ -1,3 +1,4 @@
+"use client";
 import { Typography } from "@shared/components/common/typography";
 import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
@@ -24,7 +25,7 @@ const navItems = [
 ];
 
 const Inventory = () => {
-  const nfts = useAppSelector((state) => state.nfts);
+  const nfts: any = useAppSelector((state) => state.nfts);
   const inventoryCards = nfts.balanceCards;
   const inventoryRented = nfts.balanceWrapped;
   const inventoryComics = nfts.balanceComics;
@@ -33,6 +34,7 @@ const Inventory = () => {
   const [search, setSearch] = React.useState("");
   const dispatch = useDispatch();
   const {
+    user,
     user: { ethAddress },
   } = useUser();
   const { blockchain } = useBlockchain();
@@ -41,11 +43,11 @@ const Inventory = () => {
 
   React.useEffect(() => {
     dispatch(onGetAssets({ address: ethAddress, blockchain }));
-  }, []);
+  }, [user, ethAddress, blockchain]);
 
   React.useEffect(() => {
-    const arrayPacks = [];
-    nfts.balancePacks.forEach((pack, index) => {
+    const arrayPacks: any = [];
+    nfts.balancePacks.forEach((pack: any, index: any) => {
       arrayPacks.push({
         id: pack.id,
         quantity: pack.balance,
@@ -139,19 +141,19 @@ const Inventory = () => {
       >
         {columnSelected === "Trading Cards" ? (
           inventoryCards.filter(
-            (card) =>
+            (card: any) =>
               cards[card.id]?.properties?.name?.value
                 .toLowerCase()
                 .includes(search.toLowerCase()) && card.balance > 0,
           ).length > 0 ? (
             inventoryCards
               .filter(
-                (card) =>
+                (card: any) =>
                   cards[card.id]?.properties?.name?.value
                     .toLowerCase()
                     .includes(search.toLowerCase()) && card.balance > 0,
               )
-              .map((card) => {
+              .map((card: any) => {
                 return (
                   <CardInventory
                     key={card.id}
@@ -173,11 +175,11 @@ const Inventory = () => {
             </div>
           )
         ) : columnSelected === "Packs" ? (
-          inventoryPacks.filter((pack) => parseInt(pack.quantity) > 0).length >
-          0 ? (
+          inventoryPacks.filter((pack: any) => parseInt(pack.quantity) > 0)
+            .length > 0 ? (
             inventoryPacks
-              .filter((pack) => parseInt(pack.quantity) > 0)
-              .map((pack, index) => {
+              .filter((pack: any) => parseInt(pack.quantity) > 0)
+              .map((pack: any, index) => {
                 return (
                   <CardInventory
                     key={pack.id}
@@ -198,19 +200,19 @@ const Inventory = () => {
           )
         ) : columnSelected === "Rented Cards" ? (
           inventoryRented.filter(
-            (card) =>
+            (card: any) =>
               cards[card.id]?.properties?.name?.value
                 .toLowerCase()
                 .includes(search.toLowerCase()) && card.balance > 0,
           ).length > 0 ? (
             inventoryRented
               .filter(
-                (card) =>
+                (card: any) =>
                   cards[card.id]?.properties?.name?.value
                     .toLowerCase()
                     .includes(search.toLowerCase()) && card.balance > 0,
               )
-              .map((card) => {
+              .map((card: any) => {
                 return (
                   <CardInventory
                     key={card.id}
@@ -234,19 +236,19 @@ const Inventory = () => {
           )
         ) : columnSelected === "Comics" ? (
           inventoryComics.filter(
-            (comic) =>
+            (comic: any) =>
               comics[comic.id]?.name
                 .toLowerCase()
                 .includes(search.toLowerCase()) && comic.balance > 0,
           ).length > 0 ? (
             inventoryComics
               .filter(
-                (comic) =>
+                (comic: any) =>
                   comics[comic.id]?.name
                     .toLowerCase()
                     .includes(search.toLowerCase()) && comic.balance > 0,
               )
-              .map((comic) => {
+              .map((comic: any) => {
                 return (
                   <CardInventory
                     key={comic.id}

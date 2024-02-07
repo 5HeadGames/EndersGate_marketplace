@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@shared/components/common/button";
 import { Icons } from "@shared/const/Icons";
 import clsx from "clsx";
@@ -75,7 +76,7 @@ const AccountSettingsComponent = () => {
                   htmlFor="profile_picture"
                   className={clsx(
                     "bg-overlay border border-primary cursor-pointer whitespace-nowrap",
-                    "text-primary px-4 py-2 text-md rounded-md  md:ml-0 md:mt-4 sm:mt-0 sm:ml-4 mt-4 hover:bg-primary hover:text-overlay transition-all duration-500 font-[450] text-white",
+                    "text-primary px-4 py-2 text-md rounded-md  md:ml-0 md:mt-4 sm:mt-0 sm:ml-4 mt-4 hover:bg-primary hover:!text-overlay transition-all duration-500 font-[450] text-white",
                   )}
                 >
                   Change Picture
@@ -139,7 +140,7 @@ const AccountSettingsComponent = () => {
                   ) : (
                     <Button
                       size="small"
-                      className="mt-6 rounded-md text-white hover:text-overlay"
+                      className="mt-6 rounded-md text-white hover:!text-overlay"
                       decoration="line-white"
                       onClick={sendPasswordReset}
                     >
@@ -151,7 +152,7 @@ const AccountSettingsComponent = () => {
                   <Button
                     type="submit"
                     size="small"
-                    className="mt-6 w-20 text-overlay !bg-green-button hover:text-green-button hover:!bg-overlay !border-green-button rounded-xl"
+                    className="mt-6 w-20 !text-overlay !bg-green-button hover:text-green-button hover:!bg-overlay !border-green-button rounded-xl"
                     decoration="fill"
                     disabled={loadingForm}
                   >

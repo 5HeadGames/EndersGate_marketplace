@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   CaretDownOutlined,
@@ -7,7 +8,7 @@ import {
   RightOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { useRouter } from "next/router";
+import { useParams, useRouter } from "next/navigation";
 import NftCard from "shared/components/Marketplace/itemCard";
 import FiltersBoard from "./filters/filters";
 import { DropdownActions } from "../common/dropdowns/dropdownActions/dropdownActions";
@@ -42,15 +43,8 @@ const MarketplaceComponent = () => {
 
   const [columnSelected, setColumnSelected] = React.useState("forever");
   const [listingType, setListingType] = React.useState("all");
-  const { search: searched } = useRouter().query;
+  const { search: searched } = useParams();
   const cards = convertArrayCards();
-
-  const { transactionsBoard } = useStats({
-    nfts,
-    listedSelected: "trading_cards",
-    soldSelected: "trading_cards",
-    columnSelected,
-  });
 
   const orderMapper = {
     lowest_price: "Price: Low to High",
@@ -132,7 +126,9 @@ const MarketplaceComponent = () => {
       console.log(e);
     }
 
-    nfts?.saleCreated?.forEach((sale) => {
+    console.log("continue after error", nfts);
+
+    nfts?.saleCreated?.forEach((sale: any) => {
       nftsCreated.push(sale);
       if (sale.nft === endersGate) {
         cardSalesCreated.push(sale);
@@ -253,15 +249,15 @@ const MarketplaceComponent = () => {
   });
 
   const salesFiltered = sales
-    .filter((sale) => {
+    .filter((sale: any) => {
       return (
         (sale.rent && listingType === "rent") ||
         (!sale.rent && listingType === "sale") ||
         listingType === "all"
       );
     })
-    .filter((sale, i) => {
-      return !isPack(sale.nft)
+    .filter((sale: any, i) => {
+      return !isPack(sale.nft, sale.blockchain)
         ? filterCards({
             card: cards[sale.nftId],
             filters,
@@ -408,7 +404,7 @@ const MarketplaceComponent = () => {
                   (sale, i) => i < (page + 1) * 12 && i >= page * 12,
                 ).length > 0 ? (
                   salesFiltered
-                    .filter((sale) => {
+                    .filter((sale: any) => {
                       const price = sale.price / 10 ** 6;
                       const { minPrice, maxPrice } = priceSettings;
 
@@ -419,25 +415,25 @@ const MarketplaceComponent = () => {
                       );
                     })
                     .filter((sale, i) => i < (page + 1) * 12 && i >= page * 12)
-                    .map((sale, id) => {
+                    .map((sale: any, id) => {
                       return (
                         <NftCard
                           classes={{ root: "m-4 cursor-pointer" }}
                           setPage={setPage}
                           icon={
-                            isPack(sale.nft)
+                            isPack(sale.nft, sale.blockchain)
                               ? packs[sale.nftId]?.properties?.image?.value
                               : cards[sale.nftId]?.image
                           }
                           name={
-                            isPack(sale.nft)
+                            isPack(sale.nft, sale.blockchain)
                               ? packs[sale.nftId]?.properties?.name?.value
                               : cards[sale.nftId]?.properties?.name?.value
                           }
                           byId={false}
                           type={sale.type}
                           sale={sale}
-                          rent={sale.rent}
+                          isRent={sale.rentId !== undefined}
                         />
                       );
                     })
@@ -470,7 +466,7 @@ const MarketplaceComponent = () => {
                         if (
                           page <
                           Math.floor(
-                            (salesFiltered.filter((sale) => {
+                            (salesFiltered.filter((sale: any) => {
                               return (
                                 Math.floor(new Date().getTime() / 1000) <=
                                 parseInt(sale?.duration) +

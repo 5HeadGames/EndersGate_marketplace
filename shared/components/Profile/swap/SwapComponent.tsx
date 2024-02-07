@@ -1,5 +1,5 @@
+"use client";
 import { Button } from "@shared/components/common/button";
-
 import React from "react";
 import {
   ArrowDownOutlined,
@@ -9,11 +9,14 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 
-import { useWeb3React } from "@web3-react/core";
 import { XIcon } from "@heroicons/react/solid";
 import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "@shared/hooks/modal";
-import { getAddressesMatic, getContractCustom } from "@shared/web3";
+import {
+  getAddressesMatic,
+  getContract,
+  getContractCustom,
+} from "@shared/web3";
 import Web3 from "web3";
 import {
   onApproveERC1155,
@@ -21,15 +24,15 @@ import {
   onExchangePackERC721to1155,
   onGetAssets,
 } from "@redux/actions";
-import { useToasts } from "react-toast-notifications";
 import { Icons } from "@shared/const/Icons";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { useUser } from "@shared/context/useUser";
 import clsx from "clsx";
 import { FAQS } from "@shared/utils/utils";
 import AccordionFAQ from "../../common/AccordionFAQ";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { getExchangeType, menuElements } from "@shared/components/utils";
+import { toast } from "react-hot-toast";
 
 const SwapComponent = () => {
   const {
@@ -44,8 +47,6 @@ const SwapComponent = () => {
   const { common_pack, ultraman, bemular, exchange, exchangeEG } =
     getAddressesMatic();
 
-  const { addToast } = useToasts();
-
   const { blockchain } = useBlockchain();
 
   const [showEG, setShowEG] = React.useState(true);
@@ -59,24 +60,6 @@ const SwapComponent = () => {
       result: "/images/0.png",
       address: common_pack,
     },
-    // {
-    //   name: "Gen 0 Rare Pass",
-    //   nameKey: "Rare Pack",
-    //   image: "/images/RarePass.png",
-    //   address: rare_pack,
-    // },
-    // {
-    //   name: "Gen 0 Epic Pass",
-    //   nameKey: "Epic Pack",
-    //   image: "/images/EpicPass.png",
-    //   address: epic_pack,
-    // },
-    // {
-    //   name: "Gen 0 Legendary Pass",
-    //   nameKey: "Legendary Pack",
-    //   image: "/images/LegendaryPass.png",
-    //   address: legendary_pack,
-    // },
   ];
 
   const passEG = [
@@ -194,7 +177,6 @@ const SwapComponent = () => {
   };
 
   const exchangeAllPacks = async () => {
-    console.log("a?");
     setLoading(true);
     try {
       const packsToExchange = passPacks.filter(
@@ -203,23 +185,16 @@ const SwapComponent = () => {
 
       for (const element of packsToExchange) {
         const item = element;
-        const pack = getContractCustom("ERC721Seadrop", item.address, provider);
-        const isApproved = await pack.methods
-          .isApprovedForAll(user, exchange)
-          .call();
-
-        if (isApproved == false) {
-          const res: any = dispatch(
-            onApproveERC1155({
-              from: user,
-              pack: item.address,
-              provider: provider,
-              exchange,
-            }),
-          );
-          if (res?.payload?.err) {
-            throw new Error(res?.payload.err.message);
-          }
+        const res: any = dispatch(
+          onApproveERC1155({
+            from: user,
+            pack: item.address,
+            provider: provider,
+            exchange,
+          }),
+        );
+        if (res?.payload?.err) {
+          throw new Error(res?.payload.err.message);
         }
       }
 
@@ -239,9 +214,7 @@ const SwapComponent = () => {
 
       setSuccess(true);
       dispatch(onGetAssets({ address: user, blockchain }));
-      addToast("Your NFTs have been exchanged succesfully!", {
-        appearance: "success",
-      });
+      toast.success("Your NFTs have been exchanged succesfully!");
       handleSetBalancePacks();
       setTimeout(() => {
         hide();
@@ -250,9 +223,7 @@ const SwapComponent = () => {
       }, 1500);
     } catch (error) {
       console.log(error);
-      addToast("Ups! Error exchanging your tokens, please try again", {
-        appearance: "error",
-      });
+      toast.error("Ups! Error exchanging your tokens, please try again");
       hide();
       setLoading(false);
       setSuccess(false);
@@ -266,25 +237,22 @@ const SwapComponent = () => {
         (item) => balanceEG[item.nameKey] > 0,
       );
 
+      if (cardsToExchange.length == 0) {
+        return toast.error("You don't have cards to exchange.");
+      }
+
       for (const element of cardsToExchange) {
         const item = element;
-        const eg = getContractCustom("ERC721Seadrop", item.address, provider);
-        const isApproved = await eg.methods
-          .isApprovedForAll(user, exchangeEG)
-          .call();
-        console.log(isApproved, user, exchangeEG, "approved?");
-        if (isApproved == false) {
-          const res: any = dispatch(
-            onApproveERC1155({
-              from: user,
-              pack: item.address,
-              provider: provider,
-              exchange: exchangeEG,
-            }),
-          );
-          if (res?.payload?.err) {
-            throw new Error(res?.payload.err.message);
-          }
+        const res: any = dispatch(
+          onApproveERC1155({
+            from: user,
+            pack: item.address,
+            provider: provider,
+            exchange: exchangeEG,
+          }),
+        );
+        if (res?.payload?.err) {
+          throw new Error(res?.payload.err.message);
         }
       }
 
@@ -309,16 +277,12 @@ const SwapComponent = () => {
         setLoading(false);
       }, 1500);
       dispatch(onGetAssets({ address: user, blockchain }));
-      addToast("Your NFTs have been exchanged succesfully!", {
-        appearance: "success",
-      });
+      toast.success("Your NFTs have been exchanged succesfully!");
       handleSetBalanceEG();
       setCongrats(true);
     } catch (error) {
       console.log(error);
-      addToast("Ups! Error exchanging your tokens, please try again", {
-        appearance: "error",
-      });
+      toast.error("Ups! Error exchanging your tokens, please try again");
       hide();
       setLoading(false);
       setSuccess(false);

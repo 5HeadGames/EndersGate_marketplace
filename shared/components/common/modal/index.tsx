@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import Box, { BoxProps } from "@mui/material/Box";
 import Modal from "@mui/material/Modal";

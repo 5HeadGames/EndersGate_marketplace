@@ -2,27 +2,9 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
-import { useToasts } from "react-toast-notifications";
-import { useRouter } from "next/router";
-import {
-  getAddresses,
-  getContractCustom,
-  getNativeBlockchain,
-  getTokensAllowed,
-  sendFirebaseTx,
-  switchChain,
-  hasAggregatorFeed,
-} from "@shared/web3";
-import {
-  addCartShop,
-  editCartShop,
-  buyFromShop,
-  buyFromShopNative,
-  onGetAssets,
-  removeAll,
-  removeAllShop,
-  removeFromCartShop,
-} from "@redux/actions";
+import { useRouter } from "next/navigation";
+import { getAddresses, switchChain } from "@shared/web3";
+import { addCartShop, editCartShop, removeAllShop } from "@redux/actions";
 import { toast } from "react-hot-toast";
 import { CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
@@ -31,7 +13,6 @@ import { useUser } from "@shared/context/useUser";
 import { packsShop, updateSales } from "@shared/utils/utils";
 import { DropdownShop } from "@shared/components/common/dropdowns/dropdownShop";
 import { nFormatter } from "@shared/components/common/specialFields/SpecialFields";
-import Web3 from "web3";
 import ModalShop from "./ModalShop";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 
@@ -39,19 +20,14 @@ const Shop = () => {
   const [sales, setSales] = useState([]);
   const [saleToShow, setSale] = useState(packsShop[0]);
   const [counters, setCounters] = useState([1, 1, 1, 1]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const { blockchain } = useBlockchain();
-
-  const {
-    user: { provider },
-  } = useUser();
 
   const { Modal, show, isShow, hide } = useCartModal();
 
   const { cartShop } = useSelector((state: any) => state.layout);
 
-  const { shop: shopAddress, MATICUSD } = getAddresses(blockchain);
+  const { shop: shopAddress } = getAddresses(blockchain);
 
   const dispatch = useDispatch();
 
@@ -148,7 +124,6 @@ const Shop = () => {
                 </div>
               </>
             </DropdownShop>
-            {/* </Link> */}
             <div
               className={clsx(
                 { "!border-alert-error": cartShop.length > 0 },
@@ -344,9 +319,9 @@ const ShopElement = ({ sale, counters, setCounters, index }) => {
               onClick={
                 counters[index] > 1
                   ? () => {
-                      setCounters((prev) => {
-                        const newArray = [];
-                        prev.forEach((previous, index2) => {
+                      setCounters((prev: any) => {
+                        const newArray: any = [];
+                        prev.forEach((previous: any, index2) => {
                           if (index === index2) {
                             newArray.push(previous - 1);
                           } else {
@@ -367,11 +342,11 @@ const ShopElement = ({ sale, counters, setCounters, index }) => {
               type="number"
               min={1}
               max={10}
-              onChange={(e) => {
+              onChange={(e: any) => {
                 if (e.target.value.length < 3) {
-                  setCounters((prev) => {
-                    const newArray = [];
-                    prev.forEach((previous, id) => {
+                  setCounters((prev: any) => {
+                    const newArray: any = [];
+                    prev.forEach((previous: any, id) => {
                       if (id === index) {
                         newArray.push(e.target.value);
                       } else {
@@ -389,9 +364,9 @@ const ShopElement = ({ sale, counters, setCounters, index }) => {
               onClick={
                 counters[index] < 10
                   ? () => {
-                      setCounters((prev) => {
-                        const newArray = [];
-                        prev.forEach((previous, index2) => {
+                      setCounters((prev: any) => {
+                        const newArray: any = [];
+                        prev.forEach((previous: any, index2) => {
                           if (index === index2) {
                             newArray.push(previous + 1);
                           } else {

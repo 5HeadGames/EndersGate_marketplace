@@ -1,4 +1,6 @@
 /* eslint-disable eqeqeq */
+"use client";
+"use client";
 import React from "react";
 import { Flex, Text, Image, useMediaQuery } from "@chakra-ui/react";
 import Slider from "react-slick";
@@ -9,8 +11,7 @@ import MyComics from "./MyComicsSlider";
 import clsx from "clsx";
 import { CheckIcon, PlusIcon, XIcon } from "@heroicons/react/solid";
 import { useDispatch, useSelector } from "react-redux";
-import { useToasts } from "react-toast-notifications";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Button } from "@shared/components/common/button";
 import { addCartComics, removeFromCartComics } from "@redux/actions";
 import { Input } from "@shared/components/common/form/input";
@@ -71,7 +72,7 @@ function RecentlyAddedComic({ price, getPriceMatic, balance, showCart }) {
     { name: "", photo: "" },
   ]);
 
-  const [nftModal, setNftModal] = React.useState({
+  const [nftModal, setNftModal] = React.useState<any>({
     id: 0,
     balance: 0,
     nameLink: "",
@@ -174,7 +175,7 @@ function RecentlyAddedComic({ price, getPriceMatic, balance, showCart }) {
                 className="px-8 py-3 mb-2 rounded-full text-white relative border-none flex items-center justify-center w-full"
                 onClick={() => {
                   router.push(
-                    `/comics/${nftModal.nameLink}/${nftModal.issues[0].id}`,
+                    `/comics/${nftModal.nameLink}/${nftModal.issues[0]?.id}`,
                   );
                 }}
               >
@@ -192,7 +193,7 @@ function RecentlyAddedComic({ price, getPriceMatic, balance, showCart }) {
                 decoration="greenLine"
                 className="px-8 py-3 mb-2 rounded-full text-white relative border-none flex items-center justify-center w-full"
                 onClick={() => {
-                  nftModal.issues.forEach((issue) => {
+                  nftModal.issues.forEach((issue: any) => {
                     dispatch(
                       addCartComics({
                         ...nftModal,
@@ -254,8 +255,6 @@ function RecentlyAddedComic({ price, getPriceMatic, balance, showCart }) {
 export default RecentlyAddedComic;
 
 const SliderItem = ({ price, onClickItem, id, i, setIssues, issues }) => {
-  const { addToast } = useToasts();
-
   const [hoverBuy, setHoverBuy] = React.useState([false, false, false, false]);
 
   const { register } = useForm();
@@ -275,8 +274,8 @@ const SliderItem = ({ price, onClickItem, id, i, setIssues, issues }) => {
       <Flex className="box-shadow relative w-auto flex items-center justify-center">
         <div
           onMouseOver={() =>
-            setHoverBuy((prev) => {
-              const array = [];
+            setHoverBuy((prev: any) => {
+              const array: any = [];
               prev.forEach((i, idPrev) => {
                 if (id === idPrev) {
                   array.push(true);
@@ -288,8 +287,8 @@ const SliderItem = ({ price, onClickItem, id, i, setIssues, issues }) => {
             })
           }
           onMouseLeave={() =>
-            setHoverBuy((prev) => {
-              const array = [];
+            setHoverBuy((prev: any) => {
+              const array: any = [];
               prev.forEach((i, idPrev) => {
                 if (id === idPrev) {
                   array.push(false);
@@ -387,13 +386,12 @@ const SliderItem = ({ price, onClickItem, id, i, setIssues, issues }) => {
                 value={issues[id].quantity}
                 onChange={(e) => {
                   if (parseInt(e.target.value) > parseInt(i.amount)) {
-                    addToast(
+                    toast.error(
                       "Your amount exceeds the amount of NFTs of the sale",
-                      { appearance: "error" },
                     );
                   } else {
                     setIssues((prev) => {
-                      const array = [];
+                      const array: any = [];
                       prev.forEach((a, idPrev) => {
                         array.push({
                           ...a,

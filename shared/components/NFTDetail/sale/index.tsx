@@ -1,7 +1,8 @@
+"use client";
 import React from "react";
 import Web3 from "web3";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import {
   buyERC1155,
@@ -12,22 +13,43 @@ import {
 import { Button } from "../../common/button/button";
 import { Icons } from "@shared/const/Icons";
 import { AddressText } from "../../common/specialFields/SpecialFields";
-import { getAddresses, getTokensAllowedMatic, switchChain } from "@shared/web3";
+import {
+  buyNFTsMatic,
+  buyNFTsNative,
+  getAddresses,
+  getContract,
+  getContractCustom,
+  getNativeBlockchain,
+  getTokensAllowed,
+  getTokensAllowedMatic,
+  getWeb3,
+  hasAggregatorFeed,
+  switchChain,
+} from "@shared/web3";
 import packs from "../../../packs.json";
 import { useModal } from "@shared/hooks/modal";
 import { convertArrayCards } from "../../common/convertCards";
 import clsx from "clsx";
 import Styles from "../styles.module.scss";
-import Tilt from "react-parallax-tilt";
+// import Tilt from "react-parallax-tilt";
 import { DropdownActions } from "../../common/dropdowns/dropdownActions/dropdownActions";
 import ReactCardFlip from "react-card-flip";
-import { CHAINS, CHAIN_IDS_BY_NAME } from "../../../utils/chains";
+import {
+  CHAINS,
+  CHAIN_IDS_BY_NAME,
+  CHAIN_TRANSAK_BY_NAME,
+} from "../../../utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
-import { formatPrice } from "@shared/utils/formatPrice";
+import { formatPrice, multiply } from "@shared/utils/formatPrice";
 import { ChevronLeftIcon } from "@heroicons/react/solid";
 import { ModalSale } from "./ModalSale";
 import { useUser } from "@shared/context/useUser";
+import {
+  RentStatusInfo,
+  SaleStatusInfo,
+} from "@shared/components/Profile/rents";
+import { AddFundsModal } from "@shared/components/common/addFunds";
 
 const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   const {
@@ -36,7 +58,16 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const [sale, setSale] = React.useState<any>();
   const [buyNFTData, setBuyNFTData] = React.useState(0);
+  const [balance, setBalance] = React.useState(0);
+  const [priceNative, setPriceNative] = React.useState(0);
+  const [priceToken, setPriceToken] = React.useState(0);
   const { Modal, show, hide, isShow } = useModal();
+  const {
+    Modal: ModalFunds,
+    show: showFunds,
+    hide: hideFunds,
+    isShow: isShowFunds,
+  } = useModal();
   const [isPack, setIsPack] = React.useState(false);
   const [flippedCard, setFlippedCard] = React.useState(false);
   const router = useRouter();
@@ -49,11 +80,21 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
 
   const cards: any[] = convertArrayCards();
 
-  const [tokenSelected, setTokenSelected] = React.useState({ address: "" });
+  const [tokenSelected, setTokenSelected] = React.useState({
+    address: "",
+    name: "",
+    transak: false,
+    main: false,
+  });
 
   const [message, setMessage] = React.useState("");
 
+  const tokensAllowed = getTokensAllowed(sale?.blockchain);
+  const addresses = getAddresses(sale?.blockchain);
   const { blockchain, updateBlockchain } = useBlockchain();
+  const {
+    user: { ethAddress },
+  } = useUser();
 
   const nfts = useAppSelector((state) => state.nfts);
 
@@ -64,22 +105,66 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
   }, [id, nfts.allSales]);
 
   const getSale = async () => {
-    const sale = nfts.allSales.filter((sale) => {
+    const sale = nfts.allSales.filter((sale: any) => {
       return sale?.id?.toString() === id;
-    })[0];
-    const { pack: packAddress } = getAddresses(sale?.blockchain);
-    if (sale?.nft === packAddress) {
-      setIsPack(true);
-    } else {
-      setIsPack(false);
+    })[0] as any;
+    if (sale) {
+      const { pack: packAddress } = getAddresses(sale?.blockchain);
+      if (sale?.nft === packAddress) {
+        setIsPack(true);
+      } else {
+        setIsPack(false);
+      }
+      setSale(sale);
     }
-    setSale(sale);
+  };
+
+  const getPriceNative = async (price: any) => {
+    const Aggregator = getContractCustom(
+      "Aggregator",
+      addresses.NATIVEUSD,
+      provider,
+    );
+    const priceMATIC = await Aggregator.methods.latestAnswer().call();
+    const priceNative = (BigInt(price) * BigInt(10 ** 8)) / BigInt(priceMATIC);
+    console.log(price);
+    const returnedPrice = parseFloat(
+      (
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) +
+        parseFloat(
+          Web3.utils.fromWei(
+            (priceNative * BigInt(10 ** 12)).toString(),
+            "ether",
+          ),
+        ) *
+          0.0005
+      ).toFixed(6),
+    );
+    setPriceNative(returnedPrice);
+    return returnedPrice;
   };
 
   const buyNft = async () => {
-    if (!user) {
-      router.push("/login?redirect=true&redirectAddress=" + router.pathname);
+    console.log("BUY");
+    try {
+      if (!(await hasBalance())) {
+        showFunds();
+      } else {
+        console.log("has balance");
+
+        await buyNFTProcess();
+      }
+    } catch (err) {
+      console.log(err);
     }
+  };
+
+  const buyNFTProcess = async () => {
     try {
       const changed = await switchChain(CHAIN_IDS_BY_NAME[sale.blockchain]);
       if (!changed) {
@@ -89,41 +174,34 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
       }
       updateBlockchain(sale.blockchain);
 
-      setMessage("Buying tokens");
-      const { pack, endersGate } = getAddresses(sale.blockchain);
-      if (sale.blockchain !== "matic") {
-        await dispatch(
-          buyERC1155Native({
-            seller: sale.seller,
-            amount: buyNFTData,
-            bid: Web3.utils
-              .toBN(sale.price)
-              .mul(Web3.utils.toBN(buyNFTData))
-              .toString(),
-            blockchain,
-            tokenId: sale.saleId,
-            provider: provider,
-            nftContract: isPack ? pack : endersGate,
-            user: user,
-          }),
-        );
+      const { marketplace, NATIVEUSD } = getAddresses(sale.blockchain);
+      if (!getNativeBlockchain(blockchain)) {
+        if (!tokenSelected) {
+          setMessage("");
+          return toast.error("Please select a token as a payment");
+        }
+
+        await buyNFTsMatic({
+          tokenSelected: tokenSelected.address,
+          setMessageBuy: setMessage,
+          cart: [{ ...sale, quantity: buyNFTData }],
+          marketplace,
+          provider,
+          ethAddress,
+          tokensAllowed,
+          NATIVEUSD: NATIVEUSD,
+          dispatch,
+          blockchain,
+        });
       } else {
-        await dispatch(
-          buyERC1155({
-            seller: sale.seller,
-            amount: buyNFTData,
-            bid: Web3.utils
-              .toBN(sale.price)
-              .mul(Web3.utils.toBN(buyNFTData))
-              .toString(),
-            tokenId: sale.saleId,
-            token: tokenSelected.address,
-            provider: provider,
-            nftContract: isPack ? pack : endersGate,
-            user: user,
-            blockchain,
-          }),
-        );
+        await buyNFTsNative({
+          setMessageBuy: setMessage,
+          cart: [{ ...sale, quantity: buyNFTData }],
+          marketplace,
+          provider,
+          ethAddress,
+          dispatch,
+        });
       }
     } catch (err) {
       toast.error(err.message);
@@ -136,19 +214,114 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
     setBuyNFTData(0);
   };
 
-  const notAvailable =
-    sale?.status != 0 ||
-    Math.floor(new Date().getTime() / 1000) >=
-      parseInt(sale?.duration) + parseInt(sale?.startedAt);
+  const hasBalanceNative = async (price) => {
+    const web3 = await getWeb3(provider);
+    var balance = await web3.eth.getBalance(ethAddress);
 
-  const tokensAllowed = getTokensAllowedMatic();
+    if (hasAggregatorFeed(sale?.blockchain)) {
+      console.log("agg");
+      const priceNative = await getPriceNative(price);
+      setBalance(parseFloat(Web3.utils.fromWei(balance, "ether")));
+      console.log(
+        price,
+        priceNative,
+        balance,
+        parseFloat(Web3.utils.fromWei(balance, "ether")),
+      );
+      if (priceNative < parseFloat(Web3.utils.fromWei(balance, "ether"))) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      console.log("no agg");
+      if (price < balance) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  const hasBalanceToken = async (price, token) => {
+    const ERC20 = await getContract("ERC20", token, blockchain);
+    var balanceERC20 = await ERC20.methods.balanceOf(ethAddress).call();
+    var decimals = await ERC20.methods.decimals().call();
+    setBalance(balanceERC20 / 10 ** decimals);
+    setPriceToken(price / 10 ** decimals);
+    if (parseInt(balanceERC20) >= parseInt(price)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const hasBalance = async () => {
+    console.log("has balance join");
+    const addresses = getTokensAllowed(blockchain);
+    console.log(
+      tokenSelected,
+      addresses.filter((item) => item.main)[0]?.address,
+    );
+
+    if (
+      tokenSelected.address == addresses.filter((item) => item.main)[0]?.address
+    ) {
+      console.log("native", sale, buyNFTData);
+      return hasBalanceNative(multiply(sale.price, buyNFTData.toString()));
+    } else {
+      console.log("no native", sale);
+
+      return hasBalanceToken(
+        multiply(sale.price, buyNFTData.toString()),
+        tokenSelected.address,
+      );
+    }
+  };
+
+  const notAvailable =
+    Math.floor(new Date().getTime() / 1000) >=
+    parseInt(sale?.duration) + parseInt(sale?.startedAt);
 
   return (
     <>
+      <ModalFunds isShow={isShowFunds} withoutX>
+        <AddFundsModal
+          amount={
+            tokenSelected.address ==
+            getTokensAllowed(sale?.blockchain)?.filter((item) => item.main)[0]
+              ?.address
+              ? priceNative
+              : priceToken
+          }
+          reload={hasBalance}
+          token={tokenSelected.name}
+          tokenSelected={tokenSelected}
+          network={CHAIN_TRANSAK_BY_NAME[blockchain]}
+          wallet={user}
+          balance={balance}
+          loading={false}
+          onClick={async () => {
+            try {
+              if (!(await hasBalance())) {
+                toast.error("You don't have enough balance to buy this NFT.");
+              } else {
+                console.log("has balance");
+
+                await buyNFTProcess();
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          }}
+          hide={hideFunds}
+        />
+      </ModalFunds>
       <Modal isShow={isShow} withoutX>
         {id !== undefined && sale !== undefined && (
           <ModalSale
             {...{
+              user,
               message,
               buyNft,
               tokensAllowed,
@@ -203,7 +376,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                   alt=""
                 />
                 {isPack ? (
-                  <Tilt className="flex items-center justify-center">
+                  <div className="flex items-center justify-center">
                     <div className="sm:sticky sm:top-32 h-min w-auto">
                       <img
                         src={
@@ -227,13 +400,13 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         alt=""
                       />
                     </div>
-                  </Tilt>
+                  </div>
                 ) : (
                   <ReactCardFlip
                     isFlipped={flippedCard}
                     flipDirection="horizontal"
                   >
-                    <Tilt className="flex items-center justify-center">
+                    <div className="flex items-center justify-center">
                       <img
                         src={cards[sale.nftId]?.image || Icons.logo}
                         className={clsx(
@@ -251,9 +424,9 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         )}
                         alt=""
                       />
-                    </Tilt>
+                    </div>
 
-                    <Tilt className="flex items-center justify-center">
+                    <div className="flex items-center justify-center">
                       <img
                         src={`/images/${cards[
                           sale.nftId
@@ -272,13 +445,13 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                         )}
                         alt=""
                       />
-                    </Tilt>
+                    </div>
                   </ReactCardFlip>
                 )}
               </div>
               <div className="flex flex-col xl:max-w-[500px] xl:min-h-[450px] xl:max-h-[450px]">
                 <div className="flex h-full gap-4 px-6 py-6 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                  <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                  <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                     CARD INFO
                   </p>
                   <div className="flex flex-col w-full gap-2 h-full justify-between">
@@ -358,7 +531,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       : cards[sale?.nftId]?.properties?.name?.value}
                   </h1>
                   <div className="flex flex-col md:px-6 md:py-4 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       BUY PANEL
                     </p>
                     <div className="flex flex-row gap-4 w-full">
@@ -370,29 +543,35 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                       <div className="flex flex-col">
                         <h2 className="md:text-3xl text-xl font-[450] text-white whitespace-nowrap">
                           {formatPrice(sale.price, sale.blockchain)}
-                          {/* <span className="!text-sm text-overlay-border">
+                          {/* <span className="!text-sm !text-overlay-border">
                             ($1.5k)
                           </span> */}
                         </h2>
                         <img
-                          src="/icons/POLYGON.svg"
+                          src={`/images/${sale.blockchain}.png`}
                           className="md:h-10 md:w-10 w-8 h-8"
                           alt=""
                         />
                       </div>
                       <div className="flex flex-col gap-4 w-full items-center md:pl-10 md:pr-16 pr-4">
-                        <Button
-                          decoration="fill"
-                          className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
-                          onClick={() => {
-                            show();
-                          }}
-                        >
-                          Buy Now
-                        </Button>
+                        {sale.status == 0 && !notAvailable ? (
+                          <Button
+                            decoration="fill"
+                            className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                            onClick={() => {
+                              show();
+                            }}
+                          >
+                            Buy Now
+                          </Button>
+                        ) : (
+                          <h2 className="text-white font-bold text-xl">
+                            {SaleStatusInfo({ status: sale.status, sale })}
+                          </h2>
+                        )}
                         {/* <Button
                           decoration="line-white"
-                          className="bg-dark md:text-lg text-md md:w-48 w-32 py-[6px] rounded-lg text-white hover:text-overlay border-none"
+                          className="bg-dark md:text-lg text-md md:w-48 w-32 py-[6px] rounded-lg text-white hover:!text-overlay border-none"
                         >
                           Make Offer
                         </Button> */}
@@ -423,7 +602,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex flex-col pt-2 h-full">
                   <div className="flex flex-col px-6 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative min-h-full">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       OFFERS
                     </p>
                     <div className="flex flex-row gap-4 w-full pb-2">
@@ -457,7 +636,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
               <div className="flex flex-col justify-between w-full xl:min-h-[474px] xl:max-h-[474px]">
                 <div className="flex flex-col pt-6">
                   <div className="flex items-center gap-4 px-4 py-4 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       OWNER INFO
                     </p>
                     <img src={Icons.logoCard} className="w-16 h-16" alt="" />
@@ -473,7 +652,7 @@ const NFTDetailSaleComponent: React.FC<any> = ({ id }) => {
                 </div>
                 <div className="flex flex-col">
                   <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
-                    <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+                    <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
                       TOKEN INFO
                     </p>
                     <div className="flex flex-col w-full">

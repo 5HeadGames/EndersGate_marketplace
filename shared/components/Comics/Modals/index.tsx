@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-no-undef */
+"use client";
 import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -23,7 +24,7 @@ import { toast } from "react-hot-toast";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Image } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { useUser } from "@shared/context/useUser";
 
@@ -54,7 +55,7 @@ export const Modals = ({
 
   const { cartComics, provider } = useSelector((state: any) => state.layout);
 
-  const { comics: comicsAddress, MATICUSD } = getAddresses(blockchain);
+  const { comics: comicsAddress, NATIVEUSD } = getAddresses(blockchain);
 
   const db = getDatabase();
 
@@ -116,7 +117,7 @@ export const Modals = ({
           tokenSelected === addressesAllowed[0]?.address &&
           hasAggregatorFeed(blockchain)
         ) {
-          const Aggregator = getContract("Aggregator", MATICUSD, blockchain);
+          const Aggregator = getContract("Aggregator", NATIVEUSD, blockchain);
 
           const priceMATIC = await Aggregator.methods.latestAnswer().call();
 
@@ -126,7 +127,7 @@ export const Modals = ({
                 ?.map((item) => {
                   return (parseInt(item.price) / 10 ** 6) * item.quantity;
                 })
-                ?.reduce((item, acc) => {
+                ?.reduce((item: any, acc) => {
                   return item + acc;
                 }),
             ) *
@@ -173,10 +174,10 @@ export const Modals = ({
         }
       } else {
         price = cartComics
-          ?.map((item, i) => {
+          ?.map((item: any, i) => {
             return BigInt(item.price) * BigInt(item.quantity);
           })
-          .reduce((item, acc) => {
+          .reduce((item: any, acc) => {
             return BigInt(item) + BigInt(acc);
           });
         await comics.methods
@@ -364,7 +365,7 @@ const CartComic = ({
                   {priceNative}
                   <img
                     src={
-                      `images/${blockchain}.png`
+                      `/images/${blockchain}.png`
                       // :"icons/eth.png"
                     }
                     className="w-3 h-3"
@@ -410,7 +411,7 @@ const CartComic = ({
                 onClick={() => {
                   buy();
                 }}
-                className="w-auto px-6 py-2 flex justify-center items-center rounded-xl hover:border-green-button hover:bg-overlay hover:text-green-button border border-transparent-color-gray-200 cursor-pointer bg-green-button font-bold text-overlay transition-all duration-500"
+                className="w-auto px-6 py-2 flex justify-center items-center rounded-xl hover:border-green-button hover:bg-overlay hover:text-green-button border border-transparent-color-gray-200 cursor-pointer bg-green-button font-bold !text-overlay transition-all duration-500"
               >
                 Checkout
               </div>

@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@shared/components/common/button";
 import { Typography } from "@shared/components/common/typography";
 import { Icons } from "@shared/const/Icons";
@@ -9,7 +10,12 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import Styles from "./styles.module.scss";
 import packs from "../../../packs.json";
-import { getAddresses, getRentAvailable, switchChain } from "@shared/web3";
+import {
+  getAddresses,
+  getRentAvailable,
+  redeemNFT,
+  switchChain,
+} from "@shared/web3";
 
 import { useModal } from "@shared/hooks/modal";
 import {
@@ -29,9 +35,12 @@ import { useUser } from "@shared/context/useUser";
 const Rents = () => {
   const nfts = useAppSelector((state) => state.nfts);
   const {
-    user: { ethAddress: user, provider },
+    user: { provider },
   } = useUser();
 
+  const {
+    user: { ethAddress: user },
+  } = useUser();
   const [typeOfRequest, setTypeOfRequest] = React.useState("");
 
   const [cancel, setCancel] = React.useState({ id: -1, blockchain: "" });
@@ -87,14 +96,13 @@ const Rents = () => {
         );
       }
       updateBlockchain(cancel.blockchain);
-      const tx = await dispatch(
-        redeemRent({
-          tokenId: cancel.id,
-          provider: provider,
-          user: user,
-          blockchain: cancel.blockchain,
-        }),
-      );
+      console.log(cancel, "redeem");
+      const tx = await redeemNFT({
+        tokenId: cancel.id,
+        provider: provider,
+        user: user,
+        blockchain: cancel.blockchain,
+      });
       if ((tx as any).error) {
         throw Error(
           "An error has occurred while cancelling the sale, please try again",
@@ -103,17 +111,19 @@ const Rents = () => {
       dispatch(onLoadSales());
       dispatch(onGetAssets({ address: user, blockchain }));
       toast.success("Your sale has been redeemed successfully");
+      setIsLoading(false);
     } catch (err) {
+      setIsLoading(false);
+      console.log(err);
       toast.error(err.message);
     }
-    setIsLoading(false);
 
     hide();
   };
 
   React.useEffect(() => {
-    const arrayPacks = [];
-    nfts.allRents.forEach((sale, index) => {
+    const arrayPacks: any = [];
+    nfts.allRents.forEach((sale: any, index) => {
       if (sale.seller.toLowerCase() === user.toLowerCase()) {
         arrayPacks.push(sale);
       }
@@ -145,7 +155,7 @@ const Rents = () => {
             <div className="flex justify-center items-center gap-4">
               <Button
                 decoration="line-white"
-                className="hover:text-overlay !font-bold text-white rounded-xl"
+                className="hover:!text-overlay !font-bold text-white rounded-xl"
                 size="small"
                 onClick={() => {
                   hide();
@@ -156,7 +166,7 @@ const Rents = () => {
               <Button
                 // decoration="fill"
                 size="small"
-                className="hover:text-red-primary !font-bold !hover:border-red-primary text-overlay bg-red-primary rounded-xl"
+                className="hover:text-red-primary !font-bold !hover:border-red-primary !text-overlay bg-red-primary rounded-xl"
                 onClick={() => {
                   switch (typeOfRequest) {
                     case "cancel":
@@ -198,7 +208,7 @@ const Rents = () => {
                 <th className="text-center"></th>
               </thead>
               <tbody>
-                {rents.map((rent, i) => {
+                {rents.map((rent: any, i) => {
                   const { pack: packsAddress } = getAddresses(rent.blockchain);
                   const pack = rent.nft == packsAddress;
                   return (
@@ -212,7 +222,6 @@ const Rents = () => {
                         <Rent
                           {...{
                             rent,
-                            pack,
                             setCancelId: setCancel,
                             setRedeemId: setCancel,
                             setTypeOfRequest,
@@ -244,7 +253,7 @@ const Rents = () => {
 
 export default Rents;
 
-export const StatusInfo = ({ status, rent }) => {
+export const RentStatusInfo = ({ status, rent }) => {
   switch (status) {
     case "0":
       return "Rent Listed";
@@ -259,16 +268,27 @@ export const StatusInfo = ({ status, rent }) => {
   }
 };
 
-const Rent = ({
-  rent,
-  pack,
-  setCancelId,
-  setRedeemId,
-  show,
-  setTypeOfRequest,
-}) => {
-  const cards = convertArrayCards();
+export const SaleStatusInfo = ({ status, sale }) => {
+  const notAvailable =
+    Math.floor(new Date().getTime() / 1000) >=
+    parseInt(sale?.duration) + parseInt(sale?.startedAt);
+  switch (status) {
+    case "0":
+      return notAvailable ? "Sale Expired" : "Sale Listed";
+    case "1":
+      return "NFT Sold";
+    case "2":
+      return "Sale Finished";
+    case "3":
+      return "Sale Cancelled";
+  }
+};
 
+const Rent = ({ rent, setCancelId, setRedeemId, show, setTypeOfRequest }) => {
+  const cards = convertArrayCards();
+  const notAvailable =
+    Math.floor(new Date().getTime() / 1000) >=
+    parseInt(rent?.duration) + parseInt(rent?.startedAt);
   return (
     <>
       <td className="py-4 px-4">
@@ -286,20 +306,14 @@ const Rent = ({
         <div className="flex flex-col items-center gap-y-2 w-full">
           <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
             <img
-              src={
-                pack
-                  ? packs[rent.nftId]?.properties?.image?.value
-                  : cards[rent.nftId]?.image
-              }
+              src={cards[rent.nftId]?.image}
               className={`absolute top-[-20%] bottom-0 left-[-40%] right-0 margin-auto min-w-[175%]`}
               alt=""
             />
           </div>
           <div className="flex flex-col items-center gap-4">
             <h2 className="text-primary-disabled text-xl font-bold">
-              {pack
-                ? packs[rent.nftId]?.properties?.name?.value
-                : cards[rent.nftId]?.properties.name?.value}
+              {cards[rent.nftId]?.properties.name?.value}
             </h2>
           </div>
         </div>
@@ -327,7 +341,7 @@ const Rent = ({
         <div className="flex flex-col items-center just">
           {
             <h2 className="text-white font-bold text-sm">
-              {StatusInfo({ status: rent.status, rent })}
+              {RentStatusInfo({ status: rent.status, rent })}
             </h2>
           }
         </div>
@@ -338,7 +352,7 @@ const Rent = ({
           {rent.status === "0" ? (
             <Button
               decoration="line-white"
-              className="text-white hover:text-overlay rounded-xl"
+              className="text-white hover:!text-overlay rounded-xl"
               size="small"
               onClick={() => {
                 setCancelId({
@@ -354,7 +368,7 @@ const Rent = ({
           ) : rent.status === "1" ? (
             <Button
               decoration="line-white"
-              className="text-white hover:text-overlay rounded-xl"
+              className="text-white hover:!text-overlay rounded-xl"
               size="small"
               onClick={() => {
                 setRedeemId({
@@ -362,7 +376,6 @@ const Rent = ({
                   blockchain: rent.blockchain,
                 });
                 setTypeOfRequest("redeem");
-
                 show();
               }}
               disabled={getRentAvailable(rent)}
@@ -376,8 +389,11 @@ const Rent = ({
       </td>
 
       <td className="py-4 pr-4">
-        <Link href={`/rent/${rent.id}`}>
-          <div className="flex flex-col items-center just">
+        <Link
+          className="flex flex-col items-center justify-center"
+          href={`/rent/${rent.id}`}
+        >
+          <>
             <Button
               decoration="fill"
               className="!text-overlay hover:!text-white rounded-xl"
@@ -385,7 +401,7 @@ const Rent = ({
             >
               Go to Rent
             </Button>
-          </div>
+          </>
         </Link>
       </td>
     </>

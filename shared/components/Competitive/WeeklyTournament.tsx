@@ -1,3 +1,4 @@
+import { useBlockchain } from "@shared/context/useBlockchain";
 import clsx from "clsx";
 
 // get total seconds between the times
@@ -63,6 +64,7 @@ const nextRewards = [
 ];
 
 export const WeeklyTournament = ({ lastWinners }: any) => {
+  const { blockchain } = useBlockchain();
   return (
     <div className="flex flex-col gap-10 items-center justify-center sm:w-4/5 w-full relative overflow-hidden px-4">
       <img
@@ -187,7 +189,11 @@ export const WeeklyTournament = ({ lastWinners }: any) => {
                       </h2>
                       <div className="flex gap-2 items-end">
                         <img src="/icons/logo.png" className="w-10" alt="" />
-                        <img src="/icons/POLYGON.svg" className="w-7" alt="" />
+                        <img
+                          src={`/images/${blockchain}.png`}
+                          className="w-7"
+                          alt=""
+                        />
                       </div>
                     </div>
                   </div>
@@ -219,7 +225,11 @@ export const WeeklyTournament = ({ lastWinners }: any) => {
                       </h2>
                       <div className="flex gap-2 items-end">
                         <img src="/icons/logo.png" className="w-10" alt="" />
-                        <img src="/icons/POLYGON.svg" className="w-7" alt="" />
+                        <img
+                          src={`/images/${blockchain}.png`}
+                          className="w-7"
+                          alt=""
+                        />
                       </div>
                     </div>
                   </div>
@@ -251,7 +261,11 @@ export const WeeklyTournament = ({ lastWinners }: any) => {
                       </h2>
                       <div className="flex gap-2 items-end">
                         <img src="/icons/logo.png" className="w-10" alt="" />
-                        <img src="/icons/POLYGON.svg" className="w-7" alt="" />
+                        <img
+                          src={`/images/${blockchain}.png`}
+                          className="w-7"
+                          alt=""
+                        />
                       </div>
                     </div>
                   </div>

@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
@@ -45,7 +46,7 @@ export const DropdownMenu: React.FC<
             leaveTo="transform opacity-0 scale-95"
           >
             <Menu.Items className="w-max grid xl:grid-cols-3 md:grid-cols-2  gap-4 p-6 origin-top-left absolute left-0 mt-2  rounded-md shadow-button degradated  focus:outline-none">
-              {navElementsLinks.map((item, index) => {
+              {navElementsLinks.map((item: any, index) => {
                 return (
                   <Menu.Item key={index}>
                     {() => (

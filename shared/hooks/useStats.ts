@@ -1,4 +1,5 @@
-import { getAddresses, getAddressesMatic } from "@shared/web3";
+"use client";
+import { getAddresses } from "@shared/web3";
 import React from "react";
 
 export const useStats = ({
@@ -18,8 +19,8 @@ export const useStats = ({
 
   React.useEffect(() => {
     if (nfts) {
-      const cardSalesCreated = [];
-      const packSalesCreated = [];
+      const cardSalesCreated: any = [];
+      const packSalesCreated: any = [];
       nfts.saleCreated.forEach((sale) => {
         const { endersGate, pack } = getAddresses(sale.blockchain);
         if (sale.nft == endersGate) {
@@ -56,9 +57,9 @@ export const useStats = ({
           break;
       }
 
-      const cardSalesSold = [];
-      const packSalesSold = [];
-      nfts.saleSuccessfull.forEach((sale) => {
+      const cardSalesSold: any = [];
+      const packSalesSold: any = [];
+      nfts.saleSuccessfull.forEach((sale: any) => {
         const { endersGate, pack } = getAddresses(sale.blockchain);
         if (sale.nft == endersGate) {
           cardSalesSold.push(sale);

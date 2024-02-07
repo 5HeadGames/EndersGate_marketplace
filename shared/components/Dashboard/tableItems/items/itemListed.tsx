@@ -1,3 +1,4 @@
+"use client";
 import { Typography } from "@shared/components/common/typography";
 import React from "react";
 import clsx from "clsx";
@@ -19,7 +20,7 @@ import { useBlockchain } from "@shared/context/useBlockchain";
 
 interface Props {
   id: string;
-  type: string;
+  isRent: boolean;
   seller?: string;
   buyer?: string;
   amount?: string;
@@ -29,7 +30,7 @@ interface Props {
 const cards = convertArrayCards();
 
 const ItemListed: React.FunctionComponent<Props> = (props) => {
-  const { id, type, seller, amount, pack } = props;
+  const { id, isRent, seller, amount, pack } = props;
 
   const [sale, setSale] = React.useState<any>();
 
@@ -110,29 +111,13 @@ const ItemListed: React.FunctionComponent<Props> = (props) => {
               </Typography>
             </div>
           </td>
-          {/* {type !== "Recently Listed" && (
-            <td className="py-4">
-              <div className="flex flex-col items-center just">
-                <Typography
-                  type="caption"
-                  className="text-white text-center font-bold mt-1"
-                >
-                  NFT Amount
-                </Typography>
-                <Typography
-                  type="caption"
-                  className="text-white font-bold mt-1"
-                >
-                  {amount}
-                </Typography>
-              </div>{" "}
-            </td>
-          )} */}
+
           <td className="bg-secondary  cursor-pointer py-4 text-center w-8">
-            <Link href={`/sale/${id}`}>
-              <a href={`/sale/${id}`} className="flex justify-center shrink-0">
-                <img src={Icons.arrowLeft} className="w-5" alt="" />
-              </a>
+            <Link
+              className="bg-secondary  cursor-pointer py-4 text-center w-8"
+              href={`/sale/${id}`}
+            >
+              <img src={Icons.arrowLeft} className="w-5" alt="" />
             </Link>
           </td>
         </>

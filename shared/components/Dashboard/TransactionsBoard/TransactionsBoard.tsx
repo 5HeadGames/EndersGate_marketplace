@@ -1,4 +1,4 @@
-import { Typography } from "@shared/components/common/typography";
+"use client";
 import React from "react";
 import clsx from "clsx";
 import { Icons } from "@shared/const/Icons";
@@ -75,11 +75,11 @@ const TransactionsBoard: React.FC<any> = ({
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <div className="xl:max-w-[900px] w-full rounded-xl border border-overlay-border relative">
-        <p className="absolute sm:top-4 top-2 sm:right-6 right-2 text-overlay-border sm:text-sm text-[10px]">
+        <p className="absolute sm:top-4 top-2 sm:right-6 right-2 !text-overlay-border sm:text-sm text-[10px]">
           STATS PANEL
         </p>
         {/* <div className="flex border-b-2 border-overlay-border">
-          {navItems.map((item, index) => {
+          {navItems.map((item: any, index) => {
             return (
               <div
                 key={"filterPlatform" + index}
@@ -90,7 +90,7 @@ const TransactionsBoard: React.FC<any> = ({
                   type="subTitle"
                   className={clsx(
                     {
-                      "bg-primary text-overlay": columnSelected === item.value,
+                      "bg-primary !text-overlay": columnSelected === item.value,
                     },
                     {
                       "text-primary": columnSelected !== item.value,
@@ -123,7 +123,7 @@ const TransactionsBoard: React.FC<any> = ({
             </div>
           </Dropdown>
           <div className="flex flex-wrap sm:gap-x-16 gap-x-8 sm:justify-start justify-center w-full">
-            {platformItems.map((item, index) => {
+            {platformItems.map((item: any, index) => {
               return (
                 <PlatformMovements
                   icon={item?.icon}

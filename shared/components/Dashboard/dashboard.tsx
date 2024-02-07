@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useAppSelector } from "@redux/store";
 import { getAddressesMatic } from "@shared/web3";
@@ -51,6 +52,8 @@ const DashboardComponent = () => {
       setSales(recentlyListed);
     }
   }, [recentlyListed, recentlySold, salesType]);
+
+  console.log(recentlyListed);
 
   React.useEffect(() => {
     setSalesDefault(recentlyListedCards.filter((row, i) => i < 4));
@@ -210,7 +213,7 @@ const DashboardComponent = () => {
             </Dropdown>
           </div>
           <div className="flex flex-wrap w-full justify-center items-center relative md:px-40">
-            {sales.map((sale, id) => {
+            {sales.map((sale: any, id) => {
               return (
                 <NFTCard
                   classes={{ root: "m-4 cursor-pointer" }}
@@ -226,13 +229,14 @@ const DashboardComponent = () => {
                   }
                   byId={false}
                   sale={sale}
+                  isRent={sale.rentId !== undefined}
                 />
               );
             })}
           </div>
           <div className="flex items-center justify-center">
             <Link href={"/marketplace"}>
-              <p className="p-3 px-6 font-[450] hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border text-overlay-border rounded-md cursor-pointer">
+              <p className="p-3 px-6 font-[450] hover:bg-overlay-2 hover:text-primary hover:transition-all ease-in-out delay-150  bg-overlay border border-overlay-border !text-overlay-border rounded-md cursor-pointer">
                 Browse More
               </p>
             </Link>

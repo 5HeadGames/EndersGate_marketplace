@@ -1,12 +1,12 @@
+"use client";
 import React from "react";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import { Icons } from "@shared/const/Icons";
 import { CopyOutlined, EditOutlined, LoginOutlined } from "@ant-design/icons";
 import { convertArrayCards } from "@shared/components/common/convertCards";
 import Web3 from "web3";
 import { useSelector } from "react-redux";
 import useMagicLink from "@shared/hooks/useMagicLink";
-import { useWeb3React } from "@web3-react/core";
 import packs from "../../../packs.json";
 import { Tooltip } from "@mui/material";
 import { Button } from "@shared/components/common/button/button";
@@ -20,6 +20,9 @@ import { toast } from "react-hot-toast";
 import { useUser } from "@shared/context/useUser";
 import clsx from "clsx";
 import Link from "next/link";
+import { ButtonSFUEL } from "@shared/components/common/ButtonSFUEL";
+import { useWeb3React } from "@web3-react/core";
+import { useBlockchain } from "@shared/context/useBlockchain";
 
 const ProfileLayout = ({ children }) => {
   const {
@@ -29,9 +32,11 @@ const ProfileLayout = ({ children }) => {
   const { account } = useWeb3React();
   const { register, handleSubmit } = useForm();
   const router = useRouter();
+  const pathname = usePathname();
   const [editable, setEditable] = React.useState(false);
   const [userName, setUserName] = React.useState("EG Enthusiast");
   const db = getDatabase();
+  const { blockchain } = useBlockchain();
 
   React.useEffect(() => {
     if (!account && !user && !authStillValid()) {
@@ -107,7 +112,7 @@ const ProfileLayout = ({ children }) => {
               src={profileImage}
               alt=""
             />{" "}
-            <div className="flex sm:flex-row flex-col sm:items-end items-start justify-center sm:pt-10">
+            <div className="flex sm:flex-row flex-col sm:items-end items-start justify-center sm:pt-10 gap-2">
               <div className="flex flex-col justify-center items-center">
                 {!editable ? (
                   <h2 className="text-white font-bold text-xl flex justify-start items-center gap-2 w-52 overflow-hidden">
@@ -160,12 +165,13 @@ const ProfileLayout = ({ children }) => {
                 <Button
                   type="submit"
                   decoration="line-white"
-                  className="rounded-xl bg-overlay-2 text-white hover:text-overlay text-[12px] border border-overlay-border py-2 px-4 whitespace-nowrap"
+                  className="rounded-xl bg-overlay-2 text-white hover:!text-overlay text-[12px] border border-overlay-border py-2 px-4 whitespace-nowrap"
                   onClick={() => showWallet()}
                 >
                   Show Wallet
                 </Button>
               )}
+              {blockchain === "skl" && <ButtonSFUEL user={user} />}
             </div>
           </div>
         </div>
@@ -177,8 +183,8 @@ const ProfileLayout = ({ children }) => {
               <Link href={link}>
                 <p
                   className={clsx(
-                    { "text-white": link === router.asPath },
-                    { "text-overlay-border": link !== router.asPath },
+                    { "text-white": link === pathname },
+                    { "text-overlay-border": link !== pathname },
                     "text-lg px-4 font-bold cursor-pointer",
                   )}
                 >

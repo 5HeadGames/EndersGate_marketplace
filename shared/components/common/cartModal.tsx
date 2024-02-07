@@ -19,10 +19,9 @@ import { Input } from "./form/input";
 import { Button } from "./button";
 import { WalletOutlined } from "@ant-design/icons";
 import { useUser } from "@shared/context/useUser";
+import { ButtonSFUEL, ButtonSFUELCart } from "./ButtonSFUEL";
 
 export const useCartModal = () => {
-  const { showWallet } = useMagicLink();
-
   const dispatch = useDispatch();
 
   const [isShow, setIsShow] = useState(false);
@@ -55,6 +54,8 @@ export const useCartModal = () => {
       errors,
       isValidCode,
     }) => {
+      console.log(blockchain, "blockchain");
+
       return (
         <Transition.Root show={isShow} as={Fragment}>
           <Dialog
@@ -62,7 +63,7 @@ export const useCartModal = () => {
             static
             className="fixed inset-0 overflow-y-auto"
             style={{
-              zIndex: 15000,
+              zIndex: 10,
             }}
             initialFocus={cancelButtonRef}
             open={isShow}
@@ -153,15 +154,17 @@ export const useCartModal = () => {
 
                                       {
                                         "bg-transparent-color-gray-200 border-none":
-                                          tokenSelected !== item.address,
+                                          tokenSelected.address !==
+                                          item.address,
                                       },
                                       {
                                         "bg-overlay border-green-button shadow-[0_0px_10px] shadow-green-button":
-                                          tokenSelected === item.address,
+                                          tokenSelected.address ===
+                                          item.address,
                                       },
                                     )}
                                     onClick={() => {
-                                      setTokenSelected(item.address);
+                                      setTokenSelected(item);
                                     }}
                                   >
                                     <img
@@ -194,10 +197,7 @@ export const useCartModal = () => {
                             </h3>
                           </div>
                           <div className="flex flex-col gap items-end">
-                            {tokensAllowed?.filter(
-                              (item: any) =>
-                                item.name === "MATIC" || item.name === "ETH",
-                            ).length > 0 && (
+                            {!getNativeBlockchain(blockchain) && (
                               <h3
                                 className="text-sm font-[700] text-white flex gap-1 items-center justify-center"
                                 style={{ fontSize: "14px" }}
@@ -266,39 +266,6 @@ export const useCartModal = () => {
                         ) : (
                           ""
                         )}
-                        {blockchain === "matic" &&
-                          tokensAllowed.filter((token) => {
-                            return token.address === tokenSelected;
-                          })[0]?.transak && (
-                            <>
-                              <a
-                                href={`https://global.transak.com?apiKey=${
-                                  process.env.NEXT_PUBLIC_TRANSAK_API_KEY
-                                }&walletAddress=${user}&redirectURL=https://marketplace.endersgate.gg/&defaultCryptoAmount=${priceMatic}&cryptoCurrencyCode=${
-                                  tokensAllowed.filter((token) => {
-                                    return token.address === tokenSelected;
-                                  })[0]?.name
-                                }&network=polygon&defaultFiatCurrency=USD`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-green-button font-bold text-[13px] flex items-center justify-center gap-2 cursor-pointer py-2"
-                              >
-                                Not enough{" "}
-                                {
-                                  tokensAllowed.filter((token) => {
-                                    return token.address === tokenSelected;
-                                  })[0]?.name
-                                }
-                                ? Click here and buy for your purchase!{" "}
-                                <WalletOutlined />{" "}
-                              </a>
-                              <p className="text-green-button font-bold text-[13px] flex items-center justify-center gap-2 cursor-pointer">
-                                Note: Some crypto currencies require a minimum
-                                of value to buy that could exceed the cost of
-                                this purchase.
-                              </p>
-                            </>
-                          )}
                         {/* {router && router.asPath == "/shop" && (
                           <>
                             <AccordionMenu title="Promo Code / Referral">
@@ -377,7 +344,7 @@ export const useCartModal = () => {
                         <div className="w-full flex items-center justify-center py-2">
                           <Button
                             type="submit"
-                            disabled={errors.influencer_code && !isValidCode}
+                            // disabled={errors.influencer_code && !isValidCode}
                             decoration="fillGreen"
                             className={
                               "w-auto px-6 py-2 flex justify-center items-center rounded-xl !font-bold"
@@ -386,6 +353,11 @@ export const useCartModal = () => {
                             Complete Purchase
                           </Button>
                         </div>
+                        {blockchain === "skl" && (
+                          <div className="absolute top-2 left-4">
+                            <ButtonSFUEL user={user} />
+                          </div>
+                        )}
                       </form>
                     ) : (
                       <div className="h-full flex flex-col items-center justify-center text-white font-bold gap-4 text-md text-center w-64 p-4 border border-transparent-color-gray-200 rounded-xl">

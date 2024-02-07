@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import { useUser } from "@shared/context/useUser";
 
 interface LayoutDashboardProps {
@@ -32,7 +32,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
   providerName,
   profileItems,
 }) => {
-  const router = useRouter();
+  const pathname = usePathname();
   // const { user } = useMoralis();
 
   const {
@@ -76,7 +76,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
             <div className="bg-secondary relative flex-1 flex flex-col w-screen">
               <div className="flex-1 h-0 pt-6 pb-4 overflow-y-auto">
                 <nav className="flex-1 px-7">
-                  {navItems.map((item, index) => {
+                  {navItems.map((item: any, index) => {
                     return (
                       <Fragment key={"nav-mobile-" + index}>
                         <Link href={item.link} key={"nav-desktop-" + index}>
@@ -84,7 +84,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                             className={clsx(
                               "group flex items-center px-3 pb-3 text-xl hover:opacity-90 rounded-md  relative text-primary font-[500]",
                               {
-                                "opacity-50": item.link !== router.asPath,
+                                "opacity-50": item.link !== pathname,
                               },
                             )}
                             onClick={() => setSidebarOpen(false)}
@@ -98,7 +98,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                   })}
                   {user ? (
                     <>
-                      {profileItems.map((item, index) => {
+                      {profileItems.map((item: any, index) => {
                         return (
                           <>
                             {item.onClick ? (
@@ -123,8 +123,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                                     className={clsx(
                                       "group flex items-center px-3 pb-3 text-xl hover:opacity-90 rounded-md  relative text-primary font-[500]",
                                       {
-                                        "opacity-50":
-                                          item.link !== router.asPath,
+                                        "opacity-50": item.link !== pathname,
                                       },
                                     )}
                                     onClick={() => setSidebarOpen(false)}
@@ -143,9 +142,9 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                     <Fragment key={"nav-mobile"}>
                       <Link
                         href={
-                          router.pathname !== "/login"
-                            ? `/login?redirect=true&redirectAddress=${router.pathname}`
-                            : router.asPath
+                          pathname !== "/login"
+                            ? `/login?redirect=true&redirectAddress=${pathname}`
+                            : pathname
                         }
                         key={"nav-desktop-"}
                       >
@@ -155,7 +154,7 @@ export const SidebarMobile: React.FC<LayoutDashboardProps> = ({
                             {
                               "opacity-50": user
                                 ? "/profile"
-                                : "/login" !== router.asPath,
+                                : "/login" !== pathname,
                             },
                           )}
                           onClick={() => setSidebarOpen(false)}

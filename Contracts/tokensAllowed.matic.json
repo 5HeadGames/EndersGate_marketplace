@@ -3,6 +3,7 @@
     "address": "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
     "name": "MATIC",
     "logo": "/images/matic.png",
+    "main": true,
     "transak": true
   },
   {
@@ -14,6 +15,7 @@
   {
     "address": "0x9C9e5fD8bbc25984B178FdCE6117Defa39d2db39",
     "name": "BUSD",
-    "logo": "/images/busd.png"
+    "logo": "/images/busd.png",
+    "link": "https://www.bnbchain.org/en/bnb-chain-bridges"
   }
 ]

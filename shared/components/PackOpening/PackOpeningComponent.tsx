@@ -81,7 +81,7 @@ export const PackOpeningComponent: React.FC<any> = ({
         return newArray;
       });
       setTimeout(() => {
-        setVideoPlaying(getTypePackAnimation(id, packIDs));
+        setVideoPlaying(getTypePackAnimation(id, packIDs) as any);
         setCardToOpen(new Array(5).fill(false));
         setAnimating(false);
         setVideo(true);

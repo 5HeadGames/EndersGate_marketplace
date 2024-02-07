@@ -1,3 +1,4 @@
+"use client";
 import clsx from "clsx";
 import Link from "next/link";
 import * as React from "react";
@@ -19,7 +20,8 @@ export interface ButtonProps {
     | "line-primary"
     | "fillPrimary"
     | "greenLine"
-    | "fillGreen";
+    | "fillGreen"
+    | "fillPrimaryDisabled";
   social?: "facebook" | "google";
   icon?: any;
   className?: string;
@@ -77,13 +79,13 @@ export const Button: React.FC<
               decoration === "fillPrimary" && !social && !disabled,
           },
           {
-            "shadow-md border border-transparent-color-gray-200 cursor-pointer bg-green-button text-overlay transition-all duration-500":
+            "shadow-md border border-green-button cursor-pointer bg-green-button hover:!bg-overlay !text-overlay hover:!text-green-button transition-all duration-500":
               decoration === "fillGreen" && !social && !disabled,
           },
 
           {
-            " hover:border-green-button hover:bg-overlay hover:text-green-button ":
-              decoration === "fillGreen" && !social && !disabled,
+            "!border-none !bg-[#ffffff2c] hover:!opacity-100 !opacity-90":
+              decoration === "fillPrimaryDisabled",
           },
           {
             "hover:text-primary hover:border-primary hover:bg-transparent":
@@ -207,23 +209,21 @@ export const ButtonContent: React.FC<
     <>
       {href ? (
         <Link href={href}>
-          <a>
-            <Button
-              size={size}
-              label={label}
-              disabled={disabled}
-              href={href}
-              decoration={decoration}
-              social={social}
-              icon={icon}
-              tag={tag}
-              className={className}
-              type={type}
-              {...props}
-            >
-              {children}
-            </Button>
-          </a>
+          <Button
+            size={size}
+            label={label}
+            disabled={disabled}
+            href={href}
+            decoration={decoration}
+            social={social}
+            icon={icon}
+            tag={tag}
+            className={className}
+            type={type}
+            {...props}
+          >
+            {children}
+          </Button>
         </Link>
       ) : (
         <Button

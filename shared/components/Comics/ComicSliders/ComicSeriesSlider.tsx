@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Flex, Text, Image, useMediaQuery } from "@chakra-ui/react";
 import Slider from "react-slick";

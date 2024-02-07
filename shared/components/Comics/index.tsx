@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import React from "react";
 import NftMainBanner from "./NftMainBanner";
 import NftFooter from "./NftFooter";
@@ -59,7 +60,7 @@ function Comics() {
 
   const { blockchain } = useBlockchain();
 
-  const { comics: comicsAddress, MATICUSD: NATIVEUSD } =
+  const { comics: comicsAddress, NATIVEUSD: NATIVEUSD } =
     getAddresses(blockchain);
 
   const getComicsNFTs = async () => {
@@ -121,7 +122,7 @@ function Comics() {
               ?.map((item) => {
                 return (parseInt(item.price) / 10 ** 6) * item.quantity;
               })
-              ?.reduce((item, acc) => {
+              ?.reduce((item: any, acc) => {
                 return item + acc;
               }),
           ) *
@@ -138,11 +139,11 @@ function Comics() {
           ?.map((item) => {
             return BigInt(item.price) * BigInt(item.quantity);
           })
-          ?.reduce((item, acc) => {
+          ?.reduce((item: any, acc) => {
             return BigInt(item) + BigInt(acc);
           });
 
-        setPriceNative(formatPrice(price, blockchain));
+        setPriceNative(formatPrice(price, blockchain) as any);
       }
     } catch (e) {}
   };
@@ -222,11 +223,11 @@ function Comics() {
         onClick={show}
       >
         {cartComics.length > 0 && (
-          <div className="rounded-full px-[8px] py-[2px] absolute flex items-center justify-center top-[-10px] text-[11px] text-overlay bg-white left-[-10px] border border-overlay">
+          <div className="rounded-full px-[8px] py-[2px] absolute flex items-center justify-center top-[-10px] text-[11px] !text-overlay bg-white left-[-10px] border border-overlay">
             {cartComics.length}
           </div>
         )}
-        <ShopOutlined className="text-2xl flex items-center text-overlay justify-center relative" />
+        <ShopOutlined className="text-2xl flex items-center !text-overlay justify-center relative" />
       </Flex>
     </Flex>
   );

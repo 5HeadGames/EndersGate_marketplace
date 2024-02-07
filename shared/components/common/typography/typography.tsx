@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import clsx from "clsx";
 
@@ -8,7 +9,7 @@ export interface TypographyProps {
   onClick?: () => void;
 }
 
-export const Typography: React.FC<TypographyProps> = ({
+export const Typography: React.FC<TypographyProps & any> = ({
   type,
   children,
   text = "",

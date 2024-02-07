@@ -1,3 +1,4 @@
+"use client";
 import clsx from "clsx";
 import React from "react";
 import AnimatedPackCard from "./AnimatedPackCard";
@@ -216,63 +217,58 @@ export const PackOpeningMobile: React.FC<any> = ({
         )}
         {video && (
           <>
-            <div className="w-full h-full block md:hidden">
-              {/* <video
+            <div className="w-full h-full md:block hidden">
+              <video
                 ref={vidRef1mobile}
                 className={clsx(
-                  { ["hidden"]: videoPlaying !== 0 },
-                  "h-full absolute z-0 mobileVideo",
+                  { hidden: videoPlaying !== 0 },
+                  "h-full absolute z-20 videoPack",
                 )}
                 // controls
-                muted
-                src={`./videos/packVideos/card_${
-                  packAnimation + 1
-                }_purple720x1280.mp4`}
+                src={`./videos/packVideos/card_${packAnimation}_normal.webm`}
+                muted={videoPlaying !== 0}
                 onEnded={
-                  videoPlaying === 0 ? () => endPackOpening(0) : undefined
+                  videoPlaying === 0 ? () => endPackOpening() : undefined
                 }
               ></video>
 
               <video
                 ref={vidRef2mobile}
                 className={clsx(
-                  { ["hidden"]: videoPlaying !== 1 },
-                  "h-full absolute z-0 mobileVideo",
+                  { hidden: videoPlaying !== 1 },
+                  "h-full absolute z-20 videoPack",
                 )}
                 // controls
-                muted
-                src={`./videos/packVideos/card_${
-                  packAnimation + 1
-                }_green720x1280.mp4`}
+                muted={videoPlaying !== 1}
+                src={`./videos/packVideos/card_${packAnimation}_epic.webm`}
                 onEnded={
-                  videoPlaying === 1 ? () => endPackOpening(1) : undefined
+                  videoPlaying === 1 ? () => endPackOpening() : undefined
                 }
               ></video>
 
               <video
                 ref={vidRef3mobile}
                 className={clsx(
-                  { ["hidden"]: videoPlaying !== 2 },
-                  "w-full absolute z-0 mobileVideo",
+                  { hidden: videoPlaying !== 2 },
+                  "h-full absolute z-20 videoPack",
                 )}
                 // controls
-                muted
-                src={`./videos/packVideos/card_${
-                  packAnimation + 1
-                }_yellow720x1280.mp4`}
+                muted={videoPlaying !== 2}
+                src={`./videos/packVideos/card_${packAnimation}_legendary.webm`}
                 onEnded={
-                  videoPlaying === 2 ? () => endPackOpening(2) : undefined
+                  videoPlaying === 2 ? () => endPackOpening() : undefined
                 }
-              ></video> */}
+              ></video>
 
               <video
                 ref={vidRef4mobile}
                 className={clsx(
-                  { ["hidden"]: videoPlaying !== 3 },
-                  "w-screen mobileVideo",
+                  { hidden: videoPlaying !== 3 },
+                  "h-full videoDesktop videoPack",
                 )}
                 // controls
-                src="./videos/packVideos/portal_glow_720x1280.mp4"
+                muted={videoPlaying !== 3}
+                src="./videos/packVideos/Comp.mp4"
               ></video>
             </div>
           </>

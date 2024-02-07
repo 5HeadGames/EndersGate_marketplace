@@ -10,6 +10,7 @@ import {
 } from "@redux/actions";
 import { findSum } from "@shared/components/common/specialFields/SpecialFields";
 import { child, get, getDatabase, ref, set } from "firebase/database";
+import { toast } from "react-hot-toast";
 
 import { config, passport } from "@imtbl/sdk";
 
@@ -112,6 +113,7 @@ export const getContractCustom = (
 };
 
 export const getProvider = (blockchain) => {
+  console.log(blockchain, CHAINS[CHAIN_IDS_BY_NAME[blockchain]]);
   return new Web3.providers.HttpProvider(
     CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0],
   );
@@ -138,6 +140,8 @@ export const getAddresses = (blockchain) => {
       return getAddressesIMX();
     case "skl":
       return getAddressesSkale();
+    case "linea":
+      return getAddressesLinea();
     default:
       return undefined;
   }
@@ -152,8 +156,8 @@ export const getAddressesMatic = () => {
 };
 
 export const getAddressesIMX = () => {
-  const testAddresses = require("../../Contracts/addresses.imx.json");
-  const addresses = require("../../Contracts/addresses.imx.json");
+  const testAddresses = require("../../Contracts/addresses.imx_test.json");
+  const addresses = require("../../Contracts/addresses.imx_test.json");
   return process.env.NEXT_PUBLIC_ENV === "production"
     ? addresses
     : testAddresses;
@@ -177,9 +181,21 @@ export const getAddressesEth = () => {
 };
 
 export const getAddressesSkale = () => {
-  const addresses = require("../../Contracts/addresses.skale.json");
+  const testAddresses = require("../../Contracts/addresses.nebula_test.json");
+  const addresses = require("../../Contracts/addresses.nebula.json");
 
-  return addresses;
+  return process.env.NEXT_PUBLIC_ENV === "production"
+    ? addresses
+    : testAddresses;
+};
+
+export const getAddressesLinea = () => {
+  const testAddresses = require("../../Contracts/addresses.linea_test.json");
+  const addresses = require("../../Contracts/addresses.linea.json");
+
+  return process.env.NEXT_PUBLIC_ENV === "production"
+    ? addresses
+    : testAddresses;
 };
 
 export const getTokensAllowed = (blockchain) => {
@@ -190,6 +206,8 @@ export const getTokensAllowed = (blockchain) => {
       return getTokensAllowedEth();
     case "skl":
       return getTokensAllowedSkale();
+    case "linea":
+      return getTokensAllowedLinea();
   }
 };
 
@@ -212,6 +230,11 @@ export const getTokensAllowedEth = () => {
 
 export const getTokensAllowedSkale = () => {
   const addresses = require("../../Contracts/tokensAllowed.skale.json");
+  return addresses;
+};
+
+export const getTokensAllowedLinea = () => {
+  const addresses = require("../../Contracts/tokensAllowed.linea_test.json");
   return addresses;
 };
 
@@ -315,23 +338,22 @@ export const loadSale = async function prepare({ tokenId, blockchain }: any) {
 
 export const buyNFTsMatic = async ({
   tokenSelected,
-  addToast,
   setMessageBuy,
   cart,
   marketplace,
   provider,
   ethAddress,
   tokensAllowed,
-  MATICUSD,
+  NATIVEUSD,
   dispatch,
   blockchain,
 }) => {
   if (tokenSelected === "") {
-    addToast("Please Select a Payment Method", { appearance: "error" });
+    toast.error("Please Select a Payment Method");
     return;
   }
   try {
-    setMessageBuy(`Processing your purchase...`);
+    console.log("initiated");
 
     const { amounts, bid, token, tokensId } = {
       amounts: cart.map((item) => item.quantity),
@@ -347,40 +369,53 @@ export const buyNFTsMatic = async ({
     };
 
     const marketplaceContract = getContractCustom(
-      "ClockSale",
+      getNativeBlockchain(blockchain)
+        ? "ClockSaleFindora"
+        : onlyAcceptsERC20(blockchain)
+        ? "ClockSaleOnlyMultiToken"
+        : "ClockSale",
       marketplace,
       provider,
     );
     let price: any = 0;
 
-    const ERC20 = getContractCustom("ERC20", token, provider);
-    const addresses = getTokensAllowedMatic();
+    const ERC20 = getContract("ERC20", token, blockchain);
+    const addresses = getTokensAllowed(blockchain);
     if (
       !onlyAcceptsERC20(blockchain) &&
-      tokenSelected ===
-        addresses.filter((item) => item.name === "MATIC")[0].address
+      tokenSelected === addresses.filter((item) => item.main)[0]?.address
     ) {
-      const Aggregator = getContractCustom("Aggregator", MATICUSD, provider);
+      const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
       const priceMATIC = await Aggregator.methods.latestAnswer().call();
       price = Web3.utils.toWei(
         ((bid * 10 ** 8) / priceMATIC).toString(),
         "ether",
       );
+
+      setMessageBuy(`Processing your purchase...`);
+
       await marketplaceContract.methods
         .buyBatch(tokensId, amounts, token)
         .send({ from: ethAddress, value: price });
     } else {
+      // const balanceOf = await ERC20.methods.balanceOf(ethAddress).call();
+      // if (balanceOf) {
+      // }
+      setMessageBuy(`Processing your purchase...`);
+
       const allowance = await ERC20.methods
         .allowance(ethAddress, marketplace)
         .call();
-      if (allowance < 1000000000000) {
+
+      if (allowance < 1000000000000000000) {
         setMessageBuy(
           `Increasing the allowance of ${
-            tokensAllowed.filter((item) => item.address === tokenSelected)[0]
-              .name
+            tokensAllowed.filter((item) => item.address == token)[0].name
           } 1/2`,
         );
-        await ERC20.methods
+        const ERC20Token = getContractCustom("ERC20", token, provider);
+
+        await ERC20Token.methods
           .increaseAllowance(
             marketplace,
             "1000000000000000000000000000000000000000000000000",
@@ -401,7 +436,9 @@ export const buyNFTsMatic = async ({
 
       dispatch(removeAll());
     }
-  } catch (err) {}
+  } catch (err) {
+    console.log(err, "catch");
+  }
   dispatch(onLoadSales());
   setMessageBuy(``);
 };
@@ -446,11 +483,58 @@ export const buyNFTsNative = async ({
   setMessageBuy(``);
 };
 
-export const isPack = (address: string) => {
-  return (
-    address === getAddressesMatic().pack ||
-    address === getAddressesFindora().pack
-  );
+export const redeemNFT = async ({ tokenId, provider, user, blockchain }) => {
+  try {
+    const { rent } = getAddresses(blockchain);
+    const rentContract = getContractCustom(
+      onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
+      rent,
+      provider,
+    );
+    console.log(tokenId, rentContract, "pre redeem");
+    const tx = await rentContract.methods
+      .redeemRent(tokenId.toString())
+      .send({ from: user });
+    return tx;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const onCancelSale = async (args: {
+  tokenId;
+  provider;
+  user;
+  blockchain;
+}) => {
+  try {
+    const { tokenId, provider, user, blockchain } = args;
+
+    const { marketplace } = getAddresses(blockchain);
+    const marketplaceContract = getContractCustom(
+      getNativeBlockchain(blockchain)
+        ? "ClockSaleFindora"
+        : onlyAcceptsERC20(blockchain)
+        ? "ClockSaleOnlyMultiToken"
+        : "ClockSale",
+      marketplace,
+      provider,
+    );
+    console.log("before tx");
+    const tx = await marketplaceContract.methods
+      .cancelSale(tokenId)
+      .send({ from: user });
+
+    console.log(tx, marketplace, marketplaceContract);
+    return tx;
+  } catch (err) {
+    console.log(err);
+    return { err };
+  }
+};
+
+export const isPack = (address: string, blockchain: string) => {
+  return address === getAddresses(blockchain)?.pack;
 };
 
 export const getRentsPendingByUser = ({ user, rents }) => {
@@ -477,8 +561,10 @@ export const getNativeBlockchain = (blockchain) => {
     case "findora":
       return true;
     case "imx":
-      return true;
+      return false;
     case "skl":
+      return false;
+    case "linea":
       return false;
     default:
       return undefined;
@@ -497,6 +583,8 @@ export const hasAggregatorFeed = (blockchain) => {
       return false;
     case "skl":
       return false;
+    case "linea":
+      return true;
     default:
       return undefined;
   }
@@ -511,9 +599,11 @@ export const onlyAcceptsERC20 = (blockchain) => {
     case "findora":
       return false;
     case "imx":
-      return false;
+      return true;
     case "skl":
       return true;
+    case "linea":
+      return false;
     default:
       return undefined;
   }
@@ -552,5 +642,35 @@ export const checkFirebaseInfluencerCode = async ({
   } else {
     setError("influencer_code", { message: "Invalid Code." });
     return false;
+  }
+};
+
+export const getSFUEL = async (address) => {
+  const pk: any = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+  const skale = CHAINS[CHAIN_IDS_BY_NAME["skl"]];
+  const web3 = getWeb3(skale.urls[0]);
+  console.log(address);
+  const balance = await web3.eth.getBalance(address);
+  console.log(balance);
+
+  const params = {
+    to: address,
+    value: Web3.utils.toHex(Web3.utils.toWei("0.00001", "ether")),
+    gas: Web3.utils.toHex(21000), // optional
+    gasPrice: Web3.utils.toHex(20 * Math.pow(10, 9)), // optional
+  };
+
+  if (parseFloat(Web3.utils.fromWei(balance, "ether")) <= 0.000001) {
+    const signedTx: any = await web3.eth.accounts.signTransaction(params, pk);
+    web3.eth
+      .sendSignedTransaction(signedTx.rawTransaction)
+      .on("transactionHash", () => {
+        toast.success("Gas request succesfully sent!");
+      })
+      .on("error", () => {
+        toast.error("An error has ocurred");
+      });
+  } else {
+    toast.error("You have enough sFUEL to make txs");
   }
 };

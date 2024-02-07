@@ -1,6 +1,7 @@
+"use client";
 import React from "react";
 import { ExclamationCircleOutlined, LoadingOutlined } from "@ant-design/icons";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Web3 from "web3";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import {
@@ -37,7 +38,7 @@ import ChainSelect from "@shared/components/Layouts/chainSelect";
 import { useUser } from "@shared/context/useUser";
 
 const ComicDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
-  const NFTs = useAppSelector((state) => state.nfts);
+  const NFTs: any = useAppSelector((state) => state.nfts);
   // const [state, setState] = React.useState("choose");
   const router = useRouter();
 
@@ -136,7 +137,7 @@ const ComicDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             <p className="text-sm font-bold text-white">
                               Peer to Peer Card Sales:
                             </p>
-                            <span className="text-sm text-overlay-border font-[500]">
+                            <span className="text-sm !text-overlay-border font-[500]">
                               Exchange cards with other payers.
                             </span>
                           </div>
@@ -156,7 +157,7 @@ const ComicDetailIDComponent: React.FC<any> = ({ id, inventory }) => {
                             <p className="text-sm font-bold text-white">
                               Peer to Peer Card Rentals:
                             </p>
-                            <span className="text-sm text-overlay-border font-[500]">
+                            <span className="text-sm !text-overlay-border font-[500]">
                               Rent out the card for a fixed period of time.
                             </span>
                           </div>
@@ -214,7 +215,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
     "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
   );
 
-  const [tokensSelected, setTokensSelected] = React.useState([]);
+  const [tokensSelected, setTokensSelected] = React.useState<any>([]);
 
   const [sellNFTData, setSellNFTData] = React.useState({
     startingPrice: 0,
@@ -353,10 +354,10 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
         <div className="flex flex-col md:px-6 py-10 p-2 border border-overlay-border bg-secondary rounded-xl mt-4 relative">
           <ChevronLeftIcon
             onClick={() => setState("choose")}
-            className="absolute md:top-3 left-2 top-2 text-overlay-border text-sm w-6 text-white cursor-pointer"
+            className="absolute md:top-3 left-2 top-2 !text-overlay-border text-sm w-6 text-white cursor-pointer"
           />
 
-          <p className="absolute md:bottom-3 md:right-6 bottom-2 right-4 text-overlay-border text-[10px]">
+          <p className="absolute md:bottom-3 md:right-6 bottom-2 right-4 !text-overlay-border text-[10px]">
             SELL PANEL
           </p>
           <div className="absolute md:top-3 right-2 top-2">
@@ -450,7 +451,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
                     for this listing
                   </div>
                   <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
-                    {tokensAllowed.map((item, index) => {
+                    {tokensAllowed.map((item: any, index) => {
                       return (
                         <div
                           className={clsx(
@@ -473,7 +474,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
                               );
                             } else {
                               setTokensSelected((prev) => {
-                                const newArray = [];
+                                const newArray: any = [];
                                 prev.forEach((item2) => newArray.push(item2));
                                 newArray.push(item.address);
                                 return newArray;
@@ -515,7 +516,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
               </div>
               <Button
                 decoration="fill"
-                className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
                 onClick={sellNft}
               >
                 Sell Now
@@ -543,7 +544,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
     "You will have to make two transactions (if you haven't approved us before, instead you will get one). The first one to approve us to have listed your tokens and the second one to list the tokens",
   );
 
-  const [tokensSelected, setTokensSelected] = React.useState([]);
+  const [tokensSelected, setTokensSelected] = React.useState<any>([]);
 
   const [sellNFTData, setSellNFTData] = React.useState({
     pricePerDay: 0,
@@ -659,13 +660,13 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
         <div className="flex flex-col px-6 py-10  border border-overlay-border bg-secondary rounded-xl mt-4 relative">
           <ChevronLeftIcon
             onClick={() => setState("choose")}
-            className="absolute md:top-3 left-2 top-2 text-overlay-border text-sm w-6 text-white cursor-pointer"
+            className="absolute md:top-3 left-2 top-2 !text-overlay-border text-sm w-6 text-white cursor-pointer"
           />
           <div className="absolute md:top-3 right-2 top-2">
             <ChainSelect />
           </div>
 
-          <p className="absolute md:bottom-3 md:right-4 bottom-2 right-4 text-overlay-border text-[10px]">
+          <p className="absolute md:bottom-3 md:right-4 bottom-2 right-4 !text-overlay-border text-[10px]">
             RENT PANEL
           </p>
 
@@ -712,7 +713,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
                     for this listing
                   </div>
                   <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
-                    {tokensAllowed.map((item, index) => {
+                    {tokensAllowed.map((item: any, index) => {
                       return (
                         <div
                           className={clsx(
@@ -735,7 +736,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
                               );
                             } else {
                               setTokensSelected((prev) => {
-                                const newArray = [];
+                                const newArray: any = [];
                                 prev.forEach((item2) => newArray.push(item2));
                                 newArray.push(item.address);
                                 return newArray;
@@ -777,7 +778,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
               </div>
               <Button
                 decoration="fill"
-                className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
+                className="md:w-48 w-32 md:text-lg text-md py-[6px] rounded-lg !text-overlay !bg-green-button hover:!bg-secondary hover:!text-green-button hover:!border-green-button"
                 onClick={listNFTtoRent}
               >
                 List Now
@@ -794,7 +795,7 @@ const TokenInfo = ({ id, blockchain, NFTs, comics }) => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-4 py-2 border border-overlay-border bg-secondary rounded-xl relative">
-        <p className="absolute top-2 right-4 text-overlay-border text-[11px]">
+        <p className="absolute top-2 right-4 !text-overlay-border text-[11px]">
           TOKEN INFO
         </p>
         <div className="flex flex-col w-full">

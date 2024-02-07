@@ -1,3 +1,4 @@
+"use client";
 /* eslint-disable react-hooks/exhaustive-deps */
 import clsx from "clsx";
 import React from "react";
@@ -75,16 +76,14 @@ export const PackOpening = ({
   return (
     <div
       className={clsx(
-        { "min-h-screen": !(videoPlaying === 3 && video) },
-        { "h-[calc(100vh-56px)]": videoPlaying === 3 && video },
-        "w-full  relative overflow-hidden md:block hidden",
+        "min-h-screen w-full relative overflow-hidden md:block hidden",
       )}
       style={{ backgroundColor: "#111" }}
     >
       <div
         className={clsx(
           { hidden: video },
-          "md:absolute flex md:gap-40 gap-10 justify-center items-center md:top-10 md:mt-0 mt-6 md:h-12 h-8 left-0 right-0 m-auto text-center",
+          "md:absolute flex md:gap-40 gap-10 justify-center items-center md:top-16 md:mt-0 mt-6 md:h-12 h-8 left-0 right-0 m-auto text-center",
         )}
       >
         <img
@@ -102,7 +101,7 @@ export const PackOpening = ({
         />
       </div>
       {!video && (
-        <div className="absolute top-12 right-12 z-50 w-8">
+        <div className="absolute top-16 right-12 z-50 w-8">
           <img
             src={
               backgroundSound

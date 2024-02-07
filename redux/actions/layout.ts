@@ -1,3 +1,4 @@
+"use client";
 import { createAction } from "@reduxjs/toolkit";
 import * as actionTypes from "../constants";
 

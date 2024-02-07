@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+"use client";
 import React from "react";
 import useMagicLink from "@shared/hooks/useMagicLink";
-import { useRouter } from "next/dist/client/router";
 import clsx from "clsx";
 import { SidebarMobile } from "./sidebars/mobile";
 import { useAppDispatch } from "redux/store";
-import { onLoadSales } from "redux/actions";
+import { onGetAssets, onLoadSales } from "redux/actions";
 import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
@@ -25,6 +25,14 @@ import { useModal } from "@shared/hooks/modal";
 import { Button } from "../common/button/button";
 import Link from "next/link";
 import { config, passport } from "@imtbl/sdk";
+import {
+  useRouter,
+  useParams,
+  usePathname,
+  useSearchParams,
+} from "next/navigation";
+import LoginModal from "../Login/loginModal";
+import { initializeApp } from "firebase/app";
 
 const styles = {
   content: {
@@ -36,9 +44,27 @@ const styles = {
 };
 
 export default function AppLayout({ children }) {
+  const firebaseConfig = {
+    apiKey: "AIzaSyCtkRgLKQD7vMLqf9v4iNqWclGaRW8z2Zs",
+    authDomain: "endersgate-1ff81.firebaseapp.com",
+    databaseURL: "https://endersgate-1ff81-default-rtdb.firebaseio.com",
+    projectId: "endersgate-1ff81",
+    storageBucket: "endersgate-1ff81.appspot.com",
+    messagingSenderId: "248387184050",
+    appId: "1:248387184050:web:b872255ff8f7375880f0ab",
+    measurementId: "G-K1H6HYR0C8",
+  };
+
+  const app = initializeApp(firebaseConfig);
+
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [cartOpen, setCartOpen] = React.useState(false);
-  const [tokenSelected, setTokenSelected] = React.useState("");
+  const [tokenSelected, setTokenSelected] = React.useState({
+    address: "",
+    name: "",
+    transak: false,
+    main: false,
+  });
   const refSidebarMobile = React.useRef(null);
   const [disabled, setDisabled] = React.useState<ButtonsTypes>({
     logout: false,
@@ -48,10 +74,12 @@ export default function AppLayout({ children }) {
   const [search, setSearch] = React.useState("");
 
   const router = useRouter();
+  const query = useSearchParams();
+  const pathname = usePathname();
 
   const { login, logout } = useMagicLink();
 
-  const { updateUser } = useUser();
+  const { updateUser, user } = useUser();
 
   const {
     user: { ethAddress, providerName },
@@ -60,6 +88,12 @@ export default function AppLayout({ children }) {
   const { cart, cartRent } = useSelector((state: any) => state.layout);
 
   const { Modal: ModalSwap, show, isShow, hide } = useModal();
+  const {
+    Modal: ModalAuth,
+    show: showAuth,
+    isShow: isShowAuth,
+    hide: hideAuth,
+  } = useModal();
 
   const { allRents } = useSelector((state: any) => state.nfts);
 
@@ -88,8 +122,12 @@ export default function AppLayout({ children }) {
       if (authStillValid()) {
         updateBlockchain(chain || "matic");
         WALLETS.forEach(async (wallet) => {
-          if (wallet.title === typeOfConnection) {
-            await wallet.connection.connector.activate();
+          try {
+            if (wallet.title === typeOfConnection) {
+              await wallet.connection.connector.activate();
+            }
+          } catch (err) {
+            console.log(err);
           }
         });
         if (typeOfConnection === "magic") {
@@ -110,7 +148,9 @@ export default function AppLayout({ children }) {
 
   React.useEffect(() => {
     show();
-    reconnect();
+    setTimeout(() => {
+      reconnect();
+    }, 10000);
   }, []);
 
   const loginPassportCallback = async () => {
@@ -122,8 +162,33 @@ export default function AppLayout({ children }) {
   };
 
   React.useEffect(() => {
-    if (router.query.code) loginPassportCallback();
-  }, [router.query]);
+    if (query.get("code")) loginPassportCallback();
+  }, [query]);
+
+  React.useEffect(() => {
+    if (providerName.toLowerCase() === "web3react") {
+      console.log("inside");
+      (window as any).ethereum?.on("accountsChanged", function (accounts) {
+        console.log(accounts, "accounts");
+        if (accounts.length > 0) {
+          onGetAssets({ address: accounts[0], blockchain });
+          console.log(user, { ...user, ethAddress: accounts[0] });
+          updateUser({ ...user, ethAddress: accounts[0] });
+        } else {
+          updateUser({
+            ethAddress: "",
+            email: "",
+            provider: "",
+            providerName: "",
+          });
+          localStorage.removeItem("typeOfConnection");
+          localStorage.removeItem("loginTime");
+          localStorage.removeItem("chain");
+          (window as any).location.reload();
+        }
+      });
+    }
+  }, [user]);
 
   const loadSales = async () => {
     await dispatch(onLoadSales());
@@ -213,7 +278,7 @@ export default function AppLayout({ children }) {
               className="text-dark text-xl flex items-center justify-center px-2 cursor-pointer"
               onClick={() => {
                 if (search) {
-                  if (router.asPath === "/marketplace?search=" + search) {
+                  if (pathname === "/marketplace?search=" + search) {
                     router.push("/marketplace");
                   }
                   router.push("/marketplace?search=" + search);
@@ -225,17 +290,16 @@ export default function AppLayout({ children }) {
           </div>
         </div>
         <div className="lg:flex hidden gap-4 shrink-0 items-center">
-          {navItems.map((item, index) => {
+          {navItems.map((item: any, index) => {
             return (
-              <>
+              <React.Fragment key={item.name}>
                 <NavbarItem
-                  key={item.name}
                   name={item.name}
                   link={item.link}
-                  route={router.asPath}
+                  route={pathname}
                   notification={false}
                 />
-              </>
+              </React.Fragment>
             );
           })}
           {ethAddress ? (
@@ -246,7 +310,7 @@ export default function AppLayout({ children }) {
                     "!opacity-100":
                       cartOpen || cart.length + cartRent.length > 0,
                   },
-                  { "!hidden": router.pathname == "/shop" },
+                  { "!hidden": pathname == "/shop" },
                   "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
                 )}
                 onClick={() => {
@@ -271,9 +335,9 @@ export default function AppLayout({ children }) {
                 notification={userRentsNotificationArray.length}
               >
                 <div className="flex flex-col items-center px-4 border border-overlay-border rounded-xl">
-                  {profileItems.map((item, index) => {
+                  {profileItems.map((item: any, index) => {
                     return (
-                      <>
+                      <React.Fragment key={item.name + index}>
                         {item.onClick ? (
                           <div
                             className={clsx(
@@ -290,11 +354,11 @@ export default function AppLayout({ children }) {
                             key={item.name}
                             name={item.name}
                             link={item.link}
-                            route={router.asPath}
+                            route={pathname}
                             notification={item.notification}
                           />
                         )}
-                      </>
+                      </React.Fragment>
                     );
                   })}
                 </div>
@@ -302,23 +366,22 @@ export default function AppLayout({ children }) {
               <ChainSelect />
             </>
           ) : (
-            <NavbarItem
-              name={"LOG IN"}
-              link={
-                router.pathname !== "/login"
-                  ? `/login?redirect=true&redirectAddress=${router.pathname}`
-                  : router.asPath
-              }
-              route={router.asPath}
-              notification={false}
-            />
+            <div
+              onClick={() => showAuth()}
+              className={clsx(
+                "py-2 relative",
+                "text-md font-[600] text-white opacity-50 cursor-pointer",
+              )}
+            >
+              LOG IN
+            </div>
           )}
         </div>
         <div className="lg:hidden flex gap-4">
           <div
             className={clsx(
               { "!opacity-100": cartOpen || cart.length > 0 },
-              { hidden: router.pathname === "/shop" },
+              { hidden: pathname === "/shop" },
               "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
             )}
             onClick={() => {
@@ -353,6 +416,10 @@ export default function AppLayout({ children }) {
           )}
         </div>
       </nav>
+
+      <ModalAuth isShow={isShowAuth} withoutX>
+        <LoginModal hide={hideAuth} />
+      </ModalAuth>
 
       <SidebarMobile
         initialFocus={refSidebarMobile}
@@ -422,26 +489,27 @@ export default function AppLayout({ children }) {
               alt=""
             />
           </div>
-          <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4">
-            <Link href="/login?redirect=true&redirectAddress=/profile/swap">
-              <Button
-                className="w-1/3 py-2 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md text-white font-bold"
-                onClick={() => {
-                  hide();
-                }}
-              >
-                Login
-              </Button>
-            </Link>
-          </div>
+          <Link
+            href="/login?redirect=true&redirectAddress=/profile/swap"
+            className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4"
+          >
+            <Button
+              className="w-1/3 py-2 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md text-white font-bold"
+              onClick={() => {
+                hide();
+              }}
+            >
+              Login
+            </Button>
+          </Link>
         </div>
       </ModalSwap>
 
       <div className={clsx("bg-overlay flex flex-col")} style={styles.content}>
         {children}
       </div>
-      {!router.asPath.includes("/comics") &&
-        !router.asPath.includes("/pack_opening") && <Footer />}
+      {!pathname?.includes("/comics") &&
+        !pathname?.includes("/pack_opening") && <Footer />}
     </div>
   );
 }

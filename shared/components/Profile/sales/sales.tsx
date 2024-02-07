@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@shared/components/common/button";
 import { Typography } from "@shared/components/common/typography";
 import { Icons } from "@shared/const/Icons";
@@ -9,12 +10,16 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "redux/store";
 import Styles from "./styles.module.scss";
 import packs from "../../../packs.json";
-import { getAddresses, getAddressesMatic, switchChain } from "@shared/web3";
+import {
+  getAddresses,
+  getAddressesMatic,
+  onCancelSale,
+  switchChain,
+} from "@shared/web3";
 
 import { useModal } from "@shared/hooks/modal";
-import { onCancelSale, onLoadSales, onGetAssets } from "@redux/actions";
+import { onLoadSales, onGetAssets } from "@redux/actions";
 import { convertArrayCards } from "@shared/components/common/convertCards";
-import { useWeb3React } from "@web3-react/core";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { formatPrice } from "@shared/utils/formatPrice";
 import { toast } from "react-hot-toast";
@@ -47,15 +52,15 @@ const Sales = () => {
         );
       }
       updateBlockchain(cancel.blockchain);
-      const tx = await dispatch(
-        onCancelSale({
-          tokenId: cancel.id,
-          provider: provider,
-          user: user,
-          blockchain: cancel.blockchain,
-        }),
-      );
-      if ((tx as any).error) {
+
+      const tx = await onCancelSale({
+        tokenId: cancel.id,
+        provider: provider,
+        user: user,
+        blockchain: cancel.blockchain,
+      });
+      console.log(tx);
+      if ((tx as any)?.error) {
         throw Error(
           "An error has occurred while cancelling the sale, please try again",
         );
@@ -64,7 +69,8 @@ const Sales = () => {
       dispatch(onGetAssets({ address: user, blockchain }));
       toast.success("Your sale has been canceled successfully");
     } catch (err) {
-      toast.error(err.message);
+      console.log(err);
+      toast.error("Something went wrong, try again");
     }
     setIsLoading(false);
 
@@ -72,10 +78,10 @@ const Sales = () => {
   };
 
   React.useEffect(() => {
-    const arrayPacks = [];
-    nfts.saleCreated.forEach((sale, index) => {
-      if (sale.seller.toLowerCase() === user.toLowerCase()) {
-        if (sale.status !== 3) {
+    const arrayPacks: any = [];
+    nfts.allSales.forEach((sale: any, index) => {
+      if (sale.seller.toLowerCase() == user.toLowerCase()) {
+        if (sale.status !== 3 && sale.saleId !== undefined) {
           arrayPacks.push(sale);
         }
       }
@@ -107,7 +113,7 @@ const Sales = () => {
             <div className="flex justify-center items-center gap-4">
               <Button
                 decoration="line-white"
-                className="hover:text-overlay !font-bold text-white rounded-xl"
+                className="hover:!text-overlay !font-bold text-white rounded-xl"
                 size="small"
                 onClick={() => {
                   hide();
@@ -118,7 +124,7 @@ const Sales = () => {
               <Button
                 // decoration="fill"
                 size="small"
-                className="hover:text-red-primary !font-bold !hover:border-red-primary text-overlay bg-red-primary rounded-xl"
+                className="hover:!text-red-primary !font-bold !hover:border-red-primary !text-overlay bg-red-primary rounded-xl"
                 onClick={() => {
                   cancelSale();
                 }}
@@ -137,7 +143,7 @@ const Sales = () => {
               sales.length == 0,
           },
           {
-            ["gap-2 flex-wrap gap-2"]: sales.length != 0,
+            ["gap-2 flex-wrap"]: sales.length != 0,
           },
         )}
       >
@@ -145,6 +151,7 @@ const Sales = () => {
           <div className="w-full overflow-x-auto border border-overlay-border rounded-xl py-4">
             <table className="w-full min-w-max">
               <thead className="text-white font-bold">
+                <th className="text-center px-10">CHAIN</th>
                 <th className="text-center px-10">NFT</th>
                 <th className="text-center px-10">SALE ID</th>
                 {/* <th className="text-center px-10"></th> */}
@@ -154,7 +161,7 @@ const Sales = () => {
                 <th className="text-center"></th>
               </thead>
               <tbody>
-                {sales.map((sale, i) => {
+                {sales.map((sale: any, i) => {
                   const { pack: packsAddress } = getAddresses(sale.blockchain);
                   const pack = sale.nft == packsAddress;
                   return (
@@ -164,11 +171,7 @@ const Sales = () => {
                           i < sales.length - 1,
                       })}
                     >
-                      {sale && (
-                        <Sale
-                          {...{ sale, pack, setCancelId: setCancel, show }}
-                        />
-                      )}
+                      <Sale {...{ sale, pack, setCancelId: setCancel, show }} />
                     </tr>
                   );
                 })}
@@ -198,6 +201,17 @@ const Sale = ({ sale, pack, setCancelId, show }) => {
 
   return (
     <>
+      <td className="py-4 px-4">
+        <div className="flex flex-col items-center gap-y-2 w-full">
+          <div className="rounded-full flex flex-col text-gray-100 relative overflow-hidden h-10 w-10">
+            <img
+              src={`/images/${sale.blockchain}.png`}
+              className={`w-full`}
+              alt=""
+            />
+          </div>
+        </div>
+      </td>
       <td className="py-4 px-4">
         <div className="flex flex-col items-center gap-y-2 w-full">
           <div className="rounded-xl flex flex-col text-gray-100 relative overflow-hidden border border-gray-500 h-20 w-20">
@@ -241,26 +255,31 @@ const Sale = ({ sale, pack, setCancelId, show }) => {
       </td>
       <td className="py-4 px-4">
         <div className="flex flex-col items-center just">
-          <Button
-            decoration="line-white"
-            className="text-white hover:text-overlay rounded-xl"
-            size="small"
-            onClick={() => {
-              setCancelId({
-                id: sale.saleId,
-                blockchain: sale.blockchain,
-              });
-              show();
-            }}
-          >
-            Cancel
-          </Button>
+          {sale.status == 0 && (
+            <Button
+              decoration="line-white"
+              className="text-white hover:!text-overlay rounded-xl"
+              size="small"
+              onClick={() => {
+                setCancelId({
+                  id: sale.saleId,
+                  blockchain: sale.blockchain,
+                });
+                show();
+              }}
+            >
+              Cancel
+            </Button>
+          )}
         </div>
       </td>
 
       <td className="py-4 pr-4">
-        <Link href={`/sale/${sale.id}`}>
-          <div className="flex flex-col items-center just">
+        <Link
+          className="flex flex-col items-center justify-center"
+          href={`/sale/${sale.id}`}
+        >
+          <>
             <Button
               decoration="fill"
               className="!text-overlay hover:!text-white rounded-xl"
@@ -268,7 +287,7 @@ const Sale = ({ sale, pack, setCancelId, show }) => {
             >
               Go to Sale
             </Button>
-          </div>
+          </>
         </Link>
       </td>
     </>

@@ -7,10 +7,18 @@ import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 
 const getMagicConfig = (networkId: any) => {
   const network = CHAINS[networkId];
-  return {
-    rpcUrl: network.urls[0],
-    chainId: networkId,
-  };
+  if (network) {
+    return {
+      rpcUrl: network?.urls[0],
+      chainId: networkId,
+    };
+  } else {
+    const network = CHAINS[CHAIN_IDS_BY_NAME["matic"]];
+    return {
+      rpcUrl: network?.urls[0],
+      chainId: networkId,
+    };
+  }
 };
 
 export default function useMagicLink(networkId: number = 137) {
@@ -21,7 +29,7 @@ export default function useMagicLink(networkId: number = 137) {
   const [magic, setMagic] = useState<any>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<any>(false);
 
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState<any>(null);
 
   const { blockchain } = useBlockchain();
 
@@ -86,10 +94,13 @@ export default function useMagicLink(networkId: number = 137) {
         provider: provider,
         providerName: "magic",
       });
+      setLoading(false);
+      return true;
     } catch (error) {
       console.log(error);
+      setLoading(false);
+      return false;
     }
-    setLoading(false);
   };
 
   const logout = async (updateUser: any) => {

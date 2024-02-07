@@ -91,15 +91,14 @@ export const Logo = () => (
 export const NavbarItem = ({ name, link, route, notification }) => {
   return (
     <Link href={link}>
-      <a
+      <div
         className={clsx(
           "py-2 relative",
-          "text-md font-[500] text-white opacity-50",
+          "text-md font-[600] text-white opacity-50",
           {
             "!opacity-100": link === route || notification,
           },
         )}
-        href={link}
       >
         {notification ? (
           <div className="absolute top-[-4px] right-[-8px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-[9.5px] bg-red-primary">
@@ -109,7 +108,7 @@ export const NavbarItem = ({ name, link, route, notification }) => {
           ""
         )}
         {name}
-      </a>
+      </div>
     </Link>
   );
 };
