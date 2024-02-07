@@ -1,9 +1,9 @@
 [
   {
-    "address": "0x717d43399ab3a8aada669CDC9560a6BAfdeA9796",
+    "address": "0xCC205196288B7A26f6D43bBD68AaA98dde97276d",
     "name": "USDC",
     "logo": "/images/usdc.png",
     "transak": false,
-    "link": " https://portal.skale.space/bridge?from=mainnet&to=green-giddy-denebola&token=usdc&type=erc20"
+    "link": "https://portal.skale.space/bridge?from=mainnet&to=green-giddy-denebola&token=usdc&type=erc20"
   }
 ]

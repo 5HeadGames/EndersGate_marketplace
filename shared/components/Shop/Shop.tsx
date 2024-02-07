@@ -15,6 +15,8 @@ import { DropdownShop } from "@shared/components/common/dropdowns/dropdownShop";
 import { nFormatter } from "@shared/components/common/specialFields/SpecialFields";
 import ModalShop from "./ModalShop";
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import LoginModal from "../Login/loginModal";
+import { useModal } from "@shared/hooks/modal";
 
 const Shop = () => {
   const [sales, setSales] = useState([]);
@@ -263,8 +265,18 @@ const ShopElement = ({ sale, counters, setCounters, index }) => {
   } = useUser();
   const { cartShop } = useSelector((state: any) => state.layout);
 
+  const {
+    Modal: ModalAuth,
+    show: showAuth,
+    isShow: isShowAuth,
+    hide: hideAuth,
+  } = useModal();
+
   return (
     <div className="relative flex sm:flex-row flex-col border border-white w-full p-3">
+      <ModalAuth isShow={isShowAuth} withoutX>
+        <LoginModal hide={hideAuth} />
+      </ModalAuth>
       <div className="flex flex-col items-center justify-center relative h-full py-6 px-4 shadow-white sm:w-2/5 w-full">
         <img
           src="./images/box_pack.png"
@@ -450,7 +462,7 @@ const ShopElement = ({ sale, counters, setCounters, index }) => {
                   );
                 }
               } else {
-                router.push("/login?redirect=true&redirectAddress=/shop");
+                showAuth();
               }
             }}
           >

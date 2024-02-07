@@ -4,6 +4,6 @@
     "name": "USDC",
     "logo": "/images/usdc.png",
     "transak": false,
-    "link": " https://portal.skale.space/bridge?from=mainnet&to=green-giddy-denebola&token=usdc&type=erc20"
+    "link": "https://portal.skale.space/bridge?from=mainnet&to=green-giddy-denebola&token=usdc&type=erc20"
   }
 ]
