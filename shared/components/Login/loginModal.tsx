@@ -167,6 +167,7 @@ const LoginModal = ({ hide }) => {
             size="medium"
             className="w-full mb-2 rounded-md text-white !font-bold text-xl !py-2 !px-2"
             onClick={async () => {
+              console.log("imx");
               setLoading({ value: true, walletLoading: "imx" });
               await loginIMXPassport({
                 updateUser,

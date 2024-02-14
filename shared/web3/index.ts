@@ -34,6 +34,7 @@ export const loginIMXPassport: any = async ({
   onSuccess,
 }) => {
   try {
+    console.log("IMX");
     const provider = passportInstance.connectEvm();
     const accounts = await provider.request({
       method: "eth_requestAccounts",
@@ -46,7 +47,7 @@ export const loginIMXPassport: any = async ({
       provider: provider,
       providerName: "passport",
     });
-    updateBlockchain("imx");
+    updateBlockchain("imx", false);
     if (onSuccess) onSuccess();
   } catch (err) {
     console.log(err);

@@ -133,9 +133,9 @@ export default function AppLayout({ children }) {
         if (typeOfConnection === "magic") {
           login(updateUser);
         }
-        if (typeOfConnection === "passport") {
-          loginIMXPassport({ updateUser, updateBlockchain });
-        }
+        // if (typeOfConnection === "passport") {
+        //   loginIMXPassport({ updateUser, updateBlockchain });
+        // }
       } else {
         localStorage.removeItem("typeOfConnection");
         localStorage.removeItem("loginTime");

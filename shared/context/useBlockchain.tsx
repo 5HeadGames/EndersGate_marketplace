@@ -21,27 +21,31 @@ export const BlockchainContextProvider = ({ children }: any) => {
     user: { providerName },
   } = useUser();
 
-  const _updateBlockchain = useCallback(async (blockchain: any) => {
-    try {
-      if (providerName !== "magic" && providerName !== "passport") {
-        const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
-        if (!changed) {
-          throw Error(
-            "An error has occurred while switching chain, please try again.",
-          );
-        }
+  const _updateBlockchain = useCallback(
+    async (blockchain: any, update: boolean) => {
+      try {
+        if (update)
+          if (providerName !== "magic" && providerName !== "passport") {
+            const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+            if (!changed) {
+              throw Error(
+                "An error has occurred while switching chain, please try again.",
+              );
+            }
+          }
+        localStorage.setItem("chain", blockchain);
+        setBlockchain(blockchain);
+      } catch (err: any) {
+        console.log(err.message);
+        toast.error(err.message);
       }
-      localStorage.setItem("chain", blockchain);
-      setBlockchain(blockchain);
-    } catch (err: any) {
-      console.log(err.message);
-      toast.error(err.message);
-    }
-  }, []);
+    },
+    [],
+  );
 
   const updateBlockchain = useCallback(
-    (blockchain: any) => {
-      _updateBlockchain(blockchain);
+    (blockchain: any, update = true) => {
+      _updateBlockchain(blockchain, update);
     },
     [_updateBlockchain],
   );
