@@ -1,10 +1,12 @@
 import { WalletOutlined } from "@ant-design/icons";
+import { useBlockchain } from "@shared/context/useBlockchain";
 import { getSFUEL } from "@shared/web3";
 import React from "react";
 import { Button } from "./button";
 
 export const ButtonSFUEL = ({ user }) => {
   const [justClicked, setJustClicked] = React.useState(false);
+  const { blockchain } = useBlockchain();
   return (
     <Button
       type="submit"
@@ -12,7 +14,7 @@ export const ButtonSFUEL = ({ user }) => {
       className="rounded-xl bg-overlay-2 text-white hover:!text-overlay text-[12px] border border-overlay-border py-1 px-3 whitespace-nowrap mt-2"
       onClick={() => {
         setJustClicked(true);
-        getSFUEL(user);
+        getSFUEL(user, blockchain);
         setTimeout(() => {
           setJustClicked(false);
         }, 10000);
@@ -26,6 +28,7 @@ export const ButtonSFUEL = ({ user }) => {
 
 export const ButtonSFUELCart = ({ user }) => {
   const [justClicked, setJustClicked] = React.useState(false);
+  const { blockchain } = useBlockchain();
   return (
     <Button
       type="submit"
@@ -33,7 +36,7 @@ export const ButtonSFUELCart = ({ user }) => {
       className="text-center rounded-xl p-2 border w-auto text-white hover:text-black transition-all duration-500 relative whitespace-nowrap"
       onClick={() => {
         setJustClicked(true);
-        getSFUEL(user);
+        getSFUEL(user, blockchain);
         setTimeout(() => {
           setJustClicked(false);
         }, 5000);

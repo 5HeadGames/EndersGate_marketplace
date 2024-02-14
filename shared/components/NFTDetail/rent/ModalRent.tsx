@@ -17,7 +17,6 @@ import packs from "../../../packs.json";
 import { getNativeBlockchain } from "@shared/web3";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import { ArrowRightIcon } from "@heroicons/react/solid";
-import { ButtonSFUEL } from "@shared/components/common/ButtonSFUEL";
 
 export const ModalRent = ({
   isPack,
@@ -38,9 +37,6 @@ export const ModalRent = ({
   return (
     <div className="flex flex-col items-center gap-4 bg-secondary rounded-md p-12 border border-overlay-border w-auto relative">
       <h2 className="font-bold text-primary text-center uppercase text-3xl">
-        <div className="absolute lg:top-10 lg:left-10 top-4 left-4">
-          <ButtonSFUEL user={user} />
-        </div>
         RENT{" "}
         {isPack
           ? packs[rent?.nftId].properties.name.value

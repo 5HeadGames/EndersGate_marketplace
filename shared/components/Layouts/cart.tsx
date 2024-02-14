@@ -39,7 +39,6 @@ import { useBlockchain } from "@shared/context/useBlockchain";
 import { formatPrice, multiply } from "@shared/utils/formatPrice";
 import { toast } from "react-hot-toast";
 import { useUser } from "@shared/context/useUser";
-import { ButtonSFUELCart } from "../common/ButtonSFUEL";
 import Web3 from "web3";
 import { useModal } from "@shared/hooks/modal";
 import { CHAIN_TRANSAK_BY_NAME } from "@shared/utils/chains";
@@ -420,7 +419,6 @@ export const Cart = ({
             )}
             Sales
           </div>
-          {blockchain === "skl" && <ButtonSFUELCart user={ethAddress} />}
         </div>
         {cart.length ? (
           <div className="flex flex-col items-center border border-overlay-border rounded-md md:min-w-[500px] md:w-max py-2">

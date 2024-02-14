@@ -307,6 +307,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
             from: user,
             to: marketplace,
             address: endersGate,
+            blockchain,
           });
         }
         setMessage("Listing your tokens");
@@ -340,6 +341,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
             from: user,
             to: marketplace,
             address: endersGate,
+            blockchain,
           });
         }
         setMessage("Listing your tokens");
@@ -630,6 +632,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
             from: user,
             to: rent,
             address: endersGate,
+            blockchain,
           });
         }
         setMessage("Listing your tokens");
@@ -657,6 +660,7 @@ const RentPanel = ({ id, blockchain, show, NFTs, setState }) => {
             from: user,
             to: rent,
             address: endersGate,
+            blockchain,
           });
         }
         setMessage("Listing your tokens");

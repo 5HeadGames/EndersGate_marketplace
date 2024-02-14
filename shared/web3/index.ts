@@ -229,8 +229,11 @@ export const getTokensAllowedEth = () => {
 };
 
 export const getTokensAllowedSkale = () => {
-  const addresses = require("../../Contracts/tokensAllowed.skale.json");
-  return addresses;
+  const testAddresses = require("../../Contracts/tokensAllowed.nebula_test.json");
+  const addresses = require("../../Contracts/tokensAllowed.nebula.json");
+  return process.env.NEXT_PUBLIC_ENV === "production"
+    ? addresses
+    : testAddresses;
 };
 
 export const getTokensAllowedLinea = () => {
@@ -243,12 +246,15 @@ export const approveERC1155 = async ({
   from,
   to,
   address,
+  blockchain,
 }: {
   provider: any;
   from: string;
   to: string;
   address: string;
+  blockchain: string;
 }) => {
+  await getSFUEL(from, blockchain);
   const erc1155Contract = getContractCustom("EndersPack", address, provider);
   return await erc1155Contract.methods.setApprovalForAll(to, true).send({
     from: from,
@@ -353,6 +359,7 @@ export const buyNFTsMatic = async ({
     return;
   }
   try {
+    await getSFUEL(ethAddress, blockchain);
     console.log("initiated");
 
     const { amounts, bid, token, tokensId } = {
@@ -485,6 +492,8 @@ export const buyNFTsNative = async ({
 
 export const redeemNFT = async ({ tokenId, provider, user, blockchain }) => {
   try {
+    await getSFUEL(user, blockchain);
+
     const { rent } = getAddresses(blockchain);
     const rentContract = getContractCustom(
       onlyAcceptsERC20(blockchain) ? "RentOnlyMultiToken" : "Rent",
@@ -509,7 +518,7 @@ export const onCancelSale = async (args: {
 }) => {
   try {
     const { tokenId, provider, user, blockchain } = args;
-
+    await getSFUEL(user, blockchain);
     const { marketplace } = getAddresses(blockchain);
     const marketplaceContract = getContractCustom(
       getNativeBlockchain(blockchain)
@@ -645,32 +654,32 @@ export const checkFirebaseInfluencerCode = async ({
   }
 };
 
-export const getSFUEL = async (address) => {
-  const pk: any = process.env.NEXT_PUBLIC_PRIVATE_KEY;
-  const skale = CHAINS[CHAIN_IDS_BY_NAME["skl"]];
-  const web3 = getWeb3(skale.urls[0]);
-  console.log(address);
-  const balance = await web3.eth.getBalance(address);
-  console.log(balance);
+export const getSFUEL = async (address, blockchain) => {
+  if (blockchain == "skl") {
+    const pk: any = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+    const skale = CHAINS[CHAIN_IDS_BY_NAME["skl"]];
+    const web3 = getWeb3(skale.urls[0]);
+    console.log(address);
+    const balance = await web3.eth.getBalance(address);
+    console.log(balance);
 
-  const params = {
-    to: address,
-    value: Web3.utils.toHex(Web3.utils.toWei("0.00001", "ether")),
-    gas: Web3.utils.toHex(21000), // optional
-    gasPrice: Web3.utils.toHex(20 * Math.pow(10, 9)), // optional
-  };
+    const params = {
+      to: address,
+      value: Web3.utils.toHex(Web3.utils.toWei("0.00001", "ether")),
+      gas: Web3.utils.toHex(21000), // optional
+      gasPrice: Web3.utils.toHex(20 * Math.pow(10, 9)), // optional
+    };
 
-  if (parseFloat(Web3.utils.fromWei(balance, "ether")) <= 0.000001) {
-    const signedTx: any = await web3.eth.accounts.signTransaction(params, pk);
-    web3.eth
-      .sendSignedTransaction(signedTx.rawTransaction)
-      .on("transactionHash", () => {
-        toast.success("Gas request succesfully sent!");
-      })
-      .on("error", () => {
-        toast.error("An error has ocurred");
-      });
-  } else {
-    toast.error("You have enough sFUEL to make txs");
+    if (parseFloat(Web3.utils.fromWei(balance, "ether")) < 0.000001) {
+      const signedTx: any = await web3.eth.accounts.signTransaction(params, pk);
+      web3.eth
+        .sendSignedTransaction(signedTx.rawTransaction)
+        .on("transactionHash", () => {
+          toast.success("Gas request succesfully sent!");
+        })
+        .on("error", () => {
+          toast.error("An error has ocurred");
+        });
+    }
   }
 };

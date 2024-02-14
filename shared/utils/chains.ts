@@ -117,9 +117,9 @@ export const CHAINS: {
     type: "mainnet",
   },
   13472: {
-    urls: [" https://rpc.testnet.immutable.com"],
+    urls: ["https://rpc.testnet.immutable.com"],
     name: "Inmutable X Testnet",
-    rpcUrls: [" https://rpc.testnet.immutable.com"],
+    rpcUrls: ["https://rpc.testnet.immutable.com"],
     nativeCurrency: IMX,
     blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
     blockExplorer: "https://explorer.testnet.immutable.com/",
@@ -272,10 +272,9 @@ export const blockchains = [
   //   image: "/images/findora.png",
   // },
   {
-    name: "IMMUTABLE X",
+    name: "INMUTABLE X",
     value: "imx",
     image: "/images/imx.png",
-    link: "/login?redirect=true&redirectAddress=/&imx=true",
   },
   {
     name: "NEBULA HUB",

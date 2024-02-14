@@ -62,8 +62,6 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
 
   const tokensAllowed = getTokensAllowed(blockchain);
 
-  console.log();
-
   const { cartShop } = useSelector((state: any) => state.layout);
 
   const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
@@ -170,6 +168,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
   };
 
   const hasBalanceToken = async (price, token) => {
+    console.log("token");
     const ERC20 = await getContract("ERC20", token, blockchain);
     var balance = await ERC20.methods.balanceOf(account).call();
     var decimals = await ERC20.methods.decimals().call();
@@ -183,11 +182,14 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
 
   const hasBalance = async () => {
     console.log("has balance join");
+    console.log("has balance", data, blockchain, getAddresses(blockchain));
+
     const addresses = getTokensAllowed(blockchain);
     if (
       tokenSelected.address ===
       addresses.filter((item) => item.main)[0]?.address
     ) {
+      console.log("native");
       return await hasBalanceNative(
         cartShop
           ?.map((item: any, i) =>
@@ -198,6 +200,8 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
           }),
       );
     } else {
+      console.log("token");
+
       return await hasBalanceToken(
         cartShop
           ?.map((item: any, i) =>
@@ -217,7 +221,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
         showFunds();
         setData(data);
       } else {
-        console.log("has balance");
+        console.log("has balance", data, blockchain, getAddresses(blockchain));
         await buyPacksProcess(data);
       }
     } catch (err) {
