@@ -116,15 +116,15 @@ export const CHAINS: {
       "https://green-giddy-denebola.explorer.mainnet.skalenodes.com/",
     type: "mainnet",
   },
-  // 13472: {
-  //   urls: [" https://rpc.testnet.immutable.com"],
-  //   name: "Inmutable X Testnet",
-  //   rpcUrls: [" https://rpc.testnet.immutable.com"],
-  //   nativeCurrency: IMX,
-  //   blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
-  //   blockExplorer: "https://explorer.testnet.immutable.com/",
-  //   type: "testnet",
-  // },
+  13472: {
+    urls: ["https://rpc.testnet.immutable.com"],
+    name: "Inmutable X Testnet",
+    rpcUrls: ["https://rpc.testnet.immutable.com"],
+    nativeCurrency: IMX,
+    blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
+    blockExplorer: "https://explorer.testnet.immutable.com/",
+    type: "testnet",
+  },
 
   59144: {
     urls: ["https://linea.blockpi.network/v1/rpc/public"],
@@ -250,11 +250,11 @@ export const blockchains = [
   //   value: "findora",
   //   image: "/images/findora.png",
   // },
-  // {
-  //   name: "INMUTABLE X",
-  //   value: "imx",
-  //   image: "/images/imx.png",
-  // },
+  {
+    name: "INMUTABLE X",
+    value: "imx",
+    image: "/images/imx.png",
+  },
   {
     name: "NEBULA HUB",
     value: "skl",
