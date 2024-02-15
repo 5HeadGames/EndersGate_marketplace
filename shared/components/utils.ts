@@ -33,7 +33,7 @@ export const authStillValid = () => {
   console.log(
     typeOfConnection,
     savedLoginTime,
-    currentTime - parseInt(savedLoginTime) <= TWELVE_HOURS,
+    currentTime - parseInt(savedLoginTime || "0") <= TWELVE_HOURS,
   );
 
   return (
