@@ -27,7 +27,7 @@ export const loginIMXPassport: any = async ({
   try {
     const passportInstance = new passport.Passport({
       baseConfig,
-      clientId: "HXHIOulzVI5FUDSTVmFc0XRoyd7zFEwz",
+      clientId: "bT8VZ59yPFyMeCQYdqVEUGmhZLNsAym5",
       redirectUri: window?.location?.origin,
       logoutRedirectUri: window?.location?.origin,
       logoutMode: "silent",
@@ -57,7 +57,7 @@ export const logoutIMXPassport: any = async ({ updateUser }) => {
   try {
     const passportInstance = new passport.Passport({
       baseConfig,
-      clientId: "HXHIOulzVI5FUDSTVmFc0XRoyd7zFEwz",
+      clientId: "bT8VZ59yPFyMeCQYdqVEUGmhZLNsAym5",
       redirectUri: window?.location?.origin,
       logoutRedirectUri: window?.location?.origin,
       logoutMode: "silent",
