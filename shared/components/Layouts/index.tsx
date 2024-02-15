@@ -107,24 +107,6 @@ export default function AppLayout({ children }) {
 
   let isFullscreen;
 
-  const passportInstance = new passport.Passport({
-    baseConfig: {
-      environment: config.Environment.SANDBOX,
-      publishableKey: "pk_imapik-test-T4T232i3Ud_@jpQozNrd",
-    },
-    clientId: "bT8VZ59yPFyMeCQYdqVEUGmhZLNsAym5",
-    redirectUri:
-      typeof window !== "undefined"
-        ? window?.location?.origin
-        : "http://localhost:3000",
-    logoutRedirectUri:
-      typeof window !== "undefined"
-        ? window?.location?.origin
-        : "http://localhost:3000",
-    audience: "platform_api",
-    scope: "openid offline_access email transact",
-  });
-
   const reconnect = async () => {
     try {
       const typeOfConnection = localStorage.getItem("typeOfConnection");
@@ -164,6 +146,17 @@ export default function AppLayout({ children }) {
   }, []);
 
   const loginPassportCallback = async () => {
+    const passportInstance = new passport.Passport({
+      baseConfig: {
+        environment: config.Environment.SANDBOX,
+        publishableKey: "pk_imapik-test-T4T232i3Ud_@jpQozNrd",
+      },
+      clientId: "bT8VZ59yPFyMeCQYdqVEUGmhZLNsAym5",
+      redirectUri: window?.location?.origin,
+      logoutRedirectUri: window?.location?.origin,
+      audience: "platform_api",
+      scope: "openid offline_access email transact",
+    });
     await passportInstance.loginCallback();
     const accessToken: string | undefined =
       await passportInstance.getAccessToken();

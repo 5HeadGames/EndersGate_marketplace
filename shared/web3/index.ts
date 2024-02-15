@@ -19,22 +19,21 @@ const baseConfig = {
   publishableKey: "pk_imapik-test-T4T232i3Ud_@jpQozNrd",
 };
 
-const passportInstance = new passport.Passport({
-  baseConfig,
-  clientId: "HXHIOulzVI5FUDSTVmFc0XRoyd7zFEwz",
-  redirectUri: "http://localhost:3000",
-  logoutMode: "silent",
-  audience: "platform_api",
-  scope: "openid offline_access email transact",
-});
-
 export const loginIMXPassport: any = async ({
   updateUser,
   updateBlockchain,
   onSuccess,
 }) => {
   try {
-    console.log("IMX");
+    const passportInstance = new passport.Passport({
+      baseConfig,
+      clientId: "HXHIOulzVI5FUDSTVmFc0XRoyd7zFEwz",
+      redirectUri: window?.location?.origin,
+      logoutRedirectUri: window?.location?.origin,
+      logoutMode: "silent",
+      audience: "platform_api",
+      scope: "openid offline_access email transact",
+    });
     const provider = passportInstance.connectEvm();
     const accounts = await provider.request({
       method: "eth_requestAccounts",
@@ -56,6 +55,15 @@ export const loginIMXPassport: any = async ({
 
 export const logoutIMXPassport: any = async ({ updateUser }) => {
   try {
+    const passportInstance = new passport.Passport({
+      baseConfig,
+      clientId: "HXHIOulzVI5FUDSTVmFc0XRoyd7zFEwz",
+      redirectUri: window?.location?.origin,
+      logoutRedirectUri: window?.location?.origin,
+      logoutMode: "silent",
+      audience: "platform_api",
+      scope: "openid offline_access email transact",
+    });
     updateUser({
       ethAddress: "",
       email: "",
