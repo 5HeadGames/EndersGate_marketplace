@@ -90,41 +90,32 @@ export const CHAINS: {
   //   blockExplorerUrls: ["https://gsc-mainnet.evm.findorascan.io/"],
   //   blockExplorer: "https://gsc-mainnet.evm.findorascan.io/",
   // },
-  503129905: {
-    urls: ["https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird"],
-    name: "Nebula Hub",
-    rpcUrls: [
-      "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
-    ],
-    nativeCurrency: SKL,
-    blockExplorerUrls: [
-      "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
-    ],
-    blockExplorer:
-      "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
-    type: "testnet",
-  },
-  1482601649: {
-    urls: ["https://mainnet.skalenodes.com/v1/green-giddy-denebola"],
-    name: "Nebula Hub",
-    rpcUrls: ["https://mainnet.skalenodes.com/v1/green-giddy-denebola"],
-    nativeCurrency: SKL,
-    blockExplorerUrls: [
-      "https://green-giddy-denebola.explorer.mainnet.skalenodes.com/",
-    ],
-    blockExplorer:
-      "https://green-giddy-denebola.explorer.mainnet.skalenodes.com/",
-    type: "mainnet",
-  },
-  13472: {
-    urls: ["https://rpc.testnet.immutable.com"],
-    name: "Inmutable X Testnet",
-    rpcUrls: ["https://rpc.testnet.immutable.com"],
-    nativeCurrency: IMX,
-    blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
-    blockExplorer: "https://explorer.testnet.immutable.com/",
-    type: "testnet",
-  },
+  // 503129905: {
+  //   urls: ["https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird"],
+  //   name: "Nebula Hub",
+  //   rpcUrls: [
+  //     "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
+  //   ],
+  //   nativeCurrency: SKL,
+  //   blockExplorerUrls: [
+  //     "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
+  //   ],
+  //   blockExplorer:
+  //     "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
+  //   type: "testnet",
+  // },
+  // 1482601649: {
+  //   urls: ["https://mainnet.skalenodes.com/v1/green-giddy-denebola"],
+  //   name: "Nebula Hub",
+  //   rpcUrls: ["https://mainnet.skalenodes.com/v1/green-giddy-denebola"],
+  //   nativeCurrency: SKL,
+  //   blockExplorerUrls: [
+  //     "https://green-giddy-denebola.explorer.mainnet.skalenodes.com/",
+  //   ],
+  //   blockExplorer:
+  //     "https://green-giddy-denebola.explorer.mainnet.skalenodes.com/",
+  //   type: "mainnet",
+  // },
 
   13371: {
     urls: ["https://rpc.immutable.com"],
@@ -251,11 +242,11 @@ export const CHAIN_TRANSAK_BY_NAME: {
 };
 
 export const blockchains = [
-  {
-    name: "ETHEREUM",
-    value: "eth",
-    image: "/images/eth.png",
-  },
+  // {
+  //   name: "ETHEREUM",
+  //   value: "eth",
+  //   image: "/images/eth.png",
+  // },
   {
     name: "MATIC",
     value: "matic",
@@ -266,21 +257,17 @@ export const blockchains = [
     value: "linea",
     image: "/images/linea.png",
   },
-  // {
-  //   name: "FINDORA GSC",
-  //   value: "findora",
-  //   image: "/images/findora.png",
-  // },
+
   {
     name: "INMUTABLE X",
     value: "imx",
     image: "/images/imx.png",
   },
-  {
-    name: "NEBULA HUB",
-    value: "skl",
-    image: "/images/skl.png",
-  },
+  // {
+  //   name: "NEBULA HUB",
+  //   value: "skl",
+  //   image: "/images/skl.png",
+  // },
 ];
 
 export const URLS: { [chainId: number]: string[] } = Object.keys(

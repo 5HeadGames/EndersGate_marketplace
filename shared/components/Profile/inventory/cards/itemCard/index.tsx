@@ -97,6 +97,8 @@ export const CardInventory = (props) => {
             .send({
               from: account,
             });
+          console.log("waiting");
+
           break;
         case "comic":
           const ComicsContract = getContractCustom(

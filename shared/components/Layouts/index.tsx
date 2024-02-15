@@ -17,7 +17,11 @@ import { Cart } from "./cart";
 import ChainSelect from "./chainSelect";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { toast } from "react-hot-toast";
-import { getRentsPendingByUser, loginIMXPassport } from "@shared/web3";
+import {
+  getBalance,
+  getRentsPendingByUser,
+  loginIMXPassport,
+} from "@shared/web3";
 import { useUser } from "@shared/context/useUser";
 import { handleSignOut, Logo, NavbarItem, navItems } from "./utils";
 import ModalShop from "../Shop/ModalShop";
@@ -108,7 +112,7 @@ export default function AppLayout({ children }) {
       environment: config.Environment.SANDBOX,
       publishableKey: "pk_imapik-test-T4T232i3Ud_@jpQozNrd",
     },
-    clientId: "HXHIOulzVI5FUDSTVmFc0XRoyd7zFEwz",
+    clientId: "bT8VZ59yPFyMeCQYdqVEUGmhZLNsAym5",
     redirectUri: "http://localhost:3000/",
     logoutRedirectUri: "http://localhost:3000/login",
     audience: "platform_api",
@@ -197,6 +201,16 @@ export default function AppLayout({ children }) {
   React.useEffect(() => {
     loadSales();
   }, [blockchain]);
+
+  const balanceUser = async () => {
+    console.log(await getBalance(ethAddress, blockchain), "balance");
+  };
+
+  React.useEffect(() => {
+    if (ethAddress) {
+      balanceUser();
+    }
+  }, [ethAddress, blockchain]);
 
   const userRentsNotificationArray =
     getRentsPendingByUser({ user: ethAddress, rents: allRents }) || [];

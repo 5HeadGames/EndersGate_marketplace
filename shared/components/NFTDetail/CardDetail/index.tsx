@@ -488,7 +488,7 @@ const SellPanel = ({ id, blockchain, show, NFTs, setState }) => {
                     for this listing
                   </div>
                   <div className="flex  gap-4 w-full flex-wrap items-center justify-center">
-                    {tokensAllowed.map((item: any, index) => {
+                    {tokensAllowed?.map((item: any, index) => {
                       return (
                         <div
                           className={clsx(

@@ -85,6 +85,7 @@ export const getContract = (
   blockchain: string,
 ) => {
   const web3 = getWeb3(getProvider(blockchain));
+  console.log(web3);
   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 
@@ -114,7 +115,7 @@ export const getContractCustom = (
 };
 
 export const getProvider = (blockchain) => {
-  console.log(blockchain, CHAINS[CHAIN_IDS_BY_NAME[blockchain]]);
+  console.log(blockchain, CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0]);
   return new Web3.providers.HttpProvider(
     CHAINS[CHAIN_IDS_BY_NAME[blockchain]]?.urls[0],
   );
@@ -209,6 +210,8 @@ export const getTokensAllowed = (blockchain) => {
       return getTokensAllowedSkale();
     case "linea":
       return getTokensAllowedLinea();
+    case "imx":
+      return getTokensAllowedImx();
   }
 };
 
@@ -239,6 +242,11 @@ export const getTokensAllowedSkale = () => {
 
 export const getTokensAllowedLinea = () => {
   const addresses = require("../../Contracts/tokensAllowed.linea_test.json");
+  return addresses;
+};
+
+export const getTokensAllowedImx = () => {
+  const addresses = require("../../Contracts/tokensAllowed.imx_test.json");
   return addresses;
 };
 

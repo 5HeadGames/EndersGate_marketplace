@@ -42,6 +42,7 @@ const Inventory = () => {
   const cards = convertArrayCards();
 
   React.useEffect(() => {
+    console.log(blockchain);
     dispatch(onGetAssets({ address: ethAddress, blockchain }));
   }, [user, ethAddress, blockchain]);
 

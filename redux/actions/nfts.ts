@@ -124,9 +124,7 @@ export const onLoadSales = createAsyncThunk(
     try {
       for (const element of blockchains) {
         const blockchain: any = element;
-
         const addresses = getAddresses(CHAIN_NAME_BY_ID[blockchain]);
-
         /* SALES */
         const marketplace = getContract(
           getNativeBlockchain(blockchain)
@@ -138,9 +136,10 @@ export const onLoadSales = createAsyncThunk(
           CHAIN_NAME_BY_ID[blockchain],
         );
 
-        console.log(marketplace);
-
-        console.log(await marketplace.methods.tokenIdTracker().call());
+        console.log(
+          await marketplace.methods.tokenIdTracker().call(),
+          "sales number",
+        );
 
         const lastSale = Number(
           await marketplace.methods.tokenIdTracker().call(),
@@ -150,10 +149,13 @@ export const onLoadSales = createAsyncThunk(
           const rawSales = await marketplace.methods
             .getSales(new Array(lastSale).fill(0).map((a, i) => i))
             .call();
+          console.log(rawSales, "sales", element);
+
           rawSales.forEach((sale: any[], i) => {
             const saleFormated = !getNativeBlockchain(blockchain)
               ? parseSaleTokens(sale)
               : parseSaleNative(sale);
+            console.log(saleFormated, "formatted");
             allSales.push({
               saleId: i,
               blockchain: CHAIN_NAME_BY_ID[blockchain],
@@ -161,7 +163,6 @@ export const onLoadSales = createAsyncThunk(
             });
           });
         }
-
         /* RENTS */
         if (CHAIN_NAME_BY_ID[blockchain] !== "linea") {
           if (!getNativeBlockchain(blockchain)) {
@@ -171,6 +172,7 @@ export const onLoadSales = createAsyncThunk(
               CHAIN_NAME_BY_ID[blockchain],
             );
             const lastRent = Number(await rent.methods.tokenIdTracker().call());
+            console.log(lastRent, "rent nn number");
             if (lastRent > 0) {
               const rawRents = await rent.methods
                 .getRents(new Array(lastRent).fill(0).map((a, i) => i))
@@ -178,6 +180,7 @@ export const onLoadSales = createAsyncThunk(
 
               rawRents.forEach((sale: any[], i) => {
                 const rentFormated = parseRent(sale);
+                console.log(rentFormated, "rent", element);
                 allRents.push({
                   rentId: i,
                   rent: true,
@@ -192,6 +195,8 @@ export const onLoadSales = createAsyncThunk(
               addresses.rent,
               CHAIN_NAME_BY_ID[blockchain],
             );
+            console.log("rent native");
+
             const lastRent = Number(await rent.methods.tokenIdTracker().call());
             if (lastRent > 0) {
               const rawRents = await rent.methods
@@ -284,7 +289,18 @@ export const onLoadSales = createAsyncThunk(
         cardsSold.toString(),
         cardsSoldPartial.toString(),
       ) as any;
-
+      console.log({
+        allSales: allSalesSorted,
+        saleCreated: listsCreated,
+        saleSuccessful: listsSuccessful,
+        allRents: allRentsSorted,
+        rentsListed,
+        rentsInRent,
+        rentsFinished,
+        totalSales: listsCreated.length,
+        dailyVolume: dailyVolume.toString(),
+        cardsSold: cardsSold.toString(),
+      });
       return {
         allSales: allSalesSorted,
         saleCreated: listsCreated,
@@ -372,9 +388,13 @@ export const onGetAssets = createAsyncThunk(
         .map((card, i) => i);
       if (blockchain !== "eth") {
         const { endersGate, pack, rent, comics } = getAddresses(blockchain);
-
+        console.log(endersGate, pack, rent, "addresses");
         const cardsContract = getContract("EndersGate", endersGate, blockchain);
+        console.log(cardsContract, "cards");
+
         const packsContract = getContract("EndersPack", pack, blockchain);
+        console.log(packsContract, "packs");
+
         const rentContract = getContract("Rent", rent, blockchain);
         // const comicsContract = getContract(
         //   getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
@@ -388,6 +408,11 @@ export const onGetAssets = createAsyncThunk(
         // const comicsIds = new Array(parseInt(comicsLength))
         //   .fill(1)
         //   .map((a, i) => i + 1);
+        console.log(
+          "asking balance",
+          packsIds.map(() => address),
+          packsIds,
+        );
 
         const balancePacks = await packsContract.methods
           .balanceOfBatch(
@@ -401,7 +426,6 @@ export const onGetAssets = createAsyncThunk(
             cardsIds,
           )
           .call();
-
         // const balanceComics = await comicsContract.methods
         //   .balanceOfBatch(
         //     comicsIds.map(() => address),
@@ -411,12 +435,12 @@ export const onGetAssets = createAsyncThunk(
 
         let balanceWrapped: any = [];
 
-        balanceWrapped = await rentContract.methods
-          .balanceOfBatch(
-            cardsIds.map(() => address),
-            cardsIds,
-          )
-          .call();
+        // balanceWrapped = await rentContract.methods
+        //   .balanceOfBatch(
+        //     cardsIds.map(() => address),
+        //     cardsIds,
+        //   )
+        //   .call();
 
         return {
           balanceCards: cardsIds.map((id, i) => ({
@@ -431,10 +455,11 @@ export const onGetAssets = createAsyncThunk(
             id,
             balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
           })),
-          balanceComics: packsIds.map((id, i) => ({
-            id,
-            balance: balancePacks[i],
-          })),
+          balanceComics: [],
+          // packsIds.map((id, i) => ({
+          //   id,
+          //   balance: balancePacks[i],
+          // })),
           // balanceComics: comicsIds.map((id, i) => ({
           //   id,
           //   balance: balanceComics[i],

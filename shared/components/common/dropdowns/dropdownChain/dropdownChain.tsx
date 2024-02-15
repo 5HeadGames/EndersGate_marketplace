@@ -6,9 +6,13 @@ import { Image, Text, Tooltip } from "@chakra-ui/react";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { blockchains } from "@shared/utils/chains";
 import Link from "next/link";
+import { useUser } from "@shared/context/useUser";
 
 export const DropdownChain: React.FC<any> = () => {
   const { blockchain, updateBlockchain } = useBlockchain();
+  const {
+    user: { providerName },
+  } = useUser();
 
   const handleSelect = (value) => {
     updateBlockchain(value);
@@ -46,7 +50,7 @@ export const DropdownChain: React.FC<any> = () => {
                         className="w-6"
                       ></Image>
 
-                      {blockchain !== "imx" && (
+                      {providerName !== "passport" && (
                         <>
                           {open ? (
                             <CaretUpOutlined className="opacity-50 hover:opacity-100" />
@@ -59,7 +63,7 @@ export const DropdownChain: React.FC<any> = () => {
                   </Tooltip>
                 </Menu.Button>
               </div>
-              {blockchain !== "imx" && (
+              {providerName !== "passport" && (
                 <Transition
                   as={Fragment}
                   enter="transition ease-out duration-100"
@@ -72,25 +76,13 @@ export const DropdownChain: React.FC<any> = () => {
                   <Menu.Items className="absolute top-0 right-3 z-20 md:mt-7 origin-top-right bg-overlay divide-y shadow-lg rounded-xl focus:outline-none">
                     <div>
                       <div className="flex flex-col items-center justify-center border border-overlay-border rounded-xl overflow-hidden">
-                        {blockchains.map(({ name, value, image, link }) => {
-                          return !link ? (
-                            <div
-                              className="flex !shrink-0 items-center gap-2 p-2 w-48 hover:bg-overlay-2 !px-6 cursor-pointer"
-                              onClick={() => handleSelect(value)}
-                            >
-                              <Image
-                                boxSize="1.5rem"
-                                borderRadius="full"
-                                src={image}
-                                alt="logo1"
-                              />
-                              <Text className="text-white whitespace-nowrap shrink-0">
-                                {name}
-                              </Text>
-                            </div>
-                          ) : (
-                            <Link href={link}>
-                              <div className="flex !shrink-0 items-center gap-2 p-2 w-48 hover:bg-overlay-2 !px-6 cursor-pointer">
+                        {blockchains.map(
+                          ({ name, value, image, link }: any) => {
+                            return !link ? (
+                              <div
+                                className="flex !shrink-0 items-center gap-2 p-2 w-48 hover:bg-overlay-2 !px-6 cursor-pointer"
+                                onClick={() => handleSelect(value)}
+                              >
                                 <Image
                                   boxSize="1.5rem"
                                   borderRadius="full"
@@ -101,9 +93,23 @@ export const DropdownChain: React.FC<any> = () => {
                                   {name}
                                 </Text>
                               </div>
-                            </Link>
-                          );
-                        })}
+                            ) : (
+                              <Link href={link}>
+                                <div className="flex !shrink-0 items-center gap-2 p-2 w-48 hover:bg-overlay-2 !px-6 cursor-pointer">
+                                  <Image
+                                    boxSize="1.5rem"
+                                    borderRadius="full"
+                                    src={image}
+                                    alt="logo1"
+                                  />
+                                  <Text className="text-white whitespace-nowrap shrink-0">
+                                    {name}
+                                  </Text>
+                                </div>
+                              </Link>
+                            );
+                          },
+                        )}
                       </div>
                     </div>
                   </Menu.Items>
