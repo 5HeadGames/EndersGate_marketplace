@@ -113,8 +113,14 @@ export default function AppLayout({ children }) {
       publishableKey: "pk_imapik-test-T4T232i3Ud_@jpQozNrd",
     },
     clientId: "bT8VZ59yPFyMeCQYdqVEUGmhZLNsAym5",
-    redirectUri: "http://localhost:3000/",
-    logoutRedirectUri: "http://localhost:3000/login",
+    redirectUri:
+      typeof window !== "undefined"
+        ? window?.location?.origin
+        : "http://localhost:3000",
+    logoutRedirectUri:
+      typeof window !== "undefined"
+        ? window?.location?.origin
+        : "http://localhost:3000",
     audience: "platform_api",
     scope: "openid offline_access email transact",
   });
@@ -503,19 +509,17 @@ export default function AppLayout({ children }) {
               alt=""
             />
           </div>
-          <Link
-            href="/login?redirect=true&redirectAddress=/profile/swap"
-            className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4"
-          >
+          <div className="flex sm:flex-row flex-col gap-4 w-full justify-center items-center py-4">
             <Button
               className="w-1/3 py-2 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md text-white font-bold"
               onClick={() => {
+                showAuth();
                 hide();
               }}
             >
               Login
             </Button>
-          </Link>
+          </div>
         </div>
       </ModalSwap>
 
