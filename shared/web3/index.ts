@@ -8,7 +8,10 @@ import {
   parseSaleTokens,
   removeAll,
 } from "@redux/actions";
-import { findSum } from "@shared/components/common/specialFields/SpecialFields";
+import {
+  AddressTextString,
+  findSum,
+} from "@shared/components/common/specialFields/SpecialFields";
 import { child, get, getDatabase, ref, set } from "firebase/database";
 import { toast } from "react-hot-toast";
 
@@ -307,7 +310,9 @@ export const buyNFTsMatic = async ({
     await getSFUEL(
       ethAddress,
       blockchain,
-      setMessageBuy("Sending you gas to make the tx"),
+      setMessageBuy(
+        "Sending you gas to the address : " + AddressTextString(ethAddress),
+      ),
     );
     console.log("initiated");
 
@@ -615,7 +620,7 @@ export const getSFUEL = async (address, blockchain, onSending = () => {}) => {
 
     const params = {
       to: address,
-      value: Web3.utils.toHex(Web3.utils.toWei("0.00001", "ether")),
+      value: Web3.utils.toHex(Web3.utils.toWei("0.0001", "ether")),
       gas: Web3.utils.toHex(21000), // optional
       gasPrice: Web3.utils.toHex(20 * Math.pow(10, 9)), // optional
     };

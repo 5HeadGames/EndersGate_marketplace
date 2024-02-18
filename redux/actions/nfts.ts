@@ -21,7 +21,10 @@ import {
   MAINNET_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
 } from "@shared/utils/chains";
-import { findSum } from "@shared/components/common/specialFields/SpecialFields";
+import {
+  AddressTextString,
+  findSum,
+} from "@shared/components/common/specialFields/SpecialFields";
 import { removeAllRent } from "./layout";
 import { toast } from "react-hot-toast";
 
@@ -750,7 +753,9 @@ export const buyFromShop = createAsyncThunk(
       await getSFUEL(
         account,
         blockchain,
-        setMessageBuy("Sending you gas to make the tx"),
+        setMessageBuy(
+          "Sending you gas to the address : " + AddressTextString(account),
+        ),
       );
       const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
 
@@ -881,7 +886,9 @@ export const buyFromShopNative = createAsyncThunk(
       await getSFUEL(
         account,
         blockchain,
-        setMessageBuy("Sending you gas to make the tx"),
+        setMessageBuy(
+          "Sending you gas to the address : " + AddressTextString(account),
+        ),
       );
       const { shop: shopAddress } = getAddresses(blockchain);
 
@@ -1132,7 +1139,9 @@ export const rentBatchERC1155 = createAsyncThunk(
       await getSFUEL(
         account,
         blockchain,
-        setMessageBuy("Sending you gas to make the tx"),
+        setMessageBuy(
+          "Sending you gas to the address : " + AddressTextString(account),
+        ),
       );
       const { rent, NATIVEUSD: NATIVE_TO_USD } = getAddresses(blockchain);
 
@@ -1259,7 +1268,9 @@ export const rentBatchERC1155Native = createAsyncThunk(
       await getSFUEL(
         account,
         blockchain,
-        setMessageBuy("Sending you gas to make the tx"),
+        setMessageBuy(
+          "Sending you gas to the address : " + AddressTextString(account),
+        ),
       );
       const { rent } = getAddresses(blockchain);
 

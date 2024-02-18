@@ -55,7 +55,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
 
   const [balance, setBalance] = React.useState(0);
   const [priceNative, setPriceNative] = React.useState(0);
-  const [priceToken, setPriceToken] = React.useState(0);
+  const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState(undefined);
 
   const { blockchain, updateBlockchain } = useBlockchain();
@@ -217,15 +217,17 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
 
   const buyPacks = async (data) => {
     try {
+      setLoading(true);
       if (!(await hasBalance())) {
         showFunds();
         setData(data);
       } else {
-        console.log("has balance", data, blockchain, getAddresses(blockchain));
         await buyPacksProcess(data);
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -350,6 +352,7 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
         errors={errors}
         user={account}
         isValidCode={isValidCode}
+        loading={loading}
         itemsCart={cartShop.map((item: any, index) => {
           return (
             <div

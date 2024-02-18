@@ -10,6 +10,10 @@ export const AddressText = ({ text }) => {
   );
 };
 
+export const AddressTextString = (text) => {
+  return (text?.substring(0, 5) || "") + "..." + (text?.substring(38) || "");
+};
+
 export const TransactionText = ({ text }) => {
   return (
     <>{(text?.substring(0, 7) || "") + "..." + text?.substring(40) || ""}</>
