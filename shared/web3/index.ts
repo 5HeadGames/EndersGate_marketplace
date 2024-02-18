@@ -304,7 +304,11 @@ export const buyNFTsMatic = async ({
     return;
   }
   try {
-    await getSFUEL(ethAddress, blockchain);
+    await getSFUEL(
+      ethAddress,
+      blockchain,
+      setMessageBuy("Sending you gas to make the tx"),
+    );
     console.log("initiated");
 
     const { amounts, bid, token, tokensId } = {
@@ -600,7 +604,7 @@ export const checkFirebaseInfluencerCode = async ({
   }
 };
 
-export const getSFUEL = async (address, blockchain) => {
+export const getSFUEL = async (address, blockchain, onSending = () => {}) => {
   if (blockchain == "skl") {
     const pk: any = process.env.NEXT_PUBLIC_PRIVATE_KEY;
     const skale = CHAINS[CHAIN_IDS_BY_NAME["skl"]];
@@ -617,15 +621,14 @@ export const getSFUEL = async (address, blockchain) => {
     };
 
     if (parseFloat(Web3.utils.fromWei(balance, "ether")) < 0.000001) {
+      onSending();
       const signedTx: any = await web3.eth.accounts.signTransaction(params, pk);
-      web3.eth
-        .sendSignedTransaction(signedTx.rawTransaction)
-        .on("transactionHash", () => {
-          toast.success("Gas request succesfully sent!");
-        })
-        .on("error", () => {
-          toast.error("An error has ocurred");
-        });
+      const tx = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+      if (tx.status) {
+        toast.success("Gas request succesfully sent!");
+      } else {
+        toast.error("An error has ocurred");
+      }
     }
   }
 };

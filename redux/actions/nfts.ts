@@ -747,7 +747,11 @@ export const buyFromShop = createAsyncThunk(
     let tx;
 
     try {
-      await getSFUEL(account, blockchain);
+      await getSFUEL(
+        account,
+        blockchain,
+        setMessageBuy("Sending you gas to make the tx"),
+      );
       const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
 
       console.log(shopAddress, NATIVEUSD);
@@ -874,7 +878,11 @@ export const buyFromShopNative = createAsyncThunk(
     let tx;
 
     try {
-      await getSFUEL(account, blockchain);
+      await getSFUEL(
+        account,
+        blockchain,
+        setMessageBuy("Sending you gas to make the tx"),
+      );
       const { shop: shopAddress } = getAddresses(blockchain);
 
       const shop = getContractCustom("ShopFindora", shopAddress, provider);
@@ -1121,7 +1129,11 @@ export const rentBatchERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      await getSFUEL(account, blockchain);
+      await getSFUEL(
+        account,
+        blockchain,
+        setMessageBuy("Sending you gas to make the tx"),
+      );
       const { rent, NATIVEUSD: NATIVE_TO_USD } = getAddresses(blockchain);
 
       console.log("token");
@@ -1244,7 +1256,11 @@ export const rentBatchERC1155Native = createAsyncThunk(
     } = args;
 
     try {
-      await getSFUEL(account, blockchain);
+      await getSFUEL(
+        account,
+        blockchain,
+        setMessageBuy("Sending you gas to make the tx"),
+      );
       const { rent } = getAddresses(blockchain);
 
       const rentContract = getContractCustom("RentNative", rent, provider);

@@ -250,11 +250,11 @@ export const blockchains = [
   //   value: "findora",
   //   image: "/images/findora.png",
   // },
-  {
-    name: "INMUTABLE X",
-    value: "imx",
-    image: "/images/imx.png",
-  },
+  // {
+  //   name: "INMUTABLE X",
+  //   value: "imx",
+  //   image: "/images/imx.png",
+  // },
   {
     name: "NEBULA HUB",
     value: "skl",
