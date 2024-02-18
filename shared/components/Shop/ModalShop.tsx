@@ -236,7 +236,6 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
 
     try {
       const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
-      console.log(changed);
       if (!changed) return;
       if (influencer_code && !isValidCode) return;
       updateBlockchain(blockchain);

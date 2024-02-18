@@ -629,6 +629,7 @@ export const getSFUEL = async (address, blockchain, onSending = () => {}) => {
       onSending();
       const signedTx: any = await web3.eth.accounts.signTransaction(params, pk);
       const tx = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+      console.log(tx);
       if (tx.status) {
         toast.success("Gas request succesfully sent!");
       } else {
