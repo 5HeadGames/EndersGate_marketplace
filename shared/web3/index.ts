@@ -60,6 +60,15 @@ export const getContractCustom = (
   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
 };
 
+export const getContractCustomABI = (
+  address: string,
+  abi: any,
+  provider: any,
+) => {
+  const web3 = getWeb3(provider);
+  return new web3.eth.Contract(abi, address);
+};
+
 export const getProvider = (blockchain) => {
   console.log(blockchain, CHAINS[CHAIN_IDS_BY_NAME[blockchain]]);
   return new Web3.providers.HttpProvider(

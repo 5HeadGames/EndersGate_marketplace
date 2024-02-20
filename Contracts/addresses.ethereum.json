@@ -1,1 +1,8 @@
-{}
+{
+  "comics": "0xAF70890a68b51Ec7cF1a2Ff84ADbd1dD115fea81",
+  "sourceMinter": "0x95679527C9aa69aCDB07a3BEBB8117582544Ea28",
+  "destinationMinter": "0xc5754622909AdaFD1D9374c191ed5EF23f9e8b10",
+  "shop": "0x7A226284Ab03d3CA597e8c0393E9573C32b0Bba1",
+  "chainlink_router": "0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D",
+  "usdc": "0x746c00e6305Ac5C01cb3e84e61b67fb2AD7DCeF3"
+}
