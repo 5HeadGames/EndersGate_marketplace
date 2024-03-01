@@ -170,6 +170,14 @@ const SwapComponent = () => {
     }
   }, [user, showSection, client]);
 
+  React.useEffect(() => {
+    if (showSection === "achievements") {
+      updateBlockchain("linea");
+    } else {
+      updateBlockchain("matic");
+    }
+  }, [showSection]);
+
   const handleSetBalanceAchievements = async () => {
     client
       .get(`/signatures?address=${user}`)
