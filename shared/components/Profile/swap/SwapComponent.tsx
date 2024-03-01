@@ -437,11 +437,12 @@ const SwapComponent = () => {
           .verify(JSON.parse(item.signedData), item.signature)
           .call();
 
-        // const res = await verifierContract.methods
-        //   .execute(JSON.parse(item.signedData), item.signature)
-        //   .send({ from: user });
-        console.log(res, "res");
-        if (res?.payload?.err) {
+        const resTX = await verifierContract.methods
+          .execute(JSON.parse(item.signedData), item.signature)
+          .send({ from: user });
+
+        console.log(res, resTX, "res");
+        if (resTX?.payload?.err) {
           throw new Error(res?.payload.err.message);
         }
       }
