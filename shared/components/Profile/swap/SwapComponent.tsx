@@ -852,7 +852,7 @@ const SwapComponent = () => {
 
               <div className="flex gap-2 items-center justify-center py-2 border-y border-overlay-border relative w-full px-2">
                 {loading && (
-                  <div className="flex flex-col items-center justify-center absolute top-0 bottom-0 left-0 right-0 m-auto w-full bg-[#00000088]">
+                  <div className="flex flex-col items-center justify-center absolute top-0 bottom-0 left-0 right-0 m-auto w-full bg-[#000000]">
                     <div className="flex flex-col  items-center justify-center h-auto bg-overlay border border-overlay-border p-4 rounded-xl">
                       <h2 className="text-white text-xl text-center font-bold ">
                         Swap {success ? "completed" : "in progress..."}
