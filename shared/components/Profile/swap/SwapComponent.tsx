@@ -38,6 +38,16 @@ import axios from "axios";
 import { CHAINS, CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
 import { ethers } from "ethers";
 
+const config: any = axios.defaults;
+
+config.baseURL = process.env.NEXT_PUBLIC_API_SBT;
+config.headers = {
+  ...config.headers,
+  "Content-Type": "application/json",
+  "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY_SBT,
+};
+const client = axios.create(config);
+
 const SwapComponent = () => {
   const {
     user: { ethAddress: user, provider },
@@ -158,19 +168,9 @@ const SwapComponent = () => {
         handleSetBalanceAchievementsClaimed();
       }
     }
-  }, [user, showSection]);
+  }, [user, showSection, client]);
 
   const handleSetBalanceAchievements = async () => {
-    const config: any = axios.defaults;
-
-    config.baseURL = process.env.NEXT_PUBLIC_API_SBT;
-    config.headers = {
-      ...config.headers,
-      "Content-Type": "application/json",
-      "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY_SBT,
-    };
-    const client = await axios.create(config);
-
     client
       .get(`/signatures?address=${user}`)
       .then(async (response: any) => {
