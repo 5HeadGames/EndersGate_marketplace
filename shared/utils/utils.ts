@@ -4,7 +4,11 @@ import {
   getNativeBlockchain,
   onlyAcceptsERC20,
 } from "@shared/web3";
+import { ethers } from "ethers";
 import { formatPrice } from "./formatPrice";
+
+export const hash = (msg: string) =>
+  ethers.utils.keccak256(ethers.utils.toUtf8Bytes(msg));
 
 /*// NFT SHOP UTILS //*/
 export const packsShop = [

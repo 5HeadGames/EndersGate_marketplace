@@ -18,6 +18,8 @@ import RentOnlyMultiToken from "./EndersRentOnlyMultiTokens.json";
 import Comics from "./Comics.json";
 import ComicsNative from "./ComicsNative.json";
 import ComicsOnlyMultiToken from "./EndersComicsOnlyMultiTokens.json";
+import SigVerifier from "./GenericSigVerifier.json";
+import SBT from "./SBT.json";
 
 const contracts = {
   ClockSale,
@@ -40,5 +42,7 @@ const contracts = {
   RentNative,
   RentOnlyMultiToken,
   ExchangeEGERC1155,
+  SigVerifier,
+  SBT,
 };
 export default contracts;

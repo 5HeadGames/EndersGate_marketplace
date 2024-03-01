@@ -7,8 +7,8 @@ import { getAddresses } from "@shared/web3";
 import React from "react";
 
 const Test = () => {
-  // const {blockchain} = useBlockchain()
-  const { usdc } = getAddresses("matic");
+  const { blockchain } = useBlockchain();
+  const { usdc } = getAddresses(blockchain);
   const {
     user: { ethAddress, provider },
   } = useUser();
@@ -23,8 +23,8 @@ const Test = () => {
           }
           onClick={() => {
             transferTokens({
-              sourceChain: "matic",
-              destinationChain: "ethereum",
+              sourceChain: blockchain == "eth" ? "ethereum" : "matic",
+              destinationChain: blockchain == "eth" ? "matic" : "ethereum",
               destinationAccount: "0xc2B8Abc5249397DB5d159b4E3c311c2fAf4091f2",
               tokenAddress: usdc,
               amount: "1",
