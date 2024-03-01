@@ -182,16 +182,11 @@ const SwapComponent = () => {
         };
         for (let i = 0; i < data.length; i++) {
           const itemData = data[i];
-          console.log(
-            itemData,
-            ethers.utils.hexDataSlice(itemData.calldata, 4),
-          );
           const decoded = await ethers.utils.defaultAbiCoder.decode(
             ["address", "uint256", "uint256"],
             ethers.utils.hexDataSlice(itemData.calldata, 4),
           );
           achievementsEG.forEach((item) => {
-            console.log(item.hash == decoded[1].toHexString());
             balance[item.nameKey] = {
               ...itemData,
               balance:
@@ -201,7 +196,6 @@ const SwapComponent = () => {
             };
           });
         }
-        console.log(balance, "balance");
         setBalanceAchievements(balance as any);
         return balance;
       })
@@ -436,12 +430,13 @@ const SwapComponent = () => {
         const res = await verifierContract.methods
           .verify(JSON.parse(item.signedData), item.signature)
           .call();
+        console.log(res, "res 1");
 
         const resTX = await verifierContract.methods
           .execute(JSON.parse(item.signedData), item.signature)
           .send({ from: user });
 
-        console.log(res, resTX, "res");
+        console.log(resTX, "res 2");
         if (resTX?.payload?.err) {
           throw new Error(res?.payload.err.message);
         }
