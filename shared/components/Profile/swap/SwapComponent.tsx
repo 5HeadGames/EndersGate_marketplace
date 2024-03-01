@@ -189,11 +189,16 @@ const SwapComponent = () => {
           achievementsEG.forEach((item) => {
             balance[item.nameKey] = {
               ...itemData,
+              signedData: {
+                ...JSON.parse(itemData.signedData),
+                data: itemData.calldata,
+              },
               balance:
                 item.hash == decoded[1].toHexString()
                   ? balance[item.nameKey].balance + 1
                   : balance[item.nameKey].balance + 0,
             };
+            console.log(balance[item.nameKey], "balance");
           });
         }
         setBalanceAchievements(balance as any);
@@ -426,14 +431,14 @@ const SwapComponent = () => {
       console.log(data, "data");
       for (const element of cardsToExchange) {
         const item = element;
-        console.log(JSON.parse(item.signedData), item.signature);
+        console.log(item.signedData, item.signature);
         const res = await verifierContract.methods
-          .verify(JSON.parse(item.signedData), item.signature)
+          .verify(item.signedData, item.signature)
           .call();
         console.log(res, "res 1");
 
         const resTX = await verifierContract.methods
-          .execute(JSON.parse(item.signedData), item.signature)
+          .execute(item.signedData, item.signature)
           .send({ from: user });
 
         console.log(resTX, "res 2");
@@ -441,15 +446,15 @@ const SwapComponent = () => {
           throw new Error(res?.payload.err.message);
         }
       }
+      await handleSetBalanceAchievements();
       await handleSetBalanceAchievementsClaimed();
       toast.success("Your NFTs have been exchanged succesfully!");
       handleSetBalanceEG();
-      setCongrats(true);
+      hideAchievements();
     } catch (error) {
       console.log(error);
       toast.error("Ups! Error exchanging your tokens, please try again");
       hide();
-      setSuccess(false);
     } finally {
       setLoading(false);
     }
