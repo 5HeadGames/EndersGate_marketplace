@@ -112,7 +112,7 @@ const SwapComponent = () => {
       nameKey: "My First Duel",
       description: "Obtained by completing a match in the Arena Game Mode.",
       image: "/images/swap/achieve_first_duel.png",
-      id: 1,
+      id: ethers.BigNumber.from(hash("game.duel.first").toString()).toString(),
       hash: hash("game.duel.first"),
     },
     {
@@ -122,7 +122,7 @@ const SwapComponent = () => {
       description:
         "Obtained by playing the Enders Gate Arena Game Mode during the Linea Park Voyage Event and Earning XP from Consensys.",
       image: "/images/swap/achieve_linea.png",
-      id: 2,
+      id: ethers.BigNumber.from(hash("game.level.three").toString()).toString(),
       hash: hash("game.level.three"),
     },
   ];
@@ -146,8 +146,8 @@ const SwapComponent = () => {
 
   const [balanceAchievementsClaimed, setBalanceAchievementsClaimed] =
     React.useState({
-      "Linea Park Event": 1,
-      "My First Duel": 1,
+      "Linea Park Event": 0,
+      "My First Duel": 0,
     });
 
   const [search, setSearch] = React.useState("");
@@ -186,6 +186,21 @@ const SwapComponent = () => {
             ["address", "uint256", "uint256"],
             ethers.utils.hexDataSlice(itemData.calldata, 4),
           );
+          const verifierContract = await getContract(
+            "SigVerifier",
+            verifier,
+            "linea",
+          );
+          const res = await verifierContract.methods
+            .verify(
+              {
+                ...JSON.parse(itemData.signedData),
+                data: itemData.calldata,
+              },
+              itemData.signature,
+            )
+            .call();
+          console.log(res, "res 1");
           achievementsEG.forEach((item) => {
             balance[item.nameKey] = {
               ...itemData,
@@ -194,11 +209,10 @@ const SwapComponent = () => {
                 data: itemData.calldata,
               },
               balance:
-                item.hash == decoded[1].toHexString()
+                res && item.hash == decoded[1].toHexString()
                   ? balance[item.nameKey].balance + 1
                   : balance[item.nameKey].balance + 0,
             };
-            console.log(balance[item.nameKey], "balance");
           });
         }
         setBalanceAchievements(balance as any);
@@ -215,24 +229,20 @@ const SwapComponent = () => {
         "Linea Park Event": 0,
         "My First Duel": 0,
       };
-      const web3 = new Web3(CHAINS[CHAIN_IDS_BY_NAME["linea"]].rpcUrls[0]);
 
-      const sbtContract = await getContractCustom(
-        "SBT",
-        SBT,
-        web3.currentProvider,
-      );
+      const sbtContract = await getContract("SBT", SBT, "linea");
 
       for (let i = 0; i < achievementsEG.length; i++) {
         const item = achievementsEG[i];
+        console.log(user, item.id);
         const balancePass = await sbtContract.methods
           .balanceOf(user, item.id)
           .call();
         balance[item.nameKey] = balancePass;
+        console.log(balancePass, "CLAIMED");
       }
 
-      setBalanceAchievementsClaimed(balance), "CLAIMED";
-      console.log(balance);
+      setBalanceAchievementsClaimed(balance);
     } catch (e) {
       console.log(e, "achieve claimed");
     }
@@ -427,35 +437,29 @@ const SwapComponent = () => {
         verifier,
         provider,
       );
+
       const data = await handleSetBalanceAchievements();
       console.log(data, "data");
       for (const element of cardsToExchange) {
         const item = element;
         console.log(item.signedData, item.signature);
-        const res = await verifierContract.methods
-          .verify(item.signedData, item.signature)
-          .call();
-        console.log(res, "res 1");
-
         const resTX = await verifierContract.methods
           .execute(item.signedData, item.signature)
           .send({ from: user });
-
         console.log(resTX, "res 2");
         if (resTX?.payload?.err) {
-          throw new Error(res?.payload.err.message);
+          throw new Error(resTX?.payload.err.message);
         }
       }
       await handleSetBalanceAchievements();
       await handleSetBalanceAchievementsClaimed();
       toast.success("Your NFTs have been exchanged succesfully!");
       handleSetBalanceEG();
-      hideAchievements();
     } catch (error) {
       console.log(error);
       toast.error("Ups! Error exchanging your tokens, please try again");
-      hide();
     } finally {
+      hideAchievements();
       setLoading(false);
     }
   };
@@ -749,7 +753,7 @@ const SwapComponent = () => {
           onClose={() => {
             setCongrats(false);
           }}
-          isShow={isShow}
+          isShow={isShowAchievements}
           withoutX
         >
           {congrats && showSection == "cards" ? (
@@ -1015,7 +1019,11 @@ const SwapComponent = () => {
             <Button
               className="px-2 py-1 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md"
               onClick={() => {
-                show();
+                if (showSection !== "achievements") {
+                  show();
+                } else {
+                  showAchievements();
+                }
               }}
             >
               {showSection !== "achievements" ? (
