@@ -432,9 +432,15 @@ const SwapComponent = () => {
       console.log(data, "data");
       for (const element of cardsToExchange) {
         const item = element;
+        console.log(JSON.parse(item.signedData), item.signature);
         const res = await verifierContract.methods
-          .execute(JSON.parse(item.signedData), item.signature)
-          .send({ from: user });
+          .verify(JSON.parse(item.signedData), item.signature)
+          .call();
+
+        // const res = await verifierContract.methods
+        //   .execute(JSON.parse(item.signedData), item.signature)
+        //   .send({ from: user });
+        console.log(res, "res");
         if (res?.payload?.err) {
           throw new Error(res?.payload.err.message);
         }
@@ -447,8 +453,9 @@ const SwapComponent = () => {
       console.log(error);
       toast.error("Ups! Error exchanging your tokens, please try again");
       hide();
-      setLoading(false);
       setSuccess(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -832,9 +839,11 @@ const SwapComponent = () => {
                 <p className="text-sm text-primary-disabled text-justify">
                   <span className="text-white"> Note:</span> To claim your
                   achievements, you will need to complete{" "}
-                  {Object.keys(balanceAchievements)
-                    ?.map((item) => balanceAchievements[item].balance)
-                    ?.filter((item) => item > 0).length + 1}{" "}
+                  {
+                    Object.keys(balanceAchievements)
+                      ?.map((item) => balanceAchievements[item].balance)
+                      ?.filter((item) => item > 0).length
+                  }{" "}
                   transactions. The firsts transaction grants us permission to
                   swap your tokens, and the last transaction executes the swap.
                   Granting permission only occurs once per session.
@@ -858,7 +867,7 @@ const SwapComponent = () => {
                     </div>
                   </div>
                 )}
-                <div className="flex flex-col gap-6 items-center justify-center w-full py-4">
+                <div className="flex flex-wrap gap-6 items-center justify-center w-full py-4">
                   <>
                     {achievementsEG
                       .filter((item) => {
@@ -866,28 +875,40 @@ const SwapComponent = () => {
                       })
                       .map((item) => {
                         return (
-                          <div className="flex items-center flex-col md:w-96 sm:w-72 w-60 md:px-10">
-                            <img
-                              src={item.image}
-                              className="w-[250px]"
-                              alt=""
-                            />
-                            <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
-                              {item.name}
-                            </h2>
-                            <p className="text-sm text-primary-disabled Raleway text-center pb-2">
-                              {item.description}
-                            </p>
-                            <p className="text-md text-primary-disabled Raleway">
-                              QUANTITY:{" "}
-                              {balanceAchievements[item.nameKey].balance}
-                            </p>
-                            <p className="text-md text-primary-disabled Raleway">
-                              Token: ERC1155
-                            </p>
-                            <p className="text-md text-primary-disabled Raleway">
-                              Blockchain: Linea{" "}
-                            </p>
+                          <div className="flex items-center justify-start flex-col w-48 h-72 border-2 border-[#626262] relative">
+                            <div className="h-12 flex w-full border-b-2 border-[#626262]">
+                              <div className="w-2/5 flex flex-col border-r-2 border-[#626262]">
+                                <p className="font-[500] text-md text-[#B8B8B8] text-center Raleway h-5">
+                                  Points
+                                </p>
+                                <h2 className="text-white flex items-center justify-center text-lg font-bold text-center Raleway h-5">
+                                  1000
+                                </h2>
+                              </div>
+                              <div className="w-3/5 flex flex-col">
+                                <p className="font-[500] text-md text-[#B8B8B8] text-center Raleway h-5">
+                                  Status
+                                </p>
+
+                                <h2 className="text-white flex items-center justify-center text-md font-bold text-center Raleway h-5">
+                                  COMPLETE!
+                                </h2>
+                              </div>
+                            </div>
+                            <div className="flex flex-col h-60 items-center p-2 relative">
+                              <img
+                                src="/images/swap/bg_achieve.png"
+                                className="absolute w-full h-full top-0 left-0 opacity-70"
+                                alt=""
+                              />
+                              <img src={item.image} className="w-20" alt="" />
+                              <h2 className="text-white text-xl font-bold text-center Raleway mt-1">
+                                {item.name}
+                              </h2>
+                              <p className="text-white text-xs text-primary-disabled text-center Raleway mt-1">
+                                {item.description}
+                              </p>
+                            </div>
                           </div>
                         );
                       })}
