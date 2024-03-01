@@ -439,7 +439,7 @@ const SwapComponent = () => {
           throw new Error(res?.payload.err.message);
         }
       }
-      dispatch(onGetAssets({ address: user, blockchain }));
+      await handleSetBalanceAchievementsClaimed();
       toast.success("Your NFTs have been exchanged succesfully!");
       handleSetBalanceEG();
       setCongrats(true);
