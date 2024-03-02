@@ -71,7 +71,7 @@ const SwapComponent = () => {
 
   const { blockchain, updateBlockchain } = useBlockchain();
 
-  const [showSection, setShowSection] = React.useState("cards");
+  const [showSection, setShowSection] = React.useState("achievements");
 
   const passPacks = [
     {
@@ -999,7 +999,7 @@ const SwapComponent = () => {
                   })}
               </>
             )}{" "}
-            ERC721 Items
+            {showSection !== "achievements" ? "ERC721" : "ERC1155"} Items
           </div>
           {(showSection === "cards"
             ? Object.keys(balanceEG)

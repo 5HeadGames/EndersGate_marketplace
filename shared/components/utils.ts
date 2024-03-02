@@ -44,6 +44,15 @@ export const getExchangeType = (balanceEG: any) => {
 
 export const menuElements = (showEG, setShowEG) => [
   {
+    name: "Achievements",
+    image: "/images/swap/achieve.png",
+    className: "w-10 px-3",
+    active: showEG === "achievements",
+    onClick: () => {
+      setShowEG("achievements");
+    },
+  },
+  {
     name: "Card Pass Swap",
     image: "/images/swap/cardIcon.png",
     className: "w-10",
@@ -66,14 +75,5 @@ export const menuElements = (showEG, setShowEG) => [
     image: "/images/swap/opensea_white.png",
     className: "w-10 px-1",
     link: `https://testnets.opensea.io/0xc2B8Abc5249397DB5d159b4E3c311c2fAf4091f2`,
-  },
-  {
-    name: "Achievements",
-    image: "/images/swap/achieve.png",
-    className: "w-10 px-3",
-    active: showEG === "achievements",
-    onClick: () => {
-      setShowEG("achievements");
-    },
   },
 ];
