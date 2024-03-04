@@ -459,14 +459,13 @@ const SwapComponent = () => {
           throw new Error(resTX?.payload.err.message);
         }
       }
-      await handleSetBalanceAchievements();
-      await handleSetBalanceAchievementsClaimed();
       toast.success("Your NFTs have been exchanged succesfully!");
-      handleSetBalanceEG();
     } catch (error) {
       console.log(error);
       toast.error("Ups! Error exchanging your tokens, please try again");
     } finally {
+      await handleSetBalanceAchievements();
+      await handleSetBalanceAchievementsClaimed();
       hideAchievements();
       setLoading(false);
     }
