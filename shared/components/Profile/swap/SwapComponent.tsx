@@ -127,6 +127,9 @@ const SwapComponent = () => {
     },
   ];
 
+  const [achievementsEGSelected, setAchievementsEGSelected] =
+    React.useState<any>([]);
+
   const [balanceEG, setBalanceEG] = React.useState({
     Ultraman: 0,
     Bemular: 0,
@@ -437,7 +440,7 @@ const SwapComponent = () => {
     setLoading(true);
     try {
       await updateBlockchain("linea");
-      const cardsToExchange = achievementsEG
+      const cardsToExchange = achievementsEGSelected
         .filter((item) => balanceAchievements[item.nameKey].balance > 0)
         .map((item) => balanceAchievements[item.nameKey]);
       const verifierContract = await getContractCustom(
@@ -459,6 +462,7 @@ const SwapComponent = () => {
           throw new Error(resTX?.payload.err.message);
         }
       }
+      setCongrats(true);
       toast.success("Your NFTs have been exchanged succesfully!");
     } catch (error) {
       console.log(error);
@@ -793,7 +797,7 @@ const SwapComponent = () => {
                   className="text-white w-5 cursor-pointer p-[2px] rounded-full bg-overlay border border-white"
                   onClick={() => {
                     setCongrats(false);
-                    hide();
+                    hideAchievements();
                   }}
                 />
               </div>
@@ -802,29 +806,16 @@ const SwapComponent = () => {
                   Success!
                 </h2>{" "}
                 <p className="text-center text-white text-lg py-4">
-                  Ultraman X Enders Gate collab bundle Obtained! Check your
-                  inventory for your new collectibles.
+                  Your SBTs have been successfully minted!
                 </p>
                 <p className="text-center text-white text-lg py-2">
                   Share this with your friends and inform them about the Drop!
                 </p>
-                <a
-                  href={`https://twitter.com/intent/tweet?text=I'm so excited to announce that I just have obtained my Ultraman X Enders Gate collab bundle from Enders Gate! Get yours on: https://marketplace.endersgate.gg/profile/swap`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="/images/share.png"
-                    className="h-12 cursor-pointer"
-                    alt=""
-                  />
-                </a>
                 <img
                   src="/images/swap/View_Collectibles.png"
                   className="h-12 cursor-pointer"
                   alt=""
                   onClick={() => {
-                    router.push("/profile");
                     setCongrats(false);
                     hide();
                   }}
@@ -839,7 +830,7 @@ const SwapComponent = () => {
                 </h2>
                 {!loading && (
                   <XIcon
-                    onClick={() => hide()}
+                    onClick={() => hideAchievements()}
                     className="absolute right-4 top-0 bottom-0 my-auto text-primary-disabled text-xl w-6 cursor-pointer"
                   ></XIcon>
                 )}
@@ -881,7 +872,7 @@ const SwapComponent = () => {
                 )}
                 <div className="flex flex-wrap gap-6 items-center justify-center w-full py-4">
                   <>
-                    {achievementsEG
+                    {achievementsEGSelected
                       .filter((item) => {
                         return balanceAchievements[item.nameKey].balance > 0;
                       })
@@ -1029,6 +1020,7 @@ const SwapComponent = () => {
                 if (showSection !== "achievements") {
                   show();
                 } else {
+                  setAchievementsEGSelected(achievementsEG);
                   showAchievements();
                 }
               }}
@@ -1166,6 +1158,15 @@ const SwapComponent = () => {
                                 <p className="text-md text-primary-disabled Raleway">
                                   Blockchain: Linea{" "}
                                 </p>
+                                <Button
+                                  className="px-2 py-1 border !border-green-button bg-gradient-to-b from-overlay to-[#233408] rounded-md"
+                                  onClick={() => {
+                                    setAchievementsEGSelected([item]);
+                                    showAchievements();
+                                  }}
+                                >
+                                  Mint
+                                </Button>
                               </div>
                             );
                           })}
