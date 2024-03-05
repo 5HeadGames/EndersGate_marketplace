@@ -182,6 +182,7 @@ const SwapComponent = () => {
   }, [showSection]);
 
   const handleSetBalanceAchievements = async () => {
+    // const user = "0x0aAF37c3EaaA42d417434Fd2ceC555846D46415C";
     client
       .get(`/signatures?address=${user}`)
       .then(async (response: any) => {
@@ -996,7 +997,11 @@ const SwapComponent = () => {
               <>
                 {Object.keys(balanceAchievements)
                   ?.map((item) => {
-                    return parseInt(balanceAchievements[item].balance);
+                    return parseInt(balanceAchievements[item].balance) > 0
+                      ? balanceAchievementsClaimed[item] == 0
+                        ? balanceAchievements[item].balance
+                        : 0
+                      : balanceAchievements[item].balance;
                   })
                   ?.reduce((acc, num) => {
                     return acc + num;
@@ -1023,7 +1028,11 @@ const SwapComponent = () => {
                 }) > 0
             : Object.keys(balanceAchievements)
                 ?.map((item) => {
-                  return parseInt(balanceAchievements[item].balance);
+                  return parseInt(balanceAchievements[item].balance) > 0
+                    ? balanceAchievementsClaimed[item] == 0
+                      ? balanceAchievements[item].balance
+                      : 0
+                    : balanceAchievements[item].balance;
                 })
                 ?.reduce((acc, num) => {
                   return acc + num;
@@ -1081,6 +1090,10 @@ const SwapComponent = () => {
                     ? balanceEG[item]
                     : showSection == "packs"
                     ? balance[item]
+                    : balanceAchievements[item].balance > 0
+                    ? balanceAchievementsClaimed[item] == 0
+                      ? balanceAchievements[item].balance
+                      : 0
                     : balanceAchievements[item].balance,
                 )
                 ?.reduce((acc, num) => parseInt(acc) + parseInt(num)) > 0 ? (
@@ -1145,7 +1158,8 @@ const SwapComponent = () => {
                         {achievementsEG
                           .filter((item) => {
                             return (
-                              balanceAchievements[item.nameKey].balance > 0
+                              balanceAchievements[item.nameKey].balance > 0 &&
+                              balanceAchievementsClaimed[item.nameKey] == 0
                             );
                           })
                           .map((item) => {
