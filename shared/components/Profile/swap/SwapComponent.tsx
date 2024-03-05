@@ -211,20 +211,34 @@ const SwapComponent = () => {
               itemData.signature,
             )
             .call();
-          console.log(res, "res 1");
-          achievementsEG.forEach((item) => {
-            balance[item.nameKey] = {
-              ...itemData,
-              signedData: {
-                ...JSON.parse(itemData.signedData),
-                data: itemData.calldata,
-              },
-              balance:
-                res && item.hash == decoded[1].toHexString()
-                  ? balance[item.nameKey].balance + 1
-                  : balance[item.nameKey].balance + 0,
-            };
-          });
+
+          achievementsEG
+            .filter((item) => {
+              return item.hash == decoded[1].toHexString();
+            })
+            .forEach((item) => {
+              console.log(
+                res,
+                {
+                  ...JSON.parse(itemData.signedData),
+                  data: itemData.calldata,
+                },
+                item.nameKey,
+                res,
+                "res 1",
+              );
+              balance[item.nameKey] = {
+                ...itemData,
+                signedData: {
+                  ...JSON.parse(itemData.signedData),
+                  data: itemData.calldata,
+                },
+                balance:
+                  res && item.hash == decoded[1].toHexString()
+                    ? balance[item.nameKey].balance + 1
+                    : balance[item.nameKey].balance + 0,
+              };
+            });
         }
         setBalanceAchievements(balance as any);
         return balance;
