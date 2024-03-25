@@ -409,7 +409,7 @@ export default function AppLayout({ children }) {
         <div className="flex flex-col items-center bg-secondary rounded-xl border border-overlay-border w-full relative md:max-w-[700px] md:min-w-[500px] max-w-[350px] min-w-[350px]">
           <div className="flex items-center justify-center border-b border-overlay-border w-full py-4 px-4 relative">
             <h2 className="font-bold text-primary text-center text-3xl">
-              Swap your Collab Pass!
+              Limited time offer!
             </h2>
             <XIcon
               onClick={() => hide()}
@@ -418,13 +418,15 @@ export default function AppLayout({ children }) {
           </div>
           <div className="flex flex-col gap-4 w-full items-center justify-center pb-4 pt-2 md:px-16 px-4">
             <h3 className="text-lg text-white text-center w-full font-bold Raleway">
-              Login to Swap your ERC721 NFTs for ERC1155
+              Visit the virtual shop to obtain limited cards from the very first
+              Generation of Enders Gate™ Cards!
             </h3>
             <p className="text-sm text-primary-disabled text-justify">
-              Login to swap your Ultraman Mint Passes obtained from OpenSea on
-              the 5HG marketplace. Enders Gate 1155 NFTs can be added to your
-              card deck in-game for use in duels, unlock special game modes, and
-              be rented to other players through the 5HG marketplace.
+              Login to purchase and open Packs from the 5HG marketplace. Enders
+              Gate™ Card packs can be re-sold unopened on the 5HG marketplace.
+              They can also be opened revealing multiple cards that can be used
+              in duels in the game, unlock special game modes, and listed for
+              rental on the 5HG Marketplace to other players.
             </p>
 
             <div className="flex w-full justify-around items-center">
@@ -447,9 +449,9 @@ export default function AppLayout({ children }) {
             </div>
           </div>
 
-          <div className="flex gap-2 items-center justify-center py-2 border-y border-overlay-border relative">
+          <div className="flex gap-2 items-center justify-center relative">
             <img
-              src="/images/swap/SwapGraphic.webp"
+              src="/images/home/modalImage.png"
               className="w-full flex"
               alt=""
             />
