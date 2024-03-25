@@ -32,6 +32,7 @@ const Sales = () => {
   const {
     user: { ethAddress: user, provider },
   } = useUser();
+  // const user = "0xA6F1C95D8d069b894ef506e15E4AE9ddf065a39F";
 
   const [cancel, setCancel] = React.useState({ id: -1, blockchain: "" });
   const { Modal, show, hide, isShow } = useModal();
@@ -59,8 +60,8 @@ const Sales = () => {
         user: user,
         blockchain: cancel.blockchain,
       });
-      console.log(tx);
-      if ((tx as any)?.error) {
+      console.log(tx, "tx");
+      if ((tx as any)?.err) {
         throw Error(
           "An error has occurred while cancelling the sale, please try again",
         );
@@ -88,6 +89,8 @@ const Sales = () => {
     });
     setSales(arrayPacks);
   }, [nfts.saleCreated, user]);
+
+  console.log(sales);
 
   return (
     <div className="flex flex-col w-full min-h-screen gap-4 md:px-20 px-8">

@@ -497,7 +497,6 @@ export const onCancelSale = async (args: {
       .cancelSale(tokenId)
       .send({ from: user });
 
-    console.log(tx, marketplace, marketplaceContract);
     return tx;
   } catch (err) {
     console.log(err);
