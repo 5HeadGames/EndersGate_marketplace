@@ -500,6 +500,7 @@ export const onCancelSale = async (args: {
     return tx;
   } catch (err) {
     console.log(err);
+    toast.error(err.message);
     return { err };
   }
 };

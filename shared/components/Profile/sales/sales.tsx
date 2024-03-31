@@ -46,14 +46,7 @@ const Sales = () => {
   const cancelSale = async () => {
     try {
       setIsLoading(true);
-      const changed = await switchChain(CHAIN_IDS_BY_NAME[cancel.blockchain]);
-      if (!changed) {
-        throw new Error(
-          "An error occurred while changing the network, please try again.",
-        );
-      }
       updateBlockchain(cancel.blockchain);
-
       const tx = await onCancelSale({
         tokenId: cancel.id,
         provider: provider,
@@ -71,7 +64,7 @@ const Sales = () => {
       toast.success("Your sale has been canceled successfully");
     } catch (err) {
       console.log(err);
-      toast.error("Something went wrong, try again");
+      // toast.error(err.message);
     }
     setIsLoading(false);
 
