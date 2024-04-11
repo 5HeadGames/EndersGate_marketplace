@@ -30,9 +30,12 @@ import { useUser } from "@shared/context/useUser";
 const Sales = () => {
   const nfts = useAppSelector((state) => state.nfts);
   const {
-    user: { ethAddress: user, provider },
+    user: {
+      // ethAddress: user,
+      provider,
+    },
   } = useUser();
-  // const user = "0xA6F1C95D8d069b894ef506e15E4AE9ddf065a39F";
+  const user = "0xA6F1C95D8d069b894ef506e15E4AE9ddf065a39F";
 
   const [cancel, setCancel] = React.useState({ id: -1, blockchain: "" });
   const { Modal, show, hide, isShow } = useModal();
@@ -160,6 +163,7 @@ const Sales = () => {
                 {sales.map((sale: any, i) => {
                   const { pack: packsAddress } = getAddresses(sale.blockchain);
                   const pack = sale.nft == packsAddress;
+                  console.log(sale);
                   return (
                     <tr
                       className={clsx({

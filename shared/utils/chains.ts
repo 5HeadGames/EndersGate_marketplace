@@ -118,13 +118,31 @@ export const CHAINS: {
   },
   13472: {
     urls: ["https://rpc.testnet.immutable.com"],
-    name: "Inmutable X Testnet",
+    name: "Immutable X Testnet",
     rpcUrls: ["https://rpc.testnet.immutable.com"],
     nativeCurrency: IMX,
     blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
     blockExplorer: "https://explorer.testnet.immutable.com/",
     type: "testnet",
   },
+  13371: {
+    urls: ["https://rpc.testnet.immutable.com"],
+    name: "Immutable X Testnet",
+    rpcUrls: ["https://rpc.testnet.immutable.com"],
+    nativeCurrency: IMX,
+    blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
+    blockExplorer: "https://explorer.testnet.immutable.com/",
+    type: "mainnet",
+  },
+  // 13371: {
+  //   urls: ["https://rpc.immutable.com"],
+  //   name: "Immutable X ZKEVM",
+  //   rpcUrls: ["https://rpc.immutable.com"],
+  //   nativeCurrency: IMX,
+  //   blockExplorerUrls: ["https://explorer.immutable.com"],
+  //   blockExplorer: "https://explorer.immutable.com",
+  //   type: "mainnet",
+  // },
 
   59144: {
     urls: ["https://linea.blockpi.network/v1/rpc/public"],
@@ -198,7 +216,7 @@ export const CHAIN_IDS_BY_NAME: {
 } = {
   matic: process.env.NEXT_PUBLIC_ENV === "production" ? 137 : 80001,
   eth: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
-  imx: 13472,
+  imx: process.env.NEXT_PUBLIC_ENV === "production" ? 13371 : 13472,
   skl: process.env.NEXT_PUBLIC_ENV === "production" ? 1482601649 : 503129905,
   linea: process.env.NEXT_PUBLIC_ENV === "production" ? 59144 : 59140,
 };
@@ -215,6 +233,7 @@ export const CHAIN_NAME_BY_ID: {
   1: "eth",
   11155111: "eth",
   13472: "imx",
+  13371: "imx",
   503129905: "skl",
   1482601649: "skl",
 };
@@ -250,11 +269,11 @@ export const blockchains = [
   //   value: "findora",
   //   image: "/images/findora.png",
   // },
-  // {
-  //   name: "INMUTABLE X",
-  //   value: "imx",
-  //   image: "/images/imx.png",
-  // },
+  {
+    name: "INMUTABLE X",
+    value: "imx",
+    image: "/images/imx.png",
+  },
   {
     name: "NEBULA HUB",
     value: "skl",
