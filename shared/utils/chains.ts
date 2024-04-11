@@ -90,42 +90,59 @@ export const CHAINS: {
   //   blockExplorerUrls: ["https://gsc-mainnet.evm.findorascan.io/"],
   //   blockExplorer: "https://gsc-mainnet.evm.findorascan.io/",
   // },
-  // 503129905: {
-  //   urls: ["https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird"],
-  //   name: "Nebula Hub",
-  //   rpcUrls: [
-  //     "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
-  //   ],
-  //   nativeCurrency: SKL,
-  //   blockExplorerUrls: [
-  //     "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
-  //   ],
-  //   blockExplorer:
-  //     "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
-  //   type: "testnet",
-  // },
-  // 1482601649: {
-  //   urls: ["https://mainnet.skalenodes.com/v1/green-giddy-denebola"],
-  //   name: "Nebula Hub",
-  //   rpcUrls: ["https://mainnet.skalenodes.com/v1/green-giddy-denebola"],
-  //   nativeCurrency: SKL,
-  //   blockExplorerUrls: [
-  //     "https://green-giddy-denebola.explorer.mainnet.skalenodes.com/",
-  //   ],
-  //   blockExplorer:
-  //     "https://green-giddy-denebola.explorer.mainnet.skalenodes.com/",
-  //   type: "mainnet",
-  // },
-
-  13371: {
-    urls: ["https://rpc.immutable.com"],
-    name: "Immutable X",
-    rpcUrls: ["https://rpc.immutable.com"],
+  503129905: {
+    urls: ["https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird"],
+    name: "Nebula Hub",
+    rpcUrls: [
+      "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
+    ],
+    nativeCurrency: SKL,
+    blockExplorerUrls: [
+      "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
+    ],
+    blockExplorer:
+      "https://staging-faint-slimy-achird.explorer.staging-v3.skalenodes.com/",
+    type: "testnet",
+  },
+  1482601649: {
+    urls: ["https://mainnet.skalenodes.com/v1/green-giddy-denebola"],
+    name: "Nebula Hub",
+    rpcUrls: ["https://mainnet.skalenodes.com/v1/green-giddy-denebola"],
+    nativeCurrency: SKL,
+    blockExplorerUrls: [
+      "https://green-giddy-denebola.explorer.mainnet.skalenodes.com/",
+    ],
+    blockExplorer:
+      "https://green-giddy-denebola.explorer.mainnet.skalenodes.com/",
+    type: "mainnet",
+  },
+  13473: {
+    urls: ["https://rpc.testnet.immutable.com"],
+    name: "Immutable X Testnet",
+    rpcUrls: ["https://rpc.testnet.immutable.com"],
     nativeCurrency: IMX,
     blockExplorerUrls: ["https://explorer.immutable.com"],
     blockExplorer: "https://explorer.immutable.com",
-    type: "mainnet",
+    type: "both",
   },
+  // 13371: {
+  //   urls: ["https://rpc.testnet.immutable.com"],
+  //   name: "Immutable X Testnet",
+  //   rpcUrls: ["https://rpc.testnet.immutable.com"],
+  //   nativeCurrency: IMX,
+  //   blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
+  //   blockExplorer: "https://explorer.testnet.immutable.com/",
+  //   type: "mainnet",
+  // },
+  // 13371: {
+  //   urls: ["https://rpc.immutable.com"],
+  //   name: "Immutable X ZKEVM",
+  //   rpcUrls: ["https://rpc.immutable.com"],
+  //   nativeCurrency: IMX,
+  //   blockExplorerUrls: ["https://explorer.immutable.com"],
+  //   blockExplorer: "https://explorer.immutable.com",
+  //   type: "mainnet",
+  // },
 
   59144: {
     urls: ["https://linea.blockpi.network/v1/rpc/public"],
@@ -173,16 +190,6 @@ export const CHAINS: {
     blockExplorer: "https://mumbai.polygonscan.com",
     type: "testnet",
   },
-
-  13473: {
-    urls: ["https://rpc.testnet.immutable.com/"],
-    name: "Immutable X Testnet",
-    rpcUrls: ["https://rpc.testnet.immutable.com/"],
-    nativeCurrency: IMX,
-    blockExplorerUrls: ["https://explorer.testnet.immutable.com/"],
-    blockExplorer: "https://explorer.testnet.immutable.com/",
-    type: "testnet",
-  },
 };
 
 export const MAINNET_CHAIN_IDS = Object.keys(CHAINS)
@@ -209,7 +216,8 @@ export const CHAIN_IDS_BY_NAME: {
 } = {
   matic: process.env.NEXT_PUBLIC_ENV === "production" ? 137 : 80001,
   eth: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
-  imx: process.env.NEXT_PUBLIC_ENV === "production" ? 13371 : 13473,
+  // imx: process.env.NEXT_PUBLIC_ENV === "production" ? 13371 : 13472,
+  imx: 13473,
   skl: process.env.NEXT_PUBLIC_ENV === "production" ? 1482601649 : 503129905,
   linea: process.env.NEXT_PUBLIC_ENV === "production" ? 59144 : 59140,
 };

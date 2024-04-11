@@ -1,5 +1,4 @@
 "use client";
-"use client";
 import React, { Suspense } from "react";
 import "shared/styles/global-tailwind.css";
 import "shared/styles/index.scss";

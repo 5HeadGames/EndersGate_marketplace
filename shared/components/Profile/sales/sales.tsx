@@ -30,8 +30,12 @@ import { useUser } from "@shared/context/useUser";
 const Sales = () => {
   const nfts = useAppSelector((state) => state.nfts);
   const {
-    user: { ethAddress: user, provider },
+    user: {
+      // ethAddress: user,
+      provider,
+    },
   } = useUser();
+  const user = "0xA6F1C95D8d069b894ef506e15E4AE9ddf065a39F";
 
   const [cancel, setCancel] = React.useState({ id: -1, blockchain: "" });
   const { Modal, show, hide, isShow } = useModal();
@@ -45,22 +49,15 @@ const Sales = () => {
   const cancelSale = async () => {
     try {
       setIsLoading(true);
-      const changed = await switchChain(CHAIN_IDS_BY_NAME[cancel.blockchain]);
-      if (!changed) {
-        throw new Error(
-          "An error occurred while changing the network, please try again.",
-        );
-      }
       updateBlockchain(cancel.blockchain);
-
       const tx = await onCancelSale({
         tokenId: cancel.id,
         provider: provider,
         user: user,
         blockchain: cancel.blockchain,
       });
-      console.log(tx);
-      if ((tx as any)?.error) {
+      console.log(tx, "tx");
+      if ((tx as any)?.err) {
         throw Error(
           "An error has occurred while cancelling the sale, please try again",
         );
@@ -70,7 +67,7 @@ const Sales = () => {
       toast.success("Your sale has been canceled successfully");
     } catch (err) {
       console.log(err);
-      toast.error("Something went wrong, try again");
+      // toast.error(err.message);
     }
     setIsLoading(false);
 
@@ -88,6 +85,8 @@ const Sales = () => {
     });
     setSales(arrayPacks);
   }, [nfts.saleCreated, user]);
+
+  console.log(sales);
 
   return (
     <div className="flex flex-col w-full min-h-screen gap-4 md:px-20 px-8">
@@ -164,6 +163,7 @@ const Sales = () => {
                 {sales.map((sale: any, i) => {
                   const { pack: packsAddress } = getAddresses(sale.blockchain);
                   const pack = sale.nft == packsAddress;
+                  console.log(sale);
                   return (
                     <tr
                       className={clsx({

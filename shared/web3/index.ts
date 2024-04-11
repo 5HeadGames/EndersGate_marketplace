@@ -8,7 +8,10 @@ import {
   parseSaleTokens,
   removeAll,
 } from "@redux/actions";
-import { findSum } from "@shared/components/common/specialFields/SpecialFields";
+import {
+  AddressTextString,
+  findSum,
+} from "@shared/components/common/specialFields/SpecialFields";
 import { child, get, getDatabase, ref, set } from "firebase/database";
 import { toast } from "react-hot-toast";
 
@@ -120,6 +123,15 @@ export const getContractCustom = (
 ) => {
   const web3 = getWeb3(provider);
   return new web3.eth.Contract(contracts[factory].abi as AbiItem[], address);
+};
+
+export const getContractCustomABI = (
+  address: string,
+  abi: any,
+  provider: any,
+) => {
+  const web3 = getWeb3(provider);
+  return new web3.eth.Contract(abi, address);
 };
 
 export const getProvider = (blockchain) => {
@@ -376,7 +388,13 @@ export const buyNFTsMatic = async ({
     return;
   }
   try {
-    await getSFUEL(ethAddress, blockchain);
+    await getSFUEL(
+      ethAddress,
+      blockchain,
+      setMessageBuy(
+        "Sending you gas to the address : " + AddressTextString(ethAddress),
+      ),
+    );
     console.log("initiated");
 
     const { amounts, bid, token, tokensId } = {
@@ -551,10 +569,10 @@ export const onCancelSale = async (args: {
       .cancelSale(tokenId)
       .send({ from: user });
 
-    console.log(tx, marketplace, marketplaceContract);
     return tx;
   } catch (err) {
     console.log(err);
+    toast.error(err.message);
     return { err };
   }
 };
@@ -671,7 +689,7 @@ export const checkFirebaseInfluencerCode = async ({
   }
 };
 
-export const getSFUEL = async (address, blockchain) => {
+export const getSFUEL = async (address, blockchain, onSending = () => {}) => {
   if (blockchain == "skl") {
     const pk: any = process.env.NEXT_PUBLIC_PRIVATE_KEY;
     const skale = CHAINS[CHAIN_IDS_BY_NAME["skl"]];
@@ -682,21 +700,21 @@ export const getSFUEL = async (address, blockchain) => {
 
     const params = {
       to: address,
-      value: Web3.utils.toHex(Web3.utils.toWei("0.00001", "ether")),
+      value: Web3.utils.toHex(Web3.utils.toWei("0.0001", "ether")),
       gas: Web3.utils.toHex(21000), // optional
       gasPrice: Web3.utils.toHex(20 * Math.pow(10, 9)), // optional
     };
 
     if (parseFloat(Web3.utils.fromWei(balance, "ether")) < 0.000001) {
+      onSending();
       const signedTx: any = await web3.eth.accounts.signTransaction(params, pk);
-      web3.eth
-        .sendSignedTransaction(signedTx.rawTransaction)
-        .on("transactionHash", () => {
-          toast.success("Gas request succesfully sent!");
-        })
-        .on("error", () => {
-          toast.error("An error has ocurred");
-        });
+      const tx = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+      console.log(tx);
+      if (tx.status) {
+        toast.success("Gas request succesfully sent!");
+      } else {
+        toast.error("An error has ocurred");
+      }
     }
   }
 };

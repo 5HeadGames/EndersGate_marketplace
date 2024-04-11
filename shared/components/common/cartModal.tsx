@@ -17,7 +17,7 @@ import {
 import AccordionMenu from "./Accordion";
 import { Input } from "./form/input";
 import { Button } from "./button";
-import { WalletOutlined } from "@ant-design/icons";
+import { LoadingOutlined, WalletOutlined } from "@ant-design/icons";
 import { useUser } from "@shared/context/useUser";
 
 export const useCartModal = () => {
@@ -45,6 +45,7 @@ export const useCartModal = () => {
       tokenSelected,
       setTokenSelected,
       buy,
+      loading = false,
       providerName,
       user,
       blockchain,
@@ -349,7 +350,11 @@ export const useCartModal = () => {
                               "w-auto px-6 py-2 flex justify-center items-center rounded-xl !font-bold"
                             }
                           >
-                            Complete Purchase
+                            {loading ? (
+                              <LoadingOutlined />
+                            ) : (
+                              "Complete Purchase"
+                            )}
                           </Button>
                         </div>
                       </form>

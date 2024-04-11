@@ -21,7 +21,10 @@ import {
   MAINNET_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
 } from "@shared/utils/chains";
-import { findSum } from "@shared/components/common/specialFields/SpecialFields";
+import {
+  AddressTextString,
+  findSum,
+} from "@shared/components/common/specialFields/SpecialFields";
 import { removeAllRent } from "./layout";
 import { toast } from "react-hot-toast";
 
@@ -774,7 +777,13 @@ export const buyFromShop = createAsyncThunk(
     let tx;
 
     try {
-      await getSFUEL(account, blockchain);
+      await getSFUEL(
+        account,
+        blockchain,
+        setMessageBuy(
+          "Sending you gas to the address : " + AddressTextString(account),
+        ),
+      );
       const { shop: shopAddress, NATIVEUSD } = getAddresses(blockchain);
 
       console.log(shopAddress, NATIVEUSD);
@@ -901,7 +910,13 @@ export const buyFromShopNative = createAsyncThunk(
     let tx;
 
     try {
-      await getSFUEL(account, blockchain);
+      await getSFUEL(
+        account,
+        blockchain,
+        setMessageBuy(
+          "Sending you gas to the address : " + AddressTextString(account),
+        ),
+      );
       const { shop: shopAddress } = getAddresses(blockchain);
 
       const shop = getContractCustom("ShopFindora", shopAddress, provider);
@@ -1148,7 +1163,13 @@ export const rentBatchERC1155 = createAsyncThunk(
     } = args;
 
     try {
-      await getSFUEL(account, blockchain);
+      await getSFUEL(
+        account,
+        blockchain,
+        setMessageBuy(
+          "Sending you gas to the address : " + AddressTextString(account),
+        ),
+      );
       const { rent, NATIVEUSD: NATIVE_TO_USD } = getAddresses(blockchain);
 
       console.log("token");
@@ -1271,7 +1292,13 @@ export const rentBatchERC1155Native = createAsyncThunk(
     } = args;
 
     try {
-      await getSFUEL(account, blockchain);
+      await getSFUEL(
+        account,
+        blockchain,
+        setMessageBuy(
+          "Sending you gas to the address : " + AddressTextString(account),
+        ),
+      );
       const { rent } = getAddresses(blockchain);
 
       const rentContract = getContractCustom("RentNative", rent, provider);

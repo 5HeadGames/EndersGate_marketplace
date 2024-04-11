@@ -59,24 +59,36 @@ export const getExchangeType = (balanceEG: any) => {
 
 export const menuElements = (showEG, setShowEG) => [
   {
+    name: "Achievements",
+    image: "/images/swap/achieve.png",
+    className: "w-10 px-3",
+    active: showEG === "achievements",
+    onClick: () => {
+      setShowEG("achievements");
+    },
+  },
+  {
     name: "Card Pass Swap",
     image: "/images/swap/cardIcon.png",
-    active: showEG === true,
+    className: "w-10",
+    active: showEG === "cards",
     onClick: () => {
-      setShowEG(true);
+      setShowEG("cards");
     },
   },
   {
     name: "Pack Pass Swap",
     image: "/images/swap/PackIcon.png",
-    active: showEG === false,
+    className: "w-10",
+    active: showEG === "packs",
     onClick: () => {
-      setShowEG(false);
+      setShowEG("packs");
     },
   },
   {
     name: "Visit OPENSEA",
     image: "/images/swap/opensea_white.png",
+    className: "w-10 px-1",
     link: `https://testnets.opensea.io/0xc2B8Abc5249397DB5d159b4E3c311c2fAf4091f2`,
   },
 ];
