@@ -11,7 +11,7 @@ import comicDetails from "../../../comics.json";
 import Reader from "./ComicsReader";
 
 export const ComicSlider = () => {
-  const { name: comicName, issue } = useParams().query as any;
+  const { name: comicName, issue } = useParams() as any;
   const router = useRouter();
   const {
     user: { ethAddress: user },
