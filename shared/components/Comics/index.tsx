@@ -101,7 +101,8 @@ function Comics() {
     const price = await comics.methods
       .comics(await comics.methods.comicIdCounter().call())
       .call();
-    if (hasAggregatorFeed(blockchain)) {
+    console.log(price, hasAggregatorFeed(blockchain), "priceUSD");
+    if (!hasAggregatorFeed(blockchain)) {
       setPrice(price.price);
     } else {
       const Aggregator = getContract("Aggregator", NATIVEUSD, blockchain);

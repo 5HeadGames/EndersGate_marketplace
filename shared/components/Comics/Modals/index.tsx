@@ -257,7 +257,7 @@ const CartComic = ({
     user: { providerName },
   } = useUser();
   const { blockchain } = useBlockchain();
-
+  console.log(cart);
   const { showWallet } = useMagicLink();
   return (
     <div className="inline-block align-bottom text-left rounded-20 shadow-md transform transition-all sm:align-middle w-max sm:max-w-6xl">
@@ -364,10 +364,7 @@ const CartComic = ({
                 >
                   {priceNative}
                   <img
-                    src={
-                      `/images/${blockchain}.png`
-                      // :"icons/eth.png"
-                    }
+                    src={`/images/${blockchain}.png`}
                     className="w-3 h-3"
                     alt=""
                   />
@@ -411,23 +408,12 @@ const CartComic = ({
                 onClick={() => {
                   buy();
                 }}
-                className="w-auto px-6 py-2 flex justify-center items-center rounded-xl hover:border-green-button hover:bg-overlay hover:text-green-button border border-transparent-color-gray-200 cursor-pointer bg-green-button font-bold !text-overlay transition-all duration-500"
+                className="w-auto px-6 py-2 flex justify-center items-center rounded-xl hover:border-green-button hover:bg-overlay hover:!text-green-button border border-transparent-color-gray-200 cursor-pointer bg-green-button font-bold !text-overlay transition-all duration-500"
               >
                 Checkout
               </div>
             </div>
             {providerName === "magic" && (
-              <div
-                className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
-                onClick={() => {
-                  showWallet();
-                }}
-              >
-                <img src="icons/wallet.png" className="w-8 pb-2" alt="" /> Add
-                funds to your wallet
-              </div>
-            )}
-            {blockchain == "findora" && (
               <div
                 className="text-[12px] text-green-button pt-4 font-bold flex items-center justify-center gap-2 cursor-pointer"
                 onClick={() => {

@@ -40,7 +40,7 @@ export const navItems = [
     link: "/",
   },
   { name: "EXPLORE", link: "/marketplace" },
-  // { name: "COMICS", link: "/comics" },
+  { name: "COMICS", link: "/comics" },
   { name: "SHOP", link: "/shop" },
 ];
 

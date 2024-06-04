@@ -29,6 +29,7 @@ export const InputModal: React.FC<
   verifyValue,
   handleVerification,
   white,
+  required,
   reset,
   withoutX = false,
   ...props
@@ -54,7 +55,7 @@ export const InputModal: React.FC<
                 )}
               >
                 {(showLabel || labelVisible) && title}
-                <span className="text-alert-error">*</span>
+                {required && <span className="text-alert-error">*</span>}
               </Typography>
             </div>
           )}

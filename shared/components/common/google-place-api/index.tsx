@@ -138,6 +138,7 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
         rules={rules}
         error={errors}
         className={className}
+        required
       />
       <InputModal
         register={register}
@@ -145,6 +146,7 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
         id="pac-input"
         placeholder="Country"
         labelVisible
+        required
         title="Country"
         rules={rules}
         error={errors}
@@ -154,6 +156,7 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
         <InputModal
           register={register}
           name="city"
+          required
           id="pac-input"
           placeholder="City"
           labelVisible
@@ -169,6 +172,7 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
           placeholder="Zip Code"
           labelVisible
           title="Zip Code"
+          required
           rules={rules}
           error={errors}
           className={className}
@@ -182,6 +186,7 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
           id="pac-input"
           placeholder="Zone"
           labelVisible
+          required
           title="Zone"
           rules={rules}
           error={errors}
@@ -195,6 +200,7 @@ const GooglePlaceAPI: React.FC<PropsGooglePlaceAPI> = ({
           labelVisible
           title="N⁰ House"
           rules={rules}
+          required
           error={errors}
           className={className}
         />

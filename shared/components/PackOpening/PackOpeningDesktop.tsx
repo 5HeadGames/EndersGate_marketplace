@@ -33,6 +33,8 @@ export const PackOpening = ({
   const vidRef2 = React.useRef<any>(null);
   const vidRef3 = React.useRef<any>(null);
   const vidRef4 = React.useRef<any>(null);
+  const vidRef5 = React.useRef<any>(null);
+  const vidRef6 = React.useRef<any>(null);
 
   React.useEffect(() => {
     const audio: any = document.getElementsByClassName("videoPack");
@@ -67,6 +69,10 @@ export const PackOpening = ({
     vidRef3?.current?.play();
 
     vidRef4?.current?.play();
+
+    vidRef5?.current?.play();
+
+    vidRef6?.current?.play();
   };
 
   React.useEffect(() => {

@@ -71,7 +71,7 @@ export const PackOpeningMobile: React.FC<any> = ({
   return (
     <div
       className={clsx(
-        "w-screen h-screen relative overflow-hidden md:hidden flex flex-col h-screen",
+        "w-screen h-screen relative overflow-hidden md:hidden flex flex-col",
       )}
       style={{ backgroundColor: "#1e1a29" }}
     >

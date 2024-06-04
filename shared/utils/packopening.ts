@@ -58,5 +58,10 @@ export const getTypePackAnimation = (id, cards) => {
       } else {
         return 1;
       }
+    case 4:
+      return 1;
+
+    case 5:
+      return 1;
   }
 };

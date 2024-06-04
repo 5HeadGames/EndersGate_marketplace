@@ -75,14 +75,14 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
           <p className="text-center text-white text-md py-4">
             Where do you want us to ship your physical comics to?
           </p>
-          <div className="flex flex-col pb-6">
+          {/* <div className="flex flex-col pb-6">
             <h2 className="text-green-button text-center font-bold text-2xl">
               LIMITED: {comicsLimit - currentComicsSupply}/{comicsLimit} Left
             </h2>
             <span className="text-yellow-600 text-center text-sm">
               Split across 3 Blockchains
             </span>
-          </div>
+          </div> */}
           <div className="flex flex-col items-center justify-center gap-5 w-full">
             <InputModal
               type="text"
@@ -92,6 +92,7 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
               register={register}
               labelVisible
               error={errors.name}
+              required
               rules={{
                 required: {
                   value: true,
@@ -104,6 +105,7 @@ export const useModalAddressUser = ({ onSubmit, noClose, onClose }) => {
               title="Email"
               placeholder="Your email address"
               name="email"
+              required
               register={register}
               labelVisible
               error={errors.email}

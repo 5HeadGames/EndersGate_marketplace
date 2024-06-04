@@ -177,19 +177,6 @@ export const CHAINS: {
     blockExplorer: "https://polygonscan.com",
     type: "mainnet",
   },
-
-  80001: {
-    urls: [
-      process.env.NEXT_PUBLIC_POLYGON_PROVIDER || "",
-      "https://rpc-mumbai.maticvigil.com",
-    ].filter((url) => url !== ""),
-    rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
-    name: "Polygon Mumbai",
-    nativeCurrency: MATIC,
-    blockExplorerUrls: ["https://mumbai.polygonscan.com"],
-    blockExplorer: "https://mumbai.polygonscan.com",
-    type: "testnet",
-  },
 };
 
 export const MAINNET_CHAIN_IDS = Object.keys(CHAINS)
@@ -269,11 +256,11 @@ export const blockchains = [
   //   value: "findora",
   //   image: "/images/findora.png",
   // },
-  {
-    name: "INMUTABLE X",
-    value: "imx",
-    image: "/images/imx.png",
-  },
+  // {
+  //   name: "INMUTABLE X",
+  //   value: "imx",
+  //   image: "/images/imx.png",
+  // },
   {
     name: "NEBULA HUB",
     value: "skl",

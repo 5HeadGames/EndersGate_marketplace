@@ -161,14 +161,14 @@ function RecentlyAddedComic({ price, getPriceMatic, balance, showCart }) {
               enjoy free global shipping and receive a physical printed copy
               delivered right to your doorstep!
             </p>
-            <div className="flex flex-col pb-6">
+            {/* <div className="flex flex-col pb-6">
               <h2 className="text-green-button text-center font-bold text-2xl">
                 LIMITED: {comicsLimit - currentComicsSupply}/{comicsLimit} Left
               </h2>
               <span className="text-yellow-600 text-center text-sm">
                 Split across 3 Blockchains
               </span>
-            </div>
+            </div> */}
             {nftModal.balance > 0 ? (
               <Button
                 decoration="greenLine"
