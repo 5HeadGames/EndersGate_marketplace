@@ -201,7 +201,7 @@ export const TESTNET_CHAIN_IDS = Object.keys(CHAINS)
 export const CHAIN_IDS_BY_NAME: {
   [chain: string]: any;
 } = {
-  matic: process.env.NEXT_PUBLIC_ENV === "production" ? 137 : 80001,
+  matic: process.env.NEXT_PUBLIC_ENV === "production" ? 137 : 80002,
   eth: process.env.NEXT_PUBLIC_ENV === "production" ? 1 : 11155111,
   imx: process.env.NEXT_PUBLIC_ENV === "production" ? 13371 : 13472,
   skl: process.env.NEXT_PUBLIC_ENV === "production" ? 1482601649 : 503129905,
@@ -216,7 +216,7 @@ export const CHAIN_NAME_BY_ID: {
   59140: "linea",
   59144: "linea",
   137: "matic",
-  80001: "matic",
+  80002: "matic",
   1: "eth",
   11155111: "eth",
   13472: "imx",

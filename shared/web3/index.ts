@@ -251,10 +251,11 @@ export const switchChain = async (network) => {
         });
         return true;
       } catch (error) {
-        console.log(error);
+        console.log(error, "ERROR SWITCHING CHAIN");
         return false;
       }
     }
+    console.log(err, "ERROR SWITCHING CHAIN");
     return false;
   }
 };

@@ -26,7 +26,7 @@ const [walletConnect, walletConnectHooks] = initializeConnector<WalletConnect>(
       actions,
       options: {
         rpc: {
-          "80001": process.env.NEXT_PUBLIC_POLYGON_PROVIDER as any,
+          "80002": process.env.NEXT_PUBLIC_POLYGON_PROVIDER as any,
         },
       },
     }),
@@ -79,7 +79,7 @@ export const [network, networkHooks] = initializeConnector<Network>(
     new Network({
       actions,
       urlMap: {
-        "80001": "",
+        "80002": "",
       },
     }),
 );

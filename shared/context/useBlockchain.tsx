@@ -26,6 +26,7 @@ export const BlockchainContextProvider = ({ children }: any) => {
       if (providerName == "magic") {
       } else {
         const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+        console.log(CHAIN_IDS_BY_NAME[blockchain]);
         if (!changed) {
           throw Error(
             "An error has occurred while switching chain, please try again.",
