@@ -373,25 +373,23 @@ export const onGetAssets = createAsyncThunk(
         .map((card, i) => i);
       if (blockchain !== "eth") {
         const { endersGate, pack, rent, comics } = getAddresses(blockchain);
-
+        console.log(blockchain, address, "AAAA");
         const cardsContract = getContract("EndersGate", endersGate, blockchain);
         const packsContract = getContract("EndersPack", pack, blockchain);
         const rentContract = getContract("Rent", rent, blockchain);
-        let comicsContract;
+        let comicsContract, comicsLength, comicsIds;
         if (comics) {
           comicsContract = getContract(
             getNativeBlockchain(blockchain) ? "ComicsNative" : "Comics",
             comics,
             blockchain,
           );
-        }
-        const comicsLength = await comicsContract.methods
-          .comicIdCounter()
-          .call();
+          comicsLength = await comicsContract.methods.comicIdCounter().call();
 
-        const comicsIds = new Array(parseInt(comicsLength))
-          .fill(1)
-          .map((a, i) => i + 1);
+          comicsIds = new Array(parseInt(comicsLength))
+            .fill(1)
+            .map((a, i) => i + 1);
+        }
 
         const balancePacks = await packsContract.methods
           .balanceOfBatch(
@@ -405,13 +403,15 @@ export const onGetAssets = createAsyncThunk(
             cardsIds,
           )
           .call();
-
-        const balanceComics = await comicsContract.methods
-          .balanceOfBatch(
-            comicsIds.map(() => address),
-            comicsIds,
-          )
-          .call();
+        let balanceComics = [];
+        if (comics) {
+          balanceComics = await comicsContract.methods
+            .balanceOfBatch(
+              comicsIds.map(() => address),
+              comicsIds,
+            )
+            .call();
+        }
 
         let balanceWrapped: any = [];
 
@@ -421,7 +421,32 @@ export const onGetAssets = createAsyncThunk(
             cardsIds,
           )
           .call();
-
+        console.log(
+          {
+            balanceCards: cardsIds.map((id, i) => ({
+              id,
+              balance: balanceCards[i],
+            })),
+            balancePacks: packsIds.map((id, i) => ({
+              id,
+              balance: balancePacks[i],
+            })),
+            balanceWrapped: cardsIds.map((id, i) => ({
+              id,
+              balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
+            })),
+            balanceComics: comicsIds
+              ? comicsIds?.map((id, i) => ({
+                  id,
+                  balance: balanceComics[i],
+                }))
+              : [],
+          },
+          "GET ASSETS",
+          address,
+          pack,
+          blockchain,
+        );
         return {
           balanceCards: cardsIds.map((id, i) => ({
             id,
@@ -435,10 +460,12 @@ export const onGetAssets = createAsyncThunk(
             id,
             balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
           })),
-          balanceComics: comicsIds.map((id, i) => ({
-            id,
-            balance: balanceComics[i],
-          })),
+          balanceComics: comicsIds
+            ? comicsIds?.map((id, i) => ({
+                id,
+                balance: balanceComics[i],
+              }))
+            : [],
         };
       } else {
         const { comics } = getAddresses(blockchain);

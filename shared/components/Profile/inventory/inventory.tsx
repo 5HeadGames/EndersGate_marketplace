@@ -42,10 +42,12 @@ const Inventory = () => {
   const cards = convertArrayCards();
 
   React.useEffect(() => {
+    console.log(ethAddress);
     dispatch(onGetAssets({ address: ethAddress, blockchain }));
   }, [user, ethAddress, blockchain]);
 
   React.useEffect(() => {
+    console.log(nfts);
     const arrayPacks: any = [];
     nfts.balancePacks.forEach((pack: any, index: any) => {
       arrayPacks.push({
