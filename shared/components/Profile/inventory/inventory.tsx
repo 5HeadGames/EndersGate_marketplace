@@ -64,9 +64,9 @@ const Inventory = () => {
             : index === 3
             ? "Legendary Pack"
             : index === 4
-            ? "New 4 Pack"
+            ? "Ultraman Hero Edition Pack"
             : index === 5
-            ? "New 5 Pack"
+            ? "Ultraman Villian Edition Pack"
             : "New 6 Pack",
       });
     });
