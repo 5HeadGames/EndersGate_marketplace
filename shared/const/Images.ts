@@ -3,4 +3,7 @@ export enum Images {
   pack2 = "/images/1.png",
   pack3 = "/images/2.png",
   pack4 = "/images/3.png",
+  pack5 = "/images/3.png",
+  pack6 = "/images/3.png",
+  pack7 = "/images/3.png",
 }

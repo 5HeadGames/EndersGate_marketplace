@@ -60,6 +60,17 @@ export const packsShop = [
       "This pack contains 5 cards with guaranteed Legendary Rarity Guardians, Gold Cards, and Action Cards. Additionally, you have a 30% chance of receiving a Reaction Card, a 20% chance of obtaining a Stone Rarity Guardian Card, and another 30% chance of getting an Iron Rarity Guardian Card.",
     index: 3,
   },
+  {
+    name: "LEGENDARY NFT PACK",
+    nameList: "LEGENDARY BOOSTER PACK",
+    imageList: "./images/shop/legendary.png",
+    imagePack: "./images/3.png",
+    color: "#8AE98C",
+    currentPrice: "$199.99",
+    description:
+      "This pack contains 5 cards with guaranteed Legendary Rarity Guardians, Gold Cards, and Action Cards. Additionally, you have a 30% chance of receiving a Reaction Card, a 20% chance of obtaining a Stone Rarity Guardian Card, and another 30% chance of getting an Iron Rarity Guardian Card.",
+    index: 4,
+  },
 ];
 
 export const updateSales = async ({ blockchain, shopAddress, setSales }) => {

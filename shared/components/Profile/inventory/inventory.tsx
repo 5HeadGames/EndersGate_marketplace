@@ -53,14 +53,7 @@ const Inventory = () => {
       arrayPacks.push({
         id: pack.id,
         quantity: pack.balance,
-        image:
-          index === 0
-            ? Images.pack1
-            : index === 1
-            ? Images.pack2
-            : index === 2
-            ? Images.pack3
-            : Images.pack4,
+        image: Images[`pack${index + 1}`],
         name:
           index === 0
             ? "Common Pack"
@@ -68,7 +61,13 @@ const Inventory = () => {
             ? "Rare Pack"
             : index === 2
             ? "Epic Pack"
-            : "Legendary Pack",
+            : index === 3
+            ? "Legendary Pack"
+            : index === 4
+            ? "New 4 Pack"
+            : index === 5
+            ? "New 5 Pack"
+            : "New 6 Pack",
       });
     });
     setInventoryPacks(arrayPacks);

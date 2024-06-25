@@ -16,6 +16,7 @@ import {
   getSFUEL,
 } from "@shared/web3";
 import cards from "../../cards.json";
+import packs from "../../shared/packs.json";
 import {
   CHAIN_NAME_BY_ID,
   MAINNET_CHAIN_IDS,
@@ -367,13 +368,12 @@ export const onGetAssets = createAsyncThunk(
   async function prepare({ address, blockchain }: any) {
     try {
       if (!address) throw new Error("No address provided");
-      const packsIds = [0, 1, 2, 3];
+      const packsIds = packs.map(({ properties }) => properties.id.value);
       const cardsIds = Object.values(cards)
         .reduce((acc: any[], cur) => acc.concat(cur), [])
         .map((card, i) => i);
       if (blockchain !== "eth") {
         const { endersGate, pack, rent, comics } = getAddresses(blockchain);
-        console.log(blockchain, address, "AAAA");
         const cardsContract = getContract("EndersGate", endersGate, blockchain);
         const packsContract = getContract("EndersPack", pack, blockchain);
         const rentContract = getContract("Rent", rent, blockchain);
@@ -421,32 +421,7 @@ export const onGetAssets = createAsyncThunk(
             cardsIds,
           )
           .call();
-        console.log(
-          {
-            balanceCards: cardsIds.map((id, i) => ({
-              id,
-              balance: balanceCards[i],
-            })),
-            balancePacks: packsIds.map((id, i) => ({
-              id,
-              balance: balancePacks[i],
-            })),
-            balanceWrapped: cardsIds.map((id, i) => ({
-              id,
-              balance: balanceWrapped.length > 0 ? balanceWrapped[i] : 0,
-            })),
-            balanceComics: comicsIds
-              ? comicsIds?.map((id, i) => ({
-                  id,
-                  balance: balanceComics[i],
-                }))
-              : [],
-          },
-          "GET ASSETS",
-          address,
-          pack,
-          blockchain,
-        );
+
         return {
           balanceCards: cardsIds.map((id, i) => ({
             id,
