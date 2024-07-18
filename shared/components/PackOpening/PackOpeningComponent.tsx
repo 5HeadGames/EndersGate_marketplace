@@ -35,11 +35,13 @@ export const PackOpeningComponent: React.FC<any> = ({
   const { Modal, show, isShow } = useModal();
 
   const openPack = async (index: any, id: any) => {
+    console.log("open");
     setIsLoadingPack(true);
     setOpeningPack(true);
     setPackAnimation(id);
     try {
       const web3 = await getWeb3();
+      console.log("unpack");
       await packContract.methods.unpack(id, 1).send({ from: account });
       const block = await web3.eth.getBlockNumber();
       const eventsTransfer = await NFTContract.getPastEvents("TransferSingle", {
@@ -52,7 +54,7 @@ export const PackOpeningComponent: React.FC<any> = ({
       });
 
       const pack = eventsTransfer.slice(
-        eventsTransfer.length - 5,
+        id >= 4 ? eventsTransfer.length - 10 : eventsTransfer.length - 5,
         eventsTransfer.length,
       );
       setHistory(
@@ -60,6 +62,7 @@ export const PackOpeningComponent: React.FC<any> = ({
           return { txHash, id: returnValues.id };
         }),
       );
+      console.log(pack);
       const packIDs: any = [];
       pack.forEach((card: any) => {
         packIDs.push(card.returnValues.id);

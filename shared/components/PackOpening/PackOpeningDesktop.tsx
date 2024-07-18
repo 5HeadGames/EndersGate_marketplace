@@ -299,11 +299,32 @@ export const PackOpening = ({
           </div>
           {video && (
             <div
+              id="container-cards"
               className={clsx(
-                videoPlaying !== 3
-                  ? ["hidden"]
-                  : "absolute top-0 bottom-0 left-0 right-0 m-auto flex overflow-x-auto items-center md:justify-center z-0 md:gap-10 gap-6 w-full h-screen px-10",
+                { ["hidden"]: videoPlaying !== 3 },
+                {
+                  "absolute top-0 bottom-0 left-0 right-0 m-auto flex overflow-x-auto items-center z-0 md:gap-10 gap-6 w-full h-screen px-10":
+                    videoPlaying === 3,
+                },
+
+                {
+                  "md:justify-center": cardsPack.length <= 5,
+                },
+
+                {
+                  "justify-start px-10": cardsPack.length > 5,
+                },
               )}
+              onWheel={(e) => {
+                e.preventDefault();
+                let container = document.getElementById("container-cards");
+                let containerScrollPosition =
+                  document?.getElementById("container-cards")?.scrollLeft;
+                container?.scrollTo({
+                  top: 0,
+                  left: (containerScrollPosition ?? 0) + e.deltaY,
+                });
+              }}
             >
               {cardsPack.map((id: number, index: number) => {
                 return (

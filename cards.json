@@ -3311,6 +3311,331 @@
         }
       ],
       "typeCard": "action"
+    },
+    {
+      "name": "Edo's Contingency Plan",
+      "type": "ERC1155",
+      "description": "Flip: When your opponent declares an attack during their Battle Phase, you can activate this card to negate the attack and summon one Ultraman from your hand or deck to the field. Upon activation, Gain 1 Ultra Factor Stacks.",
+      "image": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 248
+        },
+        "name": {
+          "name": "name",
+          "value": "Edo's Contingency Plan"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/action.png"
+        },
+        "type": {
+          "name": "type",
+          "value": "Flip Counter"
+        },
+        "ADOTurn": {
+          "name": "ADOTurn",
+          "value": "YES"
+        },
+        "rarity": {
+          "name": "rarity",
+          "value": "Ultra Rare"
+        },
+        "element": {
+          "name": "element"
+        },
+        "role": {
+          "name": "role"
+        },
+        "race": {
+          "name": "race"
+        },
+        "attack": {
+          "name": "attack"
+        },
+        "hp": {
+          "name": "hp"
+        },
+        "gold": {
+          "name": "gold"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "248"
+        },
+        {
+          "trait_type": "name",
+          "value": "Edo's Contingency Plan"
+        },
+        {
+          "trait_type": "description",
+          "value": "Flip: When your opponent declares an attack during their Battle Phase, you can activate this card to negate the attack and summon one Ultraman from your hand or deck to the field. Upon activation, Gain 1 Ultra Factor Stacks."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link"
+        },
+
+        {
+          "trait_type": "type",
+          "value": "Flip Counter"
+        },
+        {
+          "trait_type": "ADOTurn",
+          "value": "YES"
+        },
+        {
+          "trait_type": "rarity",
+          "value": "Ultra Rare"
+        },
+        {
+          "trait_type": "element"
+        },
+        {
+          "trait_type": "role"
+        },
+        {
+          "trait_type": "race"
+        },
+        {
+          "trait_type": "attack"
+        },
+        {
+          "trait_type": "hp"
+        },
+        {
+          "trait_type": "gold"
+        }
+      ],
+      "typeCard": "action"
+    },
+    {
+      "name": "Limiter Release",
+      "type": "ERC1155",
+      "description": "Equip to an Ultraman Guardian. Gain 1 Limiter Counter during each Standby Phase. While this card has Limiter Counters, double the equipped Guardian's ATK & HP. After 3 turns, cut the ATK & HP of the equipped card to half of its original value.",
+      "image": "https://bafybeiex2ub4mki4jj624vfl3kfgyx3ieurf2y2zrxcweozbtpqgt3qwca.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 246
+        },
+        "name": {
+          "name": "name",
+          "value": "Limiter Release"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeiex2ub4mki4jj624vfl3kfgyx3ieurf2y2zrxcweozbtpqgt3qwca.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/action.png"
+        },
+        "type": {
+          "name": "type",
+          "value": "Equip"
+        },
+        "ADOTurn": {
+          "name": "ADOTurn",
+          "value": "NO"
+        },
+        "rarity": {
+          "name": "rarity",
+          "value": "Ultra Rare"
+        },
+        "element": {
+          "name": "element"
+        },
+        "role": {
+          "name": "role"
+        },
+        "race": {
+          "name": "race"
+        },
+        "attack": {
+          "name": "attack"
+        },
+        "hp": {
+          "name": "hp"
+        },
+        "gold": {
+          "name": "gold"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "246"
+        },
+        {
+          "trait_type": "name",
+          "value": "Limiter Release"
+        },
+        {
+          "trait_type": "description",
+          "value": "Equip to an Ultraman Guardian. Gain 1 Limiter Counter during each Standby Phase. While this card has Limiter Counters, double the equipped Guardian's ATK & HP. After 3 turns, cut the ATK & HP of the equipped card to half of its original value."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeiex2ub4mki4jj624vfl3kfgyx3ieurf2y2zrxcweozbtpqgt3qwca.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "type",
+          "value": "Equip"
+        },
+        {
+          "trait_type": "ADOTurn",
+          "value": "NO"
+        },
+        {
+          "trait_type": "rarity",
+          "value": "Ultra Rare"
+        },
+        {
+          "trait_type": "element"
+        },
+        {
+          "trait_type": "role"
+        },
+        {
+          "trait_type": "race"
+        },
+        {
+          "trait_type": "attack"
+        },
+        {
+          "trait_type": "hp"
+        },
+        {
+          "trait_type": "gold"
+        }
+      ],
+      "typeCard": "action"
+    },
+    {
+      "name": "Eye Slugger Assault",
+      "type": "ERC1155",
+      "description": "Activate during your Main Phase, Select up to 3 Guardians on your opponent's field. Discard 1 Guardian card to deal damage equal to its ATK to each selected Guardian. Gain 1 Ultra Factor Stack for each destroyed Guardian.",
+      "image": "https://bafybeig2w2g43syd32ickgm4v4iukyqtojl6o2f2qij3cji3tx6tmlrc34.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 245
+        },
+        "name": {
+          "name": "name",
+          "value": "Eye Slugger Assault"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeig2w2g43syd32ickgm4v4iukyqtojl6o2f2qij3cji3tx6tmlrc34.ipfs.nftstorage.link"
+        },
+        "type": {
+          "name": "type",
+          "value": "Normal Action"
+        },
+        "ADOTurn": {
+          "name": "ADOTurn",
+          "value": "NO"
+        },
+        "rarity": {
+          "name": "rarity",
+          "value": "Ultra Rare"
+        },
+        "element": {
+          "name": "element"
+        },
+        "role": {
+          "name": "role"
+        },
+        "race": {
+          "name": "race"
+        },
+        "attack": {
+          "name": "attack"
+        },
+        "hp": {
+          "name": "hp"
+        },
+        "gold": {
+          "name": "gold"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/action.png"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "245"
+        },
+        {
+          "trait_type": "name",
+          "value": "Eye Slugger Assault"
+        },
+        {
+          "trait_type": "description",
+          "value": "Activate during your Main Phase, Select up to 3 Guardians on your opponent's field. Discard 1 Guardian card to deal damage equal to its ATK to each selected Guardian. Gain 1 Ultra Factor Stack for each destroyed Guardian."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeig2w2g43syd32ickgm4v4iukyqtojl6o2f2qij3cji3tx6tmlrc34.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "type",
+          "value": "Normal Action"
+        },
+        {
+          "trait_type": "ADOTurn",
+          "value": "NO"
+        },
+        {
+          "trait_type": "rarity",
+          "value": "Ultra Rare"
+        },
+        {
+          "trait_type": "element"
+        },
+        {
+          "trait_type": "role"
+        },
+        {
+          "trait_type": "race"
+        },
+        {
+          "trait_type": "attack"
+        },
+        {
+          "trait_type": "hp"
+        },
+        {
+          "trait_type": "gold"
+        }
+      ],
+      "typeCard": "action"
     }
   ],
   "reaction": [
@@ -6260,6 +6585,330 @@
         {
           "trait_type": "image",
           "value": "https://bafybeibzcegbmqkijvmehwgkezz4rltzgr3tfqjshzh7bvkgnzqbejiyw4.ipfs.nftstorage.link/VOID%20OVERLOAD%20FRONT.webp"
+        }
+      ],
+      "typeCard": "reaction"
+    },
+    {
+      "name": "Unorthodox Intel",
+      "type": "ERC1155",
+      "description": "During your Main Phase, select one Guardian on your opponent's side of the field. Increase the damage it takes by 25%. Upon successful activation, hire one Villain from your hand or deck to the field.",
+      "image": "https://bafybeigcstqvgxcf3bolxtflz6nemsqctlduqsqa5gr5juv77edtrzxnmq.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 250
+        },
+        "name": {
+          "name": "name",
+          "value": "Unorthodox Intel"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeigcstqvgxcf3bolxtflz6nemsqctlduqsqa5gr5juv77edtrzxnmq.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/action.png"
+        },
+        "type": {
+          "name": "type",
+          "value": "Normal Reaction"
+        },
+        "ADOTurn": {
+          "name": "ADOTurn",
+          "value": "NO"
+        },
+        "rarity": {
+          "name": "rarity",
+          "value": "Ultra Rare"
+        },
+        "element": {
+          "name": "element"
+        },
+        "role": {
+          "name": "role"
+        },
+        "race": {
+          "name": "race"
+        },
+        "attack": {
+          "name": "attack"
+        },
+        "hp": {
+          "name": "hp"
+        },
+        "gold": {
+          "name": "gold"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "250"
+        },
+        {
+          "trait_type": "name",
+          "value": "Unorthodox Intel"
+        },
+        {
+          "trait_type": "description",
+          "value": "During your Main Phase, select one Guardian on your opponent's side of the field. Increase the damage it takes by 25%. Upon successful activation, hire one Villain from your hand or deck to the field."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeigcstqvgxcf3bolxtflz6nemsqctlduqsqa5gr5juv77edtrzxnmq.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "type",
+          "value": "Normal Reaction"
+        },
+        {
+          "trait_type": "ADOTurn",
+          "value": "NO"
+        },
+        {
+          "trait_type": "rarity",
+          "value": "Ultra Rare"
+        },
+        {
+          "trait_type": "element"
+        },
+        {
+          "trait_type": "role"
+        },
+        {
+          "trait_type": "race"
+        },
+        {
+          "trait_type": "attack"
+        },
+        {
+          "trait_type": "hp"
+        },
+        {
+          "trait_type": "gold"
+        }
+      ],
+      "typeCard": "reaction"
+    },
+    {
+      "name": "Ultra Reinforcements",
+      "type": "ERC1155",
+      "description": "Flip: When you control no guardians on your side of the field, you can discard up to 2 cards from your hand to the graveyard to hire up to 2 Ultraman guardians from your hand or deck to the field.",
+      "image": "https://bafybeie2q5kbtaf4h2z5gzmoru5fdjsms63q2ainxsxzdggbpwozpnsk5a.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 249
+        },
+        "name": {
+          "name": "name",
+          "value": "Ultra Reinforcements"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeie2q5kbtaf4h2z5gzmoru5fdjsms63q2ainxsxzdggbpwozpnsk5a.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/action.png"
+        },
+        "type": {
+          "name": "type",
+          "value": "Normal Reaction"
+        },
+        "ADOTurn": {
+          "name": "ADOTurn",
+          "value": "NO"
+        },
+        "rarity": {
+          "name": "rarity",
+          "value": "Ultra Rare"
+        },
+        "element": {
+          "name": "element"
+        },
+        "role": {
+          "name": "role"
+        },
+        "race": {
+          "name": "race"
+        },
+        "attack": {
+          "name": "attack"
+        },
+        "hp": {
+          "name": "hp"
+        },
+        "gold": {
+          "name": "gold"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "249"
+        },
+        {
+          "trait_type": "name",
+          "value": "Ultra Reinforcements"
+        },
+        {
+          "trait_type": "description",
+          "value": "Flip: When you control no guardians on your side of the field, you can discard up to 2 cards from your hand to the graveyard to hire up to 2 Ultraman guardians from your hand or deck to the field."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeie2q5kbtaf4h2z5gzmoru5fdjsms63q2ainxsxzdggbpwozpnsk5a.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "type",
+          "value": "Normal Reaction"
+        },
+        {
+          "trait_type": "ADOTurn",
+          "value": "NO"
+        },
+        {
+          "trait_type": "rarity",
+          "value": "Ultra Rare"
+        },
+        {
+          "trait_type": "element"
+        },
+        {
+          "trait_type": "role"
+        },
+        {
+          "trait_type": "race"
+        },
+        {
+          "trait_type": "attack"
+        },
+        {
+          "trait_type": "hp"
+        },
+        {
+          "trait_type": "gold"
+        }
+      ],
+      "typeCard": "reaction"
+    },
+    {
+      "name": "Edo's Contingency Plan",
+      "type": "ERC1155",
+      "description": "Flip: When your opponent declares an attack during their Battle Phase, you can activate this card to negate the attack and summon one Ultraman from your hand or deck to the field. Upon activation, Gain 1 Ultra Factor Stacks.",
+      "image": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 248
+        },
+        "name": {
+          "name": "name",
+          "value": "Edo's Contingency Plan"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/action.png"
+        },
+        "type": {
+          "name": "type",
+          "value": "Flip Counter"
+        },
+        "ADOTurn": {
+          "name": "ADOTurn",
+          "value": "YES"
+        },
+        "rarity": {
+          "name": "rarity",
+          "value": "Ultra Rare"
+        },
+        "element": {
+          "name": "element"
+        },
+        "role": {
+          "name": "role"
+        },
+        "race": {
+          "name": "race"
+        },
+        "attack": {
+          "name": "attack"
+        },
+        "hp": {
+          "name": "hp"
+        },
+        "gold": {
+          "name": "gold"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "248"
+        },
+        {
+          "trait_type": "name",
+          "value": "Edo's Contingency Plan"
+        },
+        {
+          "trait_type": "description",
+          "value": "Flip: When your opponent declares an attack during their Battle Phase, you can activate this card to negate the attack and summon one Ultraman from your hand or deck to the field. Upon activation, Gain 1 Ultra Factor Stacks."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "type",
+          "value": "Flip Counter"
+        },
+        {
+          "trait_type": "ADOTurn",
+          "value": "YES"
+        },
+        {
+          "trait_type": "rarity",
+          "value": "Ultra Rare"
+        },
+        {
+          "trait_type": "element"
+        },
+        {
+          "trait_type": "role"
+        },
+        {
+          "trait_type": "race"
+        },
+        {
+          "trait_type": "attack"
+        },
+        {
+          "trait_type": "hp"
+        },
+        {
+          "trait_type": "gold"
         }
       ],
       "typeCard": "reaction"
@@ -14403,6 +15052,966 @@
         }
       ],
       "typeCard": "legendary"
+    },
+    {
+      "name": "Verokron",
+      "type": "ERC1155",
+      "description": "[Beast | Villain] “Mouth Beam” Activate: During your MP1/MP2, select up to 2 Guardians on your opponent’s side of the field. If attacked by them, deal 25% of the DMG received directly to your opponent’s LP.\nUpon activation, Gain 2 Ultra Factor Stacks.",
+      "image": "https://bafybeigpufllbxsfp5kjbazjz44ny3b56akrzuqjjnor6cy2md4iiyemfq.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 244
+        },
+        "name": {
+          "name": "name",
+          "value": "Verokron"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeigpufllbxsfp5kjbazjz44ny3b56akrzuqjjnor6cy2md4iiyemfq.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/legendary.png"
+        },
+        "element": {
+          "name": "element",
+          "value": "Fire"
+        },
+        "role": {
+          "name": "role",
+          "value": "Villain"
+        },
+        "race": {
+          "name": "race",
+          "value": "Beast"
+        },
+        "attack": {
+          "name": "attack",
+          "value": "300"
+        },
+        "hp": {
+          "name": "hp",
+          "value": "300"
+        },
+        "gold": {
+          "name": "gold",
+          "value": "550"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "244"
+        },
+        {
+          "trait_type": "name",
+          "value": "Verokron"
+        },
+        {
+          "trait_type": "description",
+          "value": "[Beast | Villain] “Mouth Beam” Activate: During your MP1/MP2, select up to 2 Guardians on your opponent’s side of the field. If attacked by them, deal 25% of the DMG received directly to your opponent’s LP.\nUpon activation, Gain 2 Ultra Factor Stacks."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeigpufllbxsfp5kjbazjz44ny3b56akrzuqjjnor6cy2md4iiyemfq.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "element",
+          "value": "Fire"
+        },
+        {
+          "trait_type": "role",
+          "value": "Villain"
+        },
+        {
+          "trait_type": "race",
+          "value": "Beast"
+        },
+        {
+          "trait_type": "attack",
+          "value": "300"
+        },
+        {
+          "trait_type": "hp",
+          "value": "300"
+        },
+        {
+          "trait_type": "gold",
+          "value": "550"
+        }
+      ],
+      "typeCard": "legendary"
+    },
+    {
+      "name": "Alien Bris",
+      "type": "ERC1155",
+      "description": "[Alien | Villain] “Shock Wave” Activate: During your MP1/MP2, select 1 Guardian on your opponent’s side of the field,Drop their hit chance by 25%.\nUpon activation, Gain 1 Ultra Factor Stacks.\nPassive: Immune to dmg in the battle phase.",
+      "image": "https://bafybeibfbgnvrljgjitu4byq5j6wfrmrb3xkvjqmkpbfdbtmd6fjy555re.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 243
+        },
+        "name": {
+          "name": "name",
+          "value": "Alien Bris"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeibfbgnvrljgjitu4byq5j6wfrmrb3xkvjqmkpbfdbtmd6fjy555re.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/legendary.png"
+        },
+        "element": {
+          "name": "element",
+          "value": "Void"
+        },
+        "role": {
+          "name": "role",
+          "value": "Villain"
+        },
+        "race": {
+          "name": "race",
+          "value": "Alien"
+        },
+        "attack": {
+          "name": "attack",
+          "value": "100"
+        },
+        "hp": {
+          "name": "hp",
+          "value": "100"
+        },
+        "gold": {
+          "name": "gold",
+          "value": "450"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "243"
+        },
+        {
+          "trait_type": "name",
+          "value": "Alien Bris"
+        },
+        {
+          "trait_type": "description",
+          "value": "[Alien | Villain] “Shock Wave” Activate: During your MP1/MP2, select 1 Guardian on your opponent’s side of the field,Drop their hit chance by 25%.\nUpon activation, Gain 1 Ultra Factor Stacks.\nPassive: Immune to dmg in the battle phase."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeibfbgnvrljgjitu4byq5j6wfrmrb3xkvjqmkpbfdbtmd6fjy555re.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "element",
+          "value": "Void"
+        },
+        {
+          "trait_type": "role",
+          "value": "Villain"
+        },
+        {
+          "trait_type": "race",
+          "value": "Alien"
+        },
+        {
+          "trait_type": "attack",
+          "value": "100"
+        },
+        {
+          "trait_type": "hp",
+          "value": "100"
+        },
+        {
+          "trait_type": "gold",
+          "value": "450"
+        }
+      ],
+      "typeCard": "legendary"
+    },
+    {
+      "name": "Alien Nepenthes",
+      "type": "ERC1155",
+      "description": "[Alien | Villain] “Weed Strangle” Activate: During your MP1/MP2, select 2 Guardians on either side of the field, disable their atk and double DMG received for for 2 turns. Cooldown: 2 turns.\nUpon activation, Gain 2 Ultra Factor Stacks.",
+      "image": "https://bafybeicpookyxkjroch4nlugp5tinqum3owbfu7udvb7u2o2tspfmbsgam.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 242
+        },
+        "name": {
+          "name": "name",
+          "value": "Alien Nepenthes"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeicpookyxkjroch4nlugp5tinqum3owbfu7udvb7u2o2tspfmbsgam.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/legendary.png"
+        },
+        "element": {
+          "name": "element",
+          "value": "Venom"
+        },
+        "role": {
+          "name": "role",
+          "value": "Villain"
+        },
+        "race": {
+          "name": "race",
+          "value": "Alien"
+        },
+        "attack": {
+          "name": "attack",
+          "value": "200"
+        },
+        "hp": {
+          "name": "hp",
+          "value": "200"
+        },
+        "gold": {
+          "name": "gold",
+          "value": "425"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "242"
+        },
+        {
+          "trait_type": "name",
+          "value": "Alien Nepenthes"
+        },
+        {
+          "trait_type": "description",
+          "value": "[Alien | Villain] “Weed Strangle” Activate: During your MP1/MP2, select 2 Guardians on either side of the field, disable their atk and double DMG received for for 2 turns. Cooldown: 2 turns.\nUpon activation, Gain 2 Ultra Factor Stacks."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeicpookyxkjroch4nlugp5tinqum3owbfu7udvb7u2o2tspfmbsgam.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "element",
+          "value": "Venom"
+        },
+        {
+          "trait_type": "role",
+          "value": "Villain"
+        },
+        {
+          "trait_type": "race",
+          "value": "Alien"
+        },
+        {
+          "trait_type": "attack",
+          "value": "200"
+        },
+        {
+          "trait_type": "hp",
+          "value": "200"
+        },
+        {
+          "trait_type": "gold",
+          "value": "425"
+        }
+      ],
+      "typeCard": "legendary"
+    },
+    {
+      "name": "Alien Adacic",
+      "type": "ERC1155",
+      "description": "[Alien | Villain] “Plasma Shots” Activate: During your MP1/MP2, select 2 Guardians on your opponent’s side of the field and deal 50% of Alien Adacic’s current ATK as DMG to them.\nUpon activation, Gain 2 Ultra Factor Stacks.",
+      "image": "https://bafybeihlw4jc3vste7pwhs3w5j64echlunl5jnqar6crxzlrixzeapasge.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 241
+        },
+        "name": {
+          "name": "name",
+          "value": "Alien Adacic"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeihlw4jc3vste7pwhs3w5j64echlunl5jnqar6crxzlrixzeapasge.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/legendary.png"
+        },
+        "element": {
+          "name": "element",
+          "value": "Void"
+        },
+        "role": {
+          "name": "role",
+          "value": "Villain"
+        },
+        "race": {
+          "name": "race",
+          "value": "Alien"
+        },
+        "attack": {
+          "name": "attack",
+          "value": "120"
+        },
+        "hp": {
+          "name": "hp",
+          "value": "200"
+        },
+        "gold": {
+          "name": "gold",
+          "value": "410"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "241"
+        },
+        {
+          "trait_type": "name",
+          "value": "Alien Adacic"
+        },
+        {
+          "trait_type": "description",
+          "value": "[Alien | Villain] “Plasma Shots” Activate: During your MP1/MP2, select 2 Guardians on your opponent’s side of the field and deal 50% of Alien Adacic’s current ATK as DMG to them.\nUpon activation, Gain 2 Ultra Factor Stacks."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeihlw4jc3vste7pwhs3w5j64echlunl5jnqar6crxzlrixzeapasge.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "element",
+          "value": "Void"
+        },
+        {
+          "trait_type": "role",
+          "value": "Villain"
+        },
+        {
+          "trait_type": "race",
+          "value": "Alien"
+        },
+        {
+          "trait_type": "attack",
+          "value": "120"
+        },
+        {
+          "trait_type": "hp",
+          "value": "200"
+        },
+        {
+          "trait_type": "gold",
+          "value": "410"
+        }
+      ],
+      "typeCard": "legendary"
+    },
+    {
+      "name": "Ace-Killer",
+      "type": "ERC1155",
+      "description": "[Robot | Villain] “Dagalette Round” Passive: During your SP, Ace killer executes 1 random guardian on your opponent’s side of the field under 30% OF ITS MAX hp.\nUpon activation, Gain 2 Ultra Factor Stacks.",
+      "image": "https://bafybeih6zoj2rz6lanpjyvn2dm5dhmqdvwzg5d42g7giklxpr24cvfswxi.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 240
+        },
+        "name": {
+          "name": "name",
+          "value": "Ace-Killer"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeih6zoj2rz6lanpjyvn2dm5dhmqdvwzg5d42g7giklxpr24cvfswxi.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/legendary.png"
+        },
+        "element": {
+          "name": "element",
+          "value": "Earth"
+        },
+        "role": {
+          "name": "role",
+          "value": "Villain"
+        },
+        "race": {
+          "name": "race",
+          "value": "Robot"
+        },
+        "attack": {
+          "name": "attack",
+          "value": "300"
+        },
+        "hp": {
+          "name": "hp",
+          "value": "225"
+        },
+        "gold": {
+          "name": "gold",
+          "value": "425"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "240"
+        },
+        {
+          "trait_type": "name",
+          "value": "Ace-Killer"
+        },
+        {
+          "trait_type": "description",
+          "value": "[Robot | Villain] “Dagalette Round” Passive: During your SP, Ace killer executes 1 random guardian on your opponent’s side of the field under 30% OF ITS MAX hp.\nUpon activation, Gain 2 Ultra Factor Stacks."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeih6zoj2rz6lanpjyvn2dm5dhmqdvwzg5d42g7giklxpr24cvfswxi.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "element",
+          "value": "Earth"
+        },
+        {
+          "trait_type": "role",
+          "value": "Villain"
+        },
+        {
+          "trait_type": "race",
+          "value": "Robot"
+        },
+        {
+          "trait_type": "attack",
+          "value": "300"
+        },
+        {
+          "trait_type": "hp",
+          "value": "225"
+        },
+        {
+          "trait_type": "gold",
+          "value": "425"
+        }
+      ],
+      "typeCard": "legendary"
+    },
+    {
+      "name": "Jack",
+      "type": "ERC1155",
+      "description": "[Ultraman | Hero] “Ultra Shield” Passive: When attacked, Jack gains a shield, reducing incoming damage by 50%.\nUpon activation, Gain 2 Ultra Factor Stacks.",
+      "image": "https://bafybeibhlxjsptsrnfvazge725c3pf26no3uxyz42xolsv6lzn42is5rem.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 239
+        },
+        "name": {
+          "name": "name",
+          "value": "Jack"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeibhlxjsptsrnfvazge725c3pf26no3uxyz42xolsv6lzn42is5rem.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/legendary.png"
+        },
+        "element": {
+          "name": "element",
+          "value": "Earth"
+        },
+        "role": {
+          "name": "role",
+          "value": "Hero"
+        },
+        "race": {
+          "name": "race",
+          "value": "Ultraman"
+        },
+        "attack": {
+          "name": "attack",
+          "value": "150"
+        },
+        "hp": {
+          "name": "hp",
+          "value": "400"
+        },
+        "gold": {
+          "name": "gold",
+          "value": "400"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "239"
+        },
+        {
+          "trait_type": "name",
+          "value": "Jack"
+        },
+        {
+          "trait_type": "description",
+          "value": "[Ultraman | Hero] “Ultra Shield” Passive: When attacked, Jack gains a shield, reducing incoming damage by 50%.\nUpon activation, Gain 2 Ultra Factor Stacks."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeibhlxjsptsrnfvazge725c3pf26no3uxyz42xolsv6lzn42is5rem.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "element",
+          "value": "Earth"
+        },
+        {
+          "trait_type": "role",
+          "value": "Hero"
+        },
+        {
+          "trait_type": "race",
+          "value": "Ultraman"
+        },
+        {
+          "trait_type": "attack",
+          "value": "150"
+        },
+        {
+          "trait_type": "hp",
+          "value": "400"
+        },
+        {
+          "trait_type": "gold",
+          "value": "400"
+        }
+      ],
+      "typeCard": "legendary"
+    },
+    {
+      "name": "Zoffy",
+      "type": "ERC1155",
+      "description": "[Ultraman | Hero] “Specium Beam” Activate: During your Mp1/mp2, Deal 75% of Zoffy’s ATK Directly to your opponent’s LP.  COOLDOWN: 2 TURNS.\nUpon activation, Gain 1 Ultra Factor Stack.",
+      "image": "https://bafybeie7xpfhrhh3du5fnirsx7eiudnpmsr2ohkjxvl2qg2tnq7a2hn7hy.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 238
+        },
+        "name": {
+          "name": "name",
+          "value": "Zoffy"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeie7xpfhrhh3du5fnirsx7eiudnpmsr2ohkjxvl2qg2tnq7a2hn7hy.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/legendary.png"
+        },
+        "element": {
+          "name": "element",
+          "value": "Mystic"
+        },
+        "role": {
+          "name": "role",
+          "value": "Hero"
+        },
+        "race": {
+          "name": "race",
+          "value": "Ultraman"
+        },
+        "attack": {
+          "name": "attack",
+          "value": "200"
+        },
+        "hp": {
+          "name": "hp",
+          "value": "300"
+        },
+        "gold": {
+          "name": "gold",
+          "value": "400"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "238"
+        },
+        {
+          "trait_type": "name",
+          "value": "Zoffy"
+        },
+        {
+          "trait_type": "description",
+          "value": "[Ultraman | Hero] “Specium Beam” Activate: During your Mp1/mp2, Deal 75% of Zoffy’s ATK Directly to your opponent’s LP.  COOLDOWN: 2 TURNS.\nUpon activation, Gain 1 Ultra Factor Stack."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeie7xpfhrhh3du5fnirsx7eiudnpmsr2ohkjxvl2qg2tnq7a2hn7hy.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "element",
+          "value": "Mystic"
+        },
+        {
+          "trait_type": "role",
+          "value": "Hero"
+        },
+        {
+          "trait_type": "race",
+          "value": "Ultraman"
+        },
+        {
+          "trait_type": "attack",
+          "value": "200"
+        },
+        {
+          "trait_type": "hp",
+          "value": "300"
+        },
+        {
+          "trait_type": "gold",
+          "value": "400"
+        }
+      ],
+      "typeCard": "legendary"
+    },
+    {
+      "name": "Taro",
+      "type": "ERC1155",
+      "description": "[Ultraman | Hero] “Flame Form” Passive: While on the field, Taro gains 50 ATK for each ‘Ultraman’ type card in your Graveyard. \nUpon activation, Gain 3 Ultra Factor Stacks.",
+      "image": "https://bafybeidyumu725aci5p7ir3qz6hbvtlpvnygnz73yxwg2vlb26y4md4ceu.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 237
+        },
+        "name": {
+          "name": "name",
+          "value": "Taro"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeidyumu725aci5p7ir3qz6hbvtlpvnygnz73yxwg2vlb26y4md4ceu.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/legendary.png"
+        },
+        "element": {
+          "name": "element",
+          "value": "Fire"
+        },
+        "role": {
+          "name": "role",
+          "value": "Hero"
+        },
+        "race": {
+          "name": "race",
+          "value": "Ultraman"
+        },
+        "attack": {
+          "name": "attack",
+          "value": "175"
+        },
+        "hp": {
+          "name": "hp",
+          "value": "300"
+        },
+        "gold": {
+          "name": "gold",
+          "value": "400"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "237"
+        },
+        {
+          "trait_type": "name",
+          "value": "Taro"
+        },
+        {
+          "trait_type": "description",
+          "value": "[Ultraman | Hero] “Flame Form” Passive: While on the field, Taro gains 50 ATK for each ‘Ultraman’ type card in your Graveyard. \nUpon activation, Gain 3 Ultra Factor Stacks."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeidyumu725aci5p7ir3qz6hbvtlpvnygnz73yxwg2vlb26y4md4ceu.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "element",
+          "value": "Fire"
+        },
+        {
+          "trait_type": "role",
+          "value": "Hero"
+        },
+        {
+          "trait_type": "race",
+          "value": "Ultraman"
+        },
+        {
+          "trait_type": "attack",
+          "value": "175"
+        },
+        {
+          "trait_type": "hp",
+          "value": "300"
+        },
+        {
+          "trait_type": "gold",
+          "value": "400"
+        }
+      ],
+      "typeCard": "legendary"
+    },
+    {
+      "name": "Seven",
+      "type": "ERC1155",
+      "description": "[Ultraman | Hero] “Specium sword” Activate: During your Mp1/mp2, Deal 50 DMG to 1 Guardian on your opponent’s side of the field. If none are available, deal 25 DMG Directly to your opponent’s LP. Upon activation, Gain 1 Ultra Factor Stack.",
+      "image": "https://bafybeidmf5zr64lk4iyusgovimjwwzocs7b5hktzvrjh32khibunqn6ip4.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 236
+        },
+        "name": {
+          "name": "name",
+          "value": "Seven"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeidmf5zr64lk4iyusgovimjwwzocs7b5hktzvrjh32khibunqn6ip4.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/legendary.png"
+        },
+        "element": {
+          "name": "element",
+          "value": "Mystic"
+        },
+        "role": {
+          "name": "role",
+          "value": "Hero"
+        },
+        "race": {
+          "name": "race",
+          "value": "Ultraman"
+        },
+        "attack": {
+          "name": "attack",
+          "value": "150"
+        },
+        "hp": {
+          "name": "hp",
+          "value": "275"
+        },
+        "gold": {
+          "name": "gold",
+          "value": "425"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "236"
+        },
+        {
+          "trait_type": "name",
+          "value": "Seven"
+        },
+        {
+          "trait_type": "description",
+          "value": "[Ultraman | Hero] “Specium sword” Activate: During your Mp1/mp2, Deal 50 DMG to 1 Guardian on your opponent’s side of the field. If none are available, deal 25 DMG Directly to your opponent’s LP. Upon activation, Gain 1 Ultra Factor Stack."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeidmf5zr64lk4iyusgovimjwwzocs7b5hktzvrjh32khibunqn6ip4.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "element",
+          "value": "Mystic"
+        },
+        {
+          "trait_type": "role",
+          "value": "Hero"
+        },
+        {
+          "trait_type": "race",
+          "value": "Ultraman"
+        },
+        {
+          "trait_type": "attack",
+          "value": "150"
+        },
+        {
+          "trait_type": "hp",
+          "value": "275"
+        },
+        {
+          "trait_type": "gold",
+          "value": "425"
+        }
+      ],
+      "typeCard": "legendary"
+    },
+    {
+      "name": "Ace",
+      "type": "ERC1155",
+      "description": "[Ultraman | Hero] “Guillotine” Passive: When Ace is attacked during the battle phase, 50% of the incoming attack is dealt back to the attacker.\nUpon activation, Gain 2 Ultra Factor Stacks.",
+      "image": "https://bafybeidxmieiscskod53jdlzshtblffkfyrbgmez5e7t5lnpratlfv6tjy.ipfs.nftstorage.link",
+      "symbol": "GATE",
+      "properties": {
+        "id": {
+          "name": "id",
+          "value": 235
+        },
+        "name": {
+          "name": "name",
+          "value": "Ace"
+        },
+        "description": {
+          "name": "description",
+          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
+        },
+        "image": {
+          "name": "image",
+          "value": "https://bafybeidxmieiscskod53jdlzshtblffkfyrbgmez5e7t5lnpratlfv6tjy.ipfs.nftstorage.link"
+        },
+        "back": {
+          "name": "back",
+          "value": "https://bafybeif62tm47b5cwjulkojq2s6bsbk4agvnn6zeq4arbjqsjqbrw3xgsa.ipfs.nftstorage.link/legendary.png"
+        },
+        "element": {
+          "name": "element",
+          "value": "Mystic"
+        },
+        "role": {
+          "name": "role",
+          "value": "Hero"
+        },
+        "race": {
+          "name": "race",
+          "value": "Ultraman"
+        },
+        "attack": {
+          "name": "attack",
+          "value": "150"
+        },
+        "hp": {
+          "name": "hp",
+          "value": "200"
+        },
+        "gold": {
+          "name": "gold",
+          "value": "400"
+        }
+      },
+      "attributes": [
+        {
+          "trait_type": "id",
+          "value": "235"
+        },
+        {
+          "trait_type": "name",
+          "value": "Ace"
+        },
+        {
+          "trait_type": "description",
+          "value": "[Ultraman | Hero] “Guillotine” Passive: When Ace is attacked during the battle phase, 50% of the incoming attack is dealt back to the attacker.\nUpon activation, Gain 2 Ultra Factor Stacks."
+        },
+        {
+          "trait_type": "image",
+          "value": "https://bafybeidxmieiscskod53jdlzshtblffkfyrbgmez5e7t5lnpratlfv6tjy.ipfs.nftstorage.link"
+        },
+        {
+          "trait_type": "element",
+          "value": "Mystic"
+        },
+        {
+          "trait_type": "role",
+          "value": "Hero"
+        },
+        {
+          "trait_type": "race",
+          "value": "Ultraman"
+        },
+        {
+          "trait_type": "attack",
+          "value": "150"
+        },
+        {
+          "trait_type": "hp",
+          "value": "200"
+        },
+        {
+          "trait_type": "gold",
+          "value": "400"
+        }
+      ],
+      "typeCard": "legendary"
     }
   ],
   "gold": [
@@ -21574,1542 +23183,6 @@
         }
       ],
       "typeCard": "wood"
-    }
-  ],
-  "ultraman_hero": [
-    {
-      "name": "Jack",
-      "type": "ERC1155",
-      "description": "[Ultraman | Hero] “Ultra Shield” Passive: When attacked, Jack gains a shield, reducing incoming damage by 50%.\nUpon activation, Gain 2 Ultra Factor Stacks.",
-      "image": "https://bafybeibhlxjsptsrnfvazge725c3pf26no3uxyz42xolsv6lzn42is5rem.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 239
-        },
-        "name": {
-          "name": "name",
-          "value": "Jack"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeibhlxjsptsrnfvazge725c3pf26no3uxyz42xolsv6lzn42is5rem.ipfs.nftstorage.link"
-        },
-        "element": {
-          "name": "element",
-          "value": "Earth"
-        },
-        "role": {
-          "name": "role",
-          "value": "Hero"
-        },
-        "race": {
-          "name": "race",
-          "value": "Ultraman"
-        },
-        "attack": {
-          "name": "attack",
-          "value": "150"
-        },
-        "hp": {
-          "name": "hp",
-          "value": "400"
-        },
-        "gold": {
-          "name": "gold",
-          "value": "400"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "239"
-        },
-        {
-          "trait_type": "name",
-          "value": "Jack"
-        },
-        {
-          "trait_type": "description",
-          "value": "[Ultraman | Hero] “Ultra Shield” Passive: When attacked, Jack gains a shield, reducing incoming damage by 50%.\nUpon activation, Gain 2 Ultra Factor Stacks."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeibhlxjsptsrnfvazge725c3pf26no3uxyz42xolsv6lzn42is5rem.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "element",
-          "value": "Earth"
-        },
-        {
-          "trait_type": "role",
-          "value": "Hero"
-        },
-        {
-          "trait_type": "race",
-          "value": "Ultraman"
-        },
-        {
-          "trait_type": "attack",
-          "value": "150"
-        },
-        {
-          "trait_type": "hp",
-          "value": "400"
-        },
-        {
-          "trait_type": "gold",
-          "value": "400"
-        }
-      ]
-    },
-    {
-      "name": "Zoffy",
-      "type": "ERC1155",
-      "description": "[Ultraman | Hero] “Specium Beam” Activate: During your Mp1/mp2, Deal 75% of Zoffy’s ATK Directly to your opponent’s LP.  COOLDOWN: 2 TURNS.\nUpon activation, Gain 1 Ultra Factor Stack.",
-      "image": "https://bafybeie7xpfhrhh3du5fnirsx7eiudnpmsr2ohkjxvl2qg2tnq7a2hn7hy.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 238
-        },
-        "name": {
-          "name": "name",
-          "value": "Zoffy"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeie7xpfhrhh3du5fnirsx7eiudnpmsr2ohkjxvl2qg2tnq7a2hn7hy.ipfs.nftstorage.link"
-        },
-        "element": {
-          "name": "element",
-          "value": "Mystic"
-        },
-        "role": {
-          "name": "role",
-          "value": "Hero"
-        },
-        "race": {
-          "name": "race",
-          "value": "Ultraman"
-        },
-        "attack": {
-          "name": "attack",
-          "value": "200"
-        },
-        "hp": {
-          "name": "hp",
-          "value": "300"
-        },
-        "gold": {
-          "name": "gold",
-          "value": "400"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "238"
-        },
-        {
-          "trait_type": "name",
-          "value": "Zoffy"
-        },
-        {
-          "trait_type": "description",
-          "value": "[Ultraman | Hero] “Specium Beam” Activate: During your Mp1/mp2, Deal 75% of Zoffy’s ATK Directly to your opponent’s LP.  COOLDOWN: 2 TURNS.\nUpon activation, Gain 1 Ultra Factor Stack."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeie7xpfhrhh3du5fnirsx7eiudnpmsr2ohkjxvl2qg2tnq7a2hn7hy.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "element",
-          "value": "Mystic"
-        },
-        {
-          "trait_type": "role",
-          "value": "Hero"
-        },
-        {
-          "trait_type": "race",
-          "value": "Ultraman"
-        },
-        {
-          "trait_type": "attack",
-          "value": "200"
-        },
-        {
-          "trait_type": "hp",
-          "value": "300"
-        },
-        {
-          "trait_type": "gold",
-          "value": "400"
-        }
-      ]
-    },
-    {
-      "name": "Taro",
-      "type": "ERC1155",
-      "description": "[Ultraman | Hero] “Flame Form” Passive: While on the field, Taro gains 50 ATK for each ‘Ultraman’ type card in your Graveyard. \nUpon activation, Gain 3 Ultra Factor Stacks.",
-      "image": "https://bafybeidyumu725aci5p7ir3qz6hbvtlpvnygnz73yxwg2vlb26y4md4ceu.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 237
-        },
-        "name": {
-          "name": "name",
-          "value": "Taro"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeidyumu725aci5p7ir3qz6hbvtlpvnygnz73yxwg2vlb26y4md4ceu.ipfs.nftstorage.link"
-        },
-        "element": {
-          "name": "element",
-          "value": "Fire"
-        },
-        "role": {
-          "name": "role",
-          "value": "Hero"
-        },
-        "race": {
-          "name": "race",
-          "value": "Ultraman"
-        },
-        "attack": {
-          "name": "attack",
-          "value": "175"
-        },
-        "hp": {
-          "name": "hp",
-          "value": "300"
-        },
-        "gold": {
-          "name": "gold",
-          "value": "400"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "237"
-        },
-        {
-          "trait_type": "name",
-          "value": "Taro"
-        },
-        {
-          "trait_type": "description",
-          "value": "[Ultraman | Hero] “Flame Form” Passive: While on the field, Taro gains 50 ATK for each ‘Ultraman’ type card in your Graveyard. \nUpon activation, Gain 3 Ultra Factor Stacks."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeidyumu725aci5p7ir3qz6hbvtlpvnygnz73yxwg2vlb26y4md4ceu.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "element",
-          "value": "Fire"
-        },
-        {
-          "trait_type": "role",
-          "value": "Hero"
-        },
-        {
-          "trait_type": "race",
-          "value": "Ultraman"
-        },
-        {
-          "trait_type": "attack",
-          "value": "175"
-        },
-        {
-          "trait_type": "hp",
-          "value": "300"
-        },
-        {
-          "trait_type": "gold",
-          "value": "400"
-        }
-      ]
-    },
-    {
-      "name": "Seven",
-      "type": "ERC1155",
-      "description": "[Ultraman | Hero] “Specium sword” Activate: During your Mp1/mp2, Deal 50 DMG to 1 Guardian on your opponent’s side of the field. If none are available, deal 25 DMG Directly to your opponent’s LP. Upon activation, Gain 1 Ultra Factor Stack.",
-      "image": "https://bafybeidmf5zr64lk4iyusgovimjwwzocs7b5hktzvrjh32khibunqn6ip4.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 236
-        },
-        "name": {
-          "name": "name",
-          "value": "Seven"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeidmf5zr64lk4iyusgovimjwwzocs7b5hktzvrjh32khibunqn6ip4.ipfs.nftstorage.link"
-        },
-        "element": {
-          "name": "element",
-          "value": "Mystic"
-        },
-        "role": {
-          "name": "role",
-          "value": "Hero"
-        },
-        "race": {
-          "name": "race",
-          "value": "Ultraman"
-        },
-        "attack": {
-          "name": "attack",
-          "value": "150"
-        },
-        "hp": {
-          "name": "hp",
-          "value": "275"
-        },
-        "gold": {
-          "name": "gold",
-          "value": "425"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "236"
-        },
-        {
-          "trait_type": "name",
-          "value": "Seven"
-        },
-        {
-          "trait_type": "description",
-          "value": "[Ultraman | Hero] “Specium sword” Activate: During your Mp1/mp2, Deal 50 DMG to 1 Guardian on your opponent’s side of the field. If none are available, deal 25 DMG Directly to your opponent’s LP. Upon activation, Gain 1 Ultra Factor Stack."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeidmf5zr64lk4iyusgovimjwwzocs7b5hktzvrjh32khibunqn6ip4.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "element",
-          "value": "Mystic"
-        },
-        {
-          "trait_type": "role",
-          "value": "Hero"
-        },
-        {
-          "trait_type": "race",
-          "value": "Ultraman"
-        },
-        {
-          "trait_type": "attack",
-          "value": "150"
-        },
-        {
-          "trait_type": "hp",
-          "value": "275"
-        },
-        {
-          "trait_type": "gold",
-          "value": "425"
-        }
-      ]
-    },
-    {
-      "name": "Ace",
-      "type": "ERC1155",
-      "description": "[Ultraman | Hero] “Guillotine” Passive: When Ace is attacked during the battle phase, 50% of the incoming attack is dealt back to the attacker.\nUpon activation, Gain 2 Ultra Factor Stacks.",
-      "image": "https://bafybeidxmieiscskod53jdlzshtblffkfyrbgmez5e7t5lnpratlfv6tjy.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 235
-        },
-        "name": {
-          "name": "name",
-          "value": "Ace"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeidxmieiscskod53jdlzshtblffkfyrbgmez5e7t5lnpratlfv6tjy.ipfs.nftstorage.link"
-        },
-        "element": {
-          "name": "element",
-          "value": "Mystic"
-        },
-        "role": {
-          "name": "role",
-          "value": "Hero"
-        },
-        "race": {
-          "name": "race",
-          "value": "Ultraman"
-        },
-        "attack": {
-          "name": "attack",
-          "value": "150"
-        },
-        "hp": {
-          "name": "hp",
-          "value": "200"
-        },
-        "gold": {
-          "name": "gold",
-          "value": "400"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "235"
-        },
-        {
-          "trait_type": "name",
-          "value": "Ace"
-        },
-        {
-          "trait_type": "description",
-          "value": "[Ultraman | Hero] “Guillotine” Passive: When Ace is attacked during the battle phase, 50% of the incoming attack is dealt back to the attacker.\nUpon activation, Gain 2 Ultra Factor Stacks."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeidxmieiscskod53jdlzshtblffkfyrbgmez5e7t5lnpratlfv6tjy.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "element",
-          "value": "Mystic"
-        },
-        {
-          "trait_type": "role",
-          "value": "Hero"
-        },
-        {
-          "trait_type": "race",
-          "value": "Ultraman"
-        },
-        {
-          "trait_type": "attack",
-          "value": "150"
-        },
-        {
-          "trait_type": "hp",
-          "value": "200"
-        },
-        {
-          "trait_type": "gold",
-          "value": "400"
-        }
-      ]
-    }
-  ],
-  "ultraman_villain": [
-    {
-      "name": "Verokron",
-      "type": "ERC1155",
-      "description": "[Beast | Villain] “Mouth Beam” Activate: During your MP1/MP2, select up to 2 Guardians on your opponent’s side of the field. If attacked by them, deal 25% of the DMG received directly to your opponent’s LP.\nUpon activation, Gain 2 Ultra Factor Stacks.",
-      "image": "https://bafybeigpufllbxsfp5kjbazjz44ny3b56akrzuqjjnor6cy2md4iiyemfq.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 244
-        },
-        "name": {
-          "name": "name",
-          "value": "Verokron"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeigpufllbxsfp5kjbazjz44ny3b56akrzuqjjnor6cy2md4iiyemfq.ipfs.nftstorage.link"
-        },
-        "element": {
-          "name": "element",
-          "value": "Fire"
-        },
-        "role": {
-          "name": "role",
-          "value": "Villain"
-        },
-        "race": {
-          "name": "race",
-          "value": "Beast"
-        },
-        "attack": {
-          "name": "attack",
-          "value": "300"
-        },
-        "hp": {
-          "name": "hp",
-          "value": "300"
-        },
-        "gold": {
-          "name": "gold",
-          "value": "550"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "244"
-        },
-        {
-          "trait_type": "name",
-          "value": "Verokron"
-        },
-        {
-          "trait_type": "description",
-          "value": "[Beast | Villain] “Mouth Beam” Activate: During your MP1/MP2, select up to 2 Guardians on your opponent’s side of the field. If attacked by them, deal 25% of the DMG received directly to your opponent’s LP.\nUpon activation, Gain 2 Ultra Factor Stacks."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeigpufllbxsfp5kjbazjz44ny3b56akrzuqjjnor6cy2md4iiyemfq.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "element",
-          "value": "Fire"
-        },
-        {
-          "trait_type": "role",
-          "value": "Villain"
-        },
-        {
-          "trait_type": "race",
-          "value": "Beast"
-        },
-        {
-          "trait_type": "attack",
-          "value": "300"
-        },
-        {
-          "trait_type": "hp",
-          "value": "300"
-        },
-        {
-          "trait_type": "gold",
-          "value": "550"
-        }
-      ]
-    },
-    {
-      "name": "Alien Bris",
-      "type": "ERC1155",
-      "description": "[Alien | Villain] “Shock Wave” Activate: During your MP1/MP2, select 1 Guardian on your opponent’s side of the field,Drop their hit chance by 25%.\nUpon activation, Gain 1 Ultra Factor Stacks.\nPassive: Immune to dmg in the battle phase.",
-      "image": "https://bafybeibfbgnvrljgjitu4byq5j6wfrmrb3xkvjqmkpbfdbtmd6fjy555re.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 243
-        },
-        "name": {
-          "name": "name",
-          "value": "Alien Bris"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeibfbgnvrljgjitu4byq5j6wfrmrb3xkvjqmkpbfdbtmd6fjy555re.ipfs.nftstorage.link"
-        },
-        "element": {
-          "name": "element",
-          "value": "Void"
-        },
-        "role": {
-          "name": "role",
-          "value": "Villain"
-        },
-        "race": {
-          "name": "race",
-          "value": "Alien"
-        },
-        "attack": {
-          "name": "attack",
-          "value": "100"
-        },
-        "hp": {
-          "name": "hp",
-          "value": "100"
-        },
-        "gold": {
-          "name": "gold",
-          "value": "450"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "243"
-        },
-        {
-          "trait_type": "name",
-          "value": "Alien Bris"
-        },
-        {
-          "trait_type": "description",
-          "value": "[Alien | Villain] “Shock Wave” Activate: During your MP1/MP2, select 1 Guardian on your opponent’s side of the field,Drop their hit chance by 25%.\nUpon activation, Gain 1 Ultra Factor Stacks.\nPassive: Immune to dmg in the battle phase."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeibfbgnvrljgjitu4byq5j6wfrmrb3xkvjqmkpbfdbtmd6fjy555re.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "element",
-          "value": "Void"
-        },
-        {
-          "trait_type": "role",
-          "value": "Villain"
-        },
-        {
-          "trait_type": "race",
-          "value": "Alien"
-        },
-        {
-          "trait_type": "attack",
-          "value": "100"
-        },
-        {
-          "trait_type": "hp",
-          "value": "100"
-        },
-        {
-          "trait_type": "gold",
-          "value": "450"
-        }
-      ]
-    },
-    {
-      "name": "Alien Nepenthes",
-      "type": "ERC1155",
-      "description": "[Alien | Villain] “Weed Strangle” Activate: During your MP1/MP2, select 2 Guardians on either side of the field, disable their atk and double DMG received for for 2 turns. Cooldown: 2 turns.\nUpon activation, Gain 2 Ultra Factor Stacks.",
-      "image": "https://bafybeicpookyxkjroch4nlugp5tinqum3owbfu7udvb7u2o2tspfmbsgam.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 242
-        },
-        "name": {
-          "name": "name",
-          "value": "Alien Nepenthes"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeicpookyxkjroch4nlugp5tinqum3owbfu7udvb7u2o2tspfmbsgam.ipfs.nftstorage.link"
-        },
-        "element": {
-          "name": "element",
-          "value": "Venom"
-        },
-        "role": {
-          "name": "role",
-          "value": "Villain"
-        },
-        "race": {
-          "name": "race",
-          "value": "Alien"
-        },
-        "attack": {
-          "name": "attack",
-          "value": "200"
-        },
-        "hp": {
-          "name": "hp",
-          "value": "200"
-        },
-        "gold": {
-          "name": "gold",
-          "value": "425"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "242"
-        },
-        {
-          "trait_type": "name",
-          "value": "Alien Nepenthes"
-        },
-        {
-          "trait_type": "description",
-          "value": "[Alien | Villain] “Weed Strangle” Activate: During your MP1/MP2, select 2 Guardians on either side of the field, disable their atk and double DMG received for for 2 turns. Cooldown: 2 turns.\nUpon activation, Gain 2 Ultra Factor Stacks."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeicpookyxkjroch4nlugp5tinqum3owbfu7udvb7u2o2tspfmbsgam.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "element",
-          "value": "Venom"
-        },
-        {
-          "trait_type": "role",
-          "value": "Villain"
-        },
-        {
-          "trait_type": "race",
-          "value": "Alien"
-        },
-        {
-          "trait_type": "attack",
-          "value": "200"
-        },
-        {
-          "trait_type": "hp",
-          "value": "200"
-        },
-        {
-          "trait_type": "gold",
-          "value": "425"
-        }
-      ]
-    },
-    {
-      "name": "Alien Adacic",
-      "type": "ERC1155",
-      "description": "[Alien | Villain] “Plasma Shots” Activate: During your MP1/MP2, select 2 Guardians on your opponent’s side of the field and deal 50% of Alien Adacic’s current ATK as DMG to them.\nUpon activation, Gain 2 Ultra Factor Stacks.",
-      "image": "https://bafybeihlw4jc3vste7pwhs3w5j64echlunl5jnqar6crxzlrixzeapasge.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 241
-        },
-        "name": {
-          "name": "name",
-          "value": "Alien Adacic"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeihlw4jc3vste7pwhs3w5j64echlunl5jnqar6crxzlrixzeapasge.ipfs.nftstorage.link"
-        },
-        "element": {
-          "name": "element",
-          "value": "Void"
-        },
-        "role": {
-          "name": "role",
-          "value": "Villain"
-        },
-        "race": {
-          "name": "race",
-          "value": "Alien"
-        },
-        "attack": {
-          "name": "attack",
-          "value": "120"
-        },
-        "hp": {
-          "name": "hp",
-          "value": "200"
-        },
-        "gold": {
-          "name": "gold",
-          "value": "410"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "241"
-        },
-        {
-          "trait_type": "name",
-          "value": "Alien Adacic"
-        },
-        {
-          "trait_type": "description",
-          "value": "[Alien | Villain] “Plasma Shots” Activate: During your MP1/MP2, select 2 Guardians on your opponent’s side of the field and deal 50% of Alien Adacic’s current ATK as DMG to them.\nUpon activation, Gain 2 Ultra Factor Stacks."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeihlw4jc3vste7pwhs3w5j64echlunl5jnqar6crxzlrixzeapasge.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "element",
-          "value": "Void"
-        },
-        {
-          "trait_type": "role",
-          "value": "Villain"
-        },
-        {
-          "trait_type": "race",
-          "value": "Alien"
-        },
-        {
-          "trait_type": "attack",
-          "value": "120"
-        },
-        {
-          "trait_type": "hp",
-          "value": "200"
-        },
-        {
-          "trait_type": "gold",
-          "value": "410"
-        }
-      ]
-    },
-    {
-      "name": "Ace-Killer",
-      "type": "ERC1155",
-      "description": "[Robot | Villain] “Dagalette Round” Passive: During your SP, Ace killer executes 1 random guardian on your opponent’s side of the field under 30% OF ITS MAX hp.\nUpon activation, Gain 2 Ultra Factor Stacks.",
-      "image": "https://bafybeih6zoj2rz6lanpjyvn2dm5dhmqdvwzg5d42g7giklxpr24cvfswxi.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 240
-        },
-        "name": {
-          "name": "name",
-          "value": "Ace-Killer"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeih6zoj2rz6lanpjyvn2dm5dhmqdvwzg5d42g7giklxpr24cvfswxi.ipfs.nftstorage.link"
-        },
-        "element": {
-          "name": "element",
-          "value": "Earth"
-        },
-        "role": {
-          "name": "role",
-          "value": "Villain"
-        },
-        "race": {
-          "name": "race",
-          "value": "Robot"
-        },
-        "attack": {
-          "name": "attack",
-          "value": "300"
-        },
-        "hp": {
-          "name": "hp",
-          "value": "225"
-        },
-        "gold": {
-          "name": "gold",
-          "value": "425"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "240"
-        },
-        {
-          "trait_type": "name",
-          "value": "Ace-Killer"
-        },
-        {
-          "trait_type": "description",
-          "value": "[Robot | Villain] “Dagalette Round” Passive: During your SP, Ace killer executes 1 random guardian on your opponent’s side of the field under 30% OF ITS MAX hp.\nUpon activation, Gain 2 Ultra Factor Stacks."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeih6zoj2rz6lanpjyvn2dm5dhmqdvwzg5d42g7giklxpr24cvfswxi.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "element",
-          "value": "Earth"
-        },
-        {
-          "trait_type": "role",
-          "value": "Villain"
-        },
-        {
-          "trait_type": "race",
-          "value": "Robot"
-        },
-        {
-          "trait_type": "attack",
-          "value": "300"
-        },
-        {
-          "trait_type": "hp",
-          "value": "225"
-        },
-        {
-          "trait_type": "gold",
-          "value": "425"
-        }
-      ]
-    }
-  ],
-  "ultraman_action": [
-    {
-      "name": "Edo's Contingency Plan",
-      "type": "ERC1155",
-      "description": "Flip: When your opponent declares an attack during their Battle Phase, you can activate this card to negate the attack and summon one Ultraman from your hand or deck to the field. Upon activation, Gain 1 Ultra Factor Stacks.",
-      "image": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 248
-        },
-        "name": {
-          "name": "name",
-          "value": "Edo's Contingency Plan"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link"
-        },
-        "type": {
-          "name": "type",
-          "value": "Flip Counter"
-        },
-        "ADOTurn": {
-          "name": "ADOTurn",
-          "value": "YES"
-        },
-        "rarity": {
-          "name": "rarity",
-          "value": "Ultra Rare"
-        },
-        "element": {
-          "name": "element"
-        },
-        "role": {
-          "name": "role"
-        },
-        "race": {
-          "name": "race"
-        },
-        "attack": {
-          "name": "attack"
-        },
-        "hp": {
-          "name": "hp"
-        },
-        "gold": {
-          "name": "gold"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "248"
-        },
-        {
-          "trait_type": "name",
-          "value": "Edo's Contingency Plan"
-        },
-        {
-          "trait_type": "description",
-          "value": "Flip: When your opponent declares an attack during their Battle Phase, you can activate this card to negate the attack and summon one Ultraman from your hand or deck to the field. Upon activation, Gain 1 Ultra Factor Stacks."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "type",
-          "value": "Flip Counter"
-        },
-        {
-          "trait_type": "ADOTurn",
-          "value": "YES"
-        },
-        {
-          "trait_type": "rarity",
-          "value": "Ultra Rare"
-        },
-        {
-          "trait_type": "element"
-        },
-        {
-          "trait_type": "role"
-        },
-        {
-          "trait_type": "race"
-        },
-        {
-          "trait_type": "attack"
-        },
-        {
-          "trait_type": "hp"
-        },
-        {
-          "trait_type": "gold"
-        }
-      ]
-    },
-    {
-      "name": "Limiter Release",
-      "type": "ERC1155",
-      "description": "Equip to an Ultraman Guardian. Gain 1 Limiter Counter during each Standby Phase. While this card has Limiter Counters, double the equipped Guardian's ATK & HP. After 3 turns, cut the ATK & HP of the equipped card to half of its original value.",
-      "image": "https://bafybeiex2ub4mki4jj624vfl3kfgyx3ieurf2y2zrxcweozbtpqgt3qwca.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 246
-        },
-        "name": {
-          "name": "name",
-          "value": "Limiter Release"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeiex2ub4mki4jj624vfl3kfgyx3ieurf2y2zrxcweozbtpqgt3qwca.ipfs.nftstorage.link"
-        },
-        "type": {
-          "name": "type",
-          "value": "Equip"
-        },
-        "ADOTurn": {
-          "name": "ADOTurn",
-          "value": "NO"
-        },
-        "rarity": {
-          "name": "rarity",
-          "value": "Ultra Rare"
-        },
-        "element": {
-          "name": "element"
-        },
-        "role": {
-          "name": "role"
-        },
-        "race": {
-          "name": "race"
-        },
-        "attack": {
-          "name": "attack"
-        },
-        "hp": {
-          "name": "hp"
-        },
-        "gold": {
-          "name": "gold"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "246"
-        },
-        {
-          "trait_type": "name",
-          "value": "Limiter Release"
-        },
-        {
-          "trait_type": "description",
-          "value": "Equip to an Ultraman Guardian. Gain 1 Limiter Counter during each Standby Phase. While this card has Limiter Counters, double the equipped Guardian's ATK & HP. After 3 turns, cut the ATK & HP of the equipped card to half of its original value."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeiex2ub4mki4jj624vfl3kfgyx3ieurf2y2zrxcweozbtpqgt3qwca.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "type",
-          "value": "Equip"
-        },
-        {
-          "trait_type": "ADOTurn",
-          "value": "NO"
-        },
-        {
-          "trait_type": "rarity",
-          "value": "Ultra Rare"
-        },
-        {
-          "trait_type": "element"
-        },
-        {
-          "trait_type": "role"
-        },
-        {
-          "trait_type": "race"
-        },
-        {
-          "trait_type": "attack"
-        },
-        {
-          "trait_type": "hp"
-        },
-        {
-          "trait_type": "gold"
-        }
-      ]
-    },
-    {
-      "name": "Eye Slugger Assault",
-      "type": "ERC1155",
-      "description": "Activate during your Main Phase, Select up to 3 Guardians on your opponent's field. Discard 1 Guardian card to deal damage equal to its ATK to each selected Guardian. Gain 1 Ultra Factor Stack for each destroyed Guardian.",
-      "image": "https://bafybeig2w2g43syd32ickgm4v4iukyqtojl6o2f2qij3cji3tx6tmlrc34.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 245
-        },
-        "name": {
-          "name": "name",
-          "value": "Eye Slugger Assault"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeig2w2g43syd32ickgm4v4iukyqtojl6o2f2qij3cji3tx6tmlrc34.ipfs.nftstorage.link"
-        },
-        "type": {
-          "name": "type",
-          "value": "Normal Action"
-        },
-        "ADOTurn": {
-          "name": "ADOTurn",
-          "value": "NO"
-        },
-        "rarity": {
-          "name": "rarity",
-          "value": "Ultra Rare"
-        },
-        "element": {
-          "name": "element"
-        },
-        "role": {
-          "name": "role"
-        },
-        "race": {
-          "name": "race"
-        },
-        "attack": {
-          "name": "attack"
-        },
-        "hp": {
-          "name": "hp"
-        },
-        "gold": {
-          "name": "gold"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "245"
-        },
-        {
-          "trait_type": "name",
-          "value": "Eye Slugger Assault"
-        },
-        {
-          "trait_type": "description",
-          "value": "Activate during your Main Phase, Select up to 3 Guardians on your opponent's field. Discard 1 Guardian card to deal damage equal to its ATK to each selected Guardian. Gain 1 Ultra Factor Stack for each destroyed Guardian."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeig2w2g43syd32ickgm4v4iukyqtojl6o2f2qij3cji3tx6tmlrc34.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "type",
-          "value": "Normal Action"
-        },
-        {
-          "trait_type": "ADOTurn",
-          "value": "NO"
-        },
-        {
-          "trait_type": "rarity",
-          "value": "Ultra Rare"
-        },
-        {
-          "trait_type": "element"
-        },
-        {
-          "trait_type": "role"
-        },
-        {
-          "trait_type": "race"
-        },
-        {
-          "trait_type": "attack"
-        },
-        {
-          "trait_type": "hp"
-        },
-        {
-          "trait_type": "gold"
-        }
-      ]
-    }
-  ],
-  "ultraman_reaction": [
-    {
-      "name": "Unorthodox Intel",
-      "type": "ERC1155",
-      "description": "During your Main Phase, select one Guardian on your opponent's side of the field. Increase the damage it takes by 25%. Upon successful activation, hire one Villain from your hand or deck to the field.",
-      "image": "https://bafybeigcstqvgxcf3bolxtflz6nemsqctlduqsqa5gr5juv77edtrzxnmq.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 250
-        },
-        "name": {
-          "name": "name",
-          "value": "Unorthodox Intel"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeigcstqvgxcf3bolxtflz6nemsqctlduqsqa5gr5juv77edtrzxnmq.ipfs.nftstorage.link"
-        },
-        "type": {
-          "name": "type",
-          "value": "Normal Reaction"
-        },
-        "ADOTurn": {
-          "name": "ADOTurn",
-          "value": "NO"
-        },
-        "rarity": {
-          "name": "rarity",
-          "value": "Ultra Rare"
-        },
-        "element": {
-          "name": "element"
-        },
-        "role": {
-          "name": "role"
-        },
-        "race": {
-          "name": "race"
-        },
-        "attack": {
-          "name": "attack"
-        },
-        "hp": {
-          "name": "hp"
-        },
-        "gold": {
-          "name": "gold"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "250"
-        },
-        {
-          "trait_type": "name",
-          "value": "Unorthodox Intel"
-        },
-        {
-          "trait_type": "description",
-          "value": "During your Main Phase, select one Guardian on your opponent's side of the field. Increase the damage it takes by 25%. Upon successful activation, hire one Villain from your hand or deck to the field."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeigcstqvgxcf3bolxtflz6nemsqctlduqsqa5gr5juv77edtrzxnmq.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "type",
-          "value": "Normal Reaction"
-        },
-        {
-          "trait_type": "ADOTurn",
-          "value": "NO"
-        },
-        {
-          "trait_type": "rarity",
-          "value": "Ultra Rare"
-        },
-        {
-          "trait_type": "element"
-        },
-        {
-          "trait_type": "role"
-        },
-        {
-          "trait_type": "race"
-        },
-        {
-          "trait_type": "attack"
-        },
-        {
-          "trait_type": "hp"
-        },
-        {
-          "trait_type": "gold"
-        }
-      ]
-    },
-    {
-      "name": "Ultra Reinforcements",
-      "type": "ERC1155",
-      "description": "Flip: When you control no guardians on your side of the field, you can discard up to 2 cards from your hand to the graveyard to hire up to 2 Ultraman guardians from your hand or deck to the field.",
-      "image": "https://bafybeie2q5kbtaf4h2z5gzmoru5fdjsms63q2ainxsxzdggbpwozpnsk5a.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 249
-        },
-        "name": {
-          "name": "name",
-          "value": "Ultra Reinforcements"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeie2q5kbtaf4h2z5gzmoru5fdjsms63q2ainxsxzdggbpwozpnsk5a.ipfs.nftstorage.link"
-        },
-        "type": {
-          "name": "type",
-          "value": "Normal Reaction"
-        },
-        "ADOTurn": {
-          "name": "ADOTurn",
-          "value": "NO"
-        },
-        "rarity": {
-          "name": "rarity",
-          "value": "Ultra Rare"
-        },
-        "element": {
-          "name": "element"
-        },
-        "role": {
-          "name": "role"
-        },
-        "race": {
-          "name": "race"
-        },
-        "attack": {
-          "name": "attack"
-        },
-        "hp": {
-          "name": "hp"
-        },
-        "gold": {
-          "name": "gold"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "249"
-        },
-        {
-          "trait_type": "name",
-          "value": "Ultra Reinforcements"
-        },
-        {
-          "trait_type": "description",
-          "value": "Flip: When you control no guardians on your side of the field, you can discard up to 2 cards from your hand to the graveyard to hire up to 2 Ultraman guardians from your hand or deck to the field."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeie2q5kbtaf4h2z5gzmoru5fdjsms63q2ainxsxzdggbpwozpnsk5a.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "type",
-          "value": "Normal Reaction"
-        },
-        {
-          "trait_type": "ADOTurn",
-          "value": "NO"
-        },
-        {
-          "trait_type": "rarity",
-          "value": "Ultra Rare"
-        },
-        {
-          "trait_type": "element"
-        },
-        {
-          "trait_type": "role"
-        },
-        {
-          "trait_type": "race"
-        },
-        {
-          "trait_type": "attack"
-        },
-        {
-          "trait_type": "hp"
-        },
-        {
-          "trait_type": "gold"
-        }
-      ]
-    },
-    {
-      "name": "Edo's Contingency Plan",
-      "type": "ERC1155",
-      "description": "Flip: When your opponent declares an attack during their Battle Phase, you can activate this card to negate the attack and summon one Ultraman from your hand or deck to the field. Upon activation, Gain 1 Ultra Factor Stacks.",
-      "image": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link",
-      "symbol": "GATE",
-      "properties": {
-        "id": {
-          "name": "id",
-          "value": 248
-        },
-        "name": {
-          "name": "name",
-          "value": "Edo's Contingency Plan"
-        },
-        "description": {
-          "name": "description",
-          "value": "Flip: Deal 30 damage to one selected Guardian on the field. "
-        },
-        "image": {
-          "name": "image",
-          "value": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link"
-        },
-        "type": {
-          "name": "type",
-          "value": "Flip Counter"
-        },
-        "ADOTurn": {
-          "name": "ADOTurn",
-          "value": "YES"
-        },
-        "rarity": {
-          "name": "rarity",
-          "value": "Ultra Rare"
-        },
-        "element": {
-          "name": "element"
-        },
-        "role": {
-          "name": "role"
-        },
-        "race": {
-          "name": "race"
-        },
-        "attack": {
-          "name": "attack"
-        },
-        "hp": {
-          "name": "hp"
-        },
-        "gold": {
-          "name": "gold"
-        }
-      },
-      "attributes": [
-        {
-          "trait_type": "id",
-          "value": "248"
-        },
-        {
-          "trait_type": "name",
-          "value": "Edo's Contingency Plan"
-        },
-        {
-          "trait_type": "description",
-          "value": "Flip: When your opponent declares an attack during their Battle Phase, you can activate this card to negate the attack and summon one Ultraman from your hand or deck to the field. Upon activation, Gain 1 Ultra Factor Stacks."
-        },
-        {
-          "trait_type": "image",
-          "value": "https://bafybeiduro6n22tyarb6gcuofimtnh62agkfsgjhlh7fgrr2cankahb6sq.ipfs.nftstorage.link"
-        },
-        {
-          "trait_type": "type",
-          "value": "Flip Counter"
-        },
-        {
-          "trait_type": "ADOTurn",
-          "value": "YES"
-        },
-        {
-          "trait_type": "rarity",
-          "value": "Ultra Rare"
-        },
-        {
-          "trait_type": "element"
-        },
-        {
-          "trait_type": "role"
-        },
-        {
-          "trait_type": "race"
-        },
-        {
-          "trait_type": "attack"
-        },
-        {
-          "trait_type": "hp"
-        },
-        {
-          "trait_type": "gold"
-        }
-      ]
     }
   ]
 }
