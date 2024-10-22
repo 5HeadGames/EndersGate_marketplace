@@ -849,12 +849,12 @@ export const buyFromShop = createAsyncThunk(
           setMessageBuy("Buying your NFT(s) 2/2");
           tx = await shop.methods
             .buyBatch(tokensId, amounts, tokenSelected)
-            .send({ from: account });
+            .send({ from: account, gasLimit: 100000 });
         } else {
           setMessageBuy("Buying your NFT(s)");
           tx = await shop.methods
             .buyBatch(tokensId, amounts, tokenSelected)
-            .send({ from: account });
+            .send({ from: account, gasLimit: 100000 });
         }
       }
       toast.success("Congrats! Your packs have been successfully purchased");

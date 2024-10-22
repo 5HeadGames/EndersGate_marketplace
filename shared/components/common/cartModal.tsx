@@ -54,8 +54,6 @@ export const useCartModal = () => {
       errors,
       isValidCode,
     }) => {
-      console.log(blockchain, "blockchain");
-
       return (
         <Transition.Root show={isShow} as={Fragment}>
           <Dialog

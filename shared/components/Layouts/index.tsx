@@ -116,41 +116,10 @@ export default function AppLayout({ children }) {
 
   let isFullscreen;
 
-  const tryActivateConnector = async (connector) => {
-    console.log("activate");
-    await connector.activate();
-    const connectionType = getConnection(connector).type;
-    updateBlockchain("matic");
-    return connectionType;
-  };
-
   const reconnect = async () => {
     try {
       const typeOfConnection = localStorage.getItem("typeOfConnection");
       if (authStillValid()) {
-        const chainId = await (window as any)?.ethereum?.request({
-          method: "eth_chainId",
-        });
-        console.log(chainId);
-        if (CHAIN_NAME_BY_ID[chainId] !== undefined) {
-          updateBlockchain("matic");
-        }
-        console.log("WALLETSSSS");
-        WALLETS.forEach(async (wallet) => {
-          try {
-            if (wallet.title === typeOfConnection) {
-              const activation = await tryActivateConnector(
-                getConnection(ConnectionType.INJECTED).connector,
-              );
-              console.log(activation);
-              if (!activation) {
-                return console.error("Could not activate");
-              }
-            }
-          } catch (err) {
-            console.log(err, "ERROR WALLET");
-          }
-        });
         if (typeOfConnection === "magic") {
           login(updateUser);
         }

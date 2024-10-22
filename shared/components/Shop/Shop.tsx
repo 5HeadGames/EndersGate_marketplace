@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { getAddresses, switchChain } from "@shared/web3";
 import { addCartShop, editCartShop, removeAllShop } from "@redux/actions";
 import { toast } from "react-hot-toast";
-import { CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
+import { CHAIN_IDS_BY_NAME, CHAIN_NAME_BY_ID } from "@shared/utils/chains";
 import { useBlockchain } from "@shared/context/useBlockchain";
 import { useCartModal } from "@shared/components/common/cartModal";
 import { useUser } from "@shared/context/useUser";
@@ -33,21 +33,30 @@ const Shop = () => {
 
   const dispatch = useDispatch();
 
+  const getSales = async () => {
+    try {
+      const chainId = await (window as any)?.ethereum?.request({
+        method: "eth_chainId",
+      });
+      if (CHAIN_NAME_BY_ID[chainId] == undefined) {
+        switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+      }
+      updateSales({
+        blockchain: CHAIN_NAME_BY_ID[chainId],
+        shopAddress,
+        setSales,
+      });
+      dispatch(removeAllShop());
+    } catch (err) {
+      toast.error(
+        "An error occurred while changing the network, please try again.",
+      );
+    }
+  };
+
   React.useEffect(() => {
     if (blockchain) {
-      try {
-        switchChain(CHAIN_IDS_BY_NAME[blockchain]);
-        updateSales({
-          blockchain,
-          shopAddress,
-          setSales,
-        });
-        dispatch(removeAllShop());
-      } catch (err) {
-        toast.error(
-          "An error occurred while changing the network, please try again.",
-        );
-      }
+      getSales();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain]);

@@ -1,29 +1,33 @@
 import { nFormatter } from "@shared/components/common/specialFields/SpecialFields";
 import Web3 from "web3";
 
-export const formatPrice = (price, blockchain) => {
-  switch (blockchain) {
-    case "matic":
-      return `${nFormatter(parseInt(price) / 10 ** 6)} USD`;
-    case "eth":
-      return `${Web3.utils.fromWei(
-        price?.toFixed(4)?.toString() || "0",
-        "ether",
-      )} ETH`;
-    case "findora":
-      return `${Web3.utils.fromWei(
-        price?.toFixed(4)?.toString() || "0",
-        "ether",
-      )} WFRA`;
-    case "imx":
-      return `${Web3.utils.fromWei(
-        price?.toFixed(4)?.toString() || "0",
-        "ether",
-      )} tIMX`;
-    case "linea":
-      return `${nFormatter((parseInt(price) / 10 ** 6)?.toFixed(4))} USD`;
-    case "skl":
-      return `${nFormatter((parseInt(price) / 10 ** 6)?.toFixed(4))} USDC`;
+export const formatPrice = (price, blockchain, currency = "usdc") => {
+  if (price) {
+    console.log(price);
+    switch (blockchain) {
+      case "matic":
+        return `${nFormatter(parseInt(price) / 10 ** 6)} USD`;
+      case "eth":
+        return `${parseFloat(
+          Web3.utils.fromWei(price.toString() || "0", "ether"),
+        ).toFixed(4)} ETH`;
+      case "findora":
+        return `${parseFloat(
+          Web3.utils.fromWei(price.toString() || "0", "ether"),
+        ).toFixed(4)} WFRA`;
+      case "imx":
+        if (currency == "native") {
+          return `${parseFloat(
+            Web3.utils.fromWei(price.toString() || "0", "ether"),
+          ).toFixed(4)} tIMX`;
+        } else {
+          return `${nFormatter(parseInt(price) / 10 ** 6)} USDC`;
+        }
+      case "linea":
+        return `${nFormatter((parseInt(price) / 10 ** 6)?.toFixed(4))} USD`;
+      case "skl":
+        return `${nFormatter((parseInt(price) / 10 ** 6)?.toFixed(4))} USDC`;
+    }
   }
 };
 
