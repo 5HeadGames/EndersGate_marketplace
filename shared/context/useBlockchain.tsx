@@ -24,14 +24,18 @@ export const BlockchainContextProvider = ({ children }: any) => {
   const _updateBlockchain = useCallback(async (blockchain: any) => {
     try {
       if (providerName !== "magic") {
-        const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
-        if (!changed) {
-          throw Error(
-            "An error has occurred while switching chain, please try again.",
-          );
+        const chainId = await (window as any)?.ethereum?.request({
+          method: "eth_chainId",
+        });
+        if (chainId !== blockchain) {
+          const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+          if (!changed) {
+            throw Error(
+              "An error has occurred while switching chain, please try again.",
+            );
+          }
         }
       }
-      localStorage.setItem("chain", blockchain);
       setBlockchain(blockchain);
     } catch (err: any) {
       console.log(err.message);

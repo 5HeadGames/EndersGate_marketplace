@@ -126,7 +126,6 @@ export default function AppLayout({ children }) {
       } else {
         localStorage.removeItem("typeOfConnection");
         localStorage.removeItem("loginTime");
-        localStorage.removeItem("chain");
       }
     } catch (err) {
       toast.error(err.message);

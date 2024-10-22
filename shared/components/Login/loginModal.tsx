@@ -16,7 +16,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { onGetAssets, onLogged } from "@redux/actions";
 import { switchChain } from "@shared/web3";
 import { useBlockchain } from "@shared/context/useBlockchain";
-import { CHAIN_IDS_BY_NAME } from "@shared/utils/chains";
+import { CHAIN_IDS_BY_NAME, CHAIN_NAME_BY_ID } from "@shared/utils/chains";
 import { useUser } from "@shared/context/useUser";
 import { useWeb3React } from "@web3-react/core";
 import { XIcon } from "@heroicons/react/solid";
@@ -34,7 +34,7 @@ const LoginModal = ({ hide }) => {
 
   const { account, provider } = useWeb3React();
 
-  const { blockchain } = useBlockchain();
+  const { blockchain, updateBlockchain } = useBlockchain();
 
   const dispatch = useAppDispatch();
   const { updateUser } = useUser();
@@ -51,7 +51,6 @@ const LoginModal = ({ hide }) => {
       } else {
         localStorage.removeItem("typeOfConnection");
         localStorage.removeItem("loginTime");
-        localStorage.removeItem("chain");
       }
     } catch (err) {
       console.log({ err });
@@ -83,7 +82,21 @@ const LoginModal = ({ hide }) => {
     if (account && isLogged) {
       setTimeout(async () => {
         try {
-          await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+          const chainId = await (window as any)?.ethereum?.request({
+            method: "eth_chainId",
+          });
+          console.log(
+            parseInt(chainId),
+            CHAIN_NAME_BY_ID[parseInt(chainId)],
+            CHAIN_IDS_BY_NAME[CHAIN_NAME_BY_ID[parseInt(chainId)]],
+            CHAIN_IDS_BY_NAME[blockchain],
+            "CHAINID",
+          );
+          if (CHAIN_NAME_BY_ID[parseInt(chainId)] == undefined) {
+            switchChain(CHAIN_IDS_BY_NAME[blockchain]);
+          } else if (parseInt(chainId) !== blockchain) {
+            updateBlockchain(CHAIN_NAME_BY_ID[parseInt(chainId)]);
+          }
         } catch (e) {
           console.log(e.message);
         }

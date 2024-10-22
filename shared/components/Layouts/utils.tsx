@@ -30,7 +30,7 @@ export const handleSignOut = async ({
   }
   localStorage.removeItem("typeOfConnection");
   localStorage.removeItem("loginTime");
-  localStorage.removeItem("chain");
+  // localStorage.removeItem("chain");
   router.push("/");
 };
 
