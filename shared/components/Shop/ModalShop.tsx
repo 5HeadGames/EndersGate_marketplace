@@ -123,23 +123,25 @@ const ModalShop = ({ Modal, isShow, hide, setSales }) => {
     const Aggregator = getContractCustom("Aggregator", NATIVEUSD, provider);
     const priceMATIC = await Aggregator.methods.latestAnswer().call();
     const priceNative = (BigInt(price) * BigInt(10 ** 8)) / BigInt(priceMATIC);
+
     const returnedPrice = parseFloat(
       (
         parseFloat(
           Web3.utils.fromWei(
-            (priceNative * BigInt(10 ** 12)).toString(),
+            (priceNative * BigInt(10 ** 18)).toString(),
             "ether",
           ),
         ) +
         parseFloat(
           Web3.utils.fromWei(
-            (priceNative * BigInt(10 ** 12)).toString(),
+            (priceNative * BigInt(10 ** 18)).toString(),
             "ether",
           ),
         ) *
           0.0005
       ).toFixed(6),
     );
+    console.log(returnedPrice, "PRICE");
     setPriceNative(returnedPrice);
     return returnedPrice;
   };

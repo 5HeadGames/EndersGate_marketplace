@@ -6,15 +6,24 @@ export const formatPrice = (price, blockchain) => {
     case "matic":
       return `${nFormatter(parseInt(price) / 10 ** 6)} USD`;
     case "eth":
-      return `${Web3.utils.fromWei(price.toString() || "0", "ether")} ETH`;
+      return `${Web3.utils.fromWei(
+        price?.toFixed(4)?.toString() || "0",
+        "ether",
+      )} ETH`;
     case "findora":
-      return `${Web3.utils.fromWei(price.toString() || "0", "ether")} WFRA`;
+      return `${Web3.utils.fromWei(
+        price?.toFixed(4)?.toString() || "0",
+        "ether",
+      )} WFRA`;
     case "imx":
-      return `${Web3.utils.fromWei(price.toString() || "0", "ether")} tIMX`;
+      return `${Web3.utils.fromWei(
+        price?.toFixed(4)?.toString() || "0",
+        "ether",
+      )} tIMX`;
     case "linea":
-      return `${nFormatter(parseInt(price) / 10 ** 6)} USD`;
+      return `${nFormatter((parseInt(price) / 10 ** 6)?.toFixed(4))} USD`;
     case "skl":
-      return `${nFormatter(parseInt(price) / 10 ** 6)} USDC`;
+      return `${nFormatter((parseInt(price) / 10 ** 6)?.toFixed(4))} USDC`;
   }
 };
 

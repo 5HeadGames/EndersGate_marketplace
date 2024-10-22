@@ -652,7 +652,7 @@ const CartItem = ({ item, pack, cards, blockchain, handleRemove }) => {
             className="text-[12px] text-gray-500 font-medium"
             style={{ lineHeight: "10px" }}
           >
-            Owner: {<AddressText text={item.seller} /> || "Owner"}
+            Owner: {item.seller ? <AddressText text={item.seller} /> : "Owner"}
           </span>
           <div className="flex gap-2 items-end">
             <img src={Icons.logo} className="w-8 h-8" alt="" />

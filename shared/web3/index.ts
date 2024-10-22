@@ -220,19 +220,19 @@ export const approveERC1155 = async ({
 
 export const switchChain = async (network) => {
   try {
-    // const chainId = await (window as any).ethereum.request({
-    //   method: "eth_chainId",
-    // });
-    // if (chainId !== network) {
-    await (window as any).ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [
-        {
-          chainId: "0x" + parseInt(network).toString(16),
-        },
-      ],
+    const chainId = await (window as any)?.ethereum?.request({
+      method: "eth_chainId",
     });
-    // }
+    if (chainId !== network) {
+      await (window as any).ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [
+          {
+            chainId: "0x" + parseInt(network).toString(16),
+          },
+        ],
+      });
+    }
     return true;
   } catch (err) {
     if (err.code === 4902) {

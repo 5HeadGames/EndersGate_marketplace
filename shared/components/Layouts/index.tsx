@@ -11,7 +11,7 @@ import { MenuIcon, XIcon } from "@heroicons/react/solid";
 import { Footer } from "../common/footerComponents/footer";
 import { Dropdown } from "../common/dropdowns/dropdown/dropdown";
 import { useSelector } from "react-redux";
-import { WALLETS } from "@shared/utils/connection/utils";
+import { getConnection, WALLETS } from "@shared/utils/connection/utils";
 import { authStillValid } from "../utils";
 import { Cart } from "./cart";
 import ChainSelect from "./chainSelect";
@@ -27,6 +27,10 @@ import Link from "next/link";
 import { useRouter, useParams, usePathname } from "next/navigation";
 import LoginModal from "../Login/loginModal";
 import { initializeApp } from "firebase/app";
+import { CHAIN_NAME_BY_ID } from "@shared/utils/chains";
+import { initializeConnector } from "@web3-react/core";
+import { MetaMask } from "@web3-react/metamask";
+import { Connection, ConnectionType } from "@shared/utils/connection";
 
 const styles = {
   content: {
@@ -50,6 +54,23 @@ export default function AppLayout({ children }) {
   };
 
   const app = initializeApp(firebaseConfig);
+
+  const [web3MetamaskWallet, web3MetamaskWalletHooks] =
+    initializeConnector<MetaMask>(
+      (actions) =>
+        new MetaMask({
+          actions,
+          onError: (error) => {
+            console.log(error);
+          },
+        }),
+    );
+
+  const injectedConnection: Connection = {
+    connector: web3MetamaskWallet,
+    hooks: web3MetamaskWalletHooks,
+    type: ConnectionType.INJECTED,
+  };
 
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [cartOpen, setCartOpen] = React.useState(false);
@@ -95,19 +116,39 @@ export default function AppLayout({ children }) {
 
   let isFullscreen;
 
+  const tryActivateConnector = async (connector) => {
+    console.log("activate");
+    await connector.activate();
+    const connectionType = getConnection(connector).type;
+    updateBlockchain("matic");
+    return connectionType;
+  };
+
   const reconnect = async () => {
     try {
       const typeOfConnection = localStorage.getItem("typeOfConnection");
-      const chain = localStorage.getItem("chain");
       if (authStillValid()) {
-        updateBlockchain(chain || "matic");
+        const chainId = await (window as any)?.ethereum?.request({
+          method: "eth_chainId",
+        });
+        console.log(chainId);
+        if (CHAIN_NAME_BY_ID[chainId] !== undefined) {
+          updateBlockchain("matic");
+        }
+        console.log("WALLETSSSS");
         WALLETS.forEach(async (wallet) => {
           try {
             if (wallet.title === typeOfConnection) {
-              await wallet.connection.connector.activate();
+              const activation = await tryActivateConnector(
+                getConnection(ConnectionType.INJECTED).connector,
+              );
+              console.log(activation);
+              if (!activation) {
+                return console.error("Could not activate");
+              }
             }
           } catch (err) {
-            console.log(err);
+            console.log(err, "ERROR WALLET");
           }
         });
         if (typeOfConnection === "magic") {
@@ -124,36 +165,10 @@ export default function AppLayout({ children }) {
   };
 
   React.useEffect(() => {
-    show();
     setTimeout(() => {
       reconnect();
     }, 10000);
   }, []);
-
-  React.useEffect(() => {
-    if (providerName.toLowerCase() === "web3react") {
-      console.log("inside");
-      (window as any).ethereum?.on("accountsChanged", function (accounts) {
-        console.log(accounts, "accounts");
-        if (accounts.length > 0) {
-          onGetAssets({ address: accounts[0], blockchain });
-          console.log(user, { ...user, ethAddress: accounts[0] });
-          updateUser({ ...user, ethAddress: accounts[0] });
-        } else {
-          updateUser({
-            ethAddress: "",
-            email: "",
-            provider: "",
-            providerName: "",
-          });
-          localStorage.removeItem("typeOfConnection");
-          localStorage.removeItem("loginTime");
-          localStorage.removeItem("chain");
-          (window as any).location.reload();
-        }
-      });
-    }
-  }, [user]);
 
   const loadSales = async () => {
     await dispatch(onLoadSales());

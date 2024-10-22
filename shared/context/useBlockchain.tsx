@@ -23,10 +23,8 @@ export const BlockchainContextProvider = ({ children }: any) => {
 
   const _updateBlockchain = useCallback(async (blockchain: any) => {
     try {
-      if (providerName == "magic") {
-      } else {
+      if (providerName !== "magic") {
         const changed = await switchChain(CHAIN_IDS_BY_NAME[blockchain]);
-        console.log(CHAIN_IDS_BY_NAME[blockchain]);
         if (!changed) {
           throw Error(
             "An error has occurred while switching chain, please try again.",
