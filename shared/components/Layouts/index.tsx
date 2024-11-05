@@ -3,34 +3,34 @@
 import React from "react";
 import useMagicLink from "@shared/hooks/useMagicLink";
 import clsx from "clsx";
-import { SidebarMobile } from "./sidebars/mobile";
-import { useAppDispatch } from "redux/store";
-import { onGetAssets, onLoadSales } from "redux/actions";
-import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
-import { MenuIcon, XIcon } from "@heroicons/react/solid";
-import { Footer } from "../common/footerComponents/footer";
-import { Dropdown } from "../common/dropdowns/dropdown/dropdown";
-import { useSelector } from "react-redux";
-import { getConnection, WALLETS } from "@shared/utils/connection/utils";
-import { authStillValid } from "../utils";
-import { Cart } from "./cart";
+import {SidebarMobile} from "./sidebars/mobile";
+import {useAppDispatch} from "redux/store";
+import {onGetAssets, onLoadSales} from "redux/actions";
+import {SearchOutlined, ShoppingCartOutlined} from "@ant-design/icons";
+import {MenuIcon, XIcon} from "@heroicons/react/solid";
+import {Footer} from "../common/footerComponents/footer";
+import {Dropdown} from "../common/dropdowns/dropdown/dropdown";
+import {useSelector} from "react-redux";
+import {getConnection, WALLETS} from "@shared/utils/connection/utils";
+import {authStillValid} from "../utils";
+import {Cart} from "./cart";
 import ChainSelect from "./chainSelect";
-import { useBlockchain } from "@shared/context/useBlockchain";
-import { toast } from "react-hot-toast";
-import { getRentsPendingByUser } from "@shared/web3";
-import { useUser } from "@shared/context/useUser";
-import { handleSignOut, Logo, NavbarItem, navItems } from "./utils";
+import {useBlockchain} from "@shared/context/useBlockchain";
+import {toast} from "react-hot-toast";
+import {getRentsPendingByUser} from "@shared/web3";
+import {useUser} from "@shared/context/useUser";
+import {handleSignOut, Logo, NavbarItem, navItems} from "./utils";
 import ModalShop from "../Shop/ModalShop";
-import { useModal } from "@shared/hooks/modal";
-import { Button } from "../common/button/button";
+import {useModal} from "@shared/hooks/modal";
+import {Button} from "../common/button/button";
 import Link from "next/link";
-import { useRouter, useParams, usePathname } from "next/navigation";
+import {useRouter, useParams, usePathname} from "next/navigation";
 import LoginModal from "../Login/loginModal";
-import { initializeApp } from "firebase/app";
-import { CHAIN_NAME_BY_ID } from "@shared/utils/chains";
-import { initializeConnector } from "@web3-react/core";
-import { MetaMask } from "@web3-react/metamask";
-import { Connection, ConnectionType } from "@shared/utils/connection";
+import {initializeApp} from "firebase/app";
+import {CHAIN_NAME_BY_ID} from "@shared/utils/chains";
+import {initializeConnector} from "@web3-react/core";
+import {MetaMask} from "@web3-react/metamask";
+import {Connection, ConnectionType} from "@shared/utils/connection";
 
 const styles = {
   content: {
@@ -41,7 +41,7 @@ const styles = {
   },
 };
 
-export default function AppLayout({ children }) {
+export default function AppLayout({children}) {
   const firebaseConfig = {
     apiKey: "AIzaSyCtkRgLKQD7vMLqf9v4iNqWclGaRW8z2Zs",
     authDomain: "endersgate-1ff81.firebaseapp.com",
@@ -90,17 +90,17 @@ export default function AppLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { login, logout } = useMagicLink();
+  const {login, logout} = useMagicLink();
 
-  const { updateUser, user } = useUser();
+  const {updateUser, user} = useUser();
 
   const {
-    user: { ethAddress, providerName },
+    user: {ethAddress, providerName},
   } = useUser();
 
-  const { cart, cartRent } = useSelector((state: any) => state.layout);
+  const {cart, cartRent} = useSelector((state: any) => state.layout);
 
-  const { Modal: ModalSwap, show, isShow, hide } = useModal();
+  const {Modal: ModalSwap, show, isShow, hide} = useModal();
   const {
     Modal: ModalAuth,
     show: showAuth,
@@ -108,9 +108,9 @@ export default function AppLayout({ children }) {
     hide: hideAuth,
   } = useModal();
 
-  const { allRents } = useSelector((state: any) => state.nfts);
+  const {allRents} = useSelector((state: any) => state.nfts);
 
-  const { blockchain, updateBlockchain } = useBlockchain();
+  const {blockchain, updateBlockchain} = useBlockchain();
 
   const dispatch = useAppDispatch();
 
@@ -147,10 +147,10 @@ export default function AppLayout({ children }) {
   }, [blockchain]);
 
   const userRentsNotificationArray =
-    getRentsPendingByUser({ user: ethAddress, rents: allRents }) || [];
+    getRentsPendingByUser({user: ethAddress, rents: allRents}) || [];
 
   const profileItems = [
-    { name: "INVENTORY", link: "/profile" },
+    {name: "INVENTORY", link: "/profile"},
     {
       name: "ACTIVITY",
       link: "/profile/activity",
@@ -196,7 +196,7 @@ export default function AppLayout({ children }) {
       <nav
         className={clsx(
           "fixed top-0 z-[100]",
-          { "!hidden": isFullscreen },
+          {"!hidden": isFullscreen},
           "bg-overlay",
           "w-[100%] md:px-10 px-4 py-2 flex flex-row items-center gap-x-4 shadow-md",
         )}
@@ -258,7 +258,7 @@ export default function AppLayout({ children }) {
                     "!opacity-100":
                       cartOpen || cart.length + cartRent.length > 0,
                   },
-                  { "!hidden": pathname == "/shop" },
+                  {"!hidden": pathname == "/shop"},
                   "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
                 )}
                 onClick={() => {
@@ -328,8 +328,8 @@ export default function AppLayout({ children }) {
         <div className="lg:hidden flex gap-4">
           <div
             className={clsx(
-              { "!opacity-100": cartOpen || cart.length > 0 },
-              { hidden: pathname === "/shop" },
+              {"!opacity-100": cartOpen || cart.length > 0},
+              {hidden: pathname === "/shop"},
               "hover:opacity-100 text-white opacity-50 flex justify-center items-center cursor-pointer rounded-md text-2xl whitespace-nowrap relative",
             )}
             onClick={() => {
