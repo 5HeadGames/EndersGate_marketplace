@@ -62,11 +62,9 @@ function RenderChildren({children}: {children: JSX.Element | JSX.Element[]}) {
         const isBanned = [ConnectionType.GNOSIS_SAFE].includes(lastConnectorName as ConnectionType)
 
         if (connectorConfig && !isBanned) {
-          console.log('CONNECTING', connectorConfig.type, await (window as any).ethereum.request({method: 'eth_accounts'}))
           try {
             await connectorConfig.connector.activate()
           } catch (err) {
-            console.log('RAF HERE', err)
           }
         }
       }
