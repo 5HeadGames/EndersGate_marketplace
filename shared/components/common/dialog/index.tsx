@@ -1,6 +1,6 @@
 "use client";
-import React, { PropsWithChildren } from "react";
-import { useAppDispatch } from "redux/store";
+import React, {PropsWithChildren} from "react";
+import {useAppDispatch} from "redux/store";
 
 const styles = {
   back: {
@@ -20,8 +20,8 @@ interface Props {
   onClose: () => void;
 }
 
-const Dialog: React.FunctionComponent<Props & PropsWithChildren> = (props) => {
-  const { open, onClose, children } = props;
+const Dialog: React.FunctionComponent<Props & PropsWithChildren<any>> = (props) => {
+  const {open, onClose, children} = props;
   const rootRef = React.useRef(null);
   const dispatch = useAppDispatch();
 

@@ -38,7 +38,7 @@ const getConnectionOrder = (selectedWallet: ConnectionType) => {
 
 const CONNECTED_WALLET_KEY = 'connectedWallet'
 
-function RenderChildren({children}: {children: JSX.Element | JSX.Element[]}) {
+function RenderChildren({children}: {children: any}) {
   const {connector, account, provider} = useWeb3React()
   const dispatch = useAppDispatch();
   const {blockchain} = useBlockchain();

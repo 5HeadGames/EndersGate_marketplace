@@ -1,14 +1,14 @@
 import clsx from "clsx";
-import { relative } from "path";
-import React, { useState, useEffect } from "react";
+import {relative} from "path";
+import React, {useState, useEffect} from "react";
 
-import { animated } from "react-spring";
-import { use3dEffect } from "use-3d-effect";
+import {animated} from "react-spring";
+import {use3dEffect} from "use-3d-effect";
 
 const AnimatedPackCard = (props: any) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const ref = React.useRef(null);
-  const { style, ...mouseHandlers } = use3dEffect(ref);
+  const {style, ...mouseHandlers} = use3dEffect(ref);
 
   const FlipCard = () => {
     console.log(isFlipped);
@@ -36,7 +36,7 @@ const AnimatedPackCard = (props: any) => {
       }}
     >
       <div
-        style={{ position: "relative", zIndex: 100, height: "100%" }}
+        style={{position: "relative", zIndex: 100, height: "100%"}}
         className={clsx(
           !isFlipped ? "cardEG" : "cardEG flipped",
           props.className,
@@ -58,7 +58,7 @@ const AnimatedPackCard = (props: any) => {
               background: "none",
               color: "white",
               ...style,
-            }}
+            } as any}
             {...mouseHandlers}
           >
             <img className="PackCard" src={props.cardFront} alt="card front" />
