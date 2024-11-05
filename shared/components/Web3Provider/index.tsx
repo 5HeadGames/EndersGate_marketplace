@@ -47,39 +47,6 @@ function RenderChildren({children}: {children: any}) {
   } = useUser();
 
   useEffect(() => {
-    const run = async () => {
-      let lastConnectorName = localStorage.getItem(CONNECTED_WALLET_KEY)
-      if (lastConnectorName) {
-        if (lastConnectorName === 'MetaMask') {
-          lastConnectorName = 'INJECTED'
-        } else if (lastConnectorName === 'CoinbaseWallet') {
-          lastConnectorName = 'COINBASE_WALLET'
-        } else if (lastConnectorName === 'GnosisSafe') {
-          lastConnectorName = 'GNOSIS_SAFE'
-        }
-
-        const connectorConfig = getConnection(lastConnectorName as ConnectionType)
-        const isBanned = [ConnectionType.GNOSIS_SAFE].includes(lastConnectorName as ConnectionType)
-
-        if (connectorConfig && !isBanned) {
-          try {
-            await connectorConfig.connector.activate()
-          } catch (err) {
-          }
-        }
-      }
-    }
-    run()
-  }, [])
-
-  // Save the connected wallet to localStorage
-  useEffect(() => {
-    if (connector.constructor.name !== 'GnosisSafe') {
-      localStorage.setItem(CONNECTED_WALLET_KEY, connector.constructor.name)
-    }
-  }, [connector, window.ethereum])
-
-  useEffect(() => {
     if (account && provider && blockchain) {
       updateUser({
         ethAddress: account,
