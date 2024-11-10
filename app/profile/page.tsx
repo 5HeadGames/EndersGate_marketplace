@@ -3,7 +3,7 @@ import React from "react";
 import ProfileLayout from "@shared/components/Profile/layout";
 import Inventory from "@shared/components/Profile/inventory/inventory";
 
-const Profile: React.FunctionComponent<{}> = () => {
+const Profile = () => {
   return (
     <ProfileLayout>
       <Inventory />

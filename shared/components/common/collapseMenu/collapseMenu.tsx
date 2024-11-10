@@ -1,9 +1,9 @@
 "use client";
 import * as React from "react";
 import clsx from "clsx";
-import { Typography } from "../typography";
-import { Icons } from "@shared/const/Icons";
-import { CaretDownOutlined, CaretUpOutlined } from "@ant-design/icons";
+import {Typography} from "../typography";
+import {Icons} from "@shared/const/Icons";
+import {CaretDownOutlined, CaretUpOutlined} from "@ant-design/icons";
 
 interface Props {
   title: string;
@@ -12,8 +12,8 @@ interface Props {
 }
 
 export const CollapseMenu: React.FunctionComponent<
-  Props & React.PropsWithChildren
-> = ({ children, title, defaultOpen = false, classes }) => {
+  Props & React.PropsWithChildren<any>
+> = ({children, title, defaultOpen = false, classes}) => {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -41,7 +41,7 @@ export const CollapseMenu: React.FunctionComponent<
         </div>
         <div
           className={clsx(
-            { ["hidden"]: !open },
+            {["hidden"]: !open},
             "flex top-0 right-0 origin-top-right mt-2 bg-white divide-y rounded-b-10 focus:outline-none",
           )}
         >
