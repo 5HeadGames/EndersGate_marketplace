@@ -1,7 +1,8 @@
-import type { BigNumber } from "@ethersproject/bignumber";
-import { formatEther } from "@ethersproject/units";
-import { useEffect, useState } from "react";
+import type {BigNumber} from "@ethersproject/bignumber";
+import {formatEther} from "@ethersproject/units";
+import {useEffect, useState} from "react";
 
+//comment
 function useBalances(
   provider?: ReturnType<any>,
   accounts?: string[],
@@ -49,18 +50,18 @@ export function Accounts({
         {accounts.length === 0
           ? "None"
           : accounts?.map((account, i) => (
-              <ul
-                key={account}
-                style={{
-                  margin: 0,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {ENSNames?.[i] ?? account}
-                {balances?.[i] ? ` (Ξ${formatEther(balances[i])})` : null}
-              </ul>
-            ))}
+            <ul
+              key={account}
+              style={{
+                margin: 0,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {ENSNames?.[i] ?? account}
+              {balances?.[i] ? ` (Ξ${formatEther(balances[i])})` : null}
+            </ul>
+          ))}
       </b>
     </div>
   );
