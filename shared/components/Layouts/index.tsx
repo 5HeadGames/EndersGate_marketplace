@@ -202,10 +202,13 @@ export default function AppLayout({children}) {
       });
       dispatch(onGetAssets({address: account, blockchain}));
     } else {
-      if (metamaskConnection)
-        metamaskConnection.connector.activate().then(res => {}).catch(err => {
-          console.log('ERR try to connect metamask', err)
-        })
+      if (metamaskConnection) {
+        const res = metamaskConnection.connector.activate()
+        if (res)
+          res.then(res => {}).catch(err => {
+            console.log('ERR try to connect metamask', err)
+          })
+      }
     }
   }, [account, provider, blockchain, connector, window.ethereum])
 
