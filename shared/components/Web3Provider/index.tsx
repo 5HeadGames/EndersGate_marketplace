@@ -1,10 +1,10 @@
-import { ReactNode, useMemo } from "react";
-import { Web3ReactHooks, Web3ReactProvider } from "@web3-react/core";
-import { Connector } from "@web3-react/types";
+import {ReactNode, useMemo} from "react";
+import {Web3ReactHooks, Web3ReactProvider} from "@web3-react/core";
+import {Connector} from "@web3-react/types";
 
-import { Connection, ConnectionType } from "utils/connection";
-import { getConnectionName, getConnection } from "utils/connection/utils";
-import { useUser } from "@shared/context/useUser";
+import {Connection, ConnectionType} from "utils/connection";
+import {getConnectionName, getConnection} from "utils/connection/utils";
+import {useUser} from "@shared/context/useUser";
 
 const SELECTABLE_WALLETS = [
   ConnectionType.INJECTED,
@@ -33,19 +33,19 @@ const getConnectionOrder = (selectedWallet: ConnectionType) => {
   return value;
 };
 
-export default function Web3Provider({ children }: { children: ReactNode }) {
+export default function Web3Provider({children}: {children: ReactNode}) {
   const {
-    user: { wallet },
+    user: {wallet},
   } = useUser();
   const connections = getConnectionOrder(wallet);
   const connectors: [Connector, Web3ReactHooks][] = connections.map(
-    ({ hooks, connector }: any) => [connector, hooks],
+    ({hooks, connector}: any) => [connector, hooks],
   );
 
   const key = useMemo(
     () =>
       connections
-        .map(({ type }: Connection) => getConnectionName(type))
+        .map(({type}: Connection) => getConnectionName(type))
         .join("-"),
     [connections],
   );
